@@ -1,37 +1,35 @@
 # SharePoint AI Demos
 
-A curated library of demo scripts, prompts, and step-by-step guides showcasing the latest AI features across Microsoft 365, SharePoint, Copilot Studio, and the Microsoft Graph.
+A curated library of AI skills, site-generation plans, and end-to-end demo setups for the latest AI features in Microsoft 365 SharePoint.
 
-> **Status:** Active — new demos added regularly.
+> **Status:** Active — new content added regularly.
 
 ---
 
 ## What's Inside
 
-| Folder | What you'll find |
-|---|---|
-| [`copilot-studio/`](./copilot-studio/) | Copilot Studio agent demos — topics, actions, connectors |
-| [`declarative-agents/`](./declarative-agents/) | Declarative agent manifests and Teams app examples |
-| [`sharepoint-agents/`](./sharepoint-agents/) | SharePoint-embedded agents and site-scoped Copilot customizations |
-| [`graph-connectors/`](./graph-connectors/) | Microsoft Graph connector schemas and ingest walkthroughs |
-| [`prompt-library/`](./prompt-library/) | Reusable prompts for Copilot in SharePoint, Teams, and Word |
+| Folder | Purpose | Intended use |
+|---|---|---|
+| [`skills/`](./skills/) | AI skills for use in SharePoint — ready-made instructions you can drop into Copilot or an agent | Download and reuse in your own tenant |
+| [`site-plans/`](./site-plans/) | `plan.md` files describing SharePoint site structures, pages, and content — feed them to an AI to generate a new site | Download and adapt for your scenario |
+| [`demos/`](./demos/) | End-to-end demo setups with sample content, configuration steps, and screenshots | Reference and walkthrough — not intended for direct reuse |
 
 ---
 
 ## Getting Started
 
-Each demo folder contains its own `README.md` with:
+Each item has its own `README.md` (or is self-contained as a `plan.md`) with:
+- What the skill or plan does
 - Prerequisites (licenses, permissions, tenant config)
-- Step-by-step setup instructions
-- Screenshots or screen-recording links where applicable
+- How to use or adapt it
 
-No special tooling is required to browse the demos — everything is written in Markdown and readable directly on GitHub.
+No special tooling required — everything is Markdown, readable directly on GitHub.
 
 ---
 
 ## Prerequisites (general)
 
-- Microsoft 365 tenant with **Copilot licenses** (where noted per demo)
+- Microsoft 365 tenant with **Copilot licenses** (where noted per item)
 - SharePoint admin or site owner permissions
 - Familiarity with the [Microsoft 365 admin center](https://admin.microsoft.com) and [SharePoint admin center](https://admin.sharepoint.com)
 
