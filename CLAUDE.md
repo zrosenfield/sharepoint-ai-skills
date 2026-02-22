@@ -7,8 +7,6 @@
 | `skills/` | AI skill files (`.md`) ready to upload to SharePoint. Each file has YAML frontmatter and self-contained instructions. See `skills/README.md` for the full index. |
 | `skills/images/` | Screenshots and images embedded in `skills/README.md` — not skill content. |
 | `demos/` | End-to-end demo setups. Each demo lives in its own subfolder and may include video recordings, scripts, and supporting assets. Not intended for direct reuse — reference and walkthrough material. |
-| `prompt-library/` | Standalone prompts that are not full skills — shorter, single-purpose instructions for use in chat or Copilot. Currently being built out. |
-| `site-plans/` | `plan.md` files describing SharePoint site structures, pages, and content. Feed to an AI to scaffold a new site. Currently being built out. |
 | `branding.md` | Quick-reference brand cheat sheet for the forest-style brand system. Human-readable; not a skill. For the AI-instructional version see `skills/forest-style.md`. |
 
 ## Skills
