@@ -4,22 +4,24 @@
 
 | Path | Purpose |
 |------|---------|
-| `<skill-name>/` | Each skill lives in its own folder at the repo root. The folder name must exactly match the `name` field in the skill's frontmatter. Contains `SKILL.md` and optionally `references/`, `scripts/`, and `assets/` subdirectories per the agentskills.io spec. |
-| `<skill-name>/SKILL.md` | The skill definition file. Required YAML frontmatter (`name`, `description`) followed by skill instructions in Markdown. |
+| `Skills/` | All AI skills live here. See `Skills/README.md` for the full index. |
+| `Skills/<skill-name>/` | Each skill lives in its own folder. The folder name must exactly match the `name` field in the skill's frontmatter. Contains `SKILL.md` and optionally `references/`, `scripts/`, and `assets/` subdirectories per the agentskills.io spec. |
+| `Skills/<skill-name>/SKILL.md` | The skill definition file. Required YAML frontmatter (`name`, `description`) followed by skill instructions in Markdown. |
 | `demos/` | End-to-end demo setups. Each demo lives in its own subfolder and may include video recordings, scripts, and supporting assets. Not intended for direct reuse — reference and walkthrough material. |
-| `branding.md` | Quick-reference brand cheat sheet for the forest-style brand system. Human-readable; not a skill. For the AI-instructional version see `forest-style/SKILL.md`. |
+| `branding.md` | Quick-reference brand cheat sheet for the forest-style brand system. Human-readable; not a skill. For the AI-instructional version see `Skills/forest-style/SKILL.md`. |
 
 ## Skills
 
 ### Follow the agentskills.io specification
-Skills follow the [agentskills.io specification](https://agentskills.io/specification). Each skill is a directory at the repo root containing a `SKILL.md` file:
+Skills follow the [agentskills.io specification](https://agentskills.io/specification). Each skill is a directory inside `Skills/` containing a `SKILL.md` file:
 
 ```
-skill-name/
-└── SKILL.md          # Required
+Skills/
+└── skill-name/
+    └── SKILL.md          # Required
 ```
 
-The directory name must exactly match the `name` field in the frontmatter. For example, a skill with `name: copy-editing` must live at `copy-editing/SKILL.md`.
+The directory name must exactly match the `name` field in the frontmatter. For example, a skill with `name: copy-editing` must live at `Skills/copy-editing/SKILL.md`.
 
 ### SharePoint skills cannot write code
 Skills in this repo run in SharePoint, which does not support code execution. Skills must be written entirely in prose and Markdown — no code blocks containing executable code, no scripts, no shell commands, no pseudocode intended for execution.
