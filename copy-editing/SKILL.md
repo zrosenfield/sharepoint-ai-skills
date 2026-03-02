@@ -1,6 +1,6 @@
 ---
 name: copy-editing
-description: Systematically edits Markdown documents — READMEs, skill files, site plans, and demo guides — using seven sequential sweeps. Each sweep focuses on one quality dimension so nothing gets missed. Use when a document needs to be clearer, tighter, or easier to act on. Triggers include "edit this", "clean this up", "review my README", "improve this skill", "tighten this up", or when a document feels long, vague, or hard to follow. Does NOT write or suggest code.
+description: Systematically edits Markdown documents — READMEs, skill files, and demo guides — using seven sequential sweeps. Each sweep focuses on one quality dimension so nothing gets missed. Use when a document needs to be clearer, tighter, or easier to act on. Triggers include "edit this", "clean this up", "review my README", "improve this skill", "tighten this up", or when a document feels long, vague, or hard to follow. Does NOT write or suggest code.
 ---
 
 # Copy Editing Skill
@@ -145,7 +145,6 @@ After:  "RALPH runs up to 5 iterations (configurable) and stops when all criteri
 This matters especially for:
 - READMEs (readers skim to decide if this is relevant)
 - Skill files (the agent may scan before applying)
-- Site plans (users jump to the section they need)
 - Demo guides (users skip to the step they're on)
 
 Look for:
