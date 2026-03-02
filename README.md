@@ -87,10 +87,8 @@ That's a complete, valid skill. The frontmatter tells the agent when to activate
 
 ## Prerequisites
 
-- Microsoft 365 tenant with **Copilot licenses** (where noted per item)
-- SharePoint admin or site owner permissions
-- Familiarity with the [Microsoft 365 admin center](https://admin.microsoft.com) and [SharePoint admin center](https://admin.sharepoint.com)
-
+- Microsoft 365 tenant with **Copilot license**
+- SharePoint contributor permissions (to add/upload a skill, but only reader needed to consume)
 ---
 
 ## Contributing
