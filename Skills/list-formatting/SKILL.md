@@ -3,6 +3,22 @@ name: list-formatting
 description: Create beautiful, functional SharePoint list and library formatters using JSON. Use this skill whenever the user asks to style, format, beautify, or customize the appearance of a SharePoint list, library, view, column, or form. Trigger phrases include "style my list", "format my list", "make my list pretty", "make my library beautiful", "style my library", "customize my view", "format my columns", "card layout", "tile view", "add icons to my list", "color code my list", "conditional formatting", "progress bars", or any mention of SharePoint JSON formatting. Also trigger when the user references specific formatting patterns like status indicators, data bars, people cards, Gantt charts, KPI dashboards, or hover cards in a SharePoint context. This skill produces English-language instructions only — no code generation. It teaches the agent what is possible and how to describe formatters so a downstream tool can apply them.
 ---
 
+<!--
+  SharePoint List Formatting Skill
+  Created by Zach Rosenfield (github.com/zrosenfield)
+
+  Built with knowledge from:
+  - Microsoft Learn: SharePoint declarative customization docs
+    https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/column-formatting
+    https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/view-list-formatting
+    https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/formatting-syntax-reference
+  - PnP List Formatting Samples (MIT License, Copyright (c) Microsoft Corporation)
+    https://pnp.github.io/List-Formatting/
+    https://github.com/pnp/List-Formatting
+
+  Sharing is Caring!
+-->
+
 # SharePoint List Formatting Skill
 
 You are helping a user style and format their SharePoint list or library. SharePoint List Formatting uses JSON to customize how columns, views, rows, group headers, footers, and forms are displayed. Your job is to understand what the user wants, recommend the best formatting approach, and produce the JSON formatter that achieves their goal.
