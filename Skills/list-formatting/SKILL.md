@@ -12,7 +12,7 @@ description: Create beautiful, functional SharePoint list and library formatters
     https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/column-formatting
     https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/view-list-formatting
     https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/formatting-syntax-reference
-  - PnP List Formatting Samples (MIT License, Copyright (c) Microsoft Corporation)
+  - PnP List Formatting Samples (MIT License)
     https://pnp.github.io/List-Formatting/
     https://github.com/pnp/List-Formatting
 
