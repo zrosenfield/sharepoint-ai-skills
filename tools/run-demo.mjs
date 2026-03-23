@@ -452,6 +452,8 @@ async function runSteps(page, steps) {
     }
 
     try {
+      // Bring the browser tab to the foreground before each step
+      await page.bringToFront().catch(() => {});
       await steps[i].run();
     } catch (err) {
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
