@@ -10,10 +10,9 @@ If the chat pane is already open from a previous session, close it.
 
 [open-chat]
 
-The chat pane should be open and showing "Hello" with prompt suggestions.
-If it shows a previous conversation, clear it before proceeding.
+The chat pane should be open. Starting a fresh session now.
 
-[pause]
+[new-chat]
 
 [section: demo]
 

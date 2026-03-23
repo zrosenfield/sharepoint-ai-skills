@@ -9,10 +9,9 @@ Verify the Welcome page loads and Copilot is accessible before the demo.
 
 [open-chat]
 
-Confirm the chat pane is showing a fresh session (no prior messages visible).
-If there is a prior conversation, clear the chat before continuing.
+Chat pane is open. Starting a fresh session now.
 
-[pause]
+[new-chat]
 
 [section: demo]
 

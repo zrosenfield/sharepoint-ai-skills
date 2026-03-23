@@ -327,13 +327,7 @@ function parseScript(src, page, section = 'demo') {
               }
               chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
             }
-            // Click the "Chat options" (...) button in the top-right of the chat pane
-            await chatFrame.locator('[aria-label="Chat options"]').click();
-            await page.waitForTimeout(400);
-            // Click "New chat" in the dropdown
-            await chatFrame.locator('[role="menuitem"]:has-text("New chat"), [aria-label="New chat"]').first().click();
-            await page.waitForTimeout(1500);
-            console.log('    New chat started.');
+            await startNewChat(page, chatFrame);
           },
         };
 
@@ -418,7 +412,7 @@ async function runSteps(page, steps) {
 
   console.log('\nSteps:');
   steps.forEach((s, i) => console.log(`  ${i + 1}. ${s.name}`));
-  console.log('\nControls: Enter = run  |  s = skip  |  b = back  |  ? = help\n');
+  console.log('\nControls: Enter/Space = run  |  s = skip  |  b = back  |  r = restart  |  n = new chat  |  d = scroll down  |  ? = help\n');
 
   let i = 0;
   while (i < steps.length) {
@@ -430,13 +424,54 @@ async function runSteps(page, steps) {
 
     if (key === '?') {
       printHelp();
-      continue; // re-prompt same step
+      continue;
     }
 
     if (key === 's') {
       console.log('skipped.');
       i++;
       continue;
+    }
+
+    if (key === 'r') {
+      console.log('restarting from step 1.');
+      i = 0;
+      continue;
+    }
+
+    if (key === 'n') {
+      console.log('starting new chat...');
+      try {
+        await page.bringToFront().catch(() => {});
+        const chatFrameLocator = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+        await startNewChat(page, chatFrameLocator);
+      } catch (err) {
+        console.error(`  Could not start new chat: ${err.message}`);
+      }
+      continue; // re-prompt same step
+    }
+
+    if (key === 'd') {
+      console.log('scrolling chat to bottom...');
+      try {
+        await page.bringToFront().catch(() => {});
+        const chatFrame = page.frames().find(f => f.url().includes('chat.aspx'));
+        if (chatFrame) {
+          await chatFrame.evaluate(() => {
+            // Scroll any overflow container that holds the messages
+            const scroller =
+              document.querySelector('[class*="scrollable"]') ||
+              document.querySelector('[class*="messageList"]') ||
+              document.querySelector('[class*="transcript"]') ||
+              document.querySelector('main') ||
+              document.documentElement;
+            scroller.scrollTop = scroller.scrollHeight;
+          });
+        }
+      } catch (err) {
+        console.error(`  Could not scroll: ${err.message}`);
+      }
+      continue; // re-prompt same step
     }
 
     if (key === 'b') {
@@ -473,11 +508,14 @@ async function runSteps(page, steps) {
 
 function printHelp() {
   console.log(`
-  Enter   run the current step
-  s       skip this step
-  b       go back and re-run the previous step
-  ?       show this help
-  Ctrl+C  quit
+  Enter / Space   run the current step
+  s               skip this step
+  b               go back and re-run the previous step
+  r               restart from step 1
+  n               start a new chat (clears Copilot conversation)
+  d               scroll the chat pane to the bottom
+  ?               show this help
+  Ctrl+C          quit
 `);
 }
 
@@ -492,7 +530,7 @@ if (!process.stdin.isTTY) {
   process.stdin.setEncoding('utf8');
   process.stdin.on('data', chunk => {
     for (const ch of chunk) {
-      const key = ch === '\r' || ch === '\n' ? 'enter' : ch.toLowerCase();
+      const key = ch === '\r' || ch === '\n' || ch === ' ' ? 'enter' : ch.toLowerCase();
       _keyQueue.push(key);
     }
     if (_keyQueueReady) { _keyQueueReady(); _keyQueueReady = null; }
@@ -519,7 +557,8 @@ async function waitForKey() {
       process.stdin.pause();
       const key = buf.toString();
       if (key === '\x03') process.exit(0);
-      resolve(key === '\r' || key === '\n' ? 'enter' : key[0].toLowerCase());
+      const k = key === '\r' || key === '\n' || key === ' ' ? 'enter' : key[0].toLowerCase();
+      resolve(k);
     });
   });
 }
@@ -531,6 +570,17 @@ function formatElapsed(ms) {
 }
 
 // ─── Browser helpers ──────────────────────────────────────────────────────────
+
+/**
+ * Click Chat options → New chat to clear the active Copilot conversation.
+ */
+async function startNewChat(page, chatFrame) {
+  await chatFrame.locator('[aria-label="Chat options"]').click();
+  await page.waitForTimeout(400);
+  await chatFrame.locator('[role="menuitem"]:has-text("New chat"), [aria-label="New chat"]').first().click();
+  await page.waitForTimeout(1500);
+  console.log('    New chat started.');
+}
 
 /**
  * Click the FAB and navigate through the popup to open the full chat pane.
