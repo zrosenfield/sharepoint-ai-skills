@@ -91,6 +91,8 @@ Talking points are word-wrapped at 72 characters and printed to the terminal bef
 | `[prompt: text]` | Slow-type text into the chat input and submit |
 | `[wait]` | Wait for Copilot to finish generating a response |
 | `[pause]` | Presenter moment — wait for Enter before continuing |
+| `[new-chat]` | Click Chat options (…) → New chat to clear the current Copilot conversation |
+| `[upload: path]` | Open the Attach menu in the chat input, then wait for the presenter to select the local file in the OS dialog (the OS file picker cannot be automated) |
 | `[confirm: message]` | Destructive action required in the browser — shows a warning box and waits for Enter after the user has completed the action |
 | `[screenshot: path]` | Save a screenshot to the given path |
 
@@ -201,6 +203,24 @@ Narrate the response here.
 
 [navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
 ```
+
+---
+
+## Relation to `demos/tool/`
+
+The repo also contains `demos/tool/` — an earlier demo runner built on the [Playwriter](https://playwriter.dev) Chrome extension CLI. The two tools overlap significantly but differ in architecture:
+
+| | `tools/` (this tool) | `demos/tool/` |
+|---|---|---|
+| Browser connection | Playwright CDP (Edge or Chrome) | Playwriter Chrome extension |
+| Pause mechanism | Terminal keypress (Enter/s/b/?) | In-browser ▶ Next button |
+| Script format | `.demo` files with `[command]` blocks | Markdown with `<!-- directive -->` comments |
+| Response detection | Watches Stop button / feedback buttons | None (fixed waits) |
+| Setup/reset sections | Yes | No |
+| Back / skip | Yes | No |
+| File upload | Yes (assisted — OS dialog) | No |
+
+`tools/` is the canonical runner for this repo. `demos/tool/` is preserved for reference.
 
 ---
 

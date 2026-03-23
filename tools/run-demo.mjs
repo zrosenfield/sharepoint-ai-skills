@@ -150,6 +150,9 @@ function tellMeAboutSiteSteps(page) {
  *   [prompt: text]            slow-type text into chat and submit
  *   [wait]                    wait for Copilot to finish responding
  *   [pause]                   wait for presenter to press Enter
+ *   [new-chat]                click Chat options → New chat to clear the conversation
+ *   [upload: local/path]      open Attach in the input menu, then wait for presenter
+ *                             to select the file in the OS dialog
  *   [confirm: message]        destructive action — warn presenter and wait for
  *                             confirmation that they've clicked the button in the UI
  *   [screenshot: path]        save a screenshot
@@ -308,6 +311,62 @@ function parseScript(src, page, section = 'demo') {
             process.stdout.write('  Press Enter once you have completed the action... ');
             await waitForKey();
             console.log('  Confirmed.\n');
+          },
+        };
+      }
+
+      case 'new-chat':
+        return {
+          name: 'New chat (clear Copilot conversation)',
+          async run() {
+            printContext();
+            if (!chatFrame) {
+              const iframe = page.locator('[data-automationid="ChatODSPFrame"]');
+              if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
+                throw new Error('[new-chat] requires the chat pane to be open first.');
+              }
+              chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+            }
+            // Click the "Chat options" (...) button in the top-right of the chat pane
+            await chatFrame.locator('[aria-label="Chat options"]').click();
+            await page.waitForTimeout(400);
+            // Click "New chat" in the dropdown
+            await chatFrame.locator('[role="menuitem"]:has-text("New chat"), [aria-label="New chat"]').first().click();
+            await page.waitForTimeout(1500);
+            console.log('    New chat started.');
+          },
+        };
+
+      case 'upload': {
+        const uploadPath = resolve(arg);
+        const uploadFileName = uploadPath.split(/[\\/]/).pop();
+        return {
+          name: `Upload file: ${uploadFileName}`,
+          async run() {
+            printContext();
+            if (!chatFrame) {
+              const iframe = page.locator('[data-automationid="ChatODSPFrame"]');
+              if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
+                throw new Error('[upload] requires the chat pane to be open first.');
+              }
+              chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+            }
+            // Click the chat input to focus, then open the input menu
+            await chatFrame.locator('[contenteditable="true"]').first().click();
+            await page.waitForTimeout(200);
+            await chatFrame.locator('[aria-label="Open input menu"]').click();
+            await page.waitForTimeout(400);
+            await chatFrame.locator('[role="menuitem"]:has-text("Attach")').first().click();
+            await page.waitForTimeout(300);
+            // File picker is an OS-native dialog — hand off to presenter
+            console.log('');
+            console.log('  ┌─────────────────────────────────────────────────────────┐');
+            console.log('  │  FILE UPLOAD — select this file in the dialog:          │');
+            console.log(`  │  ${uploadPath.slice(0, 53).padEnd(55)}│`);
+            console.log('  └─────────────────────────────────────────────────────────┘');
+            process.stdout.write('  Press Enter once the file is attached in the chat... ');
+            await waitForKey();
+            console.log('  File attached.\n');
           },
         };
       }
