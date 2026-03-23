@@ -4,6 +4,7 @@
   "description": "Demo tooling for SharePoint AI Skills",
   "private": true,
   "scripts": {
+    "start": "node tools/demo.mjs",
     "demo": "node tools/run-demo.mjs",
     "demo:tell-me-about-site": "node tools/run-demo.mjs tell-me-about-site",
     "demo:site-overview": "node tools/run-demo.mjs tools/scripts/site-overview.demo",
