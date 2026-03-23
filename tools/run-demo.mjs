@@ -212,16 +212,25 @@ function parseScript(src, page, section = 'demo') {
 
     const printContext = () => {
       if (!displayContext.length) return;
+      const COL = '\x1B[33m';   // amber
+      const RST = '\x1B[0m';
+      const TXT = '\x1B[97m';   // bright white for talking point text
+      const BAR = `${COL}▌${RST} `;
+      const WIDTH = (process.stdout.columns || 80) - 6; // leave room for bar + indent
+
       console.log('');
       for (const line of displayContext) {
-        // Word-wrap at 72 chars for readability
         const words = line.split(' ');
-        let row = '  ';
+        let row = '';
         for (const w of words) {
-          if (row.length + w.length + 1 > 74) { console.log(row); row = '  ' + w; }
-          else row += (row === '  ' ? '' : ' ') + w;
+          if (row.length + w.length + (row ? 1 : 0) > WIDTH) {
+            console.log(`  ${BAR}${TXT}${row}${RST}`);
+            row = w;
+          } else {
+            row += (row ? ' ' : '') + w;
+          }
         }
-        if (row.trim()) console.log(row);
+        if (row) console.log(`  ${BAR}${TXT}${row}${RST}`);
       }
       console.log('');
     };
@@ -418,7 +427,7 @@ async function runSteps(page, steps) {
   while (i < steps.length) {
     const step = steps[i];
     const elapsed = formatElapsed(Date.now() - startTime);
-    process.stdout.write(`[${elapsed}] Step ${i + 1}/${steps.length}: ${step.name}\n         › `);
+    process.stdout.write(`\x1B[2m[${elapsed}]\x1B[0m \x1B[1mStep ${i + 1}/${steps.length}:\x1B[0m ${step.name}\n         \x1B[2m›\x1B[0m `);
 
     const key = await waitForKey();
 
@@ -428,19 +437,19 @@ async function runSteps(page, steps) {
     }
 
     if (key === 's') {
-      console.log('skipped.');
+      console.log('\x1B[2mskipped.\x1B[0m');
       i++;
       continue;
     }
 
     if (key === 'r') {
-      console.log('restarting from step 1.');
+      console.log('\x1B[2mrestarting from step 1.\x1B[0m');
       i = 0;
       continue;
     }
 
     if (key === 'n') {
-      console.log('starting new chat...');
+      console.log('\x1B[2mstarting new chat...\x1B[0m');
       try {
         await page.bringToFront().catch(() => {});
         const chatFrameLocator = page.frameLocator('[data-automationid="ChatODSPFrame"]');
@@ -452,7 +461,7 @@ async function runSteps(page, steps) {
     }
 
     if (key === 'd') {
-      console.log('scrolling chat to bottom...');
+      console.log('\x1B[2mscrolling chat to bottom...\x1B[0m');
       try {
         await page.bringToFront().catch(() => {});
         const chatFrame = page.frames().find(f => f.url().includes('chat.aspx'));
@@ -476,14 +485,14 @@ async function runSteps(page, steps) {
 
     if (key === 'b') {
       if (i === 0) {
-        console.log('already at first step.');
+        console.log('\x1B[2malready at first step.\x1B[0m');
         continue;
       }
       i--;
-      console.log(`back — re-running step ${i + 1}.`);
+      console.log(`\x1B[2mback — re-running step ${i + 1}.\x1B[0m`);
       // fall through to run
     } else {
-      console.log('running...');
+      console.log('\x1B[2mrunning...\x1B[0m');
     }
 
     try {
