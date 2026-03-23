@@ -1,0 +1,58 @@
+# Site Overview
+# Shows how Copilot understands the structure and content of a SharePoint site.
+
+[section: setup]
+
+Navigate to the site and verify the Copilot FAB is visible before the demo.
+If the chat pane is already open from a previous session, close it.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[open-chat]
+
+The chat pane should be open and showing "Hello" with prompt suggestions.
+If it shows a previous conversation, clear it before proceeding.
+
+[pause]
+
+[section: demo]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+Welcome to Zach's Demo Site — a purpose-built SharePoint environment with a wide
+variety of lists, libraries, pages, and content types. We use it to demonstrate
+real Microsoft 365 Copilot capabilities in a controlled setting.
+
+Take a moment to point out the left nav and the hero image.
+
+[pause]
+
+[open-chat]
+
+The Copilot chat pane is now open. Notice it loaded in the sidebar — this is the
+standard Copilot experience built into SharePoint. No plugins required.
+
+[prompt: Tell me about this site]
+
+[wait]
+
+Copilot has read the site and summarized what's here — lists, libraries, pages.
+This is grounded in the actual site content, not a generic description.
+
+[pause]
+
+[prompt: What kinds of lists does this site have?]
+
+[wait]
+
+Notice how Copilot can break down the inventory further. You can keep asking
+follow-up questions in the same conversation.
+
+[screenshot: tools/screenshots/site-overview.png]
+
+[section: reset]
+
+This demo is read-only — no content was created or modified.
+Navigate back to the home page and close the chat pane to reset the view.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]

@@ -1,0 +1,22 @@
+{
+  "name": "sharepoint-ai-skills-tools",
+  "version": "1.0.0",
+  "description": "Demo tooling for SharePoint AI Skills",
+  "private": true,
+  "scripts": {
+    "demo": "node tools/run-demo.mjs",
+    "demo:tell-me-about-site": "node tools/run-demo.mjs tell-me-about-site",
+    "demo:site-overview": "node tools/run-demo.mjs tools/scripts/site-overview.demo",
+    "demo:site-overview:setup": "node tools/run-demo.mjs tools/scripts/site-overview.demo --setup",
+    "demo:site-overview:reset": "node tools/run-demo.mjs tools/scripts/site-overview.demo --reset",
+    "demo:page-summarization": "node tools/run-demo.mjs tools/scripts/page-summarization.demo",
+    "demo:page-summarization:setup": "node tools/run-demo.mjs tools/scripts/page-summarization.demo --setup",
+    "demo:page-summarization:reset": "node tools/run-demo.mjs tools/scripts/page-summarization.demo --reset",
+    "demo:find-content": "node tools/run-demo.mjs tools/scripts/find-content.demo",
+    "demo:find-content:setup": "node tools/run-demo.mjs tools/scripts/find-content.demo --setup",
+    "demo:find-content:reset": "node tools/run-demo.mjs tools/scripts/find-content.demo --reset"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0"
+  }
+}

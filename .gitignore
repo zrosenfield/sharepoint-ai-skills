@@ -28,3 +28,9 @@ __pycache__/
 dist/
 *.tmp
 *.log
+
+# Demo tool — generated screenshots (debug output and run captures)
+tools/debug-screenshot.png
+tools/result-screenshot.png
+tools/screenshots/
+tools/step*.png

@@ -1,0 +1,77 @@
+# Finding Content with Copilot
+# Shows how Copilot can help users find specific documents and list items
+# without knowing where things are stored.
+
+[section: setup]
+
+Verify the site is accessible and that the document libraries contain content
+before running the demo. The Contracts and Legal Operations libraries should
+have at least a few documents.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[open-chat]
+
+[prompt: What documents do we have about legal operations?]
+
+[wait]
+
+Confirm that Copilot returns at least one document result. If no results appear,
+check that the Legal Operations library has content before proceeding.
+
+[pause]
+
+[section: demo]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+One of the most common pain points in SharePoint: people can't find content.
+They know it exists — they just don't know which library, which folder, or
+what it's called. Copilot changes this.
+
+[pause]
+
+[open-chat]
+
+Instead of searching manually, let's just ask.
+
+[prompt: What documents do we have about legal operations?]
+
+[wait]
+
+Copilot found documents related to legal operations and can tell you where
+they live. This works across libraries — the user doesn't need to know the
+folder structure.
+
+[pause]
+
+Now let's try something more specific — asking Copilot to find a particular
+type of content across the site.
+
+[prompt: Are there any contacts or people directories on this site?]
+
+[wait]
+
+Notice that Copilot can reason about list types, not just document content.
+It understands the difference between a contacts list and a document library.
+
+[pause]
+
+Let's do one more — asking about something time-sensitive. This shows
+Copilot reasoning about the site as a knowledge base.
+
+[prompt: What's the most recently updated content on this site?]
+
+[wait]
+
+Copilot can reference recency. This is useful for team leads who want to
+quickly see what's changed, or for anyone joining a project mid-stream.
+
+[screenshot: tools/screenshots/find-content.png]
+
+[section: reset]
+
+This demo is read-only — no content was created or modified.
+Navigate back to the home page to reset.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]

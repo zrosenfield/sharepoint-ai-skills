@@ -1,0 +1,57 @@
+# Page Summarization
+# Demonstrates Copilot summarizing the content of a specific SharePoint page.
+
+[section: setup]
+
+Verify the Welcome page loads and Copilot is accessible before the demo.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[open-chat]
+
+Confirm the chat pane is showing a fresh session (no prior messages visible).
+If there is a prior conversation, clear the chat before continuing.
+
+[pause]
+
+[section: demo]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+We're starting on the home page. Copilot can summarize any page you're on —
+not just the whole site. Let's open the chat and ask for a summary.
+
+[pause]
+
+[open-chat]
+
+[prompt: Summarize this page]
+
+[wait]
+
+Copilot has summarized the Welcome page. The summary is grounded in what's
+actually on this page — text, sections, any embedded content.
+
+Compare this to a manual "executive summary" — same output, zero effort.
+
+[pause]
+
+Now let's ask it to pull out just the key takeaways. This is the kind of
+follow-up that makes Copilot useful for someone who just landed on an
+unfamiliar page.
+
+[prompt: What are the three most important things a new visitor should know from this page?]
+
+[wait]
+
+Copilot extracted a concise list. This is useful for onboarding flows,
+handoffs, and knowledge transfer — any situation where someone needs to
+quickly understand a page they haven't seen before.
+
+[screenshot: tools/screenshots/page-summarization.png]
+
+[section: reset]
+
+This demo is read-only. Navigate back to the home page to reset the view.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
