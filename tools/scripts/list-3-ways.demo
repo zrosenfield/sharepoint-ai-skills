@@ -1,0 +1,80 @@
+# List 3 Ways
+# Demonstrates three different levels of Copilot involvement in building
+# a SharePoint list — from guided creation, to fully specified, to fully
+# autonomous with RALPH iterating to a production-ready result.
+
+[section: setup]
+
+Verify the ZachDemos site is accessible. This demo creates new lists — confirm you
+have edit permissions before proceeding. Clean up any leftover Sessions lists from
+prior runs before starting.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[open-chat]
+
+[new-chat]
+
+[section: demo]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+We're going to build the same thing three times — a session tracking list for an
+M365 conference called ZachCon 2026. Each time we'll give Copilot a different level
+of control. The goal is to show the range: from guided collaboration to fully
+autonomous delivery.
+
+[pause]
+
+[open-chat]
+
+Way one: describe what you want in plain English and let Copilot make the structural
+decisions.
+
+[prompt: Generate a site for running ZachCon 2026. We need a landing page and a list for submitting session ideas that we will review and approve. Sessions need a title, speakers, description, 100-400 level assignment, conference track, status to say if we approved the session yet, and a link to a deck.]
+
+[wait]
+
+Copilot built the list schema from a business description. Notice it chose the field
+types — choice fields for level and track, a status field, a hyperlink for the deck.
+You described the outcome, not the structure.
+
+[pause]
+
+Way two: give Copilot an exact specification and ask for sample data and views too.
+
+[prompt: Create a new list called "Sessions 2026-B". Add speakers as a people field, description as multiline, level as a choice with 100/200/300/400, conference track as a choice field you design for an M365 conference, and status as approved/rejected/pending. Generate 20 sample items — assign them all to me as the speaker but randomize the rest. Build a view to show approved sessions and another for non-approved sessions. Make the views easier to read.]
+
+[wait]
+
+Same concept — but this time we specified every field type, asked for data, and
+asked for views. The result is a fully populated, operational list. No manual setup.
+
+[pause]
+
+Way three: set a goal and a quality bar, then let RALPH iterate until it's done.
+
+[prompt: RALPH in max 15 iterations: Create a "Sessions 2026-C" list that is the ultimate session tracking solution for ZachCon 2026 — an M365-focused conference. Sessions must be approved to be official. Create the views needed to make this list operational. Provide 20 sample items in diverse states so we can see it in action. Make the list beautiful — use the style-definition skill to make sure it matches style guidelines for this site.]
+
+[wait]
+
+RALPH runs autonomously — creating the list, populating it, building views,
+applying formatting, checking its own work, and iterating until it's satisfied.
+You set the outcome. It handles the execution.
+
+[screenshot: tools/screenshots/list-3-ways.png]
+
+The three approaches represent a spectrum. Guided collaboration when you want
+control. Detailed specification when you know exactly what you need. Goal-based
+autonomy when you want the best possible result with minimum involvement.
+
+[pause]
+
+[section: reset]
+
+Delete the Sessions 2026, Sessions 2026-B, and Sessions 2026-C lists created during
+the demo. Use the confirmation step below before proceeding.
+
+[confirm: Delete the "Sessions 2026", "Sessions 2026-B", and "Sessions 2026-C" lists from the site contents page, then press Enter to continue.]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]

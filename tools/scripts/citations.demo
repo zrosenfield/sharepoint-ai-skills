@@ -1,0 +1,88 @@
+# Citation Pipeline
+# Demonstrates a three-skill AI pipeline that extracts factual assertions from a
+# strategic document, searches a source corpus for supporting evidence, and writes
+# structured citation records back to a SharePoint list — automatically.
+
+[section: setup]
+
+Before running this demo:
+1. Upload the Zava Executive Brief to the root of the document library
+2. Upload the five corpus files to a subfolder (e.g., "Feb2026 Backing Data")
+3. Confirm the assertion-list-creator, assertion-extractor, and citation-finder
+   skills are installed in the site's Agent Assets > Skills library
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[open-chat]
+
+[new-chat]
+
+[section: demo]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+A strategy team has just finished an executive brief for Zava, an athletic apparel
+brand. It's packed with market statistics, growth projections, and causal claims.
+Before it goes to leadership, every assertion needs a source.
+
+Normally that means a researcher manually reading five market reports to find
+supporting evidence for each claim. Let's do it with three prompts instead.
+
+[pause]
+
+[open-chat]
+
+Step one: create a SharePoint list to hold the citation records. One row per
+assertion, with columns for the record ID, the statement, and the citation results.
+
+[prompt: Use the assertion-list-creator skill to create the Assertion Citations SharePoint list on this site. Configure Record, Statements, and Citations columns, with Citations as multi-line text supporting unlimited length.]
+
+[wait]
+
+The list is created with the right schema. The Citations column is explicitly
+configured for unlimited length — standard text fields silently truncate long
+citation blocks.
+
+[pause]
+
+Step two: read the executive brief, extract every factual assertion, and write
+each one as a record. We'll use ZAVA-2025 as the record ID prefix.
+
+[prompt: Use the assertion-extractor skill to read the Zava Executive Brief document in this library and extract all factual assertions that need citations. Write each one as a new record to the Assertion Citations list. Use the record ID prefix ZAVA-2025.]
+
+[wait]
+
+The agent read the document and identified every claim a reader could reasonably
+ask "how do you know that?" about — statistics, market projections, benchmarks,
+causal claims. Opinions and internal company facts were excluded. Each assertion
+now has a sequential ID and an empty Citations field waiting to be filled.
+
+[pause]
+
+Step three: search the source corpus for supporting evidence and write citation
+results back to each record.
+
+[prompt: Use the citation-finder skill to process all records in the Assertion Citations list that have an empty Citations field. Search for supporting sources in the Feb2026 Backing Data folder and write the citation results back to each record.]
+
+[wait]
+
+The agent fetches each empty record, searches the corpus, and writes back
+immediately — so the list shows partial progress in real time. Each citation is
+classified as Direct, Partial, Indirect, Contradicts, or Not Found. When it
+finishes, it prints a summary of how many assertions were supported and which
+ones had no match.
+
+[screenshot: tools/screenshots/citations.png]
+
+Three prompts. No manual research. Every assertion in the brief is now traceable
+to a source document — or flagged as needing external verification.
+
+[pause]
+
+[section: reset]
+
+Delete the Assertion Citations list created during the demo.
+
+[confirm: Delete the "Assertion Citations" list from the site contents page, then press Enter to continue.]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]

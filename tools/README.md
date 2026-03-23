@@ -235,6 +235,11 @@ The repo also contains `demos/tool/` — an earlier demo runner built on the [Pl
 | `tools/scripts/site-overview.demo` | Copilot summarizes the site's content and lists |
 | `tools/scripts/page-summarization.demo` | Copilot summarizes the current page and extracts key takeaways |
 | `tools/scripts/find-content.demo` | Copilot finds documents and lists without the user knowing folder structure |
+| `tools/scripts/metadata-at-scale.demo` | AI-extracted metadata enables BI-style queries across a contracts library |
+| `tools/scripts/resume-library.demo` | Copilot turns a pile of resume files into a structured hiring pipeline |
+| `tools/scripts/list-3-ways.demo` | Three approaches to building a SharePoint list — guided, specified, and autonomous |
+| `tools/scripts/citations.demo` | Three-skill pipeline extracts assertions, searches a corpus, and writes citation records |
+| `tools/scripts/brand-review.demo` | Custom skill audits marketing assets against brand guidelines with scored remediation |
 
 ---
 

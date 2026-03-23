@@ -1,0 +1,118 @@
+# Resume Library
+# Shows how Copilot can organize and enrich a document library full of resumes —
+# extracting names, suggesting columns, categorizing candidates, and building
+# a structured hiring pipeline without manual data entry.
+
+[section: setup]
+
+Verify the Candidates document library exists and contains uploaded resume files
+before running the demo. The library should have at least a few resumes but no
+metadata columns yet — this demo builds them live.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[open-chat]
+
+[new-chat]
+
+[section: demo]
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/Candidates/]
+
+We're starting with a document library full of resumes. Each file was uploaded as-is
+— no metadata, no columns, no organization. Just raw files. Let's use Copilot to
+turn this into a structured hiring pipeline without touching a single document
+manually.
+
+[pause]
+
+[open-chat]
+
+First, let's pull the candidate names directly out of the files and populate a column.
+
+[prompt: Extract the person's name from each file and add them to a Candidate Name column.]
+
+[wait]
+
+Copilot read each document, found the person's name, created the column, and stamped
+every row. That's the kind of manual work that used to take an afternoon.
+
+[pause]
+
+Now let's ask Copilot what other columns would make sense for organizing these files.
+
+[prompt: Suggest some more columns to organize these resumes.]
+
+[wait]
+
+Notice that Copilot is reasoning about what matters for a hiring library — not just
+generic metadata. Let's take one of those suggestions and go further.
+
+[pause]
+
+[prompt: Categorize if this candidate is best suited for an HR, Marketing, Finance, Sales, or Engineering role.]
+
+[wait]
+
+Copilot read each resume and made a role judgment based on the content. These
+candidates are now organized by the work they're actually suited for — not by
+file name or upload date.
+
+[pause]
+
+Let's group the view so we can see candidates by role at a glance.
+
+[prompt: Group the candidates by role.]
+
+[wait]
+
+Now the library is readable as a hiring pipeline. Let's add some operational logic.
+
+[pause]
+
+[prompt: Send me an email any time a new Engineering candidate is added.]
+
+[wait]
+
+That's an automation trigger set up in natural language. No Power Automate canvas,
+no connector configuration. Just a request.
+
+[pause]
+
+Let's add a tracking field so the team can manage candidate status.
+
+[prompt: Add a choice field to track whether we've reviewed the candidate, sent them for an interview, have offered, and they accepted or declined.]
+
+[wait]
+
+Now we have a workflow stage column. Every candidate has a status we can filter and
+report on.
+
+[pause]
+
+[prompt: Can you create a table summarizing how many candidates of each type we found so far?]
+
+[wait]
+
+A live summary from the library contents. Good for a hiring manager who wants a
+quick headcount before a meeting.
+
+[pause]
+
+[prompt: Can you style the library columns to be clearly differentiated across target role and hiring status?]
+
+[wait]
+
+Color coding the rows by role and status — so the most important information jumps
+out visually. The library went from a pile of files to a functional hiring tracker
+in a single chat session.
+
+[screenshot: tools/screenshots/resume-library.png]
+
+[section: reset]
+
+The demo created columns and formatting rules on the Candidates library. To reset,
+delete the added columns (Candidate Name, Role, Status) and remove any applied
+views or formatting.
+
+[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/Candidates/]
