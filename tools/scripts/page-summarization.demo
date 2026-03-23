@@ -2,6 +2,7 @@
 # Demonstrates Copilot summarizing the content of a specific SharePoint page.
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[category: Site & Copilot]
 
 [section: setup]
 

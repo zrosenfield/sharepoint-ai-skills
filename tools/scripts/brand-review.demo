@@ -5,6 +5,7 @@
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
 [var: SKILLS = https://microsoft.sharepoint-df.com/teams/ZachDemos/Agent%20Assets/Skills/]
+[category: Skills & Pipelines]
 
 [section: setup]
 

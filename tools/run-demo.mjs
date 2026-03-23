@@ -209,8 +209,8 @@ function parseScript(src, page, section = 'demo') {
 
       if (cmd === 'section') {
         currentSection = arg.toLowerCase();
-      } else if (cmd === 'var') {
-        // Already collected in first pass — skip as a runnable step.
+      } else if (cmd === 'var' || cmd === 'category') {
+        // Metadata only — skip as a runnable step.
       } else {
         blocks.push({ type: 'command', cmd, arg, section: currentSection });
       }

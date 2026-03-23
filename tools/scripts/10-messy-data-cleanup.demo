@@ -3,6 +3,7 @@
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
 [var: LIST = https://microsoft.sharepoint-df.com/teams/ZachDemos/Lists/Customer%20Directory/]
+[category: Lists & Data]
 
 [section: setup]
 

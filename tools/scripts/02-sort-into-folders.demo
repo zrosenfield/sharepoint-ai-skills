@@ -3,6 +3,7 @@
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
 [var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Shared%20Drive%20Dump/]
+[category: Documents & Files]
 
 [section: setup]
 

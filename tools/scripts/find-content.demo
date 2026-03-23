@@ -3,6 +3,7 @@
 # without knowing where things are stored.
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[category: Site & Copilot]
 
 [section: setup]
 

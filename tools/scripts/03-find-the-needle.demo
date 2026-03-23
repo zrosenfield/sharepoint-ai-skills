@@ -3,6 +3,7 @@
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
 [var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Company%20Policies/]
+[category: Documents & Files]
 
 [section: setup]
 

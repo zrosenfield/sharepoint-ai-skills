@@ -2,6 +2,7 @@
 # Shows how Copilot understands the structure and content of a SharePoint site.
 
 [var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[category: Site & Copilot]
 
 [section: setup]
 
