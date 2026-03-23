@@ -350,7 +350,7 @@ function parseScript(src, page, section = 'demo') {
           name: arg || 'Pause — presenter moment',
           async run() {
             printContext();
-            process.stdout.write('  [Press Enter to continue...] ');
+            waitPrompt('  ▶  Press Enter to continue... ');
             await waitForKey();
             console.log('');
           },
@@ -374,7 +374,7 @@ function parseScript(src, page, section = 'demo') {
             if (row.trim() !== '│') console.log(row.padEnd(60) + '│');
             console.log('  │                                                         │');
             console.log('  └─────────────────────────────────────────────────────────┘');
-            process.stdout.write('  Press Enter once you have completed the action... ');
+            waitPrompt('  ▶  Press Enter once you have completed the action... ');
             await waitForKey();
             console.log('  Confirmed.\n');
           },
@@ -424,7 +424,7 @@ function parseScript(src, page, section = 'demo') {
             console.log('  │  FILE UPLOAD — select this file in the dialog:          │');
             console.log(`  │  ${uploadPath.slice(0, 53).padEnd(55)}│`);
             console.log('  └─────────────────────────────────────────────────────────┘');
-            process.stdout.write('  Press Enter once the file is attached in the chat... ');
+            waitPrompt('  ▶  Press Enter once the file is attached in the chat... ');
             await waitForKey();
             console.log('  File attached.\n');
           },
@@ -469,7 +469,7 @@ function parseScript(src, page, section = 'demo') {
               console.log(`  │  ${assertUrl.slice(0, 53).padEnd(55)}│`);
               console.log('  │  Check the setup instructions before continuing.        │');
               console.log('  └─────────────────────────────────────────────────────────┘');
-              process.stdout.write('  Press Enter to continue anyway, or Ctrl+C to abort... ');
+              waitPrompt('  ▶  Press Enter to continue anyway, or Ctrl+C to abort... ');
               await waitForKey();
               console.log('');
             }
@@ -546,7 +546,7 @@ async function runSteps(getPage, steps) {
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
       await getPage().screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
       console.error('  Debug screenshot saved to tools/debug-screenshot.png');
-      process.stdout.write('  Press Enter to continue to the next step, or Ctrl+C to quit... ');
+      waitPrompt('  ▶  Press Enter to continue to the next step, or Ctrl+C to quit... ');
       await waitForKey();
       console.log('');
     }
@@ -599,6 +599,10 @@ async function waitForKey() {
       resolve(k);
     });
   });
+}
+
+function waitPrompt(msg) {
+  process.stdout.write(`\x1B[1;33m${msg}\x1B[0m`);
 }
 
 function formatElapsed(ms) {
@@ -765,7 +769,7 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 180000) {
       await page.waitForTimeout(500);
     }
     console.log('');
-    process.stdout.write('    Timed out — press Enter when the AI has finished to continue... ');
+    waitPrompt('    ▶  Press Enter when the AI has finished to continue... ');
     await waitForKey();
     console.log('');
     return;
@@ -798,7 +802,7 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 180000) {
  */
 async function pause(message) {  // eslint-disable-line no-unused-vars
   console.log(`\n  [PAUSED] ${message}`);
-  process.stdout.write('  Press Enter to continue...');
+  waitPrompt('  ▶  Press Enter to continue... ');
   await waitForKey();
   console.log('  Resuming.\n');
 }
