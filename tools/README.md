@@ -166,6 +166,10 @@ After submitting a prompt the runner watches the DOM for Copilot's generation li
 
 ## Adding a new scenario
 
+To generate a demo script with an AI, see **[demo-builder.md](demo-builder.md)** — a self-contained prompt context that defines the full script format, all commands, and worked examples. Paste it into Claude (or any AI), describe the demo you want, and get a ready-to-run `.demo` file back.
+
+
+
 Create a new `.demo` file in `tools/scripts/` and add npm shortcuts in `package.json`. A minimal script:
 
 ```
