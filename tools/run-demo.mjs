@@ -726,7 +726,7 @@ async function slowType(locator, text, delayMs = 10) {
  *   2. Wait for it to disappear (generation ended).
  *   3. Fallback: poll for new Like/Dislike feedback buttons on the last message.
  */
-async function waitForCopilotResponse(page, chatFrame, timeoutMs = 60000) {
+async function waitForCopilotResponse(page, chatFrame, timeoutMs = 180000) {
   const deadline = Date.now() + timeoutMs;
 
   const stopSelectors = [
@@ -764,7 +764,10 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 60000) {
       if (Date.now() - lastDot >= DOT_INTERVAL) { process.stdout.write('.'); lastDot = Date.now(); }
       await page.waitForTimeout(500);
     }
-    console.log('\n    Timed out waiting for stop button to disappear.');
+    console.log('');
+    process.stdout.write('    Timed out — press Enter when the AI has finished to continue... ');
+    await waitForKey();
+    console.log('');
     return;
   }
 
@@ -784,7 +787,9 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 60000) {
     await page.waitForTimeout(500);
   }
 
-  console.warn('    Timed out waiting for response. Proceeding anyway.');
+  process.stdout.write('    Timed out — press Enter when the AI has finished to continue... ');
+  await waitForKey();
+  console.log('');
 }
 
 /**
