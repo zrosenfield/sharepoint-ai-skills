@@ -1,12 +1,14 @@
 # Site Overview
 # Shows how Copilot understands the structure and content of a SharePoint site.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
 [section: setup]
 
 Navigate to the site and verify the Copilot FAB is visible before the demo.
 If the chat pane is already open from a previous session, close it.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -16,7 +18,7 @@ The chat pane should be open. Starting a fresh session now.
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 Welcome to Zach's Demo Site — a purpose-built SharePoint environment with a wide
 variety of lists, libraries, pages, and content types. We use it to demonstrate
@@ -54,4 +56,4 @@ follow-up questions in the same conversation.
 This demo is read-only — no content was created or modified.
 Navigate back to the home page and close the chat pane to reset the view.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]

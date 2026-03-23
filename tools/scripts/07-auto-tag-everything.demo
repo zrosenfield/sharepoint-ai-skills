@@ -1,0 +1,76 @@
+# Auto-Tag Everything
+# AI reads files and populates metadata columns automatically — turning a file dump into a filterable library.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Project%20Documents/]
+
+[section: setup]
+
+Verify the "Project Documents" library exists with columns: Department (choice),
+Document Type (choice), Confidentiality (choice), Summary (multi-line text).
+All six files should be present with ALL metadata columns BLANK. If metadata
+was filled from a previous run, clear all values from every row.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm 6 files are visible and all metadata columns are empty.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Six files, zero metadata. This is what happens when you tell people to fill in
+columns manually — they don't. The Department column is empty. The Document
+Type column is empty. The Confidentiality column is empty. Nobody is going to
+tag these by hand. So let's have AI do it.
+
+[pause]
+
+[open-chat]
+
+[prompt: Read each file in this library. For every file, fill in the Department, Document Type, Confidentiality, and Summary columns based on the file's content.]
+
+[wait]
+
+Watch the columns fill in. Copilot read every document, figured out which
+department owns it, what type of document it is, and how sensitive the content
+is. Point out that it flagged the salary bands as Restricted and the NDA as
+Confidential — it understood the sensitivity from the content, not from a label.
+
+[pause]
+
+Now let's see why metadata matters. Filter the library by Confidentiality
+equals Confidential or Restricted.
+
+[pause: Show the filtered view — 3 sensitive files surface instantly]
+
+Two results. This filter was impossible 30 seconds ago because the metadata
+didn't exist.
+
+Now filter by Department equals Marketing.
+
+[pause: Show Marketing filter — 2 files]
+
+Two results. The marketing team now has a curated view without anyone manually
+sorting anything. Metadata is the difference between a folder and a knowledge
+base. The AI just built the knowledge base for you.
+
+[screenshot: tools/screenshots/07-auto-tag-final.png]
+
+[section: reset]
+
+Clear all metadata values from the 6 files: set Department, Document Type,
+Confidentiality, and Summary to blank for every row.
+
+[navigate: ${LIBRARY}]
+
+Edit each item and clear all four metadata columns, or use the grid view to
+bulk-clear.
+
+[new-chat]

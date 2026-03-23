@@ -1,11 +1,13 @@
 # Page Summarization
 # Demonstrates Copilot summarizing the content of a specific SharePoint page.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
 [section: setup]
 
 Verify the Welcome page loads and Copilot is accessible before the demo.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -15,7 +17,7 @@ Chat pane is open. Starting a fresh session now.
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 We're starting on the home page. Copilot can summarize any page you're on —
 not just the whole site. Let's open the chat and ask for a summary.
@@ -53,4 +55,4 @@ quickly understand a page they haven't seen before.
 
 This demo is read-only. Navigate back to the home page to reset the view.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]

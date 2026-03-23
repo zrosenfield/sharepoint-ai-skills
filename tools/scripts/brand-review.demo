@@ -3,6 +3,9 @@
 # guidelines — scoring files across voice, visual identity, messaging, and
 # consistency, then producing a prioritized remediation plan.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: SKILLS = https://microsoft.sharepoint-df.com/teams/ZachDemos/Agent%20Assets/Skills/]
+
 [section: setup]
 
 Before running this demo:
@@ -14,7 +17,9 @@ Before running this demo:
    - social-media-content-brief.docx
    - spring-2026-creative-brief.docx
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[assert: ${SKILLS}brand-review.md]
+
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -22,7 +27,7 @@ Before running this demo:
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 A brand manager has a problem: the team produces a constant stream of marketing
 assets — launch decks, retailer training, social briefs, creative briefs. Each one
@@ -100,4 +105,4 @@ brand team produces, the agent can audit.
 This demo is read-only — no SharePoint content was created or modified. Navigate
 back to the home page to reset the view.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]

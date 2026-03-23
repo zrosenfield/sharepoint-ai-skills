@@ -3,13 +3,15 @@
 # extracting names, suggesting columns, categorizing candidates, and building
 # a structured hiring pipeline without manual data entry.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
 [section: setup]
 
 Verify the Candidates document library exists and contains uploaded resume files
 before running the demo. The library should have at least a few resumes but no
 metadata columns yet — this demo builds them live.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -17,7 +19,7 @@ metadata columns yet — this demo builds them live.
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/Candidates/]
+[navigate: ${SITE}Candidates/]
 
 We're starting with a document library full of resumes. Each file was uploaded as-is
 — no metadata, no columns, no organization. Just raw files. Let's use Copilot to
@@ -115,4 +117,4 @@ The demo created columns and formatting rules on the Candidates library. To rese
 delete the added columns (Candidate Name, Role, Status) and remove any applied
 views or formatting.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/Candidates/]
+[navigate: ${SITE}Candidates/]

@@ -1,0 +1,75 @@
+# Messy Data Cleanup
+# AI fixes inconsistent data in a list — normalizing formats, correcting typos, and standardizing entries.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIST = https://microsoft.sharepoint-df.com/teams/ZachDemos/Lists/Customer%20Directory/]
+
+[section: setup]
+
+Verify the "Customer Directory" list exists with 8 rows of intentionally messy
+data. Check that the original messy values are present — mixed-case names,
+inconsistent phone formats, varied state formats, typos in Status. If clean
+data from a previous run is present, re-enter the original messy values using
+grid view.
+
+[navigate: ${LIST}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm 8 rows are visible with messy data: "sarah connor" (lowercase),
+"555.987.6543" (dot format), "Washington" (full state name), "ative" (typo),
+etc.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIST}]
+
+This is what happens when 10 different sales reps enter data their own way.
+Look at the phone numbers — four different formats. Look at the states —
+abbreviations, full names, "Calif." as an informal abbreviation. Industry
+has "tech," "Technology," and "retail" all meaning different things. And
+there are typos in the Status column — "ative" and "acitve."
+
+[pause]
+
+[open-chat]
+
+[prompt: Clean up this list. Standardize phone numbers to (555) 123-4567 format. Fix contact names to proper capitalization. Normalize State to two-letter abbreviations. Standardize Industry values (for example, 'tech' and 'Technology' should both be 'Technology'). Fix any typos in the Status column.]
+
+[wait]
+
+Look at the transformation. Every phone number is now the same format. Contact
+names are properly capitalized. "Calif." became CA. "Washington" became WA.
+"tech" and "retail" became "Technology" and "Retail." And the typos — "ative"
+and "acitve" — are both fixed to "Active." Point out that it also fixed
+"Woodgrove bank" to "Woodgrove Bank" and city capitalization.
+
+[pause]
+
+Now let's see if the clean data reveals anything interesting.
+
+[prompt: Are there any potential duplicate companies or contacts in this list?]
+
+[wait]
+
+No exact duplicates, but Copilot flagged that three companies are in the
+Technology industry and noted the concentration. Clean data is queryable data.
+Messy data is invisible data.
+
+[pause]
+
+[screenshot: tools/screenshots/10-messy-data-cleanup-final.png]
+
+[section: reset]
+
+Re-enter the original messy data for all 8 rows using grid view. Restore:
+lowercase names, mixed phone formats, full state names, industry
+inconsistencies, and Status typos.
+
+[navigate: ${LIST}]
+
+[new-chat]

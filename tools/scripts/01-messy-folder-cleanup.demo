@@ -1,0 +1,82 @@
+# Messy Folder Cleanup
+# AI reads file names and contents, then renames files to a consistent naming convention.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Project%20Files/]
+
+[section: setup]
+
+Verify the "Project Files" library exists and contains the six messy-named
+sample files. If clean-named files from a previous run are present, re-upload
+the originals or rename them back to the messy names.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm the chat pane shows a fresh session and the library shows six files
+with messy names: meeting notes jan.docx, FINAL budget v3 (2).xlsx,
+deck for sarah.pptx, IMG_4021.png, Untitled document.docx, asdfgh.pdf.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+This is what most people's SharePoint folders actually look like. Cryptic file
+names, random versioning, files named after people instead of topics. You can't
+find anything without opening every single file.
+
+[pause]
+
+[open-chat]
+
+Let's ask Copilot to read every file and suggest better names using a
+consistent naming convention.
+
+[prompt: Look at the files in this library. For each file, suggest a better name using the format: [Category] - [Description] - [Date if known]. Show me a table with the current name and your suggested name.]
+
+[wait]
+
+Copilot read the content of every file — not just the file names — and proposed
+clean, descriptive names. Notice how it figured out "asdfgh.pdf" is a Northwind
+Traders contract just from reading the contents. Point out the table.
+
+[pause]
+
+Now let's actually rename one. We'll start with the worst offender.
+
+[prompt: Rename "asdfgh.pdf" to "Contract - Northwind Traders Cloud Migration.pdf"]
+
+[wait]
+
+One down. The file has been renamed in place — no re-uploading, no downloading
+and re-adding. Now let's do the rest in one shot.
+
+[pause]
+
+[prompt: Now rename all the other files using the suggestions you just gave me.]
+
+[wait]
+
+Refresh the library and look at the file names. Six files cleaned up in about
+30 seconds. Imagine doing this across 500 files in a migration. That's the
+power move.
+
+[pause]
+
+[screenshot: tools/screenshots/01-messy-folder-cleanup-final.png]
+
+[section: reset]
+
+Rename all files back to their original messy names for the next run. Manually
+rename each file in the library back to: meeting notes jan.docx, FINAL budget
+v3 (2).xlsx, deck for sarah.pptx, IMG_4021.png, Untitled document.docx,
+asdfgh.pdf.
+
+[navigate: ${LIBRARY}]
+
+[new-chat]

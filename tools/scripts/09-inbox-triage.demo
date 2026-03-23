@@ -1,0 +1,76 @@
+# Inbox Triage
+# AI reads messy free-text help desk requests and auto-categorizes, prioritizes, and summarizes every row.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIST = https://microsoft.sharepoint-df.com/teams/ZachDemos/Lists/Help%20Desk%20Inbox/]
+
+[section: setup]
+
+Verify the "Help Desk Inbox" list exists with 8 rows. The Category, Priority,
+and AI Summary columns should all be BLANK. If they were filled from a previous
+run, clear them using grid view.
+
+[navigate: ${LIST}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm 8 items are visible with Request, Submitted By, and Details populated,
+and Category, Priority, and AI Summary columns are all empty.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIST}]
+
+This is what an unmanaged intake queue looks like. Free-text requests, no
+categorization, no way to prioritize. Someone wrote "cant login" and someone
+else wrote "wifi sucks in bldg 3." How does a support lead triage this?
+Usually they read every single ticket. Let's try something faster.
+
+[pause]
+
+[open-chat]
+
+[prompt: Read every item in this list. For each row, fill in the Category column based on what the request is about, set the Priority based on urgency and business impact, and write a one-sentence AI Summary.]
+
+[wait]
+
+Watch the columns fill in. Copilot read the details of every request and
+made judgment calls. Notice that "cant login" got Critical priority because
+the details mention a client presentation today. "wifi sucks in bldg 3" got
+High because it's affecting multiple people for a week. The printer issue
+is Low. These aren't random — they're based on the actual business impact
+described in the Details column.
+
+[pause]
+
+Now filter by Priority equals Critical. One result — Jordan's locked account.
+Your team knows exactly what to tackle first.
+
+[pause: Show the Critical filter — one result]
+
+Let's go deeper. Can the AI spot patterns across tickets?
+
+[prompt: Which requests are likely related to the same root cause?]
+
+[wait]
+
+Copilot connected the VPN disconnects and the wifi drops — both are network
+issues, both started recently. It's not just sorting tickets — it's spotting
+patterns that a human triaging one ticket at a time would miss.
+
+[pause]
+
+[screenshot: tools/screenshots/09-inbox-triage-final.png]
+
+[section: reset]
+
+Clear the Category, Priority, and AI Summary columns for all 8 rows. Use
+grid view to bulk-clear.
+
+[navigate: ${LIST}]
+
+[new-chat]

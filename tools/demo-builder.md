@@ -45,12 +45,53 @@ The tool types prompts into the SharePoint Copilot chat at a human-readable pace
 
 ## All supported commands
 
+### Variables
+
+```
+[var: SITE = https://microsoft.sharepoint-df.com/teams/YourSite/]
+```
+Defines a script variable. Use `${SITE}` (or any name) anywhere else in the script — in `[navigate]`, `[prompt]`, `[open-tab]`, talking points, wherever. Variables are resolved before anything runs, so you can define them once at the top and change a single line to point the whole script at a different site.
+
+```
+# Example
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
+[navigate: ${SITE}]
+[prompt: Tell me about ${SITE}]
+```
+
+---
+
+### Assertions (setup only)
+
+```
+[assert: https://tenant.sharepoint.com/teams/site/Agent%20Assets/Skills/my-skill.md]
+```
+Checks that the URL is reachable (HTTP status < 400). If the check fails, shows a warning box and pauses so the presenter can decide whether to abort or continue anyway. Use in `[section: setup]` to confirm required files — skill definitions, reference documents, corpus uploads — exist before running the demo.
+
+```
+# Example: verify skills are installed before the demo
+[var: SKILLS = https://microsoft.sharepoint-df.com/teams/ZachDemos/Agent%20Assets/Skills/]
+
+[assert: ${SKILLS}brand-review.md]
+[assert: ${SKILLS}citation-finder.md]
+```
+
+URL-encode spaces as `%20` in asset library paths (e.g., `Agent%20Assets`).
+
+---
+
 ### Navigation
 
 ```
 [navigate: https://microsoft.sharepoint-df.com/teams/YourSite/]
 ```
-Navigates the browser to the given URL and waits for the page to load. Always include the trailing slash. Use the full URL.
+Navigates the **current tab** to the given URL and waits for the page to load. Always include the trailing slash. Use the full URL.
+
+```
+[open-tab: https://microsoft.sharepoint-df.com/teams/AnotherSite/]
+```
+Opens a **new browser tab** at the given URL and switches the demo runner to it — all subsequent commands (navigate, open-chat, prompt, etc.) target the new tab. The original tab stays open but is no longer the active target. Useful for showing two sites side by side or jumping to a second environment mid-demo.
 
 ---
 

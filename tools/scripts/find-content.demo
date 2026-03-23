@@ -2,13 +2,15 @@
 # Shows how Copilot can help users find specific documents and list items
 # without knowing where things are stored.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
 [section: setup]
 
 Verify the site is accessible and that the document libraries contain content
 before running the demo. The Contracts and Legal Operations libraries should
 have at least a few documents.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -27,7 +29,7 @@ Starting a fresh chat session for the demo.
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 One of the most common pain points in SharePoint: people can't find content.
 They know it exists — they just don't know which library, which folder, or
@@ -78,4 +80,4 @@ quickly see what's changed, or for anyone joining a project mid-stream.
 This demo is read-only — no content was created or modified.
 Navigate back to the home page to reset.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]

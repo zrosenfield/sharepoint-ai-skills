@@ -49,12 +49,15 @@ async function main() {
   const page = pages[0] ?? await context.newPage();
 
   let steps;
+  let getActivePage = () => page;
 
   // If the argument is a .demo script file, parse it; otherwise use a named scenario.
   if (SCENARIO.endsWith('.demo')) {
     const scriptPath = resolve(SCENARIO);
     const src = readFileSync(scriptPath, 'utf8');
-    steps = parseScript(src, page, RUN_SECTION);
+    const parsed = parseScript(src, page, RUN_SECTION);
+    steps = parsed.steps;
+    getActivePage = parsed.getActivePage;
     if (!steps.length) {
       console.error(`No steps found for section "${RUN_SECTION}" in ${scriptPath}.`);
       console.error('Add a [section: setup], [section: demo], or [section: reset] marker to the script.');
@@ -73,7 +76,7 @@ async function main() {
     steps = buildSteps(page);
   }
 
-  await runSteps(page, steps);
+  await runSteps(getActivePage, steps);
   await browser.close();
 }
 
@@ -145,7 +148,9 @@ function tellMeAboutSiteSteps(page) {
  *   [section: reset]          steps that run with --reset flag
  *
  * Commands:
+ *   [var: NAME = value]       define a script variable — use as ${NAME} anywhere in the script
  *   [navigate: URL]           navigate to a URL
+ *   [open-tab: URL]           open a new browser tab and switch all subsequent steps to it
  *   [open-chat]               open the Copilot chat pane via FAB
  *   [prompt: text]            slow-type text into chat and submit
  *   [wait]                    wait for Copilot to finish responding
@@ -161,6 +166,33 @@ function parseScript(src, page, section = 'demo') {
   const lines = src.split('\n');
   const blocks = []; // { type: 'comment'|'talking'|'command'|'section', value, raw }
 
+  // Script variables — set with [var: NAME = value], used as ${NAME} anywhere in the script.
+  // A first pass collects all [var] declarations before building steps, so vars defined
+  // anywhere in the file are available everywhere (including lines before the declaration).
+  const vars = {};
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      const inner = trimmed.slice(1, -1);
+      const colonIdx = inner.indexOf(':');
+      if (colonIdx !== -1) {
+        const cmd = inner.slice(0, colonIdx).trim();
+        const rest = inner.slice(colonIdx + 1).trim();
+        if (cmd === 'var') {
+          const eqIdx = rest.indexOf('=');
+          if (eqIdx !== -1) {
+            const name = rest.slice(0, eqIdx).trim();
+            const value = rest.slice(eqIdx + 1).trim();
+            vars[name] = value;
+          }
+        }
+      }
+    }
+  }
+
+  // Substitute ${VAR} in a string using the collected vars map.
+  const interpolate = str => str.replace(/\$\{([^}]+)\}/g, (_, name) => vars[name] ?? `\${${name}}`);
+
   let currentSection = 'demo'; // default section if no markers present
 
   for (const line of lines) {
@@ -168,24 +200,27 @@ function parseScript(src, page, section = 'demo') {
     if (!trimmed) continue;
 
     if (trimmed.startsWith('#')) {
-      blocks.push({ type: 'comment', value: trimmed.replace(/^#+\s*/, ''), section: currentSection });
+      blocks.push({ type: 'comment', value: interpolate(trimmed.replace(/^#+\s*/, '')), section: currentSection });
     } else if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
       const inner = trimmed.slice(1, -1);
       const colonIdx = inner.indexOf(':');
       const cmd = colonIdx === -1 ? inner.trim() : inner.slice(0, colonIdx).trim();
-      const arg = colonIdx === -1 ? '' : inner.slice(colonIdx + 1).trim();
+      const arg = colonIdx === -1 ? '' : interpolate(inner.slice(colonIdx + 1).trim());
 
       if (cmd === 'section') {
         currentSection = arg.toLowerCase();
+      } else if (cmd === 'var') {
+        // Already collected in first pass — skip as a runnable step.
       } else {
         blocks.push({ type: 'command', cmd, arg, section: currentSection });
       }
     } else {
       // Merge consecutive talking-point lines into the previous talking block
+      const interpolated = interpolate(trimmed);
       if (blocks.length && blocks[blocks.length - 1].type === 'talking' && blocks[blocks.length - 1].section === currentSection) {
-        blocks[blocks.length - 1].value += ' ' + trimmed;
+        blocks[blocks.length - 1].value += ' ' + interpolated;
       } else {
-        blocks.push({ type: 'talking', value: trimmed, section: currentSection });
+        blocks.push({ type: 'talking', value: interpolated, section: currentSection });
       }
     }
   }
@@ -199,6 +234,7 @@ function parseScript(src, page, section = 'demo') {
   const steps = [];
   let pendingContext = []; // talking points / comments accumulated before next command
   let chatFrame = null;
+  let activePage = page;
 
   const flushContext = () => {
     const ctx = pendingContext.slice();
@@ -241,8 +277,8 @@ function parseScript(src, page, section = 'demo') {
           name: `Navigate to ${arg}`,
           async run() {
             printContext();
-            await page.goto(arg, { waitUntil: 'load', timeout: 60000 });
-            await page.waitForTimeout(3000);
+            await activePage.goto(arg, { waitUntil: 'load', timeout: 60000 });
+            await activePage.waitForTimeout(3000);
           },
         };
 
@@ -251,13 +287,13 @@ function parseScript(src, page, section = 'demo') {
           name: 'Open Copilot chat pane',
           async run() {
             printContext();
-            const iframe = page.locator('[data-automationid="ChatODSPFrame"]');
+            const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
             if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
-              await openChatPane(page);
+              await openChatPane(activePage);
             } else {
               console.log('    Chat pane already open.');
             }
-            chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+            chatFrame = activePage.frameLocator('[data-automationid="ChatODSPFrame"]');
           },
         };
 
@@ -267,13 +303,13 @@ function parseScript(src, page, section = 'demo') {
           async run() {
             printContext();
             if (!chatFrame) {
-              const iframe = page.locator('[data-automationid="ChatODSPFrame"]');
+              const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
               if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
-                await openChatPane(page);
+                await openChatPane(activePage);
               }
-              chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+              chatFrame = activePage.frameLocator('[data-automationid="ChatODSPFrame"]');
             }
-            const input = await getChatInput(page, chatFrame);
+            const input = await getChatInput(activePage, chatFrame);
             await slowType(input, arg);
             await input.press('Enter');
           },
@@ -284,7 +320,7 @@ function parseScript(src, page, section = 'demo') {
           name: 'Wait for Copilot response',
           async run() {
             printContext();
-            await waitForCopilotResponse(page, chatFrame);
+            await waitForCopilotResponse(activePage, chatFrame);
           },
         };
 
@@ -330,13 +366,13 @@ function parseScript(src, page, section = 'demo') {
           async run() {
             printContext();
             if (!chatFrame) {
-              const iframe = page.locator('[data-automationid="ChatODSPFrame"]');
+              const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
               if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
                 throw new Error('[new-chat] requires the chat pane to be open first.');
               }
-              chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+              chatFrame = activePage.frameLocator('[data-automationid="ChatODSPFrame"]');
             }
-            await startNewChat(page, chatFrame);
+            await startNewChat(activePage, chatFrame);
           },
         };
 
@@ -348,19 +384,19 @@ function parseScript(src, page, section = 'demo') {
           async run() {
             printContext();
             if (!chatFrame) {
-              const iframe = page.locator('[data-automationid="ChatODSPFrame"]');
+              const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
               if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
                 throw new Error('[upload] requires the chat pane to be open first.');
               }
-              chatFrame = page.frameLocator('[data-automationid="ChatODSPFrame"]');
+              chatFrame = activePage.frameLocator('[data-automationid="ChatODSPFrame"]');
             }
             // Click the chat input to focus, then open the input menu
             await chatFrame.locator('[contenteditable="true"]').first().click();
-            await page.waitForTimeout(200);
+            await activePage.waitForTimeout(200);
             await chatFrame.locator('[aria-label="Open input menu"]').click();
-            await page.waitForTimeout(400);
+            await activePage.waitForTimeout(400);
             await chatFrame.locator('[role="menuitem"]:has-text("Attach")').first().click();
-            await page.waitForTimeout(300);
+            await activePage.waitForTimeout(300);
             // File picker is an OS-native dialog — hand off to presenter
             console.log('');
             console.log('  ┌─────────────────────────────────────────────────────────┐');
@@ -381,8 +417,58 @@ function parseScript(src, page, section = 'demo') {
           async run() {
             printContext();
             mkdirSync(dirname(resolve(screenshotPath)), { recursive: true });
-            await page.screenshot({ path: screenshotPath });
+            await activePage.screenshot({ path: screenshotPath });
             console.log(`    Saved ${screenshotPath}`);
+          },
+        };
+      }
+
+      case 'assert': {
+        const assertUrl = arg;
+        return {
+          name: `Assert accessible: ${assertUrl}`,
+          async run() {
+            printContext();
+            process.stdout.write(`    Checking ${assertUrl} ... `);
+            // Use a temporary page so we don't navigate away from the active tab
+            const checkPage = await activePage.context().newPage();
+            let passed = false;
+            try {
+              const response = await checkPage.goto(assertUrl, { waitUntil: 'load', timeout: 20000 }).catch(() => null);
+              passed = !!(response && response.status() < 400);
+            } finally {
+              await checkPage.close().catch(() => {});
+            }
+            if (passed) {
+              console.log('OK');
+            } else {
+              console.log('');
+              console.log('  ┌─────────────────────────────────────────────────────────┐');
+              console.log('  │  ASSERTION FAILED — resource may be missing             │');
+              console.log(`  │  ${assertUrl.slice(0, 53).padEnd(55)}│`);
+              console.log('  │  Check the setup instructions before continuing.        │');
+              console.log('  └─────────────────────────────────────────────────────────┘');
+              process.stdout.write('  Press Enter to continue anyway, or Ctrl+C to abort... ');
+              await waitForKey();
+              console.log('');
+            }
+          },
+        };
+      }
+
+      case 'open-tab': {
+        const tabUrl = arg;
+        return {
+          name: `Open new tab: ${tabUrl}`,
+          async run() {
+            printContext();
+            const newPage = await activePage.context().newPage();
+            await newPage.goto(tabUrl, { waitUntil: 'load', timeout: 60000 });
+            await newPage.waitForTimeout(3000);
+            await newPage.bringToFront();
+            activePage = newPage;
+            chatFrame = null; // reset — new tab has its own chat context
+            console.log(`    Opened new tab: ${tabUrl}`);
           },
         };
       }
@@ -411,12 +497,12 @@ function parseScript(src, page, section = 'demo') {
     steps.push(commandToStep('pause', '', flushContext()));
   }
 
-  return steps;
+  return { steps, getActivePage: () => activePage };
 }
 
 // ─── Step runner ─────────────────────────────────────────────────────────────
 
-async function runSteps(page, steps) {
+async function runSteps(getPage, steps) {
   const startTime = Date.now();
 
   console.log('\nSteps:');
@@ -451,9 +537,9 @@ async function runSteps(page, steps) {
     if (key === 'n') {
       console.log('\x1B[2mstarting new chat...\x1B[0m');
       try {
-        await page.bringToFront().catch(() => {});
-        const chatFrameLocator = page.frameLocator('[data-automationid="ChatODSPFrame"]');
-        await startNewChat(page, chatFrameLocator);
+        await getPage().bringToFront().catch(() => {});
+        const chatFrameLocator = getPage().frameLocator('[data-automationid="ChatODSPFrame"]');
+        await startNewChat(getPage(), chatFrameLocator);
       } catch (err) {
         console.error(`  Could not start new chat: ${err.message}`);
       }
@@ -463,8 +549,8 @@ async function runSteps(page, steps) {
     if (key === 'd') {
       console.log('\x1B[2mscrolling chat to bottom...\x1B[0m');
       try {
-        await page.bringToFront().catch(() => {});
-        const chatFrame = page.frames().find(f => f.url().includes('chat.aspx'));
+        await getPage().bringToFront().catch(() => {});
+        const chatFrame = getPage().frames().find(f => f.url().includes('chat.aspx'));
         if (chatFrame) {
           await chatFrame.evaluate(() => {
             // Scroll any overflow container that holds the messages
@@ -497,11 +583,11 @@ async function runSteps(page, steps) {
 
     try {
       // Bring the browser tab to the foreground before each step
-      await page.bringToFront().catch(() => {});
+      await getPage().bringToFront().catch(() => {});
       await steps[i].run();
     } catch (err) {
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
-      await page.screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
+      await getPage().screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
       console.error('  Debug screenshot saved to tools/debug-screenshot.png');
       console.error('  Press Enter to continue to the next step, or Ctrl+C to quit.');
       await waitForKey();

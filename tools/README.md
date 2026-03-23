@@ -86,7 +86,10 @@ Talking points are word-wrapped at 72 characters and printed to the terminal bef
 
 | Command | Description |
 |---------|-------------|
-| `[navigate: URL]` | Navigate the browser to a URL |
+| `[var: NAME = value]` | Define a script variable — use as `${NAME}` anywhere in the script to avoid repeating URLs or site paths |
+| `[assert: URL]` | Verify a URL is reachable (HTTP < 400). If it fails, shows a warning box and waits for presenter input before continuing. Use in setup to confirm required files/skills exist. |
+| `[navigate: URL]` | Navigate the current tab to a URL |
+| `[open-tab: URL]` | Open a new browser tab at the URL and switch all subsequent steps to it |
 | `[open-chat]` | Open the Copilot chat pane via the FAB |
 | `[prompt: text]` | Slow-type text into the chat input and submit |
 | `[wait]` | Wait for Copilot to finish generating a response |

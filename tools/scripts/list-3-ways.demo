@@ -3,13 +3,15 @@
 # a SharePoint list — from guided creation, to fully specified, to fully
 # autonomous with RALPH iterating to a production-ready result.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+
 [section: setup]
 
 Verify the ZachDemos site is accessible. This demo creates new lists — confirm you
 have edit permissions before proceeding. Clean up any leftover Sessions lists from
 prior runs before starting.
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -17,7 +19,7 @@ prior runs before starting.
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 We're going to build the same thing three times — a session tracking list for an
 M365 conference called ZachCon 2026. Each time we'll give Copilot a different level
@@ -77,4 +79,4 @@ the demo. Use the confirmation step below before proceeding.
 
 [confirm: Delete the "Sessions 2026", "Sessions 2026-B", and "Sessions 2026-C" lists from the site contents page, then press Enter to continue.]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]

@@ -3,6 +3,9 @@
 # strategic document, searches a source corpus for supporting evidence, and writes
 # structured citation records back to a SharePoint list — automatically.
 
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: SKILLS = https://microsoft.sharepoint-df.com/teams/ZachDemos/Agent%20Assets/Skills/]
+
 [section: setup]
 
 Before running this demo:
@@ -11,7 +14,13 @@ Before running this demo:
 3. Confirm the assertion-list-creator, assertion-extractor, and citation-finder
    skills are installed in the site's Agent Assets > Skills library
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[assert: ${SKILLS}assertion-list-creator.md]
+
+[assert: ${SKILLS}assertion-extractor.md]
+
+[assert: ${SKILLS}citation-finder.md]
+
+[navigate: ${SITE}]
 
 [open-chat]
 
@@ -19,7 +28,7 @@ Before running this demo:
 
 [section: demo]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]
 
 A strategy team has just finished an executive brief for Zava, an athletic apparel
 brand. It's packed with market statistics, growth projections, and causal claims.
@@ -85,4 +94,4 @@ Delete the Assertion Citations list created during the demo.
 
 [confirm: Delete the "Assertion Citations" list from the site contents page, then press Enter to continue.]
 
-[navigate: https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[navigate: ${SITE}]

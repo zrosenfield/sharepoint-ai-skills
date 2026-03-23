@@ -1,0 +1,66 @@
+# Duplicate Detective
+# AI finds duplicate or near-duplicate files in a library by reading content, not just names.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Marketing%20Assets/]
+
+[section: setup]
+
+Verify the "Marketing Assets" library exists with 8 files including the
+intentional duplicates. This demo is read-only.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm all 8 files are visible: Brand-Guidelines-2024.pdf, Brand Guide
+Final.pdf, brand_guide_BACKUP.pdf, Sales-Deck-Q3.pptx, Q3 Sales Deck -
+FINAL.pptx, Event-Banner.png, event-banner-v2.png, Case-Study-Fabrikam.docx.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Eight files in a marketing library. How many are actually unique? This happens
+on every marketing team — multiple versions, backups, files with slightly
+different names. Let's find out what's duplicated.
+
+[pause]
+
+[open-chat]
+
+[prompt: Scan this library for duplicate or near-duplicate files. Group them together and tell me which version in each group is the most complete or most recent.]
+
+[wait]
+
+Copilot found three groups of duplicates. The Brand Guidelines have three
+versions — it identified "Brand Guide Final" as the most complete because it
+includes the January 2024 update. The sales decks are a pair, with the FINAL
+version having an extra competitive positioning slide. And the event banners
+are near-dupes. Point out that the Case Study is flagged as unique.
+
+[pause]
+
+Now let's get actionable.
+
+[prompt: For each duplicate group, tell me which files are safe to delete.]
+
+[wait]
+
+It recommended keeping the most complete version in each group and flagged the
+others as safe to delete. It's not just finding dupes by file name — it read
+the content to figure out which version is the keeper.
+
+[pause]
+
+[screenshot: tools/screenshots/06-duplicate-detective-final.png]
+
+[section: reset]
+
+This demo is read-only. Just start a new chat.
+
+[new-chat]
