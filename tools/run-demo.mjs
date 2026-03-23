@@ -713,7 +713,7 @@ async function getChatInput(page, chatFrame) {
 /**
  * Type text character-by-character so the audience can read it as it appears.
  */
-async function slowType(locator, text, delayMs = 10) {
+async function slowType(locator, text, delayMs = 2) {
   await locator.click();
   await locator.fill('');
   for (const char of text) {
