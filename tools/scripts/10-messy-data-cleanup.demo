@@ -7,17 +7,30 @@
 
 [section: setup]
 
-Verify the "Customer Directory" list exists with 8 rows of intentionally messy
-data. Check that the original messy values are present — mixed-case names,
-inconsistent phone formats, varied state formats, typos in Status. If clean
-data from a previous run is present, re-enter the original messy values using
-grid view.
-
 [navigate: ${LIST}]
+
+The list doesn't exist yet — SharePoint will show a "not found" error. This is
+expected. We'll create it with AI before the demo starts.
+
+[navigate: ${SITE}]
 
 [open-chat]
 
 [new-chat]
+
+[prompt: Create a new list called "Customer Directory" with these columns: Contact Name, Company, Phone, State, Industry, Status. Then add these 8 rows exactly as written — keep all the inconsistencies, they're intentional:
+1. sarah connor | Northwind Traders | 555.987.6543 | Washington | tech | ative
+2. John Smith | Contoso | (555) 234-5678 | CA | Technology | Active
+3. mary jane | Woodgrove bank | 555-345-6789 | Calif. | retail | acitve
+4. BOB JONES | Fabrikam | 5554567890 | New York | Finance | Active
+5. Alice Wong | Tailspin Toys | (555) 567-8901 | TX | technology | Active
+6. dave brown | Adventure Works | 555.678.9012 | FL | Retail | Inactive
+7. CAROL WHITE | Proseware | (555) 789-0123 | oregon | tech | Active
+8. mike chen | Lucerne Publishing | 555-890-1234 | WA | Publishing | active]
+
+[wait]
+
+[navigate: ${LIST}]
 
 Confirm 8 rows are visible with messy data: "sarah connor" (lowercase),
 "555.987.6543" (dot format), "Washington" (full state name), "ative" (typo),
@@ -67,10 +80,15 @@ Messy data is invisible data.
 
 [section: reset]
 
-Re-enter the original messy data for all 8 rows using grid view. Restore:
-lowercase names, mixed phone formats, full state names, industry
-inconsistencies, and Status typos.
+Delete the "Customer Directory" list, then re-run the setup section to
+recreate it with the original messy data.
 
-[navigate: ${LIST}]
+[navigate: ${SITE}]
 
 [new-chat]
+
+[prompt: Delete the list called "Customer Directory"]
+
+[wait]
+
+Run setup to recreate the list with fresh messy data.

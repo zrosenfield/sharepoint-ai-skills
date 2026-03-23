@@ -163,7 +163,28 @@ function tellMeAboutSiteSteps(page) {
  *   [screenshot: path]        save a screenshot
  */
 function parseScript(src, page, section = 'demo') {
-  const lines = src.split('\n');
+  // Pre-process: collapse multi-line [command: ...] blocks into single lines.
+  // A line that starts with '[' but doesn't end with ']' is continued until a
+  // line ending with ']' is found; interior newlines become spaces.
+  const rawLines = src.split('\n');
+  const lines = [];
+  let joining = null;
+  for (const line of rawLines) {
+    const trimmed = line.trim();
+    if (joining !== null) {
+      joining += ' ' + trimmed;
+      if (trimmed.endsWith(']')) {
+        lines.push(joining);
+        joining = null;
+      }
+    } else if (trimmed.startsWith('[') && !trimmed.endsWith(']')) {
+      joining = trimmed;
+    } else {
+      lines.push(line);
+    }
+  }
+  if (joining !== null) lines.push(joining); // unterminated block — push as-is
+
   const blocks = []; // { type: 'comment'|'talking'|'command'|'section', value, raw }
 
   // Script variables — set with [var: NAME = value], used as ${NAME} anywhere in the script.
@@ -506,113 +527,35 @@ async function runSteps(getPage, steps) {
   const startTime = Date.now();
 
   console.log('\nSteps:');
-  steps.forEach((s, i) => console.log(`  ${i + 1}. ${s.name}`));
-  console.log('\nControls: Enter/Space = run  |  s = skip  |  b = back  |  r = restart  |  n = new chat  |  d = scroll down  |  ? = help\n');
+  const maxWidth = (process.stdout.columns || 80) - 6;
+  steps.forEach((s, i) => {
+    const name = s.name.length > maxWidth ? s.name.slice(0, maxWidth - 1) + '…' : s.name;
+    console.log(`  ${i + 1}. ${name}`);
+  });
+  console.log('');
 
-  let i = 0;
-  while (i < steps.length) {
+  for (let i = 0; i < steps.length; i++) {
     const step = steps[i];
     const elapsed = formatElapsed(Date.now() - startTime);
-    process.stdout.write(`\x1B[2m[${elapsed}]\x1B[0m \x1B[1mStep ${i + 1}/${steps.length}:\x1B[0m ${step.name}\n         \x1B[2m›\x1B[0m `);
-
-    const key = await waitForKey();
-
-    if (key === '?') {
-      printHelp();
-      continue;
-    }
-
-    if (key === 's') {
-      console.log('\x1B[2mskipped.\x1B[0m');
-      i++;
-      continue;
-    }
-
-    if (key === 'r') {
-      console.log('\x1B[2mrestarting from step 1.\x1B[0m');
-      i = 0;
-      continue;
-    }
-
-    if (key === 'n') {
-      console.log('\x1B[2mstarting new chat...\x1B[0m');
-      try {
-        await getPage().bringToFront().catch(() => {});
-        const chatFrameLocator = getPage().frameLocator('[data-automationid="ChatODSPFrame"]');
-        await startNewChat(getPage(), chatFrameLocator);
-      } catch (err) {
-        console.error(`  Could not start new chat: ${err.message}`);
-      }
-      continue; // re-prompt same step
-    }
-
-    if (key === 'd') {
-      console.log('\x1B[2mscrolling chat to bottom...\x1B[0m');
-      try {
-        await getPage().bringToFront().catch(() => {});
-        const chatFrame = getPage().frames().find(f => f.url().includes('chat.aspx'));
-        if (chatFrame) {
-          await chatFrame.evaluate(() => {
-            // Scroll any overflow container that holds the messages
-            const scroller =
-              document.querySelector('[class*="scrollable"]') ||
-              document.querySelector('[class*="messageList"]') ||
-              document.querySelector('[class*="transcript"]') ||
-              document.querySelector('main') ||
-              document.documentElement;
-            scroller.scrollTop = scroller.scrollHeight;
-          });
-        }
-      } catch (err) {
-        console.error(`  Could not scroll: ${err.message}`);
-      }
-      continue; // re-prompt same step
-    }
-
-    if (key === 'b') {
-      if (i === 0) {
-        console.log('\x1B[2malready at first step.\x1B[0m');
-        continue;
-      }
-      i--;
-      console.log(`\x1B[2mback — re-running step ${i + 1}.\x1B[0m`);
-      // fall through to run
-    } else {
-      console.log('\x1B[2mrunning...\x1B[0m');
-    }
+    console.log(`\x1B[2m[${elapsed}]\x1B[0m \x1B[1mStep ${i + 1}/${steps.length}:\x1B[0m ${step.name}`);
 
     try {
-      // Bring the browser tab to the foreground before each step
       await getPage().bringToFront().catch(() => {});
-      await steps[i].run();
+      await step.run();
     } catch (err) {
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
       await getPage().screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
       console.error('  Debug screenshot saved to tools/debug-screenshot.png');
-      console.error('  Press Enter to continue to the next step, or Ctrl+C to quit.');
+      process.stdout.write('  Press Enter to continue to the next step, or Ctrl+C to quit... ');
       await waitForKey();
+      console.log('');
     }
-
-    // Only advance when we ran forward (not on 'b')
-    if (key !== 'b') i++;
   }
 
   const totalTime = formatElapsed(Date.now() - startTime);
   console.log(`\nDemo complete in ${totalTime}.`);
 }
 
-function printHelp() {
-  console.log(`
-  Enter / Space   run the current step
-  s               skip this step
-  b               go back and re-run the previous step
-  r               restart from step 1
-  n               start a new chat (clears Copilot conversation)
-  d               scroll the chat pane to the bottom
-  ?               show this help
-  Ctrl+C          quit
-`);
-}
 
 // ─── Terminal input ───────────────────────────────────────────────────────────
 
@@ -672,7 +615,15 @@ function formatElapsed(ms) {
 async function startNewChat(page, chatFrame) {
   await chatFrame.locator('[aria-label="Chat options"]').click();
   await page.waitForTimeout(400);
-  await chatFrame.locator('[role="menuitem"]:has-text("New chat"), [aria-label="New chat"]').first().click();
+  const newChatItem = chatFrame.locator('[role="menuitem"]:has-text("New chat"), [aria-label="New chat"]').first();
+  const isDisabled = await newChatItem.getAttribute('aria-disabled').catch(() => null);
+  if (isDisabled === 'true') {
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    console.log('    Already in a new chat — skipping.');
+    return;
+  }
+  await newChatItem.click();
   await page.waitForTimeout(1500);
   console.log('    New chat started.');
 }
@@ -758,7 +709,7 @@ async function getChatInput(page, chatFrame) {
 /**
  * Type text character-by-character so the audience can read it as it appears.
  */
-async function slowType(locator, text, delayMs = 40) {
+async function slowType(locator, text, delayMs = 10) {
   await locator.click();
   await locator.fill('');
   for (const char of text) {
