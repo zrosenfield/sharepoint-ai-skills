@@ -67,7 +67,6 @@ async function selectDemo(demos) {
     byCategory.get(demo.category).push(demo);
   }
 
-  // Sort categories: preferred order first, then alphabetical for the rest
   const sortedCategories = [...byCategory.keys()].sort((a, b) => {
     const ai = CATEGORY_ORDER.indexOf(a);
     const bi = CATEGORY_ORDER.indexOf(b);
@@ -77,92 +76,114 @@ async function selectDemo(demos) {
     return a.localeCompare(b);
   });
 
-  // Build flat rows: category headers (non-selectable) + demo rows (selectable)
-  const rows = [];         // { type: 'category', label } | { type: 'demo', demo, idx }
-  const selectables = [];  // just the demo entries in order, for cursor indexing
-
-  for (const cat of sortedCategories) {
-    rows.push({ type: 'category', label: cat });
-    for (const demo of byCategory.get(cat)) {
-      const idx = selectables.length;
-      rows.push({ type: 'demo', demo, idx });
-      selectables.push(demo);
-    }
-  }
-
-  let cursor = 0; // index into selectables[]
-
-  const render = () => {
-    process.stdout.write('\x1B[2J\x1B[H');
-
+  const header = () => {
     const w = process.stdout.columns || 80;
-
+    process.stdout.write('\x1B[2J\x1B[H');
     console.log('');
     console.log('  \x1B[1mSharePoint AI Skills — Demo Launcher\x1B[0m');
     console.log(`  \x1B[2m${'─'.repeat(Math.min(w - 2, 60))}\x1B[0m`);
     console.log('');
-
-    for (const row of rows) {
-      if (row.type === 'category') {
-        console.log(`  \x1B[33m${row.label.toUpperCase()}\x1B[0m`);
-        console.log('');
-      } else {
-        const selected = row.idx === cursor;
-        const prefix = selected ? '  \x1B[1;36m▶\x1B[0m ' : '    ';
-        const titleFmt = selected ? `\x1B[1;36m${row.demo.title}\x1B[0m` : row.demo.title;
-
-        const tags = [
-          row.demo.hasSetup ? '\x1B[2m[setup]\x1B[0m' : null,
-          row.demo.hasReset ? '\x1B[2m[reset]\x1B[0m' : null,
-        ].filter(Boolean).join(' ');
-
-        console.log(`${prefix}${titleFmt}  ${tags}`);
-
-        if (row.demo.description) {
-          const maxDesc = w - 10;
-          const desc = row.demo.description.length > maxDesc
-            ? row.demo.description.slice(0, maxDesc - 1) + '…'
-            : row.demo.description;
-          console.log(`      \x1B[2m${desc}\x1B[0m`);
-        }
-        console.log('');
-      }
-    }
-
-    console.log(`  \x1B[2m↑ ↓  navigate   Enter  select   Ctrl+C  quit\x1B[0m`);
-    console.log('');
+    return w;
   };
 
-  render();
+  // ── Level 1: category picker ──────────────────────────────────────────────
+  const pickCategory = () => new Promise(resolve => {
+    let cursor = 0;
 
-  return new Promise((resolve, reject) => {
+    const render = () => {
+      const w = header();
+      sortedCategories.forEach((cat, i) => {
+        const demos = byCategory.get(cat);
+        const selected = i === cursor;
+        const arrow  = selected ? '\x1B[1;33m▶\x1B[0m' : ' ';
+        const label  = selected ? `\x1B[1;33m${cat}\x1B[0m` : cat;
+        const count  = `\x1B[2m${demos.length} demo${demos.length !== 1 ? 's' : ''}\x1B[0m`;
+        console.log(`  ${arrow} ${label}  ${count}`);
+        console.log('');
+      });
+      console.log(`  \x1B[2m↑ ↓  navigate   Enter  open   Ctrl+C  quit\x1B[0m`);
+      console.log('');
+    };
+
+    render();
     if (process.stdin.isTTY) process.stdin.setRawMode(true);
     process.stdin.resume();
 
-    process.stdin.on('data', buf => {
+    const onData = buf => {
       const key = buf.toString();
-
-      if (key === '\x03') { // Ctrl+C
+      if (key === '\x03') { process.exit(0); }
+      if (key === '\x1B[A' || key === 'k') { cursor = (cursor - 1 + sortedCategories.length) % sortedCategories.length; render(); }
+      else if (key === '\x1B[B' || key === 'j') { cursor = (cursor + 1) % sortedCategories.length; render(); }
+      else if (key === '\r' || key === '\n') {
+        process.stdin.removeListener('data', onData);
         if (process.stdin.isTTY) process.stdin.setRawMode(false);
         process.stdin.pause();
-        process.stdout.write('\n');
-        process.exit(0);
+        resolve(sortedCategories[cursor]);
       }
+    };
+    process.stdin.on('data', onData);
+  });
 
-      if (key === '\x1B[A' || key === 'k') { // Up
-        cursor = (cursor - 1 + selectables.length) % selectables.length;
-        render();
-      } else if (key === '\x1B[B' || key === 'j') { // Down
-        cursor = (cursor + 1) % selectables.length;
-        render();
-      } else if (key === '\r' || key === '\n') { // Enter
+  // ── Level 2: demo picker within a category ────────────────────────────────
+  const pickDemo = (category) => new Promise(resolve => {
+    const list = byCategory.get(category);
+    let cursor = 0;
+
+    const render = () => {
+      const w = header();
+      console.log(`  \x1B[2m← \x1B[0m\x1B[33m${category.toUpperCase()}\x1B[0m`);
+      console.log('');
+      list.forEach((demo, i) => {
+        const selected = i === cursor;
+        const arrow    = selected ? '\x1B[1;36m▶\x1B[0m' : ' ';
+        const titleFmt = selected ? `\x1B[1;36m${demo.title}\x1B[0m` : demo.title;
+        const tags = [
+          demo.hasSetup ? '\x1B[2m[setup]\x1B[0m' : null,
+          demo.hasReset ? '\x1B[2m[reset]\x1B[0m' : null,
+        ].filter(Boolean).join(' ');
+        console.log(`  ${arrow} ${titleFmt}  ${tags}`);
+        if (demo.description) {
+          const maxDesc = (w || 80) - 10;
+          const desc = demo.description.length > maxDesc ? demo.description.slice(0, maxDesc - 1) + '…' : demo.description;
+          console.log(`      \x1B[2m${desc}\x1B[0m`);
+        }
+        console.log('');
+      });
+      console.log(`  \x1B[2m↑ ↓  navigate   Enter  select   Esc  back   Ctrl+C  quit\x1B[0m`);
+      console.log('');
+    };
+
+    render();
+    if (process.stdin.isTTY) process.stdin.setRawMode(true);
+    process.stdin.resume();
+
+    const onData = buf => {
+      const key = buf.toString();
+      if (key === '\x03') { process.exit(0); }
+      if (key === '\x1B[A' || key === 'k') { cursor = (cursor - 1 + list.length) % list.length; render(); }
+      else if (key === '\x1B[B' || key === 'j') { cursor = (cursor + 1) % list.length; render(); }
+      else if (key === '\x1B' || key === '\x1B[D') { // Esc or left arrow — go back
+        process.stdin.removeListener('data', onData);
+        if (process.stdin.isTTY) process.stdin.setRawMode(false);
+        process.stdin.pause();
+        resolve(null); // null = back
+      } else if (key === '\r' || key === '\n') {
+        process.stdin.removeListener('data', onData);
         if (process.stdin.isTTY) process.stdin.setRawMode(false);
         process.stdin.pause();
         process.stdout.write('\x1B[2J\x1B[H');
-        resolve(selectables[cursor]);
+        resolve(list[cursor]);
       }
-    });
+    };
+    process.stdin.on('data', onData);
   });
+
+  // ── Two-level loop ────────────────────────────────────────────────────────
+  while (true) {
+    const category = await pickCategory();
+    const demo = await pickDemo(category);
+    if (demo) return demo; // null means back — loop back to category picker
+  }
 }
 
 // ─── Runner ───────────────────────────────────────────────────────────────────
