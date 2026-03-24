@@ -33,7 +33,13 @@
     "demo:brand-review:reset": "node tools/run-demo.mjs tools/scripts/brand-review.demo --reset",
     "demo:messy-data-cleanup": "node tools/run-demo.mjs tools/scripts/10-messy-data-cleanup.demo",
     "demo:messy-data-cleanup:setup": "node tools/run-demo.mjs tools/scripts/10-messy-data-cleanup.demo --setup",
-    "demo:messy-data-cleanup:reset": "node tools/run-demo.mjs tools/scripts/10-messy-data-cleanup.demo --reset"
+    "demo:messy-data-cleanup:reset": "node tools/run-demo.mjs tools/scripts/10-messy-data-cleanup.demo --reset",
+    "demo:inbox-triage": "node tools/run-demo.mjs tools/scripts/09-inbox-triage.demo",
+    "demo:inbox-triage:setup": "node tools/run-demo.mjs tools/scripts/09-inbox-triage.demo --setup",
+    "demo:inbox-triage:reset": "node tools/run-demo.mjs tools/scripts/09-inbox-triage.demo --reset",
+    "demo:generate-tracker": "node tools/run-demo.mjs tools/scripts/11-generate-tracker.demo",
+    "demo:generate-tracker:setup": "node tools/run-demo.mjs tools/scripts/11-generate-tracker.demo --setup",
+    "demo:generate-tracker:reset": "node tools/run-demo.mjs tools/scripts/11-generate-tracker.demo --reset"
   },
   "dependencies": {
     "playwright": "^1.52.0"

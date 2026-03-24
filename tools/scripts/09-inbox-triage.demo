@@ -7,13 +7,33 @@
 
 [section: setup]
 
-Verify the "Help Desk Inbox" list exists with 8 rows. The Category, Priority,
-and AI Summary columns should all be BLANK. If they were filled from a previous
-run, clear them using grid view.
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the list called "Help Desk Inbox" if it exists.]
+
+[wait]
+
+[sleep: 3s]
+
+[new-chat]
+
+[prompt: Create a new list called "Help Desk Inbox" with these columns: Request (single line text), Submitted By (person), Details (multiple lines of text), Category (single line text), Priority (single line text), AI Summary (multiple lines of text).]
+
+[wait]
+
+[sleep: 5s]
 
 [navigate: ${LIST}]
 
-[open-chat]
+[new-chat]
+
+[prompt: Add exactly these 8 rows — leave Category, Priority, and AI Summary blank on every row: 1. Request: "cant login" | Submitted By: me | Details: "i cant log into my computer at all. i have a client presentation in 2 hours and need access urgently. tried restarting 3 times." 2. Request: "wifi sucks in bldg 3" | Submitted By: me | Details: "the wifi in building 3 has been terrible for a week. drops every 20 min. affects me and at least 4 others on my team." 3. Request: "printer jammed" | Submitted By: me | Details: "the printer on floor 2 is jammed again. tried clearing it but no luck. not urgent." 4. Request: "need access to shared drive" | Submitted By: me | Details: "i need access to the Q4 marketing shared drive for the campaign launch next week." 5. Request: "vpn keeps dropping" | Submitted By: me | Details: "vpn disconnects every hour or so when working remote. started happening 3 days ago. network team looked at it but no fix yet." 6. Request: "new hire laptop setup" | Submitted By: me | Details: "we have a new hire starting monday. need laptop provisioned with standard software and vpn access." 7. Request: "email not syncing" | Submitted By: me | Details: "outlook on my phone stopped syncing 2 days ago. getting emails on desktop but not mobile." 8. Request: "projector in conf room b broken" | Submitted By: me | Details: "projector in conference room B wont turn on. we have a board meeting tomorrow morning."]
+
+[wait]
 
 [new-chat]
 
@@ -69,9 +89,14 @@ patterns that a human triaging one ticket at a time would miss.
 
 [section: reset]
 
-Clear the Category, Priority, and AI Summary columns for all 8 rows. Use
-grid view to bulk-clear.
-
 [navigate: ${LIST}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Clear the Category, Priority, and AI Summary columns for every item in this list — set them all to blank.]
+
+[wait]
 
 [new-chat]

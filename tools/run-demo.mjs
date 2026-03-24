@@ -690,10 +690,23 @@ async function openChatPane(page) {
   }
 
   if (!openChatBtn) {
-    // Pane may already be open — dismiss popup and check
+    // "Close chat" in the popup means the pane is already open — dismiss and return.
+    const closeChatSelectors = [
+      '[role="menuitem"]:has-text("Close chat")',
+      'div.fui-MenuItem:has-text("Close chat")',
+      '[aria-label="Close chat"]',
+    ];
+    for (const sel of closeChatSelectors) {
+      if (await page.locator(sel).first().isVisible({ timeout: 1000 }).catch(() => false)) {
+        await page.keyboard.press('Escape');
+        await page.waitForTimeout(300);
+        return; // pane is already open
+      }
+    }
+    // Neither "Open chat" nor "Close chat" found — dismiss and wait for iframe to appear.
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
-    const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 3000 }).catch(() => false);
+    const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 8000 }).catch(() => false);
     if (paneVisible) return; // already open, we're good
     await page.screenshot({ path: 'tools/debug-screenshot.png' });
     throw new Error('Could not find "Open chat" in the FAB popup. Debug screenshot saved.');
@@ -716,9 +729,12 @@ async function getChatInput(page, chatFrame) {
     '[role="textbox"]',
   ];
 
-  for (const sel of selectors) {
-    const loc = chatFrame.locator(sel).first();
-    if (await loc.isVisible({ timeout: 5000 }).catch(() => false)) return loc;
+  // Try fast first, then one longer retry to handle post-response loading states.
+  for (const pass of [3000, 10000]) {
+    for (const sel of selectors) {
+      const loc = chatFrame.locator(sel).first();
+      if (await loc.isVisible({ timeout: pass }).catch(() => false)) return loc;
+    }
   }
 
   await page.screenshot({ path: 'tools/debug-screenshot.png' });
@@ -742,7 +758,7 @@ async function slowType(locator, text, delayMs = 2) {
  *   2. Wait for it to disappear (generation ended).
  *   3. Fallback: poll for new Like/Dislike feedback buttons on the last message.
  */
-async function waitForCopilotResponse(page, chatFrame, timeoutMs = 180000) {
+async function waitForCopilotResponse(page, chatFrame, timeoutMs = 300000) {
   const deadline = Date.now() + timeoutMs;
 
   const stopSelectors = [
