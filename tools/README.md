@@ -5,12 +5,12 @@ Automated demo runner for SharePoint AI Skills. Connects to a live Edge browser 
 ## Prerequisites
 
 1. **Node.js 18+** and `npm install` run from the repo root.
-2. **Edge with remote debugging enabled.** Run once before starting a demo session:
-
+2. **Edge** installed at a standard path (`Program Files (x86)\Microsoft\Edge\...` or `%LOCALAPPDATA%\Microsoft\Edge\...`).
+   The runner launches Edge automatically with remote debugging if it isn't already running.
+   To start it manually (e.g. to pick a specific profile):
    ```powershell
    Start-Process "msedge" "--remote-debugging-port=9222 --user-data-dir=$env:TEMP\edge-debug"
    ```
-
 3. **Sign in to SharePoint** in that Edge window. The runner uses your existing session.
 
 ---
@@ -18,7 +18,8 @@ Automated demo runner for SharePoint AI Skills. Connects to a live Edge browser 
 ## Running a scenario
 
 ```
-npm run demo:site-overview                  # run the demo section (default)
+npm start                                   # interactive launcher (recommended)
+npm run demo:site-overview                  # run the demo section directly
 npm run demo:site-overview:setup            # run the setup section
 npm run demo:site-overview:reset            # run the reset/teardown section
 
@@ -34,17 +35,50 @@ CDP_URL=http://localhost:9223 node tools/run-demo.mjs tools/scripts/site-overvie
 
 ---
 
+## Widget mode (full-screen presentations)
+
+Add `--widget` to open a small floating controller window alongside the demo browser.
+Useful when presenting full-screen and you don't want to alt-tab to the terminal.
+
+```
+node tools/demo.mjs --widget
+node tools/run-demo.mjs tools/scripts/site-overview.demo --widget
+```
+
+A separate frameless Edge window (280×265) appears at the left edge of the screen showing:
+
+- **Step counter** — current step and total
+- **Step name** — what the runner is about to do
+- **Next / Back / Skip buttons** — same actions as keyboard controls in the terminal
+- **Elapsed timer** — counts up from when the demo section starts
+- **Status** — "Running…" while a step executes, highlighted blue when waiting for input
+
+### Layout modes
+
+Three layout modes are available via icons in the top-right of the widget window.
+The selected mode persists across sessions.
+
+| Mode | Icon | Window size | Contents |
+|------|------|-------------|----------|
+| **Full** | ⊡ | 280 × 265 | Step info, all three buttons, timer, status |
+| **Slim vertical** | ▐ | 78 × 220 | Icon-only buttons stacked vertically, timer |
+| **Slim horizontal** | ▬ | 400 × 56 | Single-row bar: buttons, step name, timer |
+
+Clicking any button in the widget is equivalent to pressing that key in the terminal —
+both inputs feed the same queue, so you can mix and match freely.
+
+---
+
 ## Step controls
 
-When the runner reaches a step it prints the step name and waits for a keypress:
+When the runner reaches a pause it waits for input from either the terminal or the widget window:
 
-| Key | Action |
-|-----|--------|
-| **Enter** | Run the current step |
-| **s** | Skip this step and advance |
-| **b** | Go back and re-run the previous step |
-| **?** | Show help |
-| **Ctrl+C** | Quit |
+| Terminal key | Widget button | Action |
+|---|---|---|
+| **Enter** | **Next ▶** | Run / continue the current step |
+| **s** | **Skip** | Skip this step and advance |
+| **b** | **Back ◀** | Go back and re-run the previous step |
+| **Ctrl+C** | — | Quit |
 
 The terminal also shows an elapsed timer `[mm:ss]` at each step prompt.
 
