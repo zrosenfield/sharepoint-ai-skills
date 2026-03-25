@@ -11,25 +11,36 @@
  *     Start-Process "msedge" "--remote-debugging-port=9222 --user-data-dir=$env:TEMP\edge-debug"
  *
  * Usage:
- *   node tools/run-demo.mjs [scenario]
+ *   node tools/run-demo.mjs [scenario] [--setup | --reset] [--widget]
  *   node tools/run-demo.mjs tell-me-about-site
+ *   node tools/run-demo.mjs tools/scripts/site-overview.demo --widget
  *
- * Step controls (press before each step runs):
- *   Enter   run the current step
+ * Flags:
+ *   --widget  Inject a floating hover-control panel into the browser.
+ *             Move the mouse to the bottom of the screen to reveal it.
+ *             Useful when running full-screen — no need to alt-tab to the terminal.
+ *
+ * Step controls (press at any pause):
+ *   Enter   run / continue
  *   s       skip this step
  *   b       go back and re-run the previous step
  *   ?       show help
  *   Ctrl+C  quit
+ *
+ * If Edge is not running on the CDP port, it is launched automatically.
  */
 
 import { chromium } from 'playwright';
-import { readFileSync, mkdirSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { readFileSync, mkdirSync, existsSync } from 'fs';
+import { resolve, dirname, join } from 'path';
+import { spawn } from 'child_process';
+import { get as httpGet, createServer } from 'http';
 
 const CDP_URL = process.env.CDP_URL ?? 'http://localhost:9222';
 const args = process.argv.slice(2);
 const SCENARIO = args.find(a => !a.startsWith('--')) ?? 'tell-me-about-site';
 const RUN_SECTION = args.includes('--setup') ? 'setup' : args.includes('--reset') ? 'reset' : 'demo';
+const USE_WIDGET = args.includes('--widget');
 
 // ─── Scenarios ───────────────────────────────────────────────────────────────
 
@@ -37,9 +48,258 @@ const scenarios = {
   'tell-me-about-site': tellMeAboutSiteSteps,
 };
 
+// ─── Edge auto-launch ─────────────────────────────────────────────────────────
+
+function checkCdpAvailable() {
+  return new Promise(resolve => {
+    const u = new URL(CDP_URL);
+    const req = httpGet(
+      { hostname: u.hostname, port: +u.port || 9222, path: '/json/version', timeout: 2000 },
+      res => { resolve(res.statusCode < 400); res.resume(); }
+    );
+    req.on('error', () => resolve(false));
+    req.on('timeout', () => { req.destroy(); resolve(false); });
+  });
+}
+
+function findEdgePath() {
+  const candidates = [
+    process.env.LOCALAPPDATA && join(process.env.LOCALAPPDATA, 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
+    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  ].filter(Boolean);
+  return candidates.find(p => existsSync(p)) ?? null;
+}
+
+async function ensureEdgeRunning() {
+  if (await checkCdpAvailable()) return;
+
+  console.log('Edge not detected — launching Edge with remote debugging...');
+
+  const edgePath = findEdgePath();
+  if (!edgePath) {
+    throw new Error(
+      'msedge.exe not found. Start Edge manually:\n' +
+      '  msedge.exe --remote-debugging-port=9222 --user-data-dir="%TEMP%\\edge-debug"'
+    );
+  }
+
+  const port = new URL(CDP_URL).port || '9222';
+  const userDataDir = join(process.env.TEMP || process.env.TMPDIR || '/tmp', 'edge-debug');
+
+  spawn(edgePath, [`--remote-debugging-port=${port}`, `--user-data-dir=${userDataDir}`], {
+    detached: true, stdio: 'ignore',
+  }).unref();
+
+  const deadline = Date.now() + 15000;
+  while (Date.now() < deadline) {
+    await new Promise(r => setTimeout(r, 600));
+    if (await checkCdpAvailable()) { console.log('Edge is ready.\n'); return; }
+  }
+  throw new Error('Edge launched but did not become available within 15 seconds.');
+}
+
+// ─── Widget: local HTTP server + separate Edge app window ─────────────────────
+//
+// No browser injection — the widget is a small standalone Edge window that polls
+// a local HTTP server for state and posts actions back.
+
+let _widgetState = {};
+
+function widgetUpdate(patch) {
+  if (!USE_WIDGET) return;
+  Object.assign(_widgetState, patch);
+}
+
+const WIDGET_HTML = `<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"><title>Demo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1b1b2e;color:#e0e0e0;user-select:none}
+
+/* top bar */
+#top{display:flex;justify-content:flex-end;gap:3px;padding:6px 8px 0}
+.mi{width:22px;height:22px;border:none;border-radius:4px;background:#252540;color:#555;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s,color .12s;padding:0;flex-shrink:0}
+.mi:hover{background:#3a3a58;color:#bbb}
+.mi.on{background:#0078d4;color:#fff}
+
+/* main */
+#main{padding:4px 12px 12px}
+#si{font-size:11px;color:#0078d4;font-weight:600;margin-bottom:2px}
+#sn{font-size:12px;color:#aaa;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{display:block;width:100%;padding:7px 12px;margin-bottom:5px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-family:inherit;text-align:left;transition:opacity .1s}
+.btn:hover{opacity:.82}
+.btn:active{opacity:.65}
+#bn{background:#0078d4;color:#fff;font-weight:600}
+#bb,#bs{background:#2d2d44;color:#ccc}
+.bl{margin-left:2px}
+#foot{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid #252540;margin-top:2px}
+#tmr{font-size:12px;color:#555;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+#stat{font-size:10px;color:#555}
+#stat.w{color:#0078d4}
+
+/* slim vertical */
+body.sv #top{justify-content:center;padding:5px 5px 0;gap:2px}
+body.sv .mi{width:19px;height:19px}
+body.sv #main{padding:3px 5px 8px}
+body.sv #si,body.sv #sn{display:none}
+body.sv .btn{padding:10px 4px;font-size:18px;text-align:center;margin-bottom:4px}
+body.sv .bl{display:none}
+body.sv #foot{flex-direction:column;gap:1px;border:none;padding-top:3px;margin-top:0}
+body.sv #stat{display:none}
+body.sv #tmr{font-size:10px;text-align:center;width:100%}
+
+/* slim horizontal */
+body.sh{display:flex;flex-direction:row;align-items:center;padding:0 8px;gap:6px}
+body.sh #top{order:99;padding:0;gap:3px}
+body.sh .mi{width:19px;height:19px}
+body.sh #main{display:contents}
+body.sh #si{display:none}
+body.sh #sn{margin:0;flex:1;min-width:0;font-size:11px}
+body.sh #btns{display:flex;gap:4px;align-items:center;flex-shrink:0}
+body.sh .btn{width:auto;padding:5px 10px;font-size:12px;margin:0;display:inline-block}
+body.sh #foot{border:none;padding:0;margin:0;flex-shrink:0;gap:0}
+body.sh #stat{display:none}
+body.sh #tmr{font-size:11px;min-width:36px;text-align:right}
+</style>
+</head><body class="full">
+
+<div id="top">
+  <button class="mi on" id="mf" onclick="setMode('full')" title="Full">
+    <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <rect x="1" y="1" width="10" height="10" rx="1.5"/>
+      <line x1="3" y1="4.5" x2="9" y2="4.5"/>
+      <line x1="3" y1="6.5" x2="9" y2="6.5"/>
+      <line x1="3" y1="8.5" x2="7" y2="8.5"/>
+    </svg>
+  </button>
+  <button class="mi" id="msv" onclick="setMode('sv')" title="Slim vertical">
+    <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <rect x="3.5" y="1" width="5" height="10" rx="1.5"/>
+    </svg>
+  </button>
+  <button class="mi" id="msh" onclick="setMode('sh')" title="Slim horizontal">
+    <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <rect x="1" y="3.5" width="10" height="5" rx="1.5"/>
+    </svg>
+  </button>
+</div>
+
+<div id="main">
+  <div id="si">\u2014</div>
+  <div id="sn">Starting\u2026</div>
+  <div id="btns">
+    <button class="btn" id="bn" onclick="act('enter')">\u25ba\ufe0e<span class="bl">Next</span></button>
+    <button class="btn" id="bb" onclick="act('b')">\u25c4\ufe0e<span class="bl">Back</span></button>
+    <button class="btn" id="bs" onclick="act('s')">\u21e5<span class="bl">Skip</span></button>
+  </div>
+  <div id="foot">
+    <div id="tmr">00:00</div>
+    <div id="stat">Ready</div>
+  </div>
+</div>
+
+<script>
+var st=null;
+var SIZES={full:[280,232],sv:[78,220],sh:[400,56]};
+var mode=localStorage.getItem('dw-mode')||'full';
+
+function setMode(m){
+  mode=m;
+  document.body.className=m==='full'?'full':m;
+  ['mf','msv','msh'].forEach(function(id){document.getElementById(id).classList.remove('on')});
+  document.getElementById(m==='full'?'mf':m==='sv'?'msv':'msh').classList.add('on');
+  var s=SIZES[m]; window.resizeTo(s[0],s[1]);
+  localStorage.setItem('dw-mode',m);
+}
+setMode(mode);
+
+function act(a){
+  fetch('/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:a})});
+}
+
+function fmt(ms){
+  var s=Math.floor(ms/1000),m=Math.floor(s/60);
+  return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+
+function poll(){
+  fetch('/state').then(function(r){return r.json()}).then(function(s){
+    if(s.startTime&&!st) st=s.startTime;
+    document.getElementById('si').textContent=s.step!=null?'Step '+s.step+' / '+(s.total||'?'):'\u2014';
+    document.getElementById('sn').textContent=s.name||'';
+    var el=document.getElementById('stat');
+    el.textContent=s.waiting?'\u25b6 Waiting \u2014 Next or Enter':'Running\u2026';
+    el.className=s.waiting?'w':'';
+  }).catch(function(){});
+}
+
+setInterval(function(){if(st)document.getElementById('tmr').textContent=fmt(Date.now()-st);},500);
+setInterval(poll,250);
+poll();
+</script>
+</body></html>`;
+
+function startWidgetServer() {
+  return new Promise((resolve, reject) => {
+    const server = createServer((req, res) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+
+      if (req.method === 'GET' && req.url === '/') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(WIDGET_HTML);
+        return;
+      }
+      if (req.method === 'GET' && req.url === '/state') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(_widgetState));
+        return;
+      }
+      if (req.method === 'POST' && req.url === '/action') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          try {
+            const { action } = JSON.parse(body);
+            const key = action === 'enter' ? 'enter' : action[0].toLowerCase();
+            _keyQueue.push(key);
+            if (_keyQueueReady) { _keyQueueReady(); _keyQueueReady = null; }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end('{"ok":true}');
+          } catch {
+            res.writeHead(400); res.end('{}');
+          }
+        });
+        return;
+      }
+      res.writeHead(404); res.end();
+    });
+
+    server.listen(0, '127.0.0.1', () => {
+      resolve({ server, port: server.address().port });
+    });
+    server.on('error', reject);
+  });
+}
+
+async function launchWidgetWindow(port, edgePath) {
+  const userDataDir = join(process.env.TEMP || process.env.TMPDIR || '/tmp', 'edge-widget');
+  spawn(edgePath, [
+    `--app=http://127.0.0.1:${port}`,
+    '--window-size=280,265',
+    '--window-position=10,200',
+    `--user-data-dir=${userDataDir}`,
+  ], { detached: true, stdio: 'ignore' }).unref();
+  console.log(`Widget window launched at http://127.0.0.1:${port}`);
+}
+
 // ─── Entry point ─────────────────────────────────────────────────────────────
 
 async function main() {
+  await ensureEdgeRunning();
+
   console.log(`Connecting to Edge at ${CDP_URL}...`);
   const browser = await chromium.connectOverCDP(CDP_URL);
 
@@ -47,6 +307,16 @@ async function main() {
   const context = contexts[0] ?? await browser.newContext();
   const pages = context.pages();
   const page = pages[0] ?? await context.newPage();
+
+  if (USE_WIDGET) {
+    const edgePath = findEdgePath();
+    if (!edgePath) {
+      console.warn('  Warning: msedge.exe not found — widget window skipped.');
+    } else {
+      const { port } = await startWidgetServer();
+      await launchWidgetWindow(port, edgePath);
+    }
+  }
 
   let steps;
   let getActivePage = () => page;
@@ -540,6 +810,7 @@ function parseScript(src, page, section = 'demo') {
 
 async function runSteps(getPage, steps) {
   const startTime = Date.now();
+  widgetUpdate({ startTime });
 
   console.log('\nSteps:');
   const maxWidth = (process.stdout.columns || 80) - 6;
@@ -556,6 +827,7 @@ async function runSteps(getPage, steps) {
 
     try {
       await getPage().bringToFront().catch(() => {});
+      widgetUpdate({ step: i + 1, total: steps.length, name: step.name, waiting: false });
       await step.run();
     } catch (err) {
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
@@ -592,28 +864,54 @@ if (!process.stdin.isTTY) {
 }
 
 async function waitForKey() {
+  widgetUpdate({ waiting: true });
+
+  let key;
   if (!process.stdin.isTTY) {
     // Drain one key from the queue; wait if empty
     while (_keyQueue.length === 0) {
       await new Promise(r => { _keyQueueReady = r; });
     }
-    const key = _keyQueue.shift();
+    key = _keyQueue.shift();
     if (key === '\x03') process.exit(0);
-    return key;
+  } else {
+    key = await new Promise(resolve => {
+      // Also drain any widget-queued key that arrived while stdin was passive
+      if (_keyQueue.length > 0) {
+        const queued = _keyQueue.shift();
+        if (queued === '\x03') process.exit(0);
+        return resolve(queued);
+      }
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+      const onData = buf => {
+        const raw = buf.toString();
+        if (raw === '\x03') process.exit(0);
+        // A widget click may have also arrived via _keyQueue — prefer stdin
+        _keyQueue.length = 0;
+        process.stdin.setRawMode(false);
+        process.stdin.pause();
+        process.stdin.off('data', onData);
+        resolve(raw === '\r' || raw === '\n' || raw === ' ' ? 'enter' : raw[0].toLowerCase());
+      };
+      process.stdin.on('data', onData);
+      // Wake up if widget sends a key while stdin is listening
+      const prevReady = _keyQueueReady;
+      _keyQueueReady = () => {
+        if (prevReady) prevReady();
+        if (_keyQueue.length > 0) {
+          const wk = _keyQueue.shift();
+          process.stdin.setRawMode(false);
+          process.stdin.pause();
+          process.stdin.off('data', onData);
+          resolve(wk === '\x03' ? (process.exit(0), 'enter') : wk);
+        }
+      };
+    });
   }
 
-  return new Promise(resolve => {
-    process.stdin.setRawMode(true);
-    process.stdin.resume();
-    process.stdin.once('data', buf => {
-      process.stdin.setRawMode(false);
-      process.stdin.pause();
-      const key = buf.toString();
-      if (key === '\x03') process.exit(0);
-      const k = key === '\r' || key === '\n' || key === ' ' ? 'enter' : key[0].toLowerCase();
-      resolve(k);
-    });
-  });
+  widgetUpdate({ waiting: false });
+  return key;
 }
 
 function waitPrompt(msg) {

@@ -15,11 +15,13 @@
  */
 
 import { readdirSync, readFileSync } from 'fs';
-import { resolve, join, basename } from 'path';
+import { resolve, join, dirname, basename } from 'path';
+import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
 
-const SCRIPTS_DIR = resolve('tools/scripts');
-const RUNNER = resolve('tools/run-demo.mjs');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const SCRIPTS_DIR = join(__dirname, 'scripts');
+const RUNNER = join(__dirname, 'run-demo.mjs');
 
 // Preferred display order for categories — unlisted categories appear at the end.
 const CATEGORY_ORDER = [
@@ -245,8 +247,8 @@ async function selectDemo(demos) {
 
 // ─── Runner ───────────────────────────────────────────────────────────────────
 
-function runSection(demoFile, section) {
-  const args = [RUNNER, demoFile];
+function runSection(demoFile, section, extraFlags = []) {
+  const args = [RUNNER, demoFile, ...extraFlags];
   if (section !== 'demo') args.push(`--${section}`);
 
   const result = spawnSync('node', args, {
@@ -287,7 +289,10 @@ function printReadyBanner(demo) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const arg = process.argv[2];
+  const flags = process.argv.slice(2).filter(a => a.startsWith('--'));
+  const arg = process.argv.slice(2).find(a => !a.startsWith('--'));
+  const extraFlags = flags.filter(f => f === '--widget'); // pass-through flags for the runner
+
   const demos = discoverDemos();
 
   if (!demos.length) {
@@ -317,20 +322,20 @@ async function main() {
 
   if (action === 'setup') {
     console.log(`\n  Running setup for: ${demo.title}\n`);
-    runSection(demo.file, 'setup');
+    runSection(demo.file, 'setup', extraFlags);
     return;
   }
 
   if (action === 'reset') {
     console.log(`\n  Running reset for: ${demo.title}\n`);
-    runSection(demo.file, 'reset');
+    runSection(demo.file, 'reset', extraFlags);
     return;
   }
 
   // action === 'setup+demo' or 'demo'
   if (action === 'setup+demo' && demo.hasSetup) {
     console.log(`\n  Running setup check for: ${demo.title}\n`);
-    const exitCode = runSection(demo.file, 'setup');
+    const exitCode = runSection(demo.file, 'setup', extraFlags);
     if (exitCode !== 0) {
       console.error('\n  Setup exited with errors. Fix issues before running the demo.');
       process.stdout.write('  Press Enter to continue anyway, or Ctrl+C to quit... ');
@@ -350,7 +355,7 @@ async function main() {
   clearTerminal();
   await printReadyBanner(demo);
   clearTerminal();
-  runSection(demo.file, 'demo');
+  runSection(demo.file, 'demo', extraFlags);
 }
 
 main().catch(err => {
