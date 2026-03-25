@@ -1,0 +1,109 @@
+# Brand Compliance Review
+# Demonstrates how a custom AI skill audits marketing assets against brand
+# guidelines — scoring files across voice, visual identity, messaging, and
+# consistency, then producing a prioritized remediation plan.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: SKILLS = https://microsoft.sharepoint-df.com/teams/ZachDemos/Agent%20Assets/Skills/]
+[category: Skills & Pipelines]
+
+[section: setup]
+
+Before running this demo:
+1. Upload uppababy-brand-guidelines-ai-extracted.md to the site's document library
+2. Confirm the brand-review skill is installed in Agent Assets > Skills
+3. Have the demo files ready locally:
+   - cruz-v3-launch.pptx
+   - retailer-training-q4.pptx
+   - social-media-content-brief.docx
+   - spring-2026-creative-brief.docx
+
+[assert: ${SKILLS}brand-review.md]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[section: demo]
+
+[navigate: ${SITE}]
+
+A brand manager has a problem: the team produces a constant stream of marketing
+assets — launch decks, retailer training, social briefs, creative briefs. Each one
+is supposed to follow brand guidelines. But reviewing each file manually against
+a 40-page brand guide doesn't scale.
+
+Let's show how a custom skill can do this automatically, at any scale, with
+specific and actionable feedback.
+
+[pause]
+
+[open-chat]
+
+We'll start with the product launch deck. I'm going to attach it and ask the
+brand-review skill to evaluate it.
+
+[upload: demos/UPPABaby Brand Review/cruz-v3-launch.pptx]
+
+[prompt: Use the brand-review skill to evaluate this file for UPPAbaby brand compliance.]
+
+[wait]
+
+The agent read the brand definition reference, identified the file type and intended
+channel, then scored the deck across five weighted categories: Voice and Tone,
+Visual Identity, Messaging Alignment, Photography and Imagery, and Brand
+Consistency.
+
+Notice the output: an overall compliance rating, then a tiered list of issues —
+Critical, Major, Minor — each with a specific, concrete fix. Not "improve your
+tone." Actual actionable steps.
+
+[pause]
+
+Let's run the same review on the retailer training deck. Different audience,
+different channel — let's see if the issues differ.
+
+[upload: demos/UPPABaby Brand Review/retailer-training-q4.pptx]
+
+[prompt: Use the brand-review skill to evaluate this file for UPPAbaby brand compliance.]
+
+[wait]
+
+Different results — the retailer deck has different compliance issues because the
+brand expectations for a channel-facing training deck differ from a launch
+presentation. The skill reasons about context, not just keyword matching.
+
+[pause]
+
+One more — a creative brief. This is internal-facing, which changes what the skill
+looks for.
+
+[upload: demos/UPPABaby Brand Review/spring-2026-creative-brief.docx]
+
+[prompt: Use the brand-review skill to evaluate this file for UPPAbaby brand compliance.]
+
+[wait]
+
+A brief scores differently from a deck — the skill understands that a brief isn't
+consumer-facing and adjusts its evaluation accordingly. You're not getting false
+positives for things that don't matter in this context.
+
+[screenshot: tools/screenshots/brand-review.png]
+
+What you just saw: three different file types, three different channels, one skill,
+consistent evaluation criteria. Each review takes seconds. Each result is grounded
+in the brand definition document you uploaded — not a generic AI opinion.
+
+The skill works across PPTX, DOCX, PDFs, images, and plain text. Any file the
+brand team produces, the agent can audit.
+
+[pause]
+
+[section: reset]
+
+This demo is read-only — no SharePoint content was created or modified. Navigate
+back to the home page to reset the view.
+
+[navigate: ${SITE}]

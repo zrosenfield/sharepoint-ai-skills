@@ -1,0 +1,64 @@
+# The Comparison Report
+# AI reads two versions of a contract and summarizes what changed between them.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Contracts/]
+[category: Documents & Files]
+
+[section: setup]
+
+Verify the "Contracts" library exists with two files: Northwind-MSA-v1.docx
+and Northwind-MSA-v2.docx. This demo is read-only.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm both contract versions are visible and the chat pane is fresh.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Legal just sent over the revised MSA. You could open both documents side by
+side and read every clause... or you could let AI do the comparison in seconds.
+
+[pause]
+
+[open-chat]
+
+[prompt: Compare Northwind-MSA-v1 and Northwind-MSA-v2. List every change and tell me which ones favor us and which ones favor the vendor.]
+
+[wait]
+
+Copilot caught all the changes: term extended from 12 to 24 months, payment
+terms tightened from Net 45 to Net 30, liability cap doubled, termination
+notice shortened, SLA improved, data residency expanded, non-compete halved,
+and a new insurance requirement added. It also flagged who each change
+benefits. Point out the favor analysis.
+
+[pause]
+
+Now let's go a step further — don't just compare, advise.
+
+[prompt: Which changes should I push back on before signing?]
+
+[wait]
+
+It's not just comparing — it's advising. Copilot identified the most
+consequential changes and suggested negotiation priorities. That's the jump
+from search to intelligence.
+
+[pause]
+
+[screenshot: tools/screenshots/04-comparison-report-final.png]
+
+[section: reset]
+
+This demo is read-only. Just start a new chat.
+
+[new-chat]

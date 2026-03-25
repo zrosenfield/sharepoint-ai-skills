@@ -1,0 +1,80 @@
+# Generate a Tracker From Scratch
+# AI builds an entire SharePoint list from a plain English description — columns, sample data, and views.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[category: Lists & Data]
+
+[section: setup]
+
+Verify the site does NOT have a list called "Product Launch Tracker." If one
+exists from a previous run, delete it before proceeding.
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm the chat pane is fresh and the site home page is visible.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${SITE}]
+
+Let's say your team just kicked off a product launch and you need a way to
+track everything. Normally you'd spend 20 minutes creating a list, adding
+columns, choosing column types, entering sample data. Instead, let's just
+describe what we need.
+
+[pause]
+
+[open-chat]
+
+[prompt: Create a list called "Product Launch Tracker" for managing a cross-functional product launch. I need to track tasks across Engineering, Marketing, Sales, and Support teams. Include columns for the task, the owner, the team, a due date, status, and any blockers. Add 12 sample rows with realistic tasks that cover all four teams across a 6-week launch timeline.]
+
+[wait]
+
+Copilot created the entire list — columns, column types, and 12 rows of
+realistic sample data. Notice it chose the right types automatically: Choice
+columns for Team and Status, Date for Due Date, text for Blockers. Point out
+the sample tasks — API documentation, press releases, CRM updates, knowledge
+base articles. These are plausible, not filler.
+
+[pause]
+
+Now let's add a useful view on top of it.
+
+[prompt: Create a view called "This Week" that shows only tasks due in the next 7 days, grouped by Team, sorted by Due Date.]
+
+[wait]
+
+A filtered view in seconds. The team can now see exactly what's due this week,
+grouped by department. No manual view configuration needed.
+
+[pause]
+
+One more — let's use AI to actually manage the tracker.
+
+[prompt: Which tasks are blocked, and what would you suggest to unblock them?]
+
+[wait]
+
+Copilot read the Blockers column and provided actionable suggestions. From
+zero to a fully functional project tracker with smart views and AI-powered
+status checks — in about 90 seconds.
+
+[pause]
+
+[screenshot: tools/screenshots/11-generate-tracker-final.png]
+
+[section: reset]
+
+Delete the "Product Launch Tracker" list to restore the site.
+
+[navigate: ${SITE}_layouts/15/viewlsts.aspx]
+
+[confirm: Delete the "Product Launch Tracker" list from Site Contents]
+
+[new-chat]

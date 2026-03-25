@@ -1,0 +1,113 @@
+# Metadata at Scale
+# Shows how AI-extracted metadata enables business intelligence queries
+# across a large contracts library — filtering, aggregating, and cross-referencing
+# at a scale that document search alone cannot support.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[category: Lists & Data]
+
+[section: setup]
+
+Verify the contracts document library is loaded and that the metadata columns are
+populated — Risk Level, Document Type, Contract Quarter, Has Termination Clause,
+Has Indemnification Clause, Energy Category, Continent, and Complexity.
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[section: demo]
+
+[navigate: ${SITE}Contracts/]
+
+AI can summarize a contract in seconds. But ask it to find every contract in your
+library that's missing a termination clause — and most tools fall apart. Not
+because AI isn't capable. Because they're missing one thing. Let me show you what
+that is.
+
+[pause]
+
+So here's a SharePoint document library — this is a contracts repository. Hundreds
+of contracts. And at first glance this looks like any other document library.
+
+Look at these columns. Risk Level. Document Type. Contract Quarter. Energy Category.
+Continent. Complexity.
+
+This metadata was extracted automatically by AI at upload time — pulled right out of
+the contract text and stamped onto each document as structured fields.
+
+[pause]
+
+You might ask: if AI is doing the extracting anyway, why bother storing it? Why not
+just let AI read the document every time?
+
+Three reasons. Scale — you don't have one contract, you have hundreds. Reading every
+document fresh for every question isn't a chat experience, it's a bill. Consistency
+— if you classify risk by reading a contract fresh each time you might get a slightly
+different answer each day. Extract it once and that answer is locked, stable,
+something your legal team can actually trust. And the big one: there are entire
+categories of questions that search simply cannot answer without metadata.
+
+[pause]
+
+[open-chat]
+
+Watch this.
+
+[prompt: Find all contracts classified as High Risk.]
+
+[wait]
+
+Instead of searching document text — which would miss contracts where the words
+"high risk" never appear verbatim — the AI filters the Risk column directly. Like a
+database query. Every single one. Not a best guess. All of them. Complete and
+auditable.
+
+[pause]
+
+Now here's where it gets interesting.
+
+[prompt: Among all High Risk contracts, what percentage include indemnification clauses?]
+
+[wait]
+
+This is the question that breaks every standard AI tool. It's actually two problems
+in sequence — first define the universe, then analyze across it. Without metadata
+you don't have a reliable universe. You have a guess. With metadata, AI locks onto
+every High Risk contract — it knows exactly what's in scope — and then reads those
+specific documents for indemnification language and calculates the percentage.
+
+That's not a chat experience anymore. That's a business intelligence query. On your
+document library.
+
+[pause]
+
+One more.
+
+[prompt: Retrieve all Joint Venture Agreements signed in Q4 2019.]
+
+[wait]
+
+Type filter. Date filter. Two columns. Instant. In a standard system, dates are
+buried in document text in a dozen different formats, and document types get
+described differently across hundreds of files. This query would be unreliable at
+best. Here it's deterministic — the metadata was standardized at ingestion.
+
+[screenshot: tools/screenshots/metadata-at-scale.png]
+
+The difference is this. Regular AI reads documents and hopes it found the right
+ones. Metadata-augmented AI knows the shape of your entire library before it reads
+a single word — how many documents exist, how they're classified, what risk they
+carry. You do the extraction work once. And then every question, every filter, every
+analysis runs on that foundation forever.
+
+[pause]
+
+[section: reset]
+
+This demo is read-only — no content was created or modified.
+Navigate back to the home page to reset.
+
+[navigate: ${SITE}]

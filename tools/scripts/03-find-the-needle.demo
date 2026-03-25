@@ -1,0 +1,69 @@
+# Find the Needle
+# AI searches across multiple documents to answer specific questions buried in policy files.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Company%20Policies/]
+[category: Documents & Files]
+
+[section: setup]
+
+Verify the "Company Policies" library exists with four files:
+Travel-Policy.docx, Expense-Policy.docx, Remote-Work-Policy.docx,
+PTO-Policy.docx. This demo is read-only so no reset is needed between runs.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm 4 policy documents are visible and the chat pane is fresh.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Four policy docs. In a real company this would be 40 or 400. Someone from your
+team just Slacked you a question and the answer is buried somewhere in here.
+You could open each document and Ctrl-F your way through... or you could just
+ask.
+
+[pause]
+
+[open-chat]
+
+[prompt: What's the maximum hotel rate for international travel?]
+
+[wait]
+
+$350 per night, sourced from the Travel Policy. Copilot found the exact answer
+across multiple documents in seconds. Point out the citation — it tells you
+which document the answer came from.
+
+[pause]
+
+Now let's try a harder question that spans multiple documents.
+
+[prompt: I'm going on a 7-day international trip. What do I need to know about booking, expenses, and time off?]
+
+[wait]
+
+This is the real power. One question pulled answers from all four documents:
+book premium economy for flights over 6 hours, $350/night hotel cap, $75/day
+meal reimbursement, expense report due by the 5th, and you need 2 weeks notice
+for PTO requests over 5 days. One question, four documents, a complete answer.
+
+[pause]
+
+That's the difference between SharePoint as a file dump and SharePoint as a
+knowledge base.
+
+[screenshot: tools/screenshots/03-find-the-needle-final.png]
+
+[section: reset]
+
+This demo is read-only. Just start a new chat.
+
+[new-chat]

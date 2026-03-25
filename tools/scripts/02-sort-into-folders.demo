@@ -1,0 +1,76 @@
+# Sort Into Folders
+# AI reads file contents, creates folders by topic, and moves files into the right folders.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Shared%20Drive%20Dump/]
+[category: Documents & Files]
+
+[section: setup]
+
+Verify the "Shared Drive Dump" library exists with all 8 files flat in the
+root — no folders. If folders from a previous run exist, move all files back
+to the root and delete the folders.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm 8 files are visible in the root: Q3-revenue-report.xlsx,
+brand-guidelines-v2.pdf, onboarding-checklist.docx, server-migration-plan.docx,
+holiday-party-invite.png, sales-commission-structure.xlsx, password-policy.pdf,
+product-launch-timeline.pptx.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Every company has that one shared drive where people just dump files. No
+folders, no structure, no hope of finding anything. This library has 8 files
+from totally different teams all sitting in the root. Let's fix it.
+
+[pause]
+
+[open-chat]
+
+[prompt: Look at all the files in this library. Based on their names and content, suggest a folder structure that would organize them. Group related files together.]
+
+[wait]
+
+Copilot has proposed a folder structure based on reading the actual file
+contents — not just guessing from file names. Notice it grouped the revenue
+report and commission structure under Finance, and separated IT from HR.
+Point out the groupings.
+
+[pause]
+
+Now let's have it actually create the folders and move everything.
+
+[prompt: Create those folders and move each file into the right one.]
+
+[wait]
+
+Refresh the library. Every file has been sorted into a topic folder. It read
+the content, figured out the categories, and organized the whole thing. No
+drag-and-drop required.
+
+[pause]
+
+[screenshot: tools/screenshots/02-sort-into-folders-final.png]
+
+[section: reset]
+
+Move all files back to the root of the library and delete the folders created
+during the demo.
+
+[navigate: ${LIBRARY}]
+
+Move each file from its subfolder back to the root, then delete the empty
+folders (Finance, Marketing, HR, IT or whatever Copilot created).
+
+[confirm: Delete all folders created during the demo after moving files back to root]
+
+[new-chat]

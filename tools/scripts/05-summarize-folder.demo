@@ -1,0 +1,65 @@
+# Summarize This Folder
+# AI reads an entire folder of docs and produces a one-page executive summary.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIBRARY = https://microsoft.sharepoint-df.com/teams/ZachDemos/Q4%20Planning/Strategy%20Docs/]
+[category: Documents & Files]
+
+[section: setup]
+
+Verify the "Q4 Planning" library exists with a "Strategy Docs" folder
+containing four files: market-analysis.docx, product-priorities.docx,
+sales-forecast.xlsx, budget-request.docx. This demo is read-only.
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+Confirm all four strategy documents are visible inside the folder.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Your leadership team needs a Q4 summary. The information is spread across four
+documents from four different teams — market analysis, product priorities, sales
+forecast, and budget. Normally you'd spend an hour reading and synthesizing.
+
+[pause]
+
+[open-chat]
+
+[prompt: Read all the documents in this folder and write a one-page executive summary covering market context, product plans, revenue targets, and budget. Keep it to 5 paragraphs.]
+
+[wait]
+
+Copilot wove all four sources into a coherent narrative. Notice it pulled the
+18% market growth from the analysis, the three product priorities, the $12.5M
+target from sales, and the $300K budget overage — all in one summary. Point out
+how it reads like a human wrote it, not a cut-and-paste job.
+
+[pause]
+
+Now let's ask the question no single document can answer.
+
+[prompt: What's the biggest risk you see across these documents?]
+
+[wait]
+
+This is where it gets interesting. Copilot connected the $1.8M renewal risk
+from sales with the $300K budget overage — a potential $2.1M swing that no
+single document mentions. It sees across the whole folder.
+
+[pause]
+
+[screenshot: tools/screenshots/05-summarize-folder-final.png]
+
+[section: reset]
+
+This demo is read-only. Just start a new chat.
+
+[new-chat]

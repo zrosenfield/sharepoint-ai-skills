@@ -1,0 +1,18 @@
+{
+  "name": "sharepoint-ai-demo-tool",
+  "version": "1.0.0",
+  "description": "Drive SharePoint AI demos from a markdown script using Playwriter",
+  "type": "module",
+  "bin": {
+    "demo": "./runner.js"
+  },
+  "scripts": {
+    "demo": "node runner.js"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,99 @@
+# Messy Data Cleanup
+# AI fixes inconsistent data in a list — normalizing formats, correcting typos, and standardizing entries.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[var: LIST = https://microsoft.sharepoint-df.com/teams/ZachDemos/Lists/Customer%20Directory/]
+[category: Lists & Data]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the list called "Customer Directory" if it exists.]
+
+[wait]
+
+[sleep: 3s]
+
+[new-chat]
+
+[prompt: Create a new list called "Customer Directory" with these columns: Contact Name, Company, Phone, State, Industry, Status.]
+
+[wait]
+
+[sleep: 5s]
+
+[navigate: ${LIST}]
+
+[new-chat]
+
+[prompt: Add these 8 rows exactly as written — keep all the inconsistencies, they're intentional: 1. sarah connor | Northwind Traders | 555.987.6543 | Washington | tech | ative 2. John Smith | Contoso | (555) 234-5678 | CA | Technology | Active 3. mary jane | Woodgrove bank | 555-345-6789 | Calif. | retail | acitve 4. BOB JONES | Fabrikam | 5554567890 | New York | Finance | Active 5. Alice Wong | Tailspin Toys | (555) 567-8901 | TX | technology | Active 6. dave brown | Adventure Works | 555.678.9012 | FL | Retail | Inactive 7. CAROL WHITE | Proseware | (555) 789-0123 | oregon | tech | Active 8. mike chen | Lucerne Publishing | 555-890-1234 | WA | Publishing | active]
+
+[wait]
+
+Confirm 8 rows are visible with messy data: "sarah connor" (lowercase),
+"555.987.6543" (dot format), "Washington" (full state name), "ative" (typo),
+etc.
+
+[new-chat]
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIST}]
+
+This is what happens when 10 different sales reps enter data their own way.
+Look at the phone numbers — four different formats. Look at the states —
+abbreviations, full names, "Calif." as an informal abbreviation. Industry
+has "tech," "Technology," and "retail" all meaning different things. And
+there are typos in the Status column — "ative" and "acitve."
+
+[pause]
+
+[open-chat]
+
+[prompt: Clean up this list. Standardize phone numbers to (555) 123-4567 format. Fix contact names to proper capitalization. Normalize State to two-letter abbreviations. Standardize Industry values (for example, 'tech' and 'Technology' should both be 'Technology'). Fix any typos in the Status column.]
+
+[wait]
+
+Look at the transformation. Every phone number is now the same format. Contact
+names are properly capitalized. "Calif." became CA. "Washington" became WA.
+"tech" and "retail" became "Technology" and "Retail." And the typos — "ative"
+and "acitve" — are both fixed to "Active." Point out that it also fixed
+"Woodgrove bank" to "Woodgrove Bank" and city capitalization.
+
+[pause]
+
+Now let's see if the clean data reveals anything interesting.
+
+[prompt: Are there any potential duplicate companies or contacts in this list?]
+
+[wait]
+
+No exact duplicates, but Copilot flagged that three companies are in the
+Technology industry and noted the concentration. Clean data is queryable data.
+Messy data is invisible data.
+
+[pause]
+
+[screenshot: tools/screenshots/10-messy-data-cleanup-final.png]
+
+[section: reset]
+
+Delete the "Customer Directory" list, then re-run the setup section to
+recreate it with the original messy data.
+
+[navigate: ${SITE}]
+
+[new-chat]
+
+[prompt: Delete the list called "Customer Directory"]
+
+[wait]
+
+Run setup to recreate the list with fresh messy data.

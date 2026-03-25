@@ -1,0 +1,99 @@
+# Tool Test
+# Exercises run-demo.mjs controls and commands against a live SharePoint site.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/ZachDemos/]
+[category: Other]
+
+[section: setup]
+
+Checking the site is reachable before running tests.
+
+[assert: ${SITE}]
+
+[section: demo]
+
+# ── Navigation ──────────────────────────────────────────────────
+
+This is a talking point. It should appear in the terminal with an amber bar,
+and in the widget's full-mode view below the step name.
+
+Navigate to the demo site to start.
+
+[navigate: ${SITE}]
+
+# ── Pause + Skip test ───────────────────────────────────────────
+
+TRY THIS: Press S (or click Skip in the widget) to skip this pause.
+You should jump straight to the next step.
+
+[pause: Skippable pause — try pressing S]
+
+# ── Back test ───────────────────────────────────────────────────
+
+TRY THIS: Press B (or click Back in the widget) to go back to the
+skippable pause above and re-run it. Then press Enter to come back here.
+
+[pause: Back test — try pressing B, then Enter twice to continue]
+
+# ── Open chat ───────────────────────────────────────────────────
+
+Opening the Copilot chat pane via the FAB. Tests the open-chat command
+and the fallback selector chain.
+
+[open-chat]
+
+# ── Prompt + Wait ───────────────────────────────────────────────
+
+Sending a simple grounding prompt. Watch the slow-typing speed and
+the response-detection logic (Stop button → feedback buttons fallback).
+
+[prompt: What is this site about? Give me a one-sentence answer.]
+
+[wait]
+
+Copilot responded. The talking points you see now were set after [wait]
+completed — the widget should update to show these lines.
+
+[pause: Confirm the response looks reasonable, then continue]
+
+# ── New chat ────────────────────────────────────────────────────
+
+Clearing the conversation with the new-chat command.
+
+[new-chat]
+
+# ── Second prompt ───────────────────────────────────────────────
+
+A second prompt in the fresh conversation tests that new-chat worked and
+the input is still reachable after clearing.
+
+[prompt: List the document libraries on this site in a bullet list.]
+
+[wait]
+
+# ── Sleep ───────────────────────────────────────────────────────
+
+Testing the sleep directive — a 2-second pause with no user input needed.
+
+[sleep: 2s]
+
+# ── Screenshot ──────────────────────────────────────────────────
+
+Saving a screenshot to confirm the file-write path works.
+
+[screenshot: tools/screenshots/tool-test.png]
+
+# ── Finish ──────────────────────────────────────────────────────
+
+All steps complete. If you can read this talking point in the widget's
+full-mode view, the context mirroring is working correctly.
+
+Press Enter to finish.
+
+[pause: All done]
+
+[section: reset]
+
+This demo is read-only — navigate home to restore the view.
+
+[navigate: ${SITE}]

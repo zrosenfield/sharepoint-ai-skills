@@ -28,3 +28,12 @@ __pycache__/
 dist/
 *.tmp
 *.log
+
+# Demo tool — generated screenshots (debug output and run captures)
+tools/debug-screenshot.png
+tools/result-screenshot.png
+tools/screenshots/
+tools/step*.png
+
+# Local demo tool config — not committed so each machine can tune its own settings
+tools/demo.config.json
