@@ -12,6 +12,7 @@ A curated library of AI skills and end-to-end demo setups for the latest AI feat
 |---|---|
 | [`Skills/`](./Skills/) | AI skills — each skill in its own folder, ready to install into a SharePoint agent |
 | [`demos/`](./demos/) | End-to-end demo setups with sample content, configuration steps, and screenshots |
+| [`tools/`](./tools/) | Automated demo runner — connects to Edge via CDP, slow-types prompts, and steps through scenarios with a floating widget controller |
 
 ---
 
