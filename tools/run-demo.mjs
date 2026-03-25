@@ -116,8 +116,7 @@ const WIDGET_HTML = `<!DOCTYPE html>
 <meta charset="utf-8"><title>Demo</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1b1b2e;color:#e0e0e0;user-select:none}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1b1b2e;color:#e0e0e0;user-select:none;overflow:hidden}
 
 /* top bar */
 #top{display:flex;justify-content:flex-end;gap:3px;padding:6px 8px 0}
@@ -153,7 +152,7 @@ body.sv #stat{display:none}
 body.sv #tmr{font-size:10px;text-align:center;width:100%}
 
 /* slim horizontal */
-body.sh{display:flex;flex-direction:row;align-items:center;padding:0 8px;gap:6px}
+body.sh{display:flex;flex-direction:row;align-items:center;padding:0 8px;gap:6px;height:100vh}
 body.sh #top{order:99;padding:0;gap:3px}
 body.sh .mi{width:19px;height:19px}
 body.sh #main{display:contents}
@@ -204,7 +203,8 @@ body.sh #tmr{font-size:11px;min-width:36px;text-align:right}
 
 <script>
 var st=null;
-var SIZES={full:[280,232],sv:[62,220],sh:[400,56]};
+var WIDTHS={full:280,sv:62,sh:400};
+var SH_H=58; // slim-h fixed content height
 var mode=localStorage.getItem('dw-mode')||'full';
 
 function setMode(m){
@@ -212,8 +212,13 @@ function setMode(m){
   document.body.className=m==='full'?'full':m;
   ['mf','msv','msh'].forEach(function(id){document.getElementById(id).classList.remove('on')});
   document.getElementById(m==='full'?'mf':m==='sv'?'msv':'msh').classList.add('on');
-  var s=SIZES[m]; window.resizeTo(s[0],s[1]);
   localStorage.setItem('dw-mode',m);
+  // Resize after layout settles; use scrollHeight so timer is never clipped
+  requestAnimationFrame(function(){
+    var chrome=Math.max(28, window.outerHeight-window.innerHeight);
+    var h=m==='sh' ? SH_H+chrome : document.documentElement.scrollHeight+chrome+4;
+    window.resizeTo(WIDTHS[m], h);
+  });
 }
 setMode(mode);
 
@@ -289,11 +294,31 @@ async function launchWidgetWindow(port, edgePath) {
   const userDataDir = join(process.env.TEMP || process.env.TMPDIR || '/tmp', 'edge-widget');
   spawn(edgePath, [
     `--app=http://127.0.0.1:${port}`,
-    '--window-size=280,265',
+    '--window-size=280,300',
     '--window-position=10,200',
     `--user-data-dir=${userDataDir}`,
   ], { detached: true, stdio: 'ignore' }).unref();
   console.log(`Widget window launched at http://127.0.0.1:${port}`);
+
+  // Set always-on-top via PowerShell after the window has had time to open
+  setTimeout(() => {
+    const ps = [
+      'Add-Type -TypeDefinition @"',
+      'using System; using System.Runtime.InteropServices;',
+      'public class Win32 {',
+      '  [DllImport("user32.dll")] public static extern bool SetWindowPos(',
+      '    IntPtr h, IntPtr hAfter, int x, int y, int cx, int cy, uint flags);',
+      '  public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);',
+      '}',
+      '"@',
+      '$title = "Demo"',
+      '$hwnd = (Get-Process msedge | Where-Object { $_.MainWindowTitle -eq $title } | Select-Object -First 1).MainWindowHandle',
+      'if ($hwnd) { [Win32]::SetWindowPos([IntPtr]$hwnd, [Win32]::HWND_TOPMOST, 0,0,0,0, 0x0003) }',
+    ].join('\n');
+    spawn('powershell', ['-NoProfile', '-NonInteractive', '-Command', ps], {
+      detached: true, stdio: 'ignore',
+    }).unref();
+  }, 3000);
 }
 
 // ─── Entry point ─────────────────────────────────────────────────────────────
