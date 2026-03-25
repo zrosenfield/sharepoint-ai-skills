@@ -127,7 +127,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* main */
 #main{padding:4px 12px 12px}
 #si{font-size:11px;color:#0078d4;font-weight:600;margin-bottom:2px}
-#sn{font-size:12px;color:#aaa;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sn{font-size:12px;color:#aaa;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ctx{display:none;font-size:11px;color:#c8922a;border-left:2px solid #c8922a;padding:3px 7px;margin-bottom:8px;line-height:1.55;max-height:90px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+#ctx.has{display:block}
 .btn{display:block;width:100%;padding:7px 12px;margin-bottom:5px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-family:inherit;text-align:left;transition:opacity .1s}
 .btn:hover{opacity:.82}
 .btn:active{opacity:.65}
@@ -143,7 +145,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 body.sv #top{justify-content:center;padding:5px 5px 0;gap:2px}
 body.sv .mi{width:19px;height:19px}
 body.sv #main{padding:3px 4px 8px}
-body.sv #si,body.sv #sn{display:none}
+body.sv #si,body.sv #sn,body.sv #ctx{display:none!important}
 body.sv #btns{display:flex;flex-direction:column;align-items:stretch}
 body.sv .btn{padding:9px 0;font-size:18px;text-align:center;margin-bottom:4px;width:100%}
 body.sv .bl{display:none}
@@ -156,7 +158,7 @@ body.sh{display:flex;flex-direction:row;align-items:center;padding:0 8px;gap:6px
 body.sh #top{order:99;padding:0;gap:3px}
 body.sh .mi{width:19px;height:19px}
 body.sh #main{display:contents}
-body.sh #si{display:none}
+body.sh #si,body.sh #ctx{display:none!important}
 body.sh #sn{margin:0;flex:1;min-width:0;font-size:11px}
 body.sh #btns{display:flex;gap:4px;align-items:center;flex-shrink:0}
 body.sh .btn{width:auto;padding:5px 10px;font-size:12px;margin:0;display:inline-block}
@@ -190,6 +192,7 @@ body.sh #tmr{font-size:11px;min-width:36px;text-align:right}
 <div id="main">
   <div id="si">\u2014</div>
   <div id="sn">Starting\u2026</div>
+  <div id="ctx"></div>
   <div id="btns">
     <button class="btn" id="bn" onclick="act('enter')">\u25ba\ufe0e<span class="bl">Next</span></button>
     <button class="btn" id="bb" onclick="act('b')">\u25c4\ufe0e<span class="bl">Back</span></button>
@@ -236,6 +239,9 @@ function poll(){
     if(s.startTime&&!st) st=s.startTime;
     document.getElementById('si').textContent=s.step!=null?'Step '+s.step+' / '+(s.total||'?'):'\u2014';
     document.getElementById('sn').textContent=s.name||'';
+    var ctxEl=document.getElementById('ctx');
+    ctxEl.textContent=s.context||'';
+    ctxEl.className=s.context?'has':'';
     var el=document.getElementById('stat');
     el.textContent=s.waiting?'\u25b6 Waiting \u2014 Next or Enter':'Running\u2026';
     el.className=s.waiting?'w':'';
@@ -586,6 +592,9 @@ function parseScript(src, page, section = 'demo') {
         if (row) console.log(`  ${BAR}${TXT}${row}${RST}`);
       }
       console.log('');
+
+      // Mirror talking points to the widget's full-mode view
+      widgetUpdate({ context: displayContext.join('\n\n') });
     };
 
     switch (cmd) {
@@ -853,7 +862,7 @@ async function runSteps(getPage, steps) {
 
     try {
       await getPage().bringToFront().catch(() => {});
-      widgetUpdate({ step: i + 1, total: steps.length, name: step.name, waiting: false });
+      widgetUpdate({ step: i + 1, total: steps.length, name: step.name, context: '', waiting: false });
       await step.run();
     } catch (err) {
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
