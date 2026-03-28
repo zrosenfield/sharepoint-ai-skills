@@ -1,0 +1,127 @@
+# Employee Onboarding Hub
+# Build a complete onboarding solution with RALPH, then demo team-specific plans, status checks, welcome emails, and Copilot actions.
+
+[var: SITE = https://contoso.sharepoint.com/sites/demo/]
+[var: SKILLS = ${SITE}Agent%20Assets/Skills/]
+
+[section: setup]
+
+[assert: ${SKILLS}ralph-loop.md]
+
+[navigate: ${SITE}]
+
+Confirm this is a clean site. The SHAREPOINT.md file should already be uploaded to a document library called "Site Documents." If not, upload it now before proceeding.
+
+[pause: Verify SHAREPOINT.md is uploaded]
+
+[open-chat]
+
+[new-chat]
+
+Confirm the chat pane shows a fresh session with no prior conversation.
+
+[pause: Confirm clean chat]
+
+[section: demo]
+
+[navigate: ${SITE}]
+
+Welcome to a blank SharePoint site. There's nothing here yet except one file — a markdown document called SHAREPOINT.md that describes how Contoso onboards people across five teams. Each team has a completely different philosophy. Engineering wants you to ship code in Week 1. Sales wants you to listen for two weeks before you pitch anything. Finance won't let you near a system until you've passed compliance training. That one file is the AI's entire playbook.
+
+[pause: Point out the Site Documents library with SHAREPOINT.md]
+
+[open-chat]
+
+Now we give the AI a goal and let it build everything. This is a RALPH loop — the AI will build, score itself, find gaps, and iterate until every success criterion hits 8 out of 10. Watch.
+
+[prompt: RALPH with max 6 iterations: GOAL: Build a complete, polished, demo-ready Employee Onboarding Hub on this SharePoint site. The solution lets HR coordinators generate tailored onboarding checklists for new hires based on their team (Engineering, Sales, Marketing, Finance, or Operations), office location, and role. Managers can track onboarding progress, and new employees can see their personalized checklist. The site should reference the SHAREPOINT.md file in the document library for all team-specific onboarding details. SUCCESS CRITERIA — score each 1–10, do not declare complete until all are 8 or higher: 1. ONBOARDING CHECKLIST LIST — A list called "Onboarding Checklist" with columns: Title (task name), Employee Name (single line of text), Team (choice: Engineering/Sales/Marketing/Finance/Operations), Category (choice: Universal/Team-Specific/Location-Specific), Due Timeframe (choice: Day 1/Week 1/Week 2/Month 1), Status (choice: Not Started/In Progress/Complete/Blocked), Owner (single line of text), Notes (multiple lines of text). At least 15 sample rows for "Alex Chen" joining Engineering in Seattle with a mix of Universal, Team-Specific, and Location-Specific tasks. 2. LIST FORMATTING — Status column color-coded (Not Started=gray, In Progress=blue, Complete=green, Blocked=red). Grouped view by Due Timeframe. Filtered view "Blocked Items" showing Status=Blocked. 3. NEW HIRE DIRECTORY — A list with columns: Title (employee name), Team, Role, Office (choice: Seattle/Austin/London), Start Date, Manager, Buddy, Onboarding Status (choice: Not Started/In Progress/Complete). 5 sample new hires across different teams. 4. SKILL: "Generate Onboarding Plan" — accepts employee name, team, role, office, start date. References SHAREPOINT.md to pull team-specific steps, philosophy, tools, buddy system, 30-day milestone. Combines Universal + Team-Specific + Location-Specific tasks. Adds items to the list and updates the directory. 5. SKILL: "Check Onboarding Status" — accepts employee name, calculates progress, flags blocked items, compares against 30-day milestone from SHAREPOINT.md. 6. SKILL: "Draft Welcome Email" — accepts employee name, pulls details from directory, references SHAREPOINT.md for team philosophy and Week 1 focus, generates personalized email from the manager. 7. HOME PAGE — hero section, embedded New Hire Directory, Onboarding Checklist in grouped view, quick action links. CONSTRAINTS: No code. No People/Person columns — single line of text for all names.]
+
+[wait]
+
+The AI just built two lists with sample data, color-coded formatting, multiple views, three skills, and a home page — all from a single prompt. It scored itself after each pass and kept iterating until everything met the bar. Point out the home page layout and the formatted list views.
+
+[pause: Walk through the finished site — home page, lists, views, formatting]
+
+Now the real magic. Let's generate an onboarding plan for a new Sales hire. Watch how the AI reads SHAREPOINT.md and produces a completely different plan than what it built for Alex Chen in Engineering.
+
+[prompt: Generate an onboarding plan for Jamie Rodriguez joining Sales in Austin starting April 14. Her manager is Sarah Kim and her buddy is Marcus Chen.]
+
+[wait]
+
+Notice the difference. Sales onboarding is built around "listen before you pitch" — so Jamie's plan has shadow 5 customer calls, CRM setup in Dynamics 365, and a mock pitch by end of Week 2. The buddy is a Solutions Engineer because Sales pairs with SE's for technical objection handling. And since Austin is remote-first, the plan includes equipment shipping and coworking access. All of that came from the SHAREPOINT.md context — the AI didn't make it up.
+
+[pause: Compare Jamie's Sales plan against Alex's Engineering plan in the list]
+
+Let's do one more to really drive it home. This time Finance in London.
+
+[prompt: Generate an onboarding plan for Raj Patel joining Finance in London starting April 21. His manager is Emma Walsh and his buddy is Thomas Grant.]
+
+[wait]
+
+Completely different again. Finance is the most structured — compliance and ethics training before any system access, SOX controls overview, shadow a month-end close. And London adds the right-to-work documentation check and pension enrollment briefing. Same skill, same prompt structure, three totally different outputs driven by one context file.
+
+[pause: Show all three employees in the directory and their different plan structures]
+
+Now let's check on Alex Chen's progress. First, go into the list and mark a few of Alex's tasks as Complete and one as Blocked.
+
+[pause: Manually update 5-6 of Alex's tasks to Complete and set "Security training" to Blocked with a note "Training portal returning 403 error"]
+
+[prompt: Check onboarding status for Alex Chen]
+
+[wait]
+
+The AI counted all of Alex's tasks, calculated the completion percentage, flagged the blocked security training, and checked against Engineering's 30-day milestone — "complete 3 code reviews and have 1 feature in production." It knows Alex can't start code reviews until security training is unblocked, so it flagged that as a risk to the milestone. That's not just counting — that's reasoning about dependencies.
+
+[pause: Point out the milestone risk assessment]
+
+Now let's have Copilot draft the welcome email for Jamie.
+
+[prompt: Draft a welcome email for Jamie Rodriguez]
+
+[wait]
+
+The email is from Sarah Kim, mentions Marcus as the buddy, explains the Sales "sponge mode" philosophy in warm language, and includes Austin-specific logistics. A manager could send this as-is. No one had to write a template.
+
+[pause: Read through the email highlights]
+
+Here's where Copilot goes beyond SharePoint. Let's schedule the actual onboarding meetings.
+
+[prompt: Create a recurring Teams meeting for Jamie Rodriguez's first-week check-ins with Sarah Kim. Daily at 9am Austin time starting April 14 for 5 days, 15 minutes each. Title: "Jamie <> Sarah — Onboarding Check-in"]
+
+[wait]
+
+Copilot just scheduled five meetings on the real calendar. The data in the SharePoint list drove an action in Teams. That's the full loop — the onboarding plan isn't just a checklist, it's a system that takes action.
+
+[pause: Point out the calendar integration]
+
+One more. Let's see the big picture across all new hires.
+
+[prompt: Give me onboarding analytics across all active new hires. Which teams are ahead? Where are the bottlenecks? Any tasks blocked for multiple people?]
+
+[wait]
+
+HR coordinators managing a dozen new hires at once get an instant roll-up. Which teams onboard fastest, where the common blockers are, and specific recommendations to fix systemic issues. This turns a SharePoint list into an HR intelligence tool.
+
+[pause: Final beat — recap the full arc]
+
+Let's recap what happened. We uploaded one markdown file describing how five teams onboard. The AI built the entire solution from scratch. Then the same "Generate Plan" skill produced three completely different onboarding experiences based on team, location, and role. We checked status with milestone awareness, drafted a personalized email, scheduled real meetings, and got analytics across all hires. One context file. One site. End to end.
+
+[screenshot: tools/screenshots/onboarding-hub-final.png]
+
+[section: reset]
+
+Navigate to Site Contents and delete the Onboarding Checklist and New Hire Directory lists.
+
+[navigate: ${SITE}_layouts/15/viewlsts.aspx]
+
+[confirm: Delete the "Onboarding Checklist" list from Site Contents]
+
+[confirm: Delete the "New Hire Directory" list from Site Contents]
+
+Reset the home page to its default state if needed.
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]

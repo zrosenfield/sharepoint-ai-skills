@@ -5,16 +5,16 @@
  * Usage:
  *   node tools/demo.mjs                        # interactive selector
  *   node tools/demo.mjs site-overview          # skip selector, match by name
- *   node tools/demo.mjs tools/scripts/my.demo  # skip selector, exact path
+ *   node tools/demo.mjs tools/scripts/my/my.demo  # skip selector, exact path
  *
  * Flow:
- *   1. Discover all .demo files in tools/scripts/
+ *   1. Discover all .demo files in tools/scripts/<name>/<name>.demo
  *   2. Show interactive grouped-category selector (or match arg directly)
  *   3. Run the [setup] section as a pre-flight check
  *   4. Clear the terminal and start the [demo] section
  */
 
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync, statSync } from 'fs';
 import { resolve, join, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
@@ -34,16 +34,18 @@ const CATEGORY_ORDER = [
 // ─── Demo discovery ───────────────────────────────────────────────────────────
 
 function discoverDemos() {
+  // Each demo lives in its own subfolder: scripts/<name>/<name>.demo
   return readdirSync(SCRIPTS_DIR)
-    .filter(f => f.endsWith('.demo'))
-    .map(f => {
-      const filePath = join(SCRIPTS_DIR, f);
+    .filter(entry => statSync(join(SCRIPTS_DIR, entry)).isDirectory())
+    .flatMap(dir => {
+      const filePath = join(SCRIPTS_DIR, dir, `${dir}.demo`);
+      try { readFileSync(filePath); } catch { return []; } // skip dirs without matching .demo
       const src = readFileSync(filePath, 'utf8');
       const lines = src.split('\n').map(l => l.trim()).filter(Boolean);
 
       // Title and description from leading # comments
       const comments = lines.filter(l => l.startsWith('#')).slice(0, 2);
-      const title = comments[0]?.replace(/^#+\s*/, '') || basename(f, '.demo');
+      const title = comments[0]?.replace(/^#+\s*/, '') || dir;
       const description = comments[1]?.replace(/^#+\s*/, '') || '';
 
       // Category from [category: Name]
@@ -54,7 +56,7 @@ function discoverDemos() {
       const hasSetup = src.includes('[section: setup]');
       const hasReset = src.includes('[section: reset]');
 
-      return { name: basename(f, '.demo'), file: filePath, title, description, category, hasSetup, hasReset };
+      return [{ name: dir, file: filePath, title, description, category, hasSetup, hasReset }];
     })
     .sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -296,7 +298,7 @@ async function main() {
   const demos = discoverDemos();
 
   if (!demos.length) {
-    console.error('No .demo files found in tools/scripts/');
+    console.error('No .demo files found in tools/scripts/. Each demo should live at tools/scripts/<name>/<name>.demo');
     process.exit(1);
   }
 

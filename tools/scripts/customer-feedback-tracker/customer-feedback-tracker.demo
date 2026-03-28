@@ -1,0 +1,111 @@
+# Customer Feedback Tracker
+# Build a feedback tracking solution with RALPH, then demo trend analysis, executive briefings, follow-up task creation, and Copilot email actions.
+
+[var: SITE = https://contoso.sharepoint.com/sites/demo/]
+[var: SKILLS = ${SITE}Agent%20Assets/Skills/]
+
+[section: setup]
+
+[assert: ${SKILLS}ralph-loop.md]
+
+[navigate: ${SITE}]
+
+Confirm this is a clean site with no existing "Customer Feedback" or "Feedback Follow-Ups" lists. If they exist from a previous run, delete them first.
+
+[pause: Verify clean site]
+
+[open-chat]
+
+[new-chat]
+
+Confirm the chat pane shows a fresh session.
+
+[pause: Confirm clean chat]
+
+[section: demo]
+
+[navigate: ${SITE}]
+
+Every company collects customer feedback — NPS surveys, support tickets, sales calls, social media. But it ends up scattered across six different tools and nobody synthesizes it. What if one SharePoint site could capture it all, analyze it automatically, and tell your leadership team what to do about it? Let's build that right now.
+
+[pause]
+
+[open-chat]
+
+We're going to give the AI a goal and let RALPH iterate until the solution is complete. It will build two lists with realistic sample data, color-coded formatting, filtered views, four skills, and a home page.
+
+[prompt: RALPH with max 6 iterations: GOAL: Build a complete, polished, demo-ready Customer Feedback Tracker on this SharePoint site. The solution lets product teams capture customer feedback, automatically analyze sentiment and themes, generate executive briefings, and create follow-up tasks. SUCCESS CRITERIA — score each 1–10, do not declare complete until all are 8 or higher: 1. FEEDBACK LIST — "Customer Feedback" with columns: Title (short summary), Customer Name (single line of text), Customer Company (single line of text), Product Area (choice: Core Platform/Mobile App/Integrations/Reporting/Onboarding), Feedback Channel (choice: Support Ticket/NPS Survey/Sales Call/Social Media/User Interview), Verbatim Feedback (multiple lines of text), Sentiment (choice: Positive/Neutral/Negative/Mixed), Priority (choice: Critical/High/Medium/Low), Status (choice: New/Under Review/Actioned/Closed/Won't Fix), Product Owner (single line of text), Date Received (date). At least 12 sample rows with realistic varied feedback across all Product Areas and Sentiments. Verbatim should read like real customer quotes — varied lengths, natural language, some emotional, some matter-of-fact. 2. FORMATTING AND VIEWS — Sentiment color-coded (Positive=green, Neutral=gray, Negative=red, Mixed=yellow). Priority color-coded (Critical=dark red, High=orange, Medium=yellow, Low=light gray). Views: "By Product Area" grouped, "By Sentiment" grouped, "Needs Attention" filtered to Negative+New, "Critical Issues" filtered to Critical priority. 3. FOLLOW-UP TASKS LIST — "Feedback Follow-Ups" with columns: Title (action item), Related Feedback (single line of text), Assigned To (single line of text), Due Date (date), Status (choice: Open/In Progress/Done), Notes (multiple lines of text). 3-4 sample tasks linked to negative feedback items. 4. SKILL: "Analyze Feedback Trends" — queries feedback, calculates sentiment distribution, identifies top themes in negative and positive feedback, compares across product areas, presents as executive briefing. 5. SKILL: "Generate Executive Briefing" — pulls recent feedback, writes VP-ready summary with sentiment trends, top themes, critical issues, and 3 recommended actions. 300-500 words. 6. SKILL: "Create Follow-Up Tasks" — reads a feedback item, generates 1-3 tasks with owners and priority-based due dates, adds to Follow-Ups list, updates feedback status to Under Review. 7. SKILL: "Draft Customer Response" — drafts response email adjusted for sentiment: empathetic for negative, grateful for positive. References specific feedback. 8. HOME PAGE — hero, Needs Attention view, open follow-ups, quick action links. CONSTRAINTS: No code. No People/Person columns.]
+
+[wait]
+
+The AI built a full customer feedback system — 12 realistic feedback entries, a follow-up tasks list, color-coded views, four skills, and a polished home page. Point out the "Needs Attention" view — it's already filtered to show only negative feedback that hasn't been addressed.
+
+[pause: Walk through the site — home page, color-coded list, different views]
+
+Let's dig into the data. The product team wants to know what's happening with the Mobile App.
+
+[prompt: Analyze feedback trends for the Mobile App]
+
+[wait]
+
+The AI didn't just count entries — it read every verbatim quote, identified the recurring themes, and calculated the sentiment split. Notice it leads with the headline finding and backs each claim with specific numbers. This is the briefing a PM actually wants, not a data dump.
+
+[pause: Point out theme identification and sentiment breakdown]
+
+Now leadership wants the big picture across all products.
+
+[prompt: Generate an executive briefing covering all feedback from the last 30 days]
+
+[wait]
+
+This is written for a VP audience. Overall sentiment, what customers love, the top concerns, critical items needing immediate attention, and three specific recommendations with named owners. The kind of analysis that takes an analyst a full day just took 15 seconds.
+
+[pause: Walk through the briefing structure]
+
+Let's act on one of these. There's a negative feedback item about reporting. Let's create follow-up tasks for it.
+
+[prompt: Create follow-up tasks for the most critical negative feedback item about reporting]
+
+[wait]
+
+The AI read the feedback, decided what actions are needed, created tasks with suggested owners and priority-based due dates, and updated the original feedback status to "Under Review." One prompt, multiple actions across two lists.
+
+[pause: Show the new tasks in the Follow-Ups list and the updated status on the original feedback]
+
+Now let's draft a response to the unhappy customer.
+
+[prompt: Draft a response to the customer who left the most negative feedback about the Mobile App]
+
+[wait]
+
+Notice the tone — empathetic, specific to their exact complaint, not a generic "thank you for your feedback." It references what the team is doing about the issue and offers a real next step. The AI adjusted automatically because the sentiment was negative.
+
+[pause: Point out the personalized tone and specific references]
+
+Here's where Copilot closes the loop beyond SharePoint.
+
+[prompt: Send that response email to the customer and create a calendar reminder for next Friday to follow up with them on the resolution]
+
+[wait]
+
+Copilot sent the email and scheduled the follow-up. The full cycle — feedback comes in, AI analyzes it, creates tasks, drafts the response, sends the email, and schedules the follow-up. Nobody had to open a separate tool.
+
+[pause: Point out the email and calendar actions]
+
+Let's zoom out. Imagine this running continuously. Feedback flows in from support tickets, NPS surveys, and sales calls. The AI analyzes trends weekly, flags critical issues immediately, creates tasks automatically, and drafts responses for the team to review and send. The SharePoint list becomes the hub, and Copilot actions reach into email, calendar, and Planner to close every loop.
+
+[screenshot: tools/screenshots/feedback-tracker-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}_layouts/15/viewlsts.aspx]
+
+[confirm: Delete the "Customer Feedback" list from Site Contents]
+
+[confirm: Delete the "Feedback Follow-Ups" list from Site Contents]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
