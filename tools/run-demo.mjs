@@ -1152,6 +1152,7 @@ async function runSteps(getPage, steps) {
 // In piped mode (e.g. tests): buffer lines and dequeue one at a time.
 const _keyQueue = [];
 let _keyQueueReady = null;
+let _stdinEOF = false;
 
 if (!process.stdin.isTTY) {
   process.stdin.setEncoding('utf8');
@@ -1162,6 +1163,11 @@ if (!process.stdin.isTTY) {
     }
     if (_keyQueueReady) { _keyQueueReady(); _keyQueueReady = null; }
   });
+  // EOF on piped stdin — wake any pending waitForKey so it can return 'enter'
+  process.stdin.on('end', () => {
+    _stdinEOF = true;
+    if (_keyQueueReady) { _keyQueueReady(); _keyQueueReady = null; }
+  });
   process.stdin.resume();
 }
 
@@ -1170,11 +1176,11 @@ async function waitForKey() {
 
   let key;
   if (!process.stdin.isTTY) {
-    // Drain one key from the queue; wait if empty
-    while (_keyQueue.length === 0) {
+    // Drain one key from the queue; wait if empty (or return 'enter' on EOF)
+    while (_keyQueue.length === 0 && !_stdinEOF) {
       await new Promise(r => { _keyQueueReady = r; });
     }
-    key = _keyQueue.shift();
+    key = _keyQueue.length > 0 ? _keyQueue.shift() : 'enter';
     if (key === '\x03') process.exit(0);
   } else {
     key = await new Promise(resolve => {
