@@ -908,19 +908,19 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
           async run() {
             printContext();
             process.stdout.write(`    Waiting for ${assertUrl} ...`);
-            // Poll in a temporary page so we don't navigate away from the active tab.
+            // Poll via fetch() inside the active page so we don't open a visible tab.
+            // Runs in the browser's auth context so SharePoint cookies are included.
             // Retry every 3s for up to 60s — gives SharePoint time to finish creating
             // a library or list before the next navigate/upload step.
             const deadline = Date.now() + 60_000;
             let passed = false;
             while (!passed && Date.now() < deadline) {
-              const checkPage = await activePage.context().newPage();
-              try {
-                const response = await checkPage.goto(assertUrl, { waitUntil: 'load', timeout: 10000 }).catch(() => null);
-                passed = !!(response && response.status() < 400);
-              } finally {
-                await checkPage.close().catch(() => {});
-              }
+              passed = await activePage.evaluate(async (url) => {
+                try {
+                  const r = await fetch(url, { method: 'HEAD', credentials: 'include' });
+                  return r.ok;
+                } catch { return false; }
+              }, assertUrl).catch(() => false);
               if (!passed && Date.now() < deadline) {
                 process.stdout.write('.');
                 await new Promise(r => setTimeout(r, 3000));

@@ -7,21 +7,29 @@
 
 [section: setup]
 
-This demo requires Demo 7 (Auto-Tag Everything) to have been run first so that
-metadata columns are populated. Verify the "Project Documents" library has
-Department, Document Type, Confidentiality, and Summary filled in for all 6
-files. If any view called "Confidential Review" exists from a previous run,
-delete it.
-
-[assert: ${LIBRARY}]
-
-[navigate: ${LIBRARY}]
+[navigate: ${SITE}]
 
 [open-chat]
 
 [new-chat]
 
-Confirm all 6 files have populated metadata columns and no "Confidential
+[prompt: Create a document library called "Project Documents" if it doesn't already exist. Add these columns if they don't exist: Department (Choice: Marketing, Finance, HR, Legal, Engineering), Document Type (Choice: Policy, Contract, Report, Presentation, Proposal), Confidentiality (Choice: Public, Internal, Confidential, Restricted), Summary (Multiple lines of text).]
+
+[wait]
+
+[sleep: 5s]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+[new-chat]
+
+Confirm "Project Documents" library exists with Department, Document Type,
+Confidentiality, and Summary columns. If the library is empty, run Demo 7
+(Auto-Tag Everything) first to upload files and populate metadata.
+
+Confirm 6 files have populated metadata columns and no "Confidential
 Review" view exists in the view switcher.
 
 [pause]
