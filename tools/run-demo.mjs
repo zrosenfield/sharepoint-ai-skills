@@ -711,7 +711,7 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
           async run() {
             printContext();
             const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
-            if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
+            if (!await iframe.isVisible({ timeout: 15000 }).catch(() => false)) {
               await openChatPane(activePage);
             } else {
               console.log('    Chat pane already open.');
@@ -826,13 +826,13 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
           name: 'New chat (clear Copilot conversation)',
           async run() {
             printContext();
-            if (!chatFrame) {
-              const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
-              if (!await iframe.isVisible({ timeout: 8000 }).catch(() => false)) {
-                throw new Error('[new-chat] requires the chat pane to be open first.');
-              }
-              chatFrame = activePage.frameLocator('[data-automationid="ChatODSPFrame"]');
+            // Re-check pane visibility even if chatFrame is set — the pane may have closed
+            // or be temporarily hidden while the page re-renders after navigation.
+            const iframe = activePage.locator('[data-automationid="ChatODSPFrame"]');
+            if (!await iframe.isVisible({ timeout: 12000 }).catch(() => false)) {
+              await openChatPane(activePage);
             }
+            chatFrame = activePage.frameLocator('[data-automationid="ChatODSPFrame"]');
             await startNewChat(activePage, chatFrame);
           },
         };
@@ -1257,6 +1257,20 @@ async function startNewChat(page, chatFrame) {
  * Click the FAB and navigate through the popup to open the full chat pane.
  */
 async function openChatPane(page) {
+  // Check if the pane is already open — fast path.
+  if (await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 1000 }).catch(() => false)) return;
+
+  // "Open Agents" is a suite-bar button present when the pane is closed on some tenants.
+  // Clicking it opens the pane directly (no popup). Try this first with a generous timeout
+  // to handle slow page loads where the suite bar renders after a brief delay.
+  const openAgentsBtn = page.locator('[aria-label="Open Agents"]').first();
+  if (await openAgentsBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+    await openAgentsBtn.click();
+    const paneViaAgents = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 8000 }).catch(() => false);
+    if (paneViaAgents) return;
+  }
+
+  // Fallback: try FAB selectors (present when pane is open, opens a popup with "Open chat").
   const fabSelectors = [
     '[aria-label*="alt plus i"]',
     'button.spui-FloatingActionButton',
@@ -1309,11 +1323,11 @@ async function openChatPane(page) {
         return; // pane is already open
       }
     }
-    // Neither "Open chat" nor "Close chat" found — dismiss and wait for iframe to appear.
+    // Neither "Open chat" nor "Close chat" found in popup — dismiss and check if pane appeared.
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
     const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 8000 }).catch(() => false);
-    if (paneVisible) return; // already open, we're good
+    if (paneVisible) return;
     await page.screenshot({ path: 'tools/debug-screenshot.png' });
     throw new Error('Could not find "Open chat" in the FAB popup. Debug screenshot saved.');
   }
