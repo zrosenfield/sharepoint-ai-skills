@@ -21,6 +21,7 @@ import { spawnSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SCRIPTS_DIR = join(__dirname, 'scripts');
+const LOCAL_SCRIPTS_DIR = join(SCRIPTS_DIR, 'local');
 const RUNNER = join(__dirname, 'run-demo.mjs');
 
 // Preferred display order for categories — unlisted categories appear at the end.
@@ -33,31 +34,36 @@ const CATEGORY_ORDER = [
 
 // ─── Demo discovery ───────────────────────────────────────────────────────────
 
-function discoverDemos() {
-  // Each demo lives in its own subfolder: scripts/<name>/<name>.demo
-  return readdirSync(SCRIPTS_DIR)
-    .filter(entry => statSync(join(SCRIPTS_DIR, entry)).isDirectory())
-    .flatMap(dir => {
-      const filePath = join(SCRIPTS_DIR, dir, `${dir}.demo`);
-      try { readFileSync(filePath); } catch { return []; } // skip dirs without matching .demo
-      const src = readFileSync(filePath, 'utf8');
+function discoverDemosIn(dir) {
+  try { readdirSync(dir); } catch { return []; } // folder may not exist
+  return readdirSync(dir)
+    .filter(entry => {
+      try { return statSync(join(dir, entry)).isDirectory(); } catch { return false; }
+    })
+    .flatMap(entry => {
+      const filePath = join(dir, entry, `${entry}.demo`);
+      let src;
+      try { src = readFileSync(filePath, 'utf8'); } catch { return []; }
       const lines = src.split('\n').map(l => l.trim()).filter(Boolean);
 
-      // Title and description from leading # comments
       const comments = lines.filter(l => l.startsWith('#')).slice(0, 2);
-      const title = comments[0]?.replace(/^#+\s*/, '') || dir;
+      const title = comments[0]?.replace(/^#+\s*/, '') || entry;
       const description = comments[1]?.replace(/^#+\s*/, '') || '';
 
-      // Category from [category: Name]
       const catMatch = src.match(/\[category:\s*([^\]]+)\]/);
       const category = catMatch ? catMatch[1].trim() : 'Other';
 
-      // Which sections exist
       const hasSetup = src.includes('[section: setup]');
       const hasReset = src.includes('[section: reset]');
 
-      return [{ name: dir, file: filePath, title, description, category, hasSetup, hasReset }];
-    })
+      return [{ name: entry, file: filePath, title, description, category, hasSetup, hasReset }];
+    });
+}
+
+function discoverDemos() {
+  // Each demo lives in its own subfolder: scripts/<name>/<name>.demo
+  // Local (gitignored) demos live in scripts/local/<name>/<name>.demo
+  return [...discoverDemosIn(SCRIPTS_DIR), ...discoverDemosIn(LOCAL_SCRIPTS_DIR)]
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 

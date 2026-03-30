@@ -261,6 +261,30 @@ After submitting a prompt the runner watches the DOM for Copilot's generation li
 
 ---
 
+## Local (gitignored) scripts
+
+Scripts that depend on unreleased or experimental features can live in
+`tools/scripts/local/`. This folder is gitignored, so nothing in it is
+committed or pushed.
+
+Local scripts use the same `.demo` format and the same numbered-folder
+convention as committed scripts:
+
+```
+tools/scripts/local/
+  19-my-experiment/
+    19-my-experiment.demo
+```
+
+They appear in the interactive launcher (`npm start`) and can be run
+directly by path — no special flag needed:
+
+```
+node tools/run-demo.mjs tools/scripts/local/19-my-experiment/19-my-experiment.demo
+```
+
+---
+
 ## Adding a new scenario
 
 To generate a demo script with an AI, see **[demo-builder.md](demo-builder.md)** — a self-contained prompt context that defines the full script format, all commands, and worked examples. Paste it into Claude (or any AI), describe the demo you want, and get a ready-to-run `.demo` file back.
