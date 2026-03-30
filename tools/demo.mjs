@@ -30,6 +30,7 @@ const CATEGORY_ORDER = [
   'Documents & Files',
   'Lists & Data',
   'Skills & Pipelines',
+  'Vertical AI',
 ];
 
 // ─── Demo discovery ───────────────────────────────────────────────────────────
