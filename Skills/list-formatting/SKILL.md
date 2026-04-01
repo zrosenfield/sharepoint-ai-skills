@@ -21,82 +21,172 @@ description: Create beautiful, functional SharePoint list and library formatters
 
 # SharePoint List Formatting Skill
 
-You are helping a user style and format their SharePoint list or library. SharePoint List Formatting uses JSON to customize how columns, views, rows, group headers, footers, and forms are displayed. Your job is to understand what the user wants, recommend the best formatting approach, and produce the JSON formatter that achieves their goal.
+## Step 1: Load Additional References (if needed)
 
-## CRITICAL FIRST STEP — READ THE REFERENCE FILE BEFORE DOING ANYTHING
+Scan the user's request and read any reference files that apply before responding:
 
-Before you respond to the user, before you ask any questions, before you generate any JSON — you MUST first read the formatting knowledge reference file. This file contains the complete technical reference for all available elements, expressions, tokens, CSS classes, Fluent UI icons, actions, and proven patterns. Without it, you will produce incomplete or incorrect formatters.
+| If the request involves… | Read… |
+|---|---|
+| Colors, icons, status indicators, severity styling, theme classes, font styling, background colors, any visual decoration | `references/visual.md` |
+| Buttons, Power Automate flows, hover cards, tile/gallery layouts, inline editing, group header/footer formatting, file previews | `references/advanced.md` |
+| A named pattern (status pill, progress bar, card layout, Gantt, KPI dashboard, etc.), or the user asks for a template, example, or starting point | `references/patterns.md` |
 
-**Action**: Read the file at [references/formatting-knowledge.md](references/formatting-knowledge.md).
+For open-ended "make it pretty" requests, read all three. When in doubt, read the file.
 
-Read the ENTIRE file. Do not skip this step. Do not summarize from memory. The file contains critical details about schemas, element types, operators, special tokens, theme classes, icon names, action types, advanced features, pattern templates, column type quirks, and common pitfalls that you need to produce correct formatters.
+---
 
-Once you have read the reference file, proceed with helping the user.
+## Step 2: Think Big Before You Build
+
+When the user asks to "make it pretty", "style my view", or gives any open-ended visual request — **do not default to incremental tweaks**. Treat it as an invitation to fundamentally reimagine the experience.
+
+Before touching JSON, ask yourself: *What is the most dramatically better version of this list?*
+
+**Default to transformation, not decoration:**
+- Prefer a `rowFormatter` card layout over adding row highlight colors
+- Prefer a tile/gallery view over a plain list with styled columns
+- Prefer rich column formatters (status pills, avatar+name, progress bars, due date urgency) over plain text with background colors
+- Propose a **complete visual system** — not isolated column tweaks
+
+**Name your vision first.** Before producing JSON, describe what you're building in one sentence. This lets the user redirect before you build the wrong thing.
+
+**Propose the boldest option, then offer alternatives.** Lead with the most dramatic transformation. Mention a simpler fallback if they want something lighter.
+
+---
+
+## Formatting Scopes
+
+Four distinct scopes — pick the right one, or combine them:
+
+- **Column formatting** — Styles a single column's cells. Applied via: Column Settings > Format this column > Advanced mode. `@currentField` is the column's value.
+- **View formatting (row-level)** — Styles entire rows or transforms the view layout. Applied via: View dropdown > Format current view > Advanced mode. Two approaches: `additionalRowClass` (conditional CSS class per row) or `rowFormatter` (full custom row layout).
+- **Group header/footer formatting** — Uses `groupProps` with `headerFormatter`/`footerFormatter`. Access group data with `@group` token.
+- **Form formatting** — Customizes new/edit/display form layout, headers, footers, and conditional show/hide.
+
+## JSON Schemas
+
+Always include the correct `$schema`:
+
+| Formatter type | Schema |
+|---|---|
+| Column formatting | `https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json` |
+| View with `rowFormatter` | `https://developer.microsoft.com/json-schemas/sp/v2/row-formatting.schema.json` |
+| View with `additionalRowClass` only | `https://developer.microsoft.com/json-schemas/sp/view-formatting.schema.json` |
+| Tile/gallery view | `https://developer.microsoft.com/json-schemas/sp/v2/tile-formatting.schema.json` |
+
+## Element Types (elmType)
+
+| elmType | Description |
+|---------|-------------|
+| `div` | Block container. Most common wrapper. |
+| `span` | Inline container. Good for text alongside other elements. |
+| `a` | Hyperlink. Requires `href` attribute. |
+| `img` | Image. Requires `src`. Subject to domain restrictions. |
+| `svg` / `path` | Vector graphics. `path` requires `d` attribute. |
+| `button` | Clickable button. Requires `customRowAction`. |
+| `filepreview` | Document library thumbnail. Set `src` to `@thumbnail.medium`. |
+
+## Key Properties
+
+- **`txtContent`** — Text content of the element (string or expression). If set, `children` are ignored.
+- **`style`** — CSS property/value pairs. Supports layout (`display`, `flex-*`, `position`), sizing, spacing, background, border, text, and `transform: translate()`. Use flexbox; `float` is deprecated.
+- **`attributes`** — HTML attributes: `href`, `src`, `class`, `target`, `title`, `role`, `iconName` (Fluent UI icon), `d` (SVG path), `data-interception`.
+- **`children`** — Array of child element objects. Ignored if `txtContent` is set.
+- **`forEach`** — `"iteratorName in @currentField"` — duplicates element for each value in a multi-value field. Cannot be on the root element.
+- **`debugMode`** — Set `true` to log errors to browser console.
+
+## Expressions
+
+Prefer Excel-style (`=` prefix). Examples:
+```
+=if(@currentField == 'Done', 'sp-field-severity--good', '')
+=if([$DueDate] <= @now, '#a4262c', 'inherit')
+='mailto:' + @currentField.email
+=toString(floor(@currentField * 100)) + '%'
+```
+
+**Operators**: `+`, `-`, `*`, `/`, `%`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `&&`, `||`, ternary `?`
+
+**String**: `toString()`, `toLowerCase`, `toUpperCase`, `indexOf`, `startsWith`, `endsWith`, `substring`, `replace`, `replaceAll`, `padStart`, `padEnd`, `split`, `join`, `length` (array count only — not string length)
+
+**Number**: `Number()`, `abs`, `floor`, `ceiling`, `pow`, `cos`, `sin`, `toLocaleString()`
+
+**Date**: `Date()`, `getDate`, `getMonth` (0-based), `getYear`, `addDays`, `addMinutes`, `toLocaleDateString()`, `toLocaleString()`
+
+**Array**: `appendTo`, `removeFrom`, `indexOf`, `join`, `length`
+
+**Images**: `getUserImage(email, size)` — sizes: `'small'`/`'s'`, `'medium'`/`'m'`, `'large'`/`'l'`
+
+## Special Tokens
+
+| Token | Description |
+|-------|-------------|
+| `@currentField` | Column value. In `rowFormatter`, always resolves to Title — use `[$FieldName]` instead. |
+| `@currentField.title` / `.email` / `.id` / `.picture` / `.department` / `.jobTitle` | Person field sub-properties |
+| `@currentField.lookupValue` / `.lookupId` | Lookup field sub-properties |
+| `@currentField.desc` | Hyperlink description |
+| `@me` | Current user's email |
+| `@now` | Current date/time (epoch ms) |
+| `@rowIndex` | Zero-based row index |
+| `[$FieldInternalName]` | Another column's value. Spaces → `_x0020_`. |
+| `[$FieldName.title]` / `.email` / `.lookupValue` | Sub-properties from another column |
+| `@thumbnail.small` / `.medium` / `.large` | Document library thumbnail URLs |
+| `@currentWeb` | Current site URL |
+| `@group.fieldData.displayValue` / `@group.count` | Group header/footer tokens |
+
+## Column Types
+
+| Type | Access | Notes |
+|------|--------|-------|
+| Text / Choice | `@currentField` | Direct string |
+| Number / Currency | `@currentField` | Use in math; `toLocaleString()` for display |
+| Date/Time | `@currentField` | Compare with `@now`; 1 day = 86400000ms |
+| Yes/No | `@currentField` | Returns `1` or `0`, not true/false |
+| Person | `@currentField.title`, `.email`, `.picture` | Object |
+| Multi-Person / Multi-Choice / Multi-Lookup | `forEach` | Use forEach to iterate |
+| Lookup | `@currentField.lookupValue`, `.lookupId` | Object |
+| Hyperlink | `@currentField` (URL), `@currentField.desc` | |
+| Location | `@currentField.DisplayName`, `.City`, `.Latitude`, `.Longitude` | |
+
+**Document library fields**: `[$FileLeafRef]` (filename), `[$FileRef]` (full path), `[$File_x0020_Type]` (extension), `[$Editor]` (modified by), `[$FileSizeDisplay]`, `@thumbnail.medium`.
+
+## Common Pitfalls
+
+1. **Internal vs display names**: Use internal names in `[$...]`. Spaces → `_x0020_`. Find via List Settings > column URL parameter `Field=`.
+2. **`@currentField` in rowFormatter**: Always resolves to Title. Use `[$FieldName]` for other columns.
+3. **Person fields are objects**: Use `.title` or `.email`, not the field reference directly.
+4. **Yes/No is 0/1**: Not true/false. `=if(@currentField == 1, 'Yes', 'No')`.
+5. **Date math in ms**: `@now + 259200000` = 3 days from now.
+6. **`length` is not string length**: It counts array items (multi-value fields only).
+7. **External images blocked**: Use Fluent UI icons, SVG, or theme classes instead.
+8. **`additionalRowClass` + `rowFormatter` are mutually exclusive**: rowFormatter wins.
+9. **Wrong schema silently fails**: Match schema to formatter type exactly.
 
 ---
 
 ## Your Role
 
-You are a SharePoint list formatting expert. When the user asks to style or format a list/library, you should:
-
-1. **Understand the context**: Ask what columns exist in their list, what column types they are (text, number, choice, person, date, yes/no, etc.), and what visual outcome they want.
-
-2. **Recommend the right formatting scope**: There are four distinct scopes of formatting — pick the right one (or combine them):
-   - **Column formatting** — Styles a single column's cells. Best for status indicators, progress bars, icons, conditional colors, data bars, action buttons, and per-field visuals.
-   - **View formatting** — Styles entire rows or transforms the view layout. Best for card layouts, tile views, row highlighting, alternating row colors, and completely custom row rendering.
-   - **Group header/footer formatting** — Customizes how grouped views display their headers and footers. Best for KPI summaries, aggregate displays, and color-coded group sections.
-   - **Form formatting** — Customizes the new/edit/display form layout including headers, footers, and section groupings with conditional show/hide.
-
-3. **Generate the JSON formatter**: Produce valid SharePoint list formatting JSON that achieves the user's goal. Always include the correct `$schema` reference. Use Excel-style expressions (the `=if(...)` syntax) rather than AST syntax for readability.
-
-4. **Explain what it does**: Briefly describe how the formatter works and any columns the user needs to have in their list for it to work.
-
-## Key Principles
-
-- **Always use the v2 schema** for column formatting: `https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json`
-- **Use the view formatting schema** for view/row formatters: `https://developer.microsoft.com/json-schemas/sp/v2/row-formatting.schema.json`
-- **Use the view-formatting schema** for simple additionalRowClass: `https://developer.microsoft.com/json-schemas/sp/view-formatting.schema.json`
-- **Prefer Excel-style expressions** (`=if(...)`) over AST operator/operands syntax for clarity
-- **Use Fluent UI icon names** via the `iconName` attribute (e.g., `CheckMark`, `Warning`, `Error`, `Forward`, `Calendar`, `Mail`, `Phone`)
-- **Use SharePoint theme classes** (e.g., `sp-field-severity--good`, `ms-bgColor-themePrimary`) for consistent theming
-- **Reference other columns** using `[$InternalFieldName]` syntax (spaces become `_x0020_`)
-- **Use `@currentField`** for the column being formatted, `@me` for current user, `@now` for current datetime
-- **Always think about the user's actual columns** — ask about column names and types before generating formatters that reference specific field names
+1. **Understand the context**: Ask what columns exist, their types, and what visual outcome they want.
+2. **Recommend the right scope(s)**: Column, view, group, or form formatting — or a combination.
+3. **Generate valid JSON**: Always include the correct `$schema`. Use Excel-style expressions.
+4. **Explain what it does**: Briefly describe the formatter and any columns it requires.
 
 ## Interaction Pattern
 
-When the user says something like "style my list" or "make my library pretty":
+1. Ask what kind of list it is and what columns it has.
+2. Name your vision and propose 2–3 approaches ranked bold-to-simple (e.g., "Best: full card layout with status pills and avatars. Lighter: conditional row colors + styled status column.").
+3. Generate the formatter(s) once the user confirms.
+4. Provide the JSON and instructions for where to apply it.
 
-1. Ask what kind of list/library it is (task tracker, project list, document library, contacts, etc.) and what columns it has
-2. Suggest 2-3 formatting approaches that would work well for their scenario (e.g., "We could do status color-coding on your Status column, a progress bar on your Percent Complete column, and a card-style view for the overall layout")
-3. Generate the formatter(s) once the user confirms what they want
-4. Provide the JSON along with instructions on where to apply it (Column Settings > Format this column, or Format current view)
+## Common Scenarios
 
-## Common Scenarios and Recommended Patterns
+**Task/project lists**: Lead with a rowFormatter card layout — status pills, due date urgency, progress bars, person avatars.
 
-Consult the formatting knowledge reference file (which you already read in the first step above) for the full technical reference, but here are the high-value patterns to suggest:
+**Document libraries**: Lead with a tile/gallery view using `filepreview` thumbnails, file type icons, and modified-by fields.
 
-**For task/project lists**: Status pills with color-coded icons, progress bars, due date highlighting (overdue in red), person fields with profile pictures, Gantt chart columns, priority indicators
+**Contact/people lists**: Card layouts with `getUserImage` profile pictures, email/phone action buttons.
 
-**For document libraries**: Tile/card layouts with file thumbnails using `filepreview` elmType, custom gallery cards with metadata overlays, file type icons, recently modified highlighting
+**Status/tracking lists**: Traffic light indicators, data bars, KPI aggregate footers.
 
-**For contact/people lists**: Card layouts with profile images (getUserImage), email/phone action buttons, department grouping with color-coded headers
+**Link/resource lists**: Tile layouts with icons and category sections.
 
-**For status/tracking lists**: KPI dashboards with gauges, traffic light indicators (red/yellow/green), trend arrows, data bars, heat maps, aggregate footers
-
-**For link/resource lists**: Tile layouts with icons, quick-link cards, image-based navigation tiles, categorized sections
-
-**For event/calendar lists**: Timeline views, card layouts with date badges, countdown formatting, registration status indicators
-
-## Important Reminders
-
-- Column formatting only changes display, never the underlying data
-- `@currentField` resolves to the Title field when used inside a `rowFormatter` — reference specific fields with `[$FieldName]` instead
-- Person fields are objects: use `@currentField.title` for name, `@currentField.email` for email
-- Lookup fields are objects: use `@currentField.lookupValue` for display text
-- Multi-value fields (multi-person, multi-choice) need `forEach` to iterate
-- The `setValue` action on buttons can update field values inline without opening the edit form
-- The `executeFlow` action can trigger Power Automate flows from buttons
-- External images require domain allowlisting in SharePoint admin — prefer Fluent UI icons and SVG for reliable visuals
-- Date math uses milliseconds: 1 day = 86400000ms
-- `length` returns array count for multi-value fields, not string length
+**Event/calendar lists**: Cards with date badges, countdown formatting, registration status.
