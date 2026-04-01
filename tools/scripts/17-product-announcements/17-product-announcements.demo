@@ -47,6 +47,8 @@ saved them as. Right now this library is basically a pile. Let's make it useful.
 
 [open-chat]
 
+[new-chat]
+
 First thing — let's see what's inside these files without opening any of them.
 
 [prompt: Read these docs and extract product name, release date, and target audience into columns]
@@ -182,9 +184,9 @@ and every step was a short sentence in plain English.
 
 [wait]
 
-[new-chat]
-
 [navigate: ${LIBRARY}]
+
+[new-chat]
 
 [prompt: Delete all files from this Product Announcements library.]
 

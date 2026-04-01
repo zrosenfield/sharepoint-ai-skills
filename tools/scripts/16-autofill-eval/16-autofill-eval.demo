@@ -91,6 +91,8 @@ weak.
 
 [open-chat]
 
+[new-chat]
+
 [prompt: Run the Autofill Eval Judge skill now against the Zava Test Documents library and the Expected Outputs list.]
 
 [wait]
@@ -104,6 +106,8 @@ need work.
 [pause]
 
 [navigate: ${RESULTS}]
+
+[new-chat]
 
 Let's dig into the bottom performers.
 
@@ -125,6 +129,8 @@ written better prompts to fix both.
 Now let's close the loop. Update the weakest prompt and run the eval again.
 
 [navigate: ${LIBRARY}]
+
+[new-chat]
 
 [prompt: Update the autofill prompt for the lowest-scoring column using the improvement suggestion from the eval results. Then re-run the Autofill Eval Judge skill and compare the new scores to the previous Eval Run ID. Did the rewrite improve accuracy?]
 
@@ -169,9 +175,9 @@ again. Instead of guessing whether your autofill is working, you know.
 
 [confirm: Click "Delete" in the SharePoint confirmation dialog]
 
-[new-chat]
-
 [navigate: ${LIBRARY}]
+
+[new-chat]
 
 [prompt: Remove all autofill columns from this library — delete Document Type, Primary Company, Counterparty, Total Dollar Value, Time Period or Term, Key Risk or Limitation, Target Audience, Compliance Certifications, Executive Summary, and Action Required columns.]
 
