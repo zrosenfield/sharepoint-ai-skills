@@ -137,6 +137,17 @@ Same as `[pause]` but the label appears in the step list shown before the demo s
 
 ---
 
+### Select items in a list or library
+
+```
+[select: 1]
+[select: 1-3]
+[select: all]
+```
+Selects items in the currently visible SharePoint list or document library by their visible position (1-indexed). `1-3` selects the first three items; `all` clicks the Select All checkbox in the header. Use before prompts that operate on selected files, or to set up a demo state.
+
+---
+
 ### File upload
 
 ```

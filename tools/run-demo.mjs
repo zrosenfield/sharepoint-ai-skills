@@ -31,7 +31,7 @@
  */
 
 import { chromium } from 'playwright';
-import { readFileSync, mkdirSync, existsSync } from 'fs';
+import { readFileSync, mkdirSync, existsSync, statSync } from 'fs';
 import { resolve, dirname, join, basename } from 'path';
 import { spawn } from 'child_process';
 import { get as httpGet, createServer } from 'http';
@@ -43,6 +43,13 @@ const _scriptDir = dirname(fileURLToPath(import.meta.url));
 let _cfg = {};
 try { _cfg = JSON.parse(readFileSync(join(_scriptDir, 'demo.config.json'), 'utf8')); } catch { /* defaults */ }
 
+// Resolve scenario first so per-demo config overrides can be applied before
+// any constants are derived from _cfg.
+const args = process.argv.slice(2);
+const SCENARIO = args.find(a => !a.startsWith('--')) ?? 'tell-me-about-site';
+const _scenarioKey = SCENARIO.endsWith('.demo') ? basename(resolve(SCENARIO), '.demo') : SCENARIO;
+if (_cfg.overrides?.[_scenarioKey]) Object.assign(_cfg, _cfg.overrides[_scenarioKey]);
+
 const TYPE_CHUNK = _cfg.typeChunkSize ?? 5;   // characters per fill() call
 const TYPE_DELAY = _cfg.typeDelayMs   ?? 10;  // ms between fills
 
@@ -52,8 +59,6 @@ let _demoVars = {};
 try { _demoVars = JSON.parse(readFileSync(join(_scriptDir, 'demo.vars.json'), 'utf8')); } catch { /* none */ }
 
 const CDP_URL = process.env.CDP_URL ?? 'http://localhost:9222';
-const args = process.argv.slice(2);
-const SCENARIO = args.find(a => !a.startsWith('--')) ?? 'tell-me-about-site';
 const _sectionIdx = args.indexOf('--section');
 const RUN_SECTION = args.includes('--setup') ? 'setup' : args.includes('--reset') ? 'reset' : args.includes('--all') ? 'all' : (_sectionIdx !== -1 && args[_sectionIdx + 1] ? args[_sectionIdx + 1] : 'demo');
 const USE_WIDGET = args.includes('--widget');
@@ -101,9 +106,13 @@ async function ensureEdgeRunning() {
   }
 
   const port = new URL(CDP_URL).port || '9222';
-  const userDataDir = join(process.env.TEMP || process.env.TMPDIR || '/tmp', 'edge-debug');
+  const userDataDir = _cfg.userDataDir ?? join(process.env.TEMP || process.env.TMPDIR || '/tmp', 'edge-debug');
 
-  spawn(edgePath, [`--remote-debugging-port=${port}`, `--user-data-dir=${userDataDir}`], {
+  const launchArgs = [`--remote-debugging-port=${port}`, `--user-data-dir=${userDataDir}`];
+  if (_cfg.profileDirectory) launchArgs.push(`--profile-directory=${_cfg.profileDirectory}`);
+  if (_cfg.inPrivate) launchArgs.push('--inprivate');
+
+  spawn(edgePath, launchArgs, {
     detached: true, stdio: 'ignore',
   }).unref();
 
@@ -788,11 +797,47 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
           isPause: true,
           async run() {
             printContext();
-            waitPrompt('  ▶  Enter=continue   b=back   s=skip   ');
+            waitPrompt('  ▶  Enter=continue   b=back   s=skip   g<n>=goto  ');
             const key = await waitForKey();
             console.log('');
             if (key === 'b') return 'back';
             if (key === 's') return 'skip';
+            if (key && key.startsWith('g') && /^\d+$/.test(key.slice(1))) return key;
+          },
+        };
+
+      case 'login-if-needed':
+        return {
+          name: 'Login if needed',
+          async run() {
+            const AUTH_HOSTS = /login\.(microsoftonline|live|microsoft)\.com/i;
+            const isAuthPage = () => AUTH_HOSTS.test(activePage.url());
+
+            // Also check for the Microsoft sign-in form in case of silent redirect
+            const hasSignInForm = async () => {
+              return activePage.locator('input[type="email"], input[name="loginfmt"], [data-testid="i0116"]')
+                .first().isVisible({ timeout: 2000 }).catch(() => false);
+            };
+
+            if (!isAuthPage() && !await hasSignInForm()) {
+              console.log('    Already authenticated — skipping login.');
+              return;
+            }
+
+            console.log('');
+            console.log('  ┌─────────────────────────────────────────────────────────┐');
+            console.log('  │  SIGN IN REQUIRED                                       │');
+            console.log('  │  Complete the Microsoft login in the browser window,    │');
+            console.log('  │  then press Enter to continue.                          │');
+            console.log('  └─────────────────────────────────────────────────────────┘');
+            waitPrompt('  ▶  Press Enter once signed in... ');
+            await waitForKey();
+            console.log('');
+
+            // Wait for the post-login redirect to settle
+            await activePage.waitForLoadState('load', { timeout: 30000 }).catch(() => {});
+            await activePage.waitForTimeout(2000);
+            console.log('    Signed in. Continuing.');
           },
         };
 
@@ -969,12 +1014,16 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
             }
 
             // Derive server-relative folder path from current page URL.
-            // e.g. /sites/demo/Messy%20Files/Forms/AllItems.aspx → /sites/demo/Messy Files
+            // Prefer RootFolder/id query param (set when browsing into a subfolder)
+            // over the pathname (which only contains the library root in that case).
+            // e.g. pathname: /sites/demo/Messy%20Files/Forms/AllItems.aspx → /sites/demo/Messy Files
+            // e.g. ?RootFolder=%2Fsites%2Fdemo%2FMessy%20Files%2FSubfolder → /sites/demo/Messy Files/Subfolder
             const urlObj = new URL(activePage.url());
             const origin = urlObj.origin;
-            const folderPath = decodeURIComponent(
-              urlObj.pathname.replace(/\/Forms\/[^/]*$/, '').replace(/\/$/, '')
-            );
+            const rootFolderParam = urlObj.searchParams.get('RootFolder') ?? urlObj.searchParams.get('id');
+            const folderPath = rootFolderParam
+              ? decodeURIComponent(rootFolderParam).replace(/\/$/, '')
+              : decodeURIComponent(urlObj.pathname.replace(/\/Forms\/[^/]*$/, '').replace(/\/$/, ''));
 
             process.stdout.write(`    Checking "${uploadFileName}"... `);
 
@@ -1018,15 +1067,30 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
             console.log('uploading...');
             process.stdout.write(`    Uploading "${uploadFileName}"... `);
 
+            // Files over 50 MB are too large to pass through page.evaluate() as base64
+            // without crashing the browser tab. Fall through to a manual prompt.
+            const fileSizeMB = statSync(localPath).size / (1024 * 1024);
+            if (fileSizeMB > 50) {
+              console.log(`skipping (${Math.round(fileSizeMB)} MB — too large for automated upload).`);
+              console.log(`  ℹ  Upload "${uploadFileName}" manually to SharePoint.`);
+              waitPrompt('  ▶  Upload the file manually, then press Enter... ');
+              const k = await waitForKey();
+              if (k === 'b') return 'back';
+              if (k === 's') return 'skip';
+              return;
+            }
+
+            // Upload via page.evaluate() so the request runs inside the browser and
+            // automatically uses the live session cookies.
             const fileBase64 = readFileSync(localPath).toString('base64');
+            const escapedFolder = folderPath.replace(/'/g, "''");
+            const escapedFile   = uploadFileName.replace(/'/g, "''");
             const upload = await activePage.evaluate(
               async ({ webUrl, folder, file, b64, digest }) => {
                 const binary = atob(b64);
                 const buf = new Uint8Array(binary.length);
                 for (let i = 0; i < binary.length; i++) buf[i] = binary.charCodeAt(i);
-                const escapedFolder = folder.replace(/'/g, "''");
-                const escapedFile   = file.replace(/'/g, "''");
-                const apiUrl = `${webUrl}/_api/web/GetFolderByServerRelativeUrl('${escapedFolder}')/Files/add(url='${escapedFile}',overwrite=false)`;
+                const apiUrl = `${webUrl}/_api/web/GetFolderByServerRelativeUrl('${folder}')/Files/add(url='${file}',overwrite=true)`;
                 const resp = await fetch(apiUrl, {
                   method: 'POST',
                   headers: {
@@ -1037,7 +1101,7 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
                 }).catch(() => ({ ok: false, status: 0 }));
                 return { ok: resp.ok, status: resp.status };
               },
-              { webUrl: check.webUrl, folder: folderPath, file: uploadFileName, b64: fileBase64, digest: check.digest }
+              { webUrl: check.webUrl, folder: escapedFolder, file: escapedFile, b64: fileBase64, digest: check.digest }
             );
 
             if (upload.ok) {
@@ -1048,6 +1112,78 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
               const k = await waitForKey();
               if (k === 'b') return 'back';
               if (k === 's') return 'skip';
+            }
+          },
+        };
+      }
+
+      case 'select': {
+        const selectArg = arg.trim().toLowerCase();
+        return {
+          name: `Select: ${selectArg}`,
+          async run() {
+            printContext();
+
+            if (selectArg === 'all') {
+              // Click the "Select all" checkbox in the list/library header.
+              // SharePoint uses "Select All" (capital A) in modern lists; CSS attribute
+              // selectors are case-sensitive so we try getByRole (case-insensitive) first,
+              // then fall back through CSS variants.
+              const attempts = [
+                () => activePage.getByRole('checkbox', { name: /select all/i }).first(),
+                () => activePage.locator('[data-automationid="SelectAllCheckbox"]').first(),
+                () => activePage.locator('[data-automationid="SelectAllCheckbox"] input').first(),
+                () => activePage.locator('[data-automationid="SelectAllCheckbox"] [role="checkbox"]').first(),
+                () => activePage.locator('[aria-label="Select All"]').first(),
+                () => activePage.locator('[aria-label="Select All Items"]').first(),
+                () => activePage.locator('[aria-label="Select all items"]').first(),
+                () => activePage.locator('[aria-label="Select all"]').first(),
+              ];
+
+              let clicked = false;
+              for (const attempt of attempts) {
+                const el = attempt();
+                if (await el.isVisible({ timeout: 2000 }).catch(() => false)) {
+                  // force:true bypasses decorative overlay spans (e.g. checkFocusRing)
+                  // that sit on top of the checkbox and intercept pointer events.
+                  await el.click({ timeout: 5000, force: true });
+                  clicked = true;
+                  break;
+                }
+              }
+              if (!clicked) {
+                throw new Error('[select:all] Could not find a "Select All" checkbox — is a list or library visible on this page?');
+              }
+              console.log('    Selected all items.');
+              return;
+            }
+
+            // Parse "N" or "N-M"
+            const rangeMatch = selectArg.match(/^(\d+)(?:-(\d+))?$/);
+            if (!rangeMatch) {
+              throw new Error(`[select] invalid argument "${arg}" — use a number, range (e.g. 1-3), or "all"`);
+            }
+            const start = parseInt(rangeMatch[1], 10);
+            const end = rangeMatch[2] ? parseInt(rangeMatch[2], 10) : start;
+
+            // Gather all list rows, skipping the header row (aria-rowindex="1" or no aria-rowindex).
+            // SharePoint assigns aria-rowindex starting at 1 for the header and 2+ for data rows,
+            // so item N corresponds to aria-rowindex N+1.
+            for (let n = start; n <= end; n++) {
+              // Try aria-rowindex first (modern SharePoint details list)
+              let row = activePage.locator(`[role="row"][aria-rowindex="${n + 1}"]`).first();
+              if (!await row.isVisible({ timeout: 3000 }).catch(() => false)) {
+                // Fallback: nth data row by position (skip header)
+                row = activePage.locator('[role="row"]').nth(n); // nth(0)=header, nth(1)=item1
+              }
+              await row.hover({ timeout: 5000 });
+              await activePage.waitForTimeout(150); // let hover-reveal animation settle
+              // Checkbox selector covers modern SP and classic variants
+              const checkbox = row.locator(
+                '[role="checkbox"], button[aria-label="Select"], [data-automationid="DetailsRowCheck"] button'
+              ).first();
+              await checkbox.click({ timeout: 3000 });
+              console.log(`    Selected item ${n}.`);
             }
           },
         };
@@ -1131,6 +1267,10 @@ async function runSteps(getPage, steps) {
       const nav = await step.run();
       if (nav === 'back') { i = prevPauseIndex(steps, i); continue; }
       if (nav === 'skip') continue;
+      if (nav && nav.startsWith('g') && /^\d+$/.test(nav.slice(1))) {
+        i = Math.min(parseInt(nav.slice(1), 10) - 2, steps.length - 1); // -2: 1-indexed + loop i++
+        continue;
+      }
       if (_widgetPauseRequested) {
         _widgetPauseRequested = false;
         widgetUpdate({ pauseRequested: false });
@@ -1139,6 +1279,10 @@ async function runSteps(getPage, steps) {
         console.log('');
         if (pk === 'b') { i = prevPauseIndex(steps, i); continue; }
         if (pk === 's') continue;
+        if (pk && pk.startsWith('g') && /^\d+$/.test(pk.slice(1))) {
+          i = Math.min(parseInt(pk.slice(1), 10) - 2, steps.length - 1);
+          continue;
+        }
       }
     } catch (err) {
       _widgetPauseRequested = false;
@@ -1206,12 +1350,42 @@ async function waitForKey() {
       const onData = buf => {
         const raw = buf.toString();
         if (raw === '\x03') process.exit(0);
+        const ch = raw === '\r' || raw === '\n' || raw === ' ' ? 'enter' : raw[0].toLowerCase();
+        // Goto mode: 'g' followed by digits then Enter
+        if (ch === 'g') {
+          _keyQueue.length = 0;
+          process.stdin.off('data', onData);
+          process.stdout.write('g');
+          let digits = '';
+          const onDigit = buf2 => {
+            const r = buf2.toString();
+            if (r === '\x03') process.exit(0);
+            if (r === '\r' || r === '\n') {
+              process.stdin.setRawMode(false);
+              process.stdin.pause();
+              process.stdin.off('data', onDigit);
+              process.stdout.write('\n');
+              resolve(digits ? 'g' + digits : 'enter');
+            } else if (r >= '0' && r <= '9') {
+              digits += r;
+              process.stdout.write(r);
+            } else {
+              // non-digit cancels goto — treat as that key
+              process.stdin.setRawMode(false);
+              process.stdin.pause();
+              process.stdin.off('data', onDigit);
+              resolve(r.toLowerCase());
+            }
+          };
+          process.stdin.on('data', onDigit);
+          return;
+        }
         // A widget click may have also arrived via _keyQueue — prefer stdin
         _keyQueue.length = 0;
         process.stdin.setRawMode(false);
         process.stdin.pause();
         process.stdin.off('data', onData);
-        resolve(raw === '\r' || raw === '\n' || raw === ' ' ? 'enter' : raw[0].toLowerCase());
+        resolve(ch);
       };
       process.stdin.on('data', onData);
       // Wake up if widget sends a key while stdin is listening
@@ -1270,6 +1444,19 @@ async function startNewChat(page, chatFrame) {
 async function openChatPane(page) {
   // Check if the pane is already open — fast path.
   if (await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 1000 }).catch(() => false)) return;
+
+  // Dismiss any overlay panel (Tips and Tricks, What's New, etc.) that may be
+  // intercepting pointer events and blocking the suite-bar FAB click.
+  const overlayPanel = page.locator('.ms-tipsntricks-panel, [class*="tipsntricks"], .ms-Panel.is-open:not([data-automationid="ChatODSPFrame"])').first();
+  if (await overlayPanel.isVisible({ timeout: 1500 }).catch(() => false)) {
+    const closeBtn = overlayPanel.locator('button[aria-label="Close"], .ms-Panel-closeButton, button.ms-Dialog-button--close').first();
+    if (await closeBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
+      await closeBtn.click();
+    } else {
+      await page.keyboard.press('Escape');
+    }
+    await page.waitForTimeout(400);
+  }
 
   // "Open Agents" is a suite-bar button present when the pane is closed on some tenants.
   // Clicking it opens the pane directly (no popup). Try this first with a generous timeout
@@ -1334,7 +1521,11 @@ async function openChatPane(page) {
         return; // pane is already open
       }
     }
-    // Neither "Open chat" nor "Close chat" found in popup — dismiss and check if pane appeared.
+    // Neither "Open chat" nor "Close chat" found — the FAB click may have opened the pane
+    // directly (no popup). Check first before pressing Escape (which would close the pane).
+    const paneVisibleDirect = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 5000 }).catch(() => false);
+    if (paneVisibleDirect) return;
+    // No pane and no recognisable popup — dismiss whatever is open and try once more.
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
     const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 8000 }).catch(() => false);
