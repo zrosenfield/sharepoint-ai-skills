@@ -8,6 +8,7 @@
 [section: setup]
 
 [navigate: ${SITE}]
+[login-if-needed]
 
 [open-chat]
 
@@ -45,45 +46,44 @@ messy-named files.
 
 [navigate: ${LIBRARY}]
 
-This is what most people's SharePoint folders actually look like. Cryptic file
-names, random versioning, files named after people instead of topics. You can't
-find anything without opening every single file.
+[scene: Main]
+
+This is what most SharePoint folders actually look like. You can't find
+anything without opening every single file.
 
 [pause]
 
 [open-chat]
 
-Let's ask Copilot to read every file and suggest better names using a
-consistent naming convention.
+Let's ask Copilot to read every file and suggest better names.
 
 [prompt: Look at the files in this library. For each file, suggest a better name using the format: [Category] - [Description] - [Date if known]. Show me a table with the current name and your suggested name.]
 
 [wait]
 
-Copilot read the content of every file — not just the file names — and proposed
-clean, descriptive names. Notice how it figured out "asdfgh.pdf" is a Northwind
-Traders contract just from reading the contents. Point out the table.
+Copilot read the content of every file — not just the names — and proposed
+clean, descriptive names. It figured out "asdfgh.pdf" is a Northwind Traders
+contract just from reading the contents.
 
 [pause]
 
-Now let's actually rename one. We'll start with the worst offender.
+Now let's rename one. We'll start with the worst offender.
 
 [prompt: Rename "asdfgh.pdf" to "Contract - Northwind Traders Cloud Migration.pdf"]
 
 [wait]
 
-One down. The file has been renamed in place — no re-uploading, no downloading
-and re-adding. Now let's do the rest in one shot.
+One down. Renamed in place — no re-uploading, no downloading and re-adding.
+Now let's do the rest in one shot.
 
 [pause]
 
 [prompt: Now rename all the other files using the suggestions you just gave me.]
 
+
 [wait]
 
-Refresh the library and look at the file names. Six files cleaned up in about
-30 seconds. Imagine doing this across 500 files in a migration. That's the
-power move.
+Six files, cleaned up in about 30 seconds. Scale that to a 500-file migration.
 
 [pause]
 

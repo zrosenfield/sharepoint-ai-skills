@@ -30,8 +30,8 @@ dist/
 *.log
 
 # Demo tool — generated screenshots (debug output and run captures)
-tools/debug-screenshot.png
-tools/result-screenshot.png
+**/debug-screenshot.png
+**/result-screenshot.png
 tools/screenshots/
 tools/step*.png
 
@@ -45,3 +45,6 @@ tools/demo.vars.json
 
 # Local-only demo scripts — not committed; use for unreleased / experimental features
 tools/scripts/local/
+
+# Playwright MCP — ephemeral session logs and snapshots
+.playwright-mcp/

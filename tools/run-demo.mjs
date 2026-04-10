@@ -1870,11 +1870,18 @@ async function openChatPane(page) {
   // "Open Agents" is a suite-bar button present when the pane is closed on some tenants.
   // Clicking it opens the pane directly (no popup). Try this first with a generous timeout
   // to handle slow page loads where the suite bar renders after a brief delay.
-  const openAgentsBtn = page.locator('[aria-label="Open Agents"]').first();
+  // Use an exact-length check: ignore "Open Agents. Press tab to enter expanded region."
+  // variants that open an agents marketplace panel instead of the chat pane.
+  const openAgentsBtn = page.locator('[aria-label="Open Agents"]:not([aria-label*="."])').first();
   if (await openAgentsBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+    console.log('    Trying "Open Agents" button...');
     await openAgentsBtn.click();
     const paneViaAgents = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 8000 }).catch(() => false);
-    if (paneViaAgents) return;
+    if (paneViaAgents) { console.log('    Opened via "Open Agents".'); return; }
+    // Did not open ChatODSPFrame — dismiss whatever it opened before trying the FAB.
+    console.log('    "Open Agents" did not open chat pane — dismissing and falling through to FAB.');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(500);
   }
 
   // Fallback: try FAB selectors (present when pane is open, opens a popup with "Open chat").
@@ -1900,7 +1907,15 @@ async function openChatPane(page) {
   }
 
   await fab.click();
-  await page.waitForTimeout(1000);
+
+  // Wait for either the popup menu OR the pane to appear — whichever comes first.
+  // A fixed 1 s sleep was unreliable: isVisible() doesn't retry, so if the popup
+  // appears after the sleep all four selector checks instantly return false.
+  const _fabResult = await Promise.race([
+    page.locator('[role="menu"]').waitFor({ state: 'visible', timeout: 8000 }).then(() => 'menu').catch(() => null),
+    page.locator('[data-automationid="ChatODSPFrame"]').waitFor({ state: 'visible', timeout: 8000 }).then(() => 'pane').catch(() => null),
+  ]);
+  if (_fabResult === 'pane') return; // FAB opened the pane directly — done.
 
   const openChatSelectors = [
     '[role="menuitem"]:has-text("Open chat")',
@@ -1912,7 +1927,7 @@ async function openChatPane(page) {
   let openChatBtn = null;
   for (const sel of openChatSelectors) {
     openChatBtn = page.locator(sel).first();
-    if (await openChatBtn.isVisible({ timeout: 3000 }).catch(() => false)) break;
+    if (await openChatBtn.isVisible().catch(() => false)) break;
     openChatBtn = null;
   }
 
@@ -1931,13 +1946,14 @@ async function openChatPane(page) {
       }
     }
     // Neither "Open chat" nor "Close chat" found — the FAB click may have opened the pane
-    // directly (no popup). Check first before pressing Escape (which would close the pane).
-    const paneVisibleDirect = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 5000 }).catch(() => false);
+    // directly (no popup). Wait properly (not instant isVisible) before pressing Escape,
+    // since Escape would close a still-loading pane.
+    const paneVisibleDirect = await page.locator('[data-automationid="ChatODSPFrame"]').waitFor({ state: 'visible', timeout: 15000 }).then(() => true).catch(() => false);
     if (paneVisibleDirect) return;
-    // No pane and no recognisable popup — dismiss whatever is open and try once more.
+    // Pane did not appear — now safe to dismiss any stray overlay and try once more.
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
-    const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').isVisible({ timeout: 8000 }).catch(() => false);
+    const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').waitFor({ state: 'visible', timeout: 8000 }).then(() => true).catch(() => false);
     if (paneVisible) return;
     await page.screenshot({ path: 'tools/debug-screenshot.png' });
     throw new Error('Could not find "Open chat" in the FAB popup. Debug screenshot saved.');
