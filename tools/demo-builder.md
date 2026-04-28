@@ -175,6 +175,15 @@ Saves a screenshot of the current browser state. Use at the end of key moments. 
 
 ---
 
+### Clip boundaries (for video production)
+
+```
+[clip]
+```
+Marks a split point for video production. Has no effect during a live demo run. When the runner is invoked with `--clips`, it stops and restarts the OBS recording at each `[clip]` marker, producing one video file per segment. Use `[clip]` between major demo beats that you expect to edit into separate short-form clips.
+
+---
+
 ## Section responsibilities
 
 | Section | Flag | Purpose |

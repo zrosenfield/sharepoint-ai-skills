@@ -43,10 +43,22 @@ Add `--record` to run the demo fully unattended — all `[pause]` steps auto-adv
 node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.demo --record
 ```
 
+Add `--clips` instead of (or in addition to) `--record` to split the recording at each `[clip]` marker in the script. Each segment between markers becomes a separate OBS recording file. `--clips` implies `--record` — you don't need both flags.
+
+```
+node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.demo --clips
+```
+
 **What `--record` does:**
 - Skips all `[pause]` waits — the demo runs straight through from start to finish
 - All automated steps (`[navigate]`, `[open-chat]`, `[prompt]`, `[wait]`, `[screenshot]`) still execute normally
 - Writes `recordings/<demo-name>/events.json` with per-step timing data and talking points
+
+**What `--clips` adds on top of `--record`:**
+- At each `[clip]` marker in the script, the OBS recording is stopped and a new one immediately started
+- Each clip becomes its own OBS output file alongside `events.json` in `recordings/<demo-name>/`
+- `events.json` switches to a `clips` array format — each entry has its own `videoFile`, `videoOffsetMs`, and `steps` slice
+- Screenshot frame numbers continue globally across clip boundaries
 
 **Claude Code is not required.** This is a plain Node.js command you can run in any terminal. Claude Code was used to build the Remotion video project (`C:\repos\remotion`) but has no role in day-to-day recording.
 
@@ -72,12 +84,13 @@ node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.
 | `[confirm]` | Auto-advances — the UI action is skipped. Run setup manually first if confirm steps are required. |
 | `[upload]` | Auto-advances — file won't be attached. Use `[upload-library]` instead if possible. |
 | `[login-if-needed]` | Auto-advances — requires you to already be signed in before running. |
+| `[clip]` | In `--clips` mode: stops/starts OBS recording. In `--record` mode (no `--clips`): no-op. |
 
 **Recommendation:** run `--setup` manually once before doing a `--record` run so the environment is ready.
 
 ### What `--record` captures
 
-Every step in the demo produces a screenshot saved to `recordings/<demo-name>/frames/step-NNN.png`, plus an `events.json` file with step timing. If OBS is connected, the full-motion video path is also captured (see OBS section below).
+Every step produces a timing entry in `recordings/<demo-name>/events.json`. If OBS is connected, the full-motion video is also captured (see OBS section below). Playwright screenshots are intentionally skipped in record and clip mode — OBS is the screen capture source and any Playwright screenshot causes a visible flash in the recording.
 
 ### OBS WebSocket integration (optional — for smooth video output)
 
@@ -234,6 +247,7 @@ Talking points are word-wrapped at 72 characters and printed to the terminal bef
 | `[confirm: message]` | Destructive action required in the browser — shows a warning box and waits for Enter after the user has completed the action |
 | `[screenshot: path]` | Save a screenshot to the given path |
 | `[scene: Name]` | Switch the OBS program scene (e.g. `[scene: Zoom SPAI]`). No-op if OBS is not connected. |
+| `[clip]` | Mark a clip boundary. In `--clips` mode, stops and restarts the OBS recording here. No-op in all other modes. |
 
 ---
 

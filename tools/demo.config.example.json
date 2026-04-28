@@ -6,6 +6,7 @@
   "userDataDir": "%TEMP%\\edge-debug",
   "profileDirectory": "Default",
   "inPrivate": false,
+  "cdpUrl": "http://localhost:9222",
 
   "_comment_obs": "OBS WebSocket settings for --record mode (OBS 28+ built-in, port 4455)",
   "_comment_obs2": "Find the password in OBS → Tools → WebSocket Server Settings",

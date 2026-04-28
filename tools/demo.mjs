@@ -278,7 +278,7 @@ function clearTerminal() {
 async function main() {
   const flags = process.argv.slice(2).filter(a => a.startsWith('--'));
   const arg = process.argv.slice(2).find(a => !a.startsWith('--'));
-  const extraFlags = flags.filter(f => ['--widget', '--record'].includes(f));
+  const extraFlags = flags.filter(f => ['--widget', '--record', '--clips'].includes(f));
 
   const demos = discoverDemos();
 

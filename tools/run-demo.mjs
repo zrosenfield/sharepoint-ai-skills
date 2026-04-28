@@ -58,11 +58,12 @@ const TYPE_DELAY = _cfg.typeDelayMs   ?? 10;  // ms between fills
 let _demoVars = {};
 try { _demoVars = JSON.parse(readFileSync(join(_scriptDir, 'demo.vars.json'), 'utf8')); } catch { /* none */ }
 
-const CDP_URL = process.env.CDP_URL ?? 'http://localhost:9222';
+const CDP_URL = process.env.CDP_URL ?? _cfg.cdpUrl ?? 'http://localhost:9222';
 const _sectionIdx = args.indexOf('--section');
 const RUN_SECTION = args.includes('--setup') ? 'setup' : args.includes('--reset') ? 'reset' : args.includes('--all') ? 'all' : (_sectionIdx !== -1 && args[_sectionIdx + 1] ? args[_sectionIdx + 1] : 'demo');
 const USE_WIDGET = args.includes('--widget');
-const RECORD_MODE = args.includes('--record');
+const CLIP_MODE = args.includes('--clips');
+const RECORD_MODE = args.includes('--record') || CLIP_MODE;
 
 // ─── Scenarios ───────────────────────────────────────────────────────────────
 
@@ -136,6 +137,7 @@ let _widgetPauseRequested = false;
 // OBS recording state (populated by main() in --record mode)
 let _obsConn = null;
 let _obsRecordingStartMs = null;
+let _obsClips = []; // populated by runSteps() in --clips mode
 
 function widgetUpdate(patch) {
   if (!USE_WIDGET) return;
@@ -491,9 +493,14 @@ async function main() {
         const eventsPath = join(_scriptDir, '..', 'recordings', _scenarioKey, 'events.json');
         if (existsSync(eventsPath)) {
           const ev = JSON.parse(readFileSync(eventsPath, 'utf8'));
-          ev.videoFile = videoFile;
+          if (CLIP_MODE && ev.clips?.length) {
+            ev.clips[ev.clips.length - 1].videoFile = videoFile;
+            console.log(`  \x1B[32m✓\x1B[0m  OBS clip ${ev.clips.length} → ${videoFile}`);
+          } else {
+            ev.videoFile = videoFile;
+            console.log(`  \x1B[32m✓\x1B[0m  OBS recording → ${videoFile}`);
+          }
           writeFileSync(eventsPath, JSON.stringify(ev, null, 2));
-          console.log(`  \x1B[32m✓\x1B[0m  OBS recording → ${videoFile}`);
         }
       }
     } catch { /* ignore */ }
@@ -1556,6 +1563,77 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
         };
       }
 
+      case 'click-button': {
+        const label = arg;
+        return {
+          name: `Click button: "${label}"`,
+          async run() {
+            printContext();
+            await activePage.waitForTimeout(2000);
+            const tryClick = async (locator, source) => {
+              try {
+                await locator.waitFor({ state: 'visible', timeout: 10000 });
+                await locator.click();
+                console.log(`    Clicked "${label}" in ${source}.`);
+                return true;
+              } catch { return false; }
+            };
+            if (chatFrame && await tryClick(chatFrame.getByRole('button', { name: label, exact: false }), 'chat')) return;
+            if (await tryClick(activePage.getByRole('button', { name: label, exact: false }), 'page')) return;
+            console.warn(`    Button "${label}" not found — skipping.`);
+          },
+        };
+      }
+
+      case 'follow-chat-link': {
+        return {
+          name: 'Navigate to link from chat response',
+          async run() {
+            printContext();
+            if (!chatFrame) {
+              console.warn('    No chat frame active — skipping.');
+              return;
+            }
+            // Walk links in the chat iframe from last to first.
+            // Preference order: .docx/.pptx (authored documents) > other SharePoint pages.
+            // Skip: citation-style links (short/numeric text), data files (.xlsx/.csv/.json).
+            const DATA_EXTS = /\.(xlsx|xls|csv|json|tsv)(\?|$)/i;
+            const DOC_EXTS  = /\.(docx|doc|pptx|ppt|pdf)(\?|$)/i;
+            const links = chatFrame.locator('a[href]');
+            const count = await links.count();
+            let href = null;
+            let fallback = null;
+            for (let i = count - 1; i >= 0; i--) {
+              const link = links.nth(i);
+              const h = await link.getAttribute('href');
+              if (!h || !h.startsWith('http') || !h.includes('sharepoint.com')) continue;
+              if (DATA_EXTS.test(h)) continue; // skip data/spreadsheet files
+              const text = (await link.innerText().catch(() => '')).trim();
+              if (text.length <= 3 || /^\d+$/.test(text)) continue; // skip citation links
+              if (DOC_EXTS.test(h)) { href = h; break; } // prefer authored doc types
+              if (!fallback) fallback = h;
+            }
+            if (!href) href = fallback;
+            if (!href) {
+              console.warn('    No SharePoint link found in chat — skipping.');
+              return;
+            }
+            console.log(`    → ${href}`);
+            chatFrame = null; // navigating away — chat no longer in context
+            await activePage.goto(href, { waitUntil: 'load', timeout: 60000 });
+            await activePage.waitForTimeout(3000);
+          },
+        };
+      }
+
+      case 'clip':
+        if (!CLIP_MODE) return null; // no-op outside --clips mode
+        return {
+          name: '✂  Clip boundary',
+          isClip: true,
+          async run() { /* OBS stop/start handled by runSteps */ },
+        };
+
       default:
         return {
           name: `[unknown command: ${cmd}]`,
@@ -1573,8 +1651,8 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
       const step = commandToStep(block.cmd, block.arg, ctx);
       if (step) {
         step.context = ctx.filter(b => b.type === 'talking' || b.type === 'comment').map(b => b.value).join('\n\n');
+        steps.push(step);
       }
-      steps.push(step);
     } else {
       pendingContext.push(block);
     }
@@ -1616,16 +1694,20 @@ async function runSteps(getPage, steps) {
   });
   console.log('');
 
-  if (RECORD_MODE) console.log('  \x1B[33m⏺  RECORD MODE — pauses auto-advance\x1B[0m\n');
+  if (RECORD_MODE) console.log(`  \x1B[33m⏺  ${CLIP_MODE ? 'CLIP' : 'RECORD'} MODE — pauses auto-advance\x1B[0m\n`);
 
-  // Set up recording directory and frames folder up front
+  // Set up recording directory up front
   let recordDir;
   if (RECORD_MODE) {
     recordDir = join(_scriptDir, '..', 'recordings', _scenarioKey);
-    mkdirSync(join(recordDir, 'frames'), { recursive: true });
+    mkdirSync(recordDir, { recursive: true });
   }
 
   const recordedSteps = [];
+  // Clip-mode tracking
+  let clipIdx = 1;
+  let currentClipSteps = [];
+  let clipObsStartWall = _obsRecordingStartMs; // wall-clock when current clip's OBS recording started
 
   for (let i = 0; i < steps.length; i++) {
     const step = steps[i];
@@ -1635,28 +1717,58 @@ async function runSteps(getPage, steps) {
     const stepStartMs = Date.now() - startTime;
 
     try {
-      await getPage().bringToFront().catch(() => {});
+      if (!RECORD_MODE) await getPage().bringToFront().catch(() => {});
       widgetUpdate({ step: i + 1, total: steps.length, name: step.name, context: '', waiting: false });
       const nav = await step.run();
 
       if (RECORD_MODE) {
-        const frameNum = String(i + 1).padStart(3, '0');
-        const screenshotFilename = `frames/step-${frameNum}.png`;
-        await getPage().screenshot({ path: join(recordDir, screenshotFilename) }).catch(() => {});
-
-        const endMs = Date.now() - startTime;
-        recordedSteps.push({
-          name: step.name,
-          talkingPoints: step.context || '',
-          isPause: !!step.isPause,
-          startMs: stepStartMs,
-          endMs,
-          durationMs: endMs - stepStartMs,
-          // Pause steps auto-advance instantly — give them a display duration for the slideshow
-          ...(step.isPause && { displayDurationMs: 5000 }),
-          // Path relative to Remotion's public/ root
-          screenshot: `recordings/${_scenarioKey}/${screenshotFilename}`,
-        });
+        if (step.isClip && CLIP_MODE) {
+          // Hold on the current state briefly so the payoff is visible before the clip ends
+          await new Promise(r => setTimeout(r, 2500));
+          // Clip boundary — stop current OBS recording, start the next one
+          const firstStepWall = currentClipSteps.length > 0
+            ? startTime + currentClipSteps[0].startMs
+            : startTime;
+          const videoOffsetMs = clipObsStartWall != null ? firstStepWall - clipObsStartWall : undefined;
+          if (_obsConn) {
+            const obs = await import('./obs-record.mjs');
+            // Stop current clip — independent of whether start succeeds
+            let videoFile = null;
+            try {
+              videoFile = await obs.stopRecording(_obsConn);
+              console.log(`  \x1B[32m✓\x1B[0m  OBS clip ${clipIdx} → ${videoFile}`);
+            } catch (e) {
+              console.warn(`  OBS stop failed for clip ${clipIdx}: ${e.message}`);
+            }
+            _obsClips.push({ clipIndex: clipIdx, ...(videoFile && { videoFile }), ...(videoOffsetMs != null && { videoOffsetMs }), steps: currentClipSteps });
+            // Let OBS fully settle before starting next clip
+            await new Promise(r => setTimeout(r, 500));
+            // Start next clip — failure here is independent of the stop above
+            try {
+              clipObsStartWall = await obs.startRecording(_obsConn);
+              console.log(`  \x1B[33m⏺  OBS clip ${clipIdx + 1} started\x1B[0m`);
+            } catch (e) {
+              console.warn(`  OBS start failed for clip ${clipIdx + 1}: ${e.message}`);
+            }
+          } else {
+            _obsClips.push({ clipIndex: clipIdx, ...(videoOffsetMs != null && { videoOffsetMs }), steps: currentClipSteps });
+          }
+          clipIdx++;
+          currentClipSteps = [];
+        } else {
+          // Record step timing only — no Playwright screenshot (OBS captures the screen)
+          const endMs = Date.now() - startTime;
+          const stepData = {
+            name: step.name,
+            talkingPoints: step.context || '',
+            isPause: !!step.isPause,
+            startMs: stepStartMs,
+            endMs,
+            durationMs: endMs - stepStartMs,
+          };
+          recordedSteps.push(stepData);
+          if (CLIP_MODE) currentClipSteps.push(stepData);
+        }
       }
 
       if (nav === 'back') { i = prevPauseIndex(steps, i); continue; }
@@ -1695,16 +1807,31 @@ async function runSteps(getPage, steps) {
 
   if (RECORD_MODE && recordedSteps.length) {
     const eventsPath = join(recordDir, 'events.json');
-    writeFileSync(eventsPath, JSON.stringify({
-      demoName: _scenarioKey,
-      recordedAt: new Date().toISOString(),
-      // videoOffsetMs: how far into the OBS recording the demo steps begin.
-      // Used by DemoVideo in Remotion to sync overlays to the video.
-      ...(_obsRecordingStartMs && { videoOffsetMs: startTime - _obsRecordingStartMs }),
-      steps: recordedSteps,
-    }, null, 2));
-    console.log(`\n  \x1B[32m✓\x1B[0m  Events saved → ${eventsPath}`);
-    console.log(`       Copy to C:\\repos\\remotion\\public\\recordings\\ then run: npm run studio`);
+    if (CLIP_MODE) {
+      // Finalize the last clip (videoFile will be patched by main() after OBS stops)
+      const firstStepWall = currentClipSteps.length > 0
+        ? startTime + currentClipSteps[0].startMs
+        : startTime;
+      const videoOffsetMs = clipObsStartWall != null ? firstStepWall - clipObsStartWall : undefined;
+      _obsClips.push({ clipIndex: clipIdx, ...(videoOffsetMs != null && { videoOffsetMs }), steps: currentClipSteps });
+      writeFileSync(eventsPath, JSON.stringify({
+        demoName: _scenarioKey,
+        recordedAt: new Date().toISOString(),
+        clips: _obsClips,
+      }, null, 2));
+      console.log(`\n  \x1B[32m✓\x1B[0m  Events saved (${clipIdx} clip${clipIdx !== 1 ? 's' : ''}) → ${eventsPath}`);
+    } else {
+      writeFileSync(eventsPath, JSON.stringify({
+        demoName: _scenarioKey,
+        recordedAt: new Date().toISOString(),
+        // videoOffsetMs: how far into the OBS recording the demo steps begin.
+        // Used by DemoVideo in Remotion to sync overlays to the video.
+        ...(_obsRecordingStartMs && { videoOffsetMs: startTime - _obsRecordingStartMs }),
+        steps: recordedSteps,
+      }, null, 2));
+      console.log(`\n  \x1B[32m✓\x1B[0m  Events saved → ${eventsPath}`);
+      console.log(`       Copy to C:\\repos\\remotion\\public\\recordings\\ then run: npm run studio`);
+    }
   }
 }
 
