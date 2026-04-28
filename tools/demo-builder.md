@@ -184,6 +184,24 @@ Marks a split point for video production. Has no effect during a live demo run. 
 
 ---
 
+### Button clicking
+
+```
+[click-button: Save]
+```
+Clicks a button by its visible label. The runner waits 2 seconds before clicking (giving the UI time to render), searches the Copilot chat frame first and then the full page, and logs a warning rather than failing if the button is not found. Use this when Copilot presents an action button (e.g. "Save", "Create", "Accept") that should be clicked as part of the flow.
+
+---
+
+### Following a link from a chat response
+
+```
+[follow-chat-link]
+```
+Navigates to the most relevant SharePoint link visible in the current Copilot response. The runner prefers `.docx`/`.pptx` document links over plain page links, and skips data files (`.xlsx`, `.csv`, `.json`), citation-style links, and list-item form URLs. Use this after a prompt that generates a document — it clicks through to the result without needing to hard-code a URL.
+
+---
+
 ## Section responsibilities
 
 | Section | Flag | Purpose |

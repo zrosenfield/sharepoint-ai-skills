@@ -831,8 +831,9 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
               process.stdin.on('data', rawListener);
             }
 
+            let waitResult;
             try {
-              await waitForCopilotResponse(activePage, chatFrame, 300000, ac.signal);
+              waitResult = await waitForCopilotResponse(activePage, chatFrame, 300000, ac.signal);
             } finally {
               _keyQueueReady = prevReady;
               if (rawListener) {
@@ -841,6 +842,7 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
                 process.stdin.pause();
               }
             }
+            if (waitResult === 'navigated') chatFrame = null;
             if (nav) console.log('');
             return nav;
           },
@@ -1594,26 +1596,43 @@ function parseScript(src, page, section = 'demo', externalVars = {}) {
               console.warn('    No chat frame active — skipping.');
               return;
             }
-            // Walk links in the chat iframe from last to first.
-            // Preference order: .docx/.pptx (authored documents) > other SharePoint pages.
-            // Skip: citation-style links (short/numeric text), data files (.xlsx/.csv/.json).
+            // Collect all candidate links in DOM order, then select the best one.
+            // Copilot responses put the generated output FIRST, then cite sources at the bottom.
+            // Walking last-to-first was hitting citation .docx files before the report .docx.
             const DATA_EXTS = /\.(xlsx|xls|csv|json|tsv)(\?|$)/i;
             const DOC_EXTS  = /\.(docx|doc|pptx|ppt|pdf)(\?|$)/i;
+            // URL patterns typical of list-item citations, not generated documents.
+            const CITATION_URLS = /\/Lists\/[^?]*DispForm\.aspx|\/Lists\/[^?]*AllItems\.aspx|_layouts\/15\/listform\.aspx/i;
             const links = chatFrame.locator('a[href]');
             const count = await links.count();
-            let href = null;
-            let fallback = null;
-            for (let i = count - 1; i >= 0; i--) {
+
+            // Build ordered list of candidates (filter obvious non-candidates fast).
+            const candidates = [];
+            for (let i = 0; i < count; i++) {
               const link = links.nth(i);
               const h = await link.getAttribute('href');
               if (!h || !h.startsWith('http') || !h.includes('sharepoint.com')) continue;
-              if (DATA_EXTS.test(h)) continue; // skip data/spreadsheet files
+              if (DATA_EXTS.test(h)) continue;
+              if (CITATION_URLS.test(h)) continue;
               const text = (await link.innerText().catch(() => '')).trim();
-              if (text.length <= 3 || /^\d+$/.test(text)) continue; // skip citation links
-              if (DOC_EXTS.test(h)) { href = h; break; } // prefer authored doc types
-              if (!fallback) fallback = h;
+              if (!text || text.length <= 3 || /^\d+$/.test(text)) continue;
+              // Skip links inside citation containers (<sup>, class*=citation/source/reference).
+              const inCitation = await link.evaluate(el => !!el.closest(
+                'sup,[data-type="citation"],[data-annotation],[class*="Citation"],[class*="citation"],[class*="Source"],[class*="source"],[class*="Reference"],[class*="reference"],[class*="Footnote"],[class*="footnote"]'
+              )).catch(() => false);
+              if (inCitation) continue;
+              candidates.push({ href: h, text, docExt: DOC_EXTS.test(h) });
             }
-            if (!href) href = fallback;
+
+            // Preference: last DOC_EXT candidate (generated document from latest message),
+            // then first non-DOC candidate (main output body appears before sources section).
+            let href = null;
+            for (let i = candidates.length - 1; i >= 0; i--) {
+              if (candidates[i].docExt) { href = candidates[i].href; break; }
+            }
+            if (!href && candidates.length) href = candidates[0].href;
+
+            console.log(`    Links found: ${candidates.length} candidates${candidates.length ? ' — ' + candidates.map(c => `"${c.text}"(${c.docExt?'doc':'page'})`).join(', ') : ''}`);
             if (!href) {
               console.warn('    No SharePoint link found in chat — skipping.');
               return;
@@ -1794,8 +1813,10 @@ async function runSteps(getPage, steps) {
       _widgetPauseRequested = false;
       widgetUpdate({ pauseRequested: false });
       console.error(`\n  Error in step ${i + 1}: ${err.message}`);
-      await getPage().screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
-      console.error('  Debug screenshot saved to tools/debug-screenshot.png');
+      if (!RECORD_MODE) {
+        await getPage().screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
+        console.error('  Debug screenshot saved to tools/debug-screenshot.png');
+      }
       waitPrompt('  ▶  Press Enter to continue to the next step, or Ctrl+C to quit... ');
       await waitForKey();
       console.log('');
@@ -2029,8 +2050,8 @@ async function openChatPane(page) {
   }
 
   if (!fab) {
-    await page.screenshot({ path: 'tools/debug-screenshot.png' });
-    throw new Error('Could not locate the Copilot FAB. Debug screenshot saved.');
+    if (!RECORD_MODE) await page.screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
+    throw new Error('Could not locate the Copilot FAB.' + (!RECORD_MODE ? ' Debug screenshot saved.' : ''));
   }
 
   await fab.click();
@@ -2049,21 +2070,34 @@ async function openChatPane(page) {
     'div.fui-MenuItem:has-text("Open chat")',
     '[aria-label="Open chat"]',
     '[data-automationid*="OpenChat"]',
+    // Broader fallbacks for UI variants
+    '[role="menuitem"]:has-text("Open Copilot")',
+    'div.fui-MenuItem:has-text("Open Copilot")',
+    '[aria-label*="Open Copilot"]',
+    '[role="menuitem"][aria-label*="chat" i]',
+    '[role="menuitem"][aria-label*="Copilot" i]',
   ];
 
   let openChatBtn = null;
   for (const sel of openChatSelectors) {
     openChatBtn = page.locator(sel).first();
-    if (await openChatBtn.isVisible().catch(() => false)) break;
+    if (await openChatBtn.isVisible({ timeout: 1000 }).catch(() => false)) break;
     openChatBtn = null;
   }
 
   if (!openChatBtn) {
+    // Log what menu items ARE visible to help diagnose selector mismatches.
+    const menuItems = await page.locator('[role="menuitem"]').allTextContents().catch(() => []);
+    if (menuItems.length) console.log(`    FAB menu items found: ${menuItems.map(t => `"${t.trim()}"`).join(', ')}`);
+
     // "Close chat" in the popup means the pane is already open — dismiss and return.
     const closeChatSelectors = [
       '[role="menuitem"]:has-text("Close chat")',
       'div.fui-MenuItem:has-text("Close chat")',
       '[aria-label="Close chat"]',
+      '[role="menuitem"]:has-text("Close Copilot")',
+      'div.fui-MenuItem:has-text("Close Copilot")',
+      '[aria-label*="Close Copilot"]',
     ];
     for (const sel of closeChatSelectors) {
       if (await page.locator(sel).first().isVisible({ timeout: 1000 }).catch(() => false)) {
@@ -2082,8 +2116,8 @@ async function openChatPane(page) {
     await page.waitForTimeout(500);
     const paneVisible = await page.locator('[data-automationid="ChatODSPFrame"]').waitFor({ state: 'visible', timeout: 8000 }).then(() => true).catch(() => false);
     if (paneVisible) return;
-    await page.screenshot({ path: 'tools/debug-screenshot.png' });
-    throw new Error('Could not find "Open chat" in the FAB popup. Debug screenshot saved.');
+    if (!RECORD_MODE) await page.screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
+    throw new Error('Could not find "Open chat" in the FAB popup.' + (!RECORD_MODE ? ' Debug screenshot saved.' : ''));
   }
 
   await openChatBtn.click();
@@ -2111,8 +2145,8 @@ async function getChatInput(page, chatFrame) {
     }
   }
 
-  await page.screenshot({ path: 'tools/debug-screenshot.png' });
-  throw new Error('Chat input not found. Debug screenshot saved.');
+  if (!RECORD_MODE) await page.screenshot({ path: 'tools/debug-screenshot.png' }).catch(() => {});
+  throw new Error('Chat input not found.' + (!RECORD_MODE ? ' Debug screenshot saved.' : ''));
 }
 
 /**
@@ -2138,6 +2172,8 @@ async function slowType(locator, text, chunkSize = TYPE_CHUNK, delayMs = TYPE_DE
 async function waitForCopilotResponse(page, chatFrame, timeoutMs = 300000, signal = null) {
   const aborted = () => signal?.aborted ?? false;
   const deadline = Date.now() + timeoutMs;
+  const startUrl = page.url();
+  const navigated = () => page.url() !== startUrl;
 
   // If the input still has text, the prompt wasn't submitted — press Enter to re-submit.
   try {
@@ -2176,6 +2212,7 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 300000, signa
   let lastDot = Date.now();
   outer: while (Date.now() < startDeadline) {
     if (aborted()) return;
+    if (navigated()) { console.log(' navigated.'); return 'navigated'; }
     for (const sel of stopSelectors) {
       const loc = chatFrame.locator(sel).first();
       if (await loc.isVisible({ timeout: 500 }).catch(() => false)) {
@@ -2192,6 +2229,7 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 300000, signa
     lastDot = Date.now();
     while (Date.now() < deadline) {
       if (aborted()) return;
+      if (navigated()) { console.log(' navigated.'); return 'navigated'; }
       if (!await stopBtn.isVisible({ timeout: 500 }).catch(() => false)) {
         console.log(' done.');
         return;
@@ -2214,6 +2252,7 @@ async function waitForCopilotResponse(page, chatFrame, timeoutMs = 300000, signa
 
   while (Date.now() < deadline) {
     if (aborted()) return;
+    if (navigated()) { console.log('    Page navigated — treating as complete.'); return 'navigated'; }
     const count = await chatFrame.locator(feedbackSel).count().catch(() => 0);
     if (count > initialCount) {
       console.log('    Generation complete (feedback buttons appeared).');

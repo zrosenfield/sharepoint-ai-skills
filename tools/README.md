@@ -248,6 +248,8 @@ Talking points are word-wrapped at 72 characters and printed to the terminal bef
 | `[screenshot: path]` | Save a screenshot to the given path |
 | `[scene: Name]` | Switch the OBS program scene (e.g. `[scene: Zoom SPAI]`). No-op if OBS is not connected. |
 | `[clip]` | Mark a clip boundary. In `--clips` mode, stops and restarts the OBS recording here. No-op in all other modes. |
+| `[click-button: text]` | Click a button by its visible label — searched in the chat frame first, then the full page. Waits 2 seconds before clicking so the UI can settle. Logs a warning (rather than failing) if the button is not found. |
+| `[follow-chat-link]` | Navigate to the most-relevant SharePoint link in the current Copilot response. Prefers `.docx`/`.pptx` document links over page links; skips citation-style links, data files (`.xlsx`, `.csv`), and list-item `DispForm` URLs. Useful after a prompt that generates a document to jump straight to the result. |
 
 ---
 
@@ -341,6 +343,7 @@ Per-script overrides are merged on top of the global vars, so you only need to s
 |-----|---------|-------------|
 | `typeChunkSize` | `5` | Characters typed per fill() call when slow-typing a prompt |
 | `typeDelayMs` | `10` | Milliseconds between fill() calls (controls perceived typing speed) |
+| `cdpUrl` | `http://localhost:9222` | CDP endpoint for the Edge/Chrome instance. Override here (or via the `CDP_URL` env var) when using a non-standard debugging port, e.g. `9223` for an InPrivate browser. Per-demo overrides in `demo.config.json` take precedence over the top-level value. |
 
 To type faster, increase `typeChunkSize` or decrease `typeDelayMs`. To type slower (e.g. for a live audience that needs more reading time), decrease `typeChunkSize` or increase `typeDelayMs`.
 
