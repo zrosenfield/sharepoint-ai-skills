@@ -1,0 +1,280 @@
+# Community Skills Walkthrough — Skills Demo
+# Three real-world scenarios: file renaming policy, video content repurposing, and brand-palette styling.
+
+[var: COMMUNITY = https://microsoft.sharepoint-df.com/sites/CommunityDemos/]
+[var: FILENAMES = https://microsoft.sharepoint-df.com/sites/CommunityDemos/Shared%20Documents/Filenames/]
+[var: VIDEOS = https://microsoft.sharepoint-df.com/sites/CommunityDemos/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FCommunityDemos%2FShared%20Documents%2FVideos&viewid=b8678446%2D4a62%2D48ea%2Da2ec%2Dd663a6292afa&share=cgrEe5T1eIArQ46TzU6s%2DyTTEgUC0lODU%5Ftec7S1u1S%2DMnC8rg]
+[var: DOCS = https://microsoft.sharepoint-df.com/sites/CommunityDemos/Shared%20Documents/]
+[var: AGENT_ASSETS = https://microsoft.sharepoint-df.com/sites/CommunityDemos/AgentAssets/]
+[var: LIST = https://microsoft.sharepoint-df.com/sites/CommunityDemos/Lists/Job%20Postings/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${DOCS}]
+
+[login-if-needed]
+
+[enable-site-feature: Agent Assets | 9E14D30C-1E0D-4C8C-8DCB-A8D29F7D4C15]
+
+[navigate: ${AGENT_ASSETS}]
+
+[upload-skill: Skills/youtube-description | Skills]
+
+[upload-skill: Skills/list-formatting | Skills]
+
+[navigate: ${DOCS}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a folder called "Filenames" in this document library if it doesn't already exist. Then create a folder called "Videos" in this document library if it doesn't already exist.]
+
+[wait]
+
+[navigate: ${VIDEOS}]
+
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/3-methods-to-up-your-skills-game - Trim.mp4]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/SPAI - Demo Tool - Trim.mp4]
+
+[navigate: ${DOCS}]
+
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/palette.jpeg]
+
+[navigate: ${FILENAMES}]
+
+[open-chat]
+
+[new-chat]
+
+[select:all]
+
+[prompt: Delete these selected files.]
+
+[wait]
+
+Uploading the ten vendor contracts with messy real-world filenames.
+
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/FabrikamHoldings_MSA_Executed_v2.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/contoso services agreement - final signed.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/NW Consulting Vendor Agmt Q3 2024.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Woodgrove_Fin_Contract_FINAL_FINAL.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Litware SOW + Contract v1.3 reviewed.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/TAILSPIN-Consulting-Agreement copy 2.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/WingtipMedia 2024 contract ZR edits Nov.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Peerless IT - fully executed - send to AP.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/TreyResearch_vendor_agmt_SIGNED_archive.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Alpine Data Systems svc agr draft 11-14-24.docx]
+
+[new-chat]
+
+Confirm all 10 files are visible. Confirm the Videos folder and color palette document are also present.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${FILENAMES}]
+
+[open-chat]
+
+[new-chat]
+
+A folder full of files with inconsistent names. Every team saves things differently.
+Instead of cleaning this up by hand, let's turn the naming policy into a reusable skill.
+
+[pause]
+
+[prompt: Our company policy is to name files [company,customer,product file is about]-[MM_DD_YYYY]-[1-word-what-is-this].[extension]. Make a skill to properly name files using the creation date of the document.]
+
+[wait]
+
+Skill created. Before we run it, let's sharpen it.
+
+[pause]
+
+[prompt: Update the file-rename skill to use camel case for the 1-word descriptor.]
+
+[wait]
+
+Now let's put it to work.
+
+[pause]
+
+[select:all]
+
+[prompt: Review these files to make sure they align to the company policy.]
+
+[wait]
+
+Every file that didn't match the policy got renamed. The ones that were already
+correct were left alone. Let's go see the skill itself.
+
+[pause]
+
+[navigate: ${AGENT_ASSETS}]
+
+There it is — a persistent skill anyone on this site can invoke. Not a flow, not a
+macro. A reusable prompt that knows the naming convention. Next person who uploads
+a file can run it in one click.
+
+[pause]
+
+[navigate: ${VIDEOS}]
+
+[open-chat]
+
+[new-chat]
+
+Completely different use case. Someone uploaded a recording to SharePoint. Marketing
+wants a YouTube description from it. Let's generate one.
+
+[pause]
+
+[prompt: Generate a youtube description for this file.]
+
+[wait]
+
+Done. Now let's make that repeatable as a Quick Step so anyone can run it on any
+video without typing the prompt.
+
+Add a Quick Step.
+
+[pause]
+
+[navigate: ${DOCS}]
+
+[open-chat]
+
+[new-chat]
+
+Select the color palette document.
+
+Last scenario. There's a brand color palette sitting in this library. Let's find out
+what's in it — and then teach the AI to enforce it going forward.
+
+[pause]
+
+[prompt: Read this color palette. Tell me about the color palette it recommends.]
+
+[wait]
+
+The AI read the document and knows the palette. Now let's lock that in as a skill.
+
+[pause]
+
+[prompt: Create a skill that ensures anything we style uses this color palette.]
+
+[wait]
+
+Skill created. Let's go run it immediately!
+
+[pause]
+
+[navigate: ${LIST}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Make this view pretty.]
+
+[wait]
+
+The library view is now styled to the brand palette — without anyone looking up hex
+codes or consulting the brand guidelines doc. The skill carries the knowledge.
+
+[pause]
+
+[screenshot: tools/screenshots/18-community-skills-walkthrough-final.png]
+
+[section: reset]
+
+[navigate: ${COMMUNITY}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete any skill related to file naming or renaming, if one exists.]
+
+[wait]
+
+Confirm the deletion in the browser if prompted.
+
+[pause]
+
+[new-chat]
+
+[prompt: Delete any skill related to color palette or styling, if one exists.]
+
+[wait]
+
+Confirm the deletion in the browser if prompted.
+
+[pause]
+
+[navigate: ${FILENAMES}]
+
+[new-chat]
+
+[select:all]
+
+[prompt: Delete all these files.]
+
+[wait]
+
+Confirm each deletion in the browser, then continue.
+
+[pause]
+
+Restoring the ten vendor contracts with their original messy filenames.
+
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/FabrikamHoldings_MSA_Executed_v2.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/contoso services agreement - final signed.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/NW Consulting Vendor Agmt Q3 2024.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Woodgrove_Fin_Contract_FINAL_FINAL.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Litware SOW + Contract v1.3 reviewed.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/TAILSPIN-Consulting-Agreement copy 2.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/WingtipMedia 2024 contract ZR edits Nov.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Peerless IT - fully executed - send to AP.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/TreyResearch_vendor_agmt_SIGNED_archive.docx]
+[upload-library: tools/scripts/18-community-skills-walkthrough/assets/Alpine Data Systems svc agr draft 11-14-24.docx]
+
+[new-chat]
+
+Confirm all 10 files are back with their original names.
+
+[pause]
+
+# ─── Prompt backup (copy/paste if automation fails) ──────────────────────────
+#
+# SETUP
+#   Delete all files from this library.
+#
+# DEMO — Part 1: File rename skill
+#   Our company policy is to name files [company,customer,product file is about]-[MM_DD_YYYY]-[1-word-what-is-this].[extension]. Make a skill to properly name files using the creation date of the document.
+#
+#   Update the file-rename skill to use camel case for the 1-word descriptor.
+#
+#   Review the files here to make sure they align to the company policy.
+#
+# DEMO — Part 2: YouTube description
+#   Generate a youtube description for this file.
+#
+# DEMO — Part 3: Color palette skill
+#   Read this color palette. Tell me about the color palette it recommends.
+#
+#   Create a skill that ensures anything we style uses this color palette.
+#
+#   Make this view pretty.
+#
+# RESET
+#   Delete any skill related to file naming or renaming, if one exists.
+#
+#   Delete any skill related to color palette or styling, if one exists.
+#
+#   Delete all files from this library.
+#
+# ─────────────────────────────────────────────────────────────────────────────

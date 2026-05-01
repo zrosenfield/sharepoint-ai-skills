@@ -1,0 +1,167 @@
+# Zava Hiring Pipeline Report
+# Shows how a SharePoint AI skill reads two lists and generates a full HTML hiring dashboard — then turns it into a PPT slide.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/CONFIGURE_ME/]
+[var: ROLES = ${SITE}Lists/Open%20Roles/]
+[var: CANDIDATES = ${SITE}Lists/Candidates/]
+[var: SKILLS = ${SITE}AgentAssets/Skills/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a list called "Open Roles" with these columns: Title (single line of text — this is the role title), Department (choice: Engineering, Marketing, Sales, Operations, Finance, People), Hiring Manager (single line of text), Priority (choice: Critical, High, Normal), Target Start (date), Status (choice: Open, On Hold, Filled).]
+
+[wait]
+
+[assert: ${ROLES}]
+
+[navigate: ${ROLES}]
+
+[new-chat]
+
+[prompt: Add these items to the Open Roles list: 1. Title: Senior Frontend Engineer | Department: Engineering | Hiring Manager: Maya Chen | Priority: Critical | Target Start: 5/1/2026 | Status: Open. 2. Title: Data Analyst | Department: Engineering | Hiring Manager: James Okafor | Priority: High | Target Start: 5/15/2026 | Status: Open. 3. Title: Product Marketing Manager | Department: Marketing | Hiring Manager: Lisa Tran | Priority: Normal | Target Start: 6/1/2026 | Status: Open. 4. Title: Account Executive - Enterprise | Department: Sales | Hiring Manager: Derek Hollins | Priority: Critical | Target Start: 4/15/2026 | Status: Open. 5. Title: HR Business Partner | Department: People | Hiring Manager: Sandra Miles | Priority: High | Target Start: 5/1/2026 | Status: Open. 6. Title: DevOps Engineer | Department: Engineering | Hiring Manager: Maya Chen | Priority: High | Target Start: 6/1/2026 | Status: Open. 7. Title: Financial Analyst | Department: Finance | Hiring Manager: Brian Kowalski | Priority: Normal | Target Start: 6/15/2026 | Status: Open. 8. Title: Operations Coordinator | Department: Operations | Hiring Manager: Priya Deshmukh | Priority: Normal | Target Start: 7/1/2026 | Status: On Hold. 9. Title: Senior Backend Engineer | Department: Engineering | Hiring Manager: Maya Chen | Priority: Critical | Target Start: 4/15/2026 | Status: Open.]
+
+[wait]
+
+[navigate: ${SITE}]
+
+[new-chat]
+
+[prompt: Create a list called "Candidates" with these columns: Title (single line of text — this is the candidate name), Role (single line of text — matches a role title from Open Roles), Current Stage (choice: Applied, Phone Screen, Interview, Final Round, Offer, Hired, Rejected, Withdrawn), Days in Stage (number), Source (choice: LinkedIn, Referral, Careers Page, Recruiter, Job Board), Recruiter (single line of text), Applied Date (date), Notes (multiple lines of text).]
+
+[wait]
+
+[assert: ${CANDIDATES}]
+
+[navigate: ${CANDIDATES}]
+
+[new-chat]
+
+[prompt: Add these items to the Candidates list: 1. Alex Rivera | Senior Frontend Engineer | Interview | 14 | LinkedIn | Kim Novak | 2/18/2026 | Strong React portfolio. Third interview round — scheduling delays with panel. 2. Jordan Patel | Senior Frontend Engineer | Final Round | 3 | Referral | Kim Novak | 2/25/2026 | Referred by Maya Chen. Very strong candidate. 3. Sam Okonkwo | Senior Frontend Engineer | Phone Screen | 8 | Careers Page | Kim Novak | 3/15/2026 | Solid resume. Needs to schedule screen. 4. Morgan Lee | Senior Frontend Engineer | Applied | 2 | LinkedIn | Kim Novak | 4/1/2026 | Just applied. Looks promising. 5. Casey Kim | Data Analyst | Interview | 12 | LinkedIn | Devon Okafor | 2/20/2026 | SQL skills strong. Waiting on take-home assessment review. 6. Riley Tanaka | Data Analyst | Phone Screen | 6 | Referral | Devon Okafor | 3/10/2026 | Internal referral from finance team. 7. Jamie Russo | Data Analyst | Applied | 1 | Careers Page | Devon Okafor | 4/2/2026 | New applicant. 8. Avery Nguyen | Product Marketing Manager | Final Round | 5 | LinkedIn | Sarah Banks | 2/15/2026 | Great presentation. Finalizing references. 9. Quinn Delgado | Product Marketing Manager | Offer | 2 | Recruiter | Sarah Banks | 2/10/2026 | Offer extended. Waiting on response. 10. Drew Foster | Product Marketing Manager | Withdrawn | 0 | Job Board | Sarah Banks | 3/5/2026 | Accepted another offer before interview.]
+
+[wait]
+
+[navigate: ${CANDIDATES}]
+
+[new-chat]
+
+[prompt: Add these additional candidates to the Candidates list: 1. Reese Johansson | Account Executive - Enterprise | Interview | 18 | LinkedIn | Marco Vitale | 1/28/2026 | Multiple reschedules. Concerned about engagement. 2. Sage Abernathy | Account Executive - Enterprise | Interview | 11 | Recruiter | Marco Vitale | 2/15/2026 | Strong sales background. Panel interview pending. 3. Blake Morrison | Account Executive - Enterprise | Phone Screen | 4 | Referral | Marco Vitale | 3/20/2026 | Referred by Derek Hollins. Fast-tracked. 4. Cameron Holt | Account Executive - Enterprise | Applied | 6 | Job Board | Marco Vitale | 3/28/2026 | Resume under review. 5. Jules Nakamura | HR Business Partner | Final Round | 7 | LinkedIn | Sarah Banks | 2/20/2026 | Culture fit interview went well. Checking comp alignment. 6. Parker Singh | HR Business Partner | Phone Screen | 9 | Careers Page | Sarah Banks | 3/12/2026 | Needs follow-up. Screen was positive but no next step scheduled. 7. Hayden Cross | DevOps Engineer | Applied | 3 | LinkedIn | Kim Novak | 3/31/2026 | New applicant. Kubernetes experience. 8. Robin Marsh | DevOps Engineer | Phone Screen | 5 | Referral | Kim Novak | 3/22/2026 | Referred by engineering team. Looks strong. 9. Dakota Voss | Financial Analyst | Interview | 4 | Careers Page | Devon Okafor | 3/15/2026 | Good technical interview. Moving to case study. 10. Emery Shaw | Financial Analyst | Applied | 1 | LinkedIn | Devon Okafor | 4/2/2026 | Just applied. 11. Charlie Bautista | Senior Backend Engineer | Interview | 15 | Recruiter | Kim Novak | 2/10/2026 | System design round went well but long delay in scheduling final. 12. Finley Zhao | Senior Backend Engineer | Final Round | 2 | LinkedIn | Kim Novak | 2/28/2026 | Top candidate. Expecting offer approval this week. 13. Rowan Eriksson | Senior Backend Engineer | Phone Screen | 10 | Job Board | Kim Novak | 3/10/2026 | Phone screen done. Interviewer had concerns about distributed systems depth. 14. Milan Torres | Senior Backend Engineer | Applied | 4 | LinkedIn | Kim Novak | 3/30/2026 | Strong GitHub profile. Reviewing.]
+
+[wait]
+
+[navigate: ${CANDIDATES}]
+
+[new-chat]
+
+[prompt: Add these additional candidates to the Candidates list: 1. Zoe Castellano | Senior Backend Engineer | Final Round | 8 | LinkedIn | Kim Novak | 2/15/2026 | Second finalist. Strong distributed systems background. 2. Nadia Osei | Account Executive - Enterprise | Final Round | 4 | Recruiter | Marco Vitale | 2/18/2026 | Excellent enterprise track record. Reference checks in progress. 3. Tomas Lindqvist | Data Analyst | Final Round | 6 | LinkedIn | Devon Okafor | 2/22/2026 | Data modeling skills stood out. Awaiting final decision. 4. Oscar Pemberton | Financial Analyst | Final Round | 3 | Referral | Devon Okafor | 3/5/2026 | Strong candidate. Final approval pending from hiring manager. 5. Iris Fontaine | HR Business Partner | Hired | 0 | Referral | Sarah Banks | 1/15/2026 | Offer accepted. Start date 4/14/2026. 6. Marcus Webb | Senior Frontend Engineer | Rejected | 0 | LinkedIn | Kim Novak | 3/5/2026 | Rejected after final round — culture fit concerns raised by panel. 7. Chloe Baxter | Account Executive - Enterprise | Rejected | 0 | Recruiter | Marco Vitale | 2/28/2026 | Did not pass final round — compensation expectations too high. 8. Lena Hartmann | DevOps Engineer | Interview | 6 | LinkedIn | Kim Novak | 3/8/2026 | Good technical skills. Third candidate in the pipeline for this role.]
+
+[wait]
+
+[navigate: ${SKILLS}]
+
+[new-chat]
+
+[prompt: Create a folder called "hiring-pipeline-report" in this library.]
+
+[wait]
+
+[navigate: ${SKILLS}hiring-pipeline-report/]
+
+[upload-library: Skills/hiring-pipeline-report/SKILL.md]
+
+[assert: ${SKILLS}hiring-pipeline-report/SKILL.md]
+
+Confirm both lists are populated and the skill file is visible in the hiring-pipeline-report folder. Verify the chat pane shows a fresh session with no prior conversation.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${CANDIDATES}]
+
+[open-chat]
+
+[new-chat]
+
+Two lists. Open Roles has the positions Zava is actively trying to fill — nine open roles across engineering, sales, marketing, and people. Candidates has thirty-three applicants spread across every stage of the pipeline. This is just normal SharePoint list data. No BI tool, no custom dashboards, no Power Automate flows.
+
+[pause]
+
+[prompt: Give me a status report on our hiring pipeline.]
+
+[wait]
+
+The skill read both lists, did the analysis, and generated a full HTML dashboard. Open the file it produced. Walk through what it built without touching any code.
+
+[pause]
+
+Point out the metrics bar at the top — open roles, active candidates, average days in stage, pipeline-to-offer rate. These are live calculations from the list data. Then walk through the Sankey diagram showing candidate flow from Applied all the way through to Hired, Rejected, or Withdrawn. Note the color-coded risk callouts at the bottom — stale candidates, starved roles, and bottleneck stages.
+
+[pause]
+
+The AI didn't just summarize the data. It chose what to visualize, wrote the JavaScript for the Sankey diagram, and flagged the specific risks worth attention. No developer, no BI license, no template.
+
+[pause]
+
+[prompt: Turn this report into a single executive summary slide.]
+
+[wait]
+
+Same data, different format — now optimized for a leadership presentation. The AI pulled the key metrics and risk callouts from the report it just generated and composed a slide-ready summary. One pipeline, two outputs, zero manual formatting.
+
+[pause]
+
+[screenshot: tools/screenshots/19-zava-hiring-tracker-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the Open Roles list from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Open Roles list in the browser dialog]
+
+[new-chat]
+
+[prompt: Delete the Candidates list from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Candidates list in the browser dialog]
+
+[new-chat]
+
+# ─── Prompt backup (copy/paste if automation fails) ──────────────────────────
+#
+# SETUP — Open Roles list creation
+#   Create a list called "Open Roles" with these columns: Title (single line of text — this is the role title), Department (choice: Engineering, Marketing, Sales, Operations, Finance, People), Hiring Manager (single line of text), Priority (choice: Critical, High, Normal), Target Start (date), Status (choice: Open, On Hold, Filled).
+#
+# SETUP — Open Roles data
+#   Add these items to the Open Roles list: 1. Senior Frontend Engineer | Engineering | Maya Chen | Critical | 5/1/2026 | Open. 2. Data Analyst | Engineering | James Okafor | High | 5/15/2026 | Open. 3. Product Marketing Manager | Marketing | Lisa Tran | Normal | 6/1/2026 | Open. 4. Account Executive - Enterprise | Sales | Derek Hollins | Critical | 4/15/2026 | Open. 5. HR Business Partner | People | Sandra Miles | High | 5/1/2026 | Open. 6. DevOps Engineer | Engineering | Maya Chen | High | 6/1/2026 | Open. 7. Financial Analyst | Finance | Brian Kowalski | Normal | 6/15/2026 | Open. 8. Operations Coordinator | Operations | Priya Deshmukh | Normal | 7/1/2026 | On Hold. 9. Senior Backend Engineer | Engineering | Maya Chen | Critical | 4/15/2026 | Open.
+#
+# SETUP — Candidates list creation
+#   Create a list called "Candidates" with these columns: Title (single line of text — candidate name), Role (single line of text), Current Stage (choice: Applied, Phone Screen, Interview, Final Round, Offer, Hired, Rejected, Withdrawn), Days in Stage (number), Source (choice: LinkedIn, Referral, Careers Page, Recruiter, Job Board), Recruiter (single line of text), Applied Date (date), Notes (multiple lines of text).
+#
+# DEMO
+#   Give me a status report on our hiring pipeline.
+#
+#   Turn this report into a single executive summary slide.
+#
+# RESET
+#   Delete the Open Roles list from this site.
+#
+#   Delete the Candidates list from this site.
+#
+# ─────────────────────────────────────────────────────────────────────────────
