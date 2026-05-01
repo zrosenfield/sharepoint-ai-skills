@@ -54,7 +54,12 @@ Skills are organized into categories:
 | Folder | Skill | Description |
 |---|---|---|
 | [styling/forest-style/](./styling/forest-style/) | Forest-Style Brand | Applies the forest-style brand system to any visual output, document, web content, presentation, or interface element. Covers the full color palette, typography, spacing, component styles, and voice rules. |
+| [styling/list-styling/](./styling/list-styling/) | List Styling Engine | Applies a visual style theme to any SharePoint list or library using column, view, and row formatting. Pairs with a style token skill (e.g., style-neobrutalism) that defines the colors, shapes, and typography. Use when asked to style, theme, or format the appearance of a list. |
+| [styling/style-bento/](./styling/style-bento/) | Style: Bento | Bento style tokens for the list-styling skill. Warm earth tones, compact uppercase badges, medium progress bars. Use when the user says "bento," "warm style," "earth tones," or "muted colors." |
+| [styling/style-figma-clean/](./styling/style-figma-clean/) | Style: Figma Clean | Figma Clean style tokens for the list-styling skill. Polished professional aesthetic, self-colored badge borders, thin precise progress bars. Use when the user says "figma," "clean style," "polished," or "professional." |
+| [styling/style-glassmorphism/](./styling/style-glassmorphism/) | Style: Glassmorphism | Glassmorphism style tokens for the list-styling skill. Soft pill badges, no borders, thin bars, airy modern aesthetic. Use when the user says "glassmorphism," "frosted glass," "glass look," or "soft modern." |
 | [styling/style-guidelines/](./styling/style-guidelines/) | Brand Style Guide Template | A fill-in-the-blank template for turning any organization's brand guide into an AI skill. Covers color palette, typography, spacing tokens, and component styles. |
+| [styling/style-neobrutalism/](./styling/style-neobrutalism/) | Style: Neobrutalism | Neobrutalism style tokens for the list-styling skill. Bold black borders, saturated colors, uppercase text, chunky progress bars. Use when the user says "neobrutalism," "brutalist," "bold borders," or "chunky style." |
 | [styling/uppababy-brand-review/](./styling/uppababy-brand-review/) | UPPAbaby Brand Compliance Review | Reviews any content file against UPPAbaby brand guidelines. Produces a weighted scorecard across five categories plus a prioritized remediation list. |
 
 ## Writing
