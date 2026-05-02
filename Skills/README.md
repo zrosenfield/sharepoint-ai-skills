@@ -51,7 +51,7 @@ Skills are organized into categories:
 
 ## Styling
 
-![SharePoint list style samples — Neobrutalism, Glassmorphism, Bento, Figma Clean, High Contrast, Monochrome, Pastel, Retro, Terminal](./styling/sharepoint%20sytles.jpg)
+![SharePoint list style samples — Neobrutalism, Glassmorphism, Bento, Figma Clean, High Contrast, Monochrome, Pastel, Retro, Terminal](./images/sharepoint-styles.jpg)
 
 | Folder | Skill | Description |
 |---|---|---|
