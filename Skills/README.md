@@ -51,6 +51,8 @@ Skills are organized into categories:
 
 ## Styling
 
+![SharePoint list style samples — Neobrutalism, Glassmorphism, Bento, Figma Clean, High Contrast, Monochrome, Pastel, Retro, Terminal](./styling/sharepoint%20sytles.jpg)
+
 | Folder | Skill | Description |
 |---|---|---|
 | [styling/forest-style/](./styling/forest-style/) | Forest-Style Brand | Applies the forest-style brand system to any visual output, document, web content, presentation, or interface element. Covers the full color palette, typography, spacing, component styles, and voice rules. |
