@@ -1,266 +1,183 @@
 ---
 name: list-styling
-description: Apply a visual style theme to any SharePoint list or document library using column formatting, view formatting, and row formatting. Use this skill whenever the user asks to "style a list," "theme a library," "apply a look," "make this list look like X," "format this list," or mentions any specific style name like Neobrutalism, Glassmorphism, Bento, or Figma Clean. Also trigger when the user says "apply the brutalist style," "give it a frosted glass look," "make it bento-style," or any request to change the visual appearance of a SharePoint list or library. This skill works with any style definition skill — it reads the style token file and generates SharePoint JSON formatting.
+description: Apply a visual style theme to any SharePoint list or document library using column formatting, view formatting, row templates, and tile layouts. Use this skill whenever the user asks to style, theme, or visually transform a list or library. The goal is "I can't believe that's SharePoint" impact — not just color swaps, but fully art-directed views. This skill works with any style token file.
 ---
 
 # List Styling Engine
 
-Apply visual style themes to SharePoint lists and document libraries. This skill contains ALL the logic, formatting syntax, and template patterns. It pairs with a lightweight style token file (e.g., `style-neobrutalism/SKILL.md`) that defines only the colors, shapes, and typography for that specific style.
+Transform SharePoint lists and document libraries into fully art-directed views. This is not a color palette swap — it's a complete visual redesign using every formatting capability SharePoint provides.
 
-## Workflow
+**The bar: "I can't believe that's SharePoint."**
 
-### Step 1: Identify the Style
+## Formatting Capabilities — Use ALL of These
 
-If the user names a style, read the matching style token file from the skills library:
-- `style-neobrutalism/SKILL.md`
-- `style-glassmorphism/SKILL.md`
-- `style-bento/SKILL.md`
-- `style-figma-clean/SKILL.md`
+SharePoint provides four levels of formatting. A properly styled view uses MULTIPLE levels together. Do not stop at column formatting.
 
-If unclear, ask: "Which style would you like to apply?"
+### Level 1: Column Formatting
+Per-column rendering. Controls how individual cell values display.
+- Status badges, progress bars, date compositions
+- Applied via: Column header → Column settings → Format this column → Advanced mode
 
-### Step 2: Read the List Schema
+### Level 2: View Formatting (additionalRowClass)
+Adds CSS classes to existing rows. Lightweight — doesn't change layout.
+- Alternating row colors, conditional row highlighting (overdue tinting)
+- Applied via: View dropdown → Format current view → Advanced mode
 
-You need to know:
-- Column names and their internal names
-- Column types (Choice, Number, DateTime, Text)
-- Choice values for any Choice columns (e.g., Draft, In Review, Approved)
+### Level 3: Row Template (rowFormatter)
+**REPLACES the entire row layout.** This is the power move. Instead of SharePoint's default column grid, you define the complete HTML structure of each row.
+- Full card layouts with sidebars, composed metadata, multi-section rows
+- Can combine multiple columns into a single visual composition
+- Applied via: View dropdown → Format current view → Advanced mode (uses `rowFormatter` key instead of `additionalRowClass`)
 
-Get this from SHAREPOINT.md if available, or ask the user.
+### Level 4: Tile Formatting
+Gallery/card view layouts. Each item renders as a card instead of a row.
+- Standalone card designs with headers, bodies, footers, progress indicators
+- Applied via: Gallery view → Format current view → Advanced mode
 
-### Step 3: Generate Formatters
-
-Read the style token file. Use the tokens to fill in the template patterns below. Generate one formatter per styled column.
-
-### Step 4: Apply
-
-For each formatter, tell the user:
-
-**Column formatting:**
-"Go to the **[Column Name]** column header → Column settings → Format this column → Advanced mode → paste this JSON."
-
-**View formatting:**
-"Go to the view dropdown → Format current view → Advanced mode → paste this JSON."
-
-Provide the complete, ready-to-paste JSON. No code blocks with commentary — just the JSON.
-
-### Step 5: Verify
-
-Ask the user to refresh and confirm.
+**Rule: Every style MUST use at least Level 1 + Level 3. Level 3 (rowFormatter) is what creates the "I can't believe it" impact. Column formatting alone is a 3/10.**
 
 ---
 
-## Template Patterns
+## The Style Application Workflow
 
-Use these templates. Replace every `{token}` with the value from the style token file.
+### Step 1: Read the style token file
+Load the matching `style-{name}/SKILL.md`. It contains design tokens AND a `rowFormatter` template AND the style's signature layout pattern.
 
-### Status Badge (Choice Column)
+### Step 2: Read the list schema
+Know the columns, types, internal names, and Choice values.
 
-```json
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
-  "elmType": "div",
-  "style": {
-    "display": "flex",
-    "align-items": "center"
-  },
-  "children": [
-    {
-      "elmType": "span",
-      "txtContent": "@currentField",
-      "style": {
-        "display": "inline-block",
-        "padding": "{badge_padding}",
-        "border-radius": "{badge_border_radius}",
-        "font-size": "{badge_font_size}",
-        "font-weight": "{badge_font_weight}",
-        "text-transform": "{badge_text_transform}",
-        "white-space": "nowrap",
-        "border": "{CONDITIONAL: build from status_colors map — each status gets its border value}",
-        "color": "{CONDITIONAL: build from status_colors map — each status gets its text color}",
-        "background-color": "{CONDITIONAL: build from status_colors map — each status gets its bg color}"
-      }
-    }
-  ]
-}
-```
+### Step 3: Map columns to the rowFormatter
 
-**Building conditionals from the status_colors map:**
+The style file's rowFormatter uses reference column names: `[$Title]`, `[$FileLeafRef]`, `[$Status]`, `[$Progress]`, `[$Deadline]`. These are examples — the user's list will likely have different column names.
 
-The style token file has a `status_colors` map like:
-```
-Draft:       bg=#9ca3af, text=#000000, border=2px solid #000000
-In Review:   bg=#2563eb, text=#ffffff, border=2px solid #000000
-```
+**Before applying the rowFormatter, you MUST adapt it:**
 
-Turn this into nested `if` expressions:
-```
-"=if(@currentField == 'Draft', '#9ca3af', if(@currentField == 'In Review', '#2563eb', ...))"
-```
+1. Identify which column in the user's list serves each role:
+   - **Name/Title role**: The item or document name (e.g., `[$Title]`, `[$FileLeafRef]`, `[$ProjectName]`)
+   - **Status role**: A Choice column with workflow states (e.g., `[$Status]`, `[$Phase]`, `[$Stage]`)
+   - **Progress role**: A Number column 0-100 (e.g., `[$Progress]`, `[$Completion]`, `[$PercentComplete]`)
+   - **Deadline role**: A DateTime column (e.g., `[$Deadline]`, `[$DueDate]`, `[$TargetDate]`)
 
-Always include a fallback color at the end for unmapped values.
+2. Find-and-replace all `[$ReferenceName]` values in the rowFormatter JSON with the actual internal column names.
 
-### Progress Bar (Number Column, 0-100)
+3. Update the status_colors `if()` expressions to use the actual Choice values from the user's list. If they use "Active" instead of "In Review", or "Complete" instead of "Published", remap accordingly using the same color logic from the style tokens.
 
-```json
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
-  "elmType": "div",
-  "style": {
-    "display": "flex",
-    "align-items": "center",
-    "gap": "8px"
-  },
-  "children": [
-    {
-      "elmType": "div",
-      "style": {
-        "width": "100px",
-        "height": "{progress_track_height}",
-        "background-color": "{progress_track_bg}",
-        "border": "{progress_track_border}",
-        "border-radius": "{progress_track_radius}",
-        "overflow": "hidden"
-      },
-      "children": [
-        {
-          "elmType": "div",
-          "style": {
-            "width": "=toString(@currentField) + '%'",
-            "height": "100%",
-            "border-radius": "{progress_fill_radius}",
-            "background-color": "=if(@currentField < 30, '{progress_color_low}', if(@currentField < 66, '{progress_color_mid}', '{progress_color_high}'))"
-          }
-        }
-      ]
-    },
-    {
-      "elmType": "span",
-      "txtContent": "=toString(@currentField) + '%'",
-      "style": {
-        "font-size": "{progress_label_font_size}",
-        "font-weight": "{progress_label_font_weight}",
-        "color": "{progress_label_color}"
-      }
-    }
-  ]
-}
-```
+4. If the user's list has ADDITIONAL columns not covered by the style template (e.g., Owner, Priority, Category), decide where to surface them:
+   - In the sidebar/panel area alongside existing metadata
+   - In the main content area replacing the "Open Item" button
+   - As additional inline elements in the metadata row
 
-### Date with Overdue (DateTime Column)
+5. If the user's list is MISSING a column the template expects (e.g., no Deadline column), remove that section from the rowFormatter rather than letting it error.
 
-```json
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
-  "elmType": "div",
-  "style": {
-    "display": "flex",
-    "flex-direction": "column",
-    "gap": "2px"
-  },
-  "children": [
-    {
-      "elmType": "div",
-      "style": {
-        "display": "flex",
-        "align-items": "center",
-        "gap": "6px"
-      },
-      "children": [
-        {
-          "elmType": "span",
-          "txtContent": "=toLocaleDateString(@currentField)",
-          "style": {
-            "color": "=if(@currentField < @now, '{date_overdue_color}', '{date_normal_color}')",
-            "font-weight": "=if(@currentField < @now, '{date_overdue_weight}', '{date_normal_weight}')",
-            "font-size": "{date_font_size}"
-          }
-        }
-      ]
-    },
-    {
-      "elmType": "span",
-      "txtContent": "=if(@currentField < @now, 'OVERDUE', '{date_sublabel}')",
-      "style": {
-        "color": "=if(@currentField < @now, '{date_overdue_color}', '{date_sublabel_color}')",
-        "font-size": "{date_sublabel_font_size}",
-        "font-weight": "=if(@currentField < @now, '700', '400')",
-        "text-transform": "uppercase"
-      }
-    }
-  ]
-}
-```
+**The style's rowFormatter is a reference implementation. Adapt it to the user's data — do not paste it verbatim.**
 
-### View Formatting (Row Styling)
+### Step 4: Generate formatters — in this order
+
+**A. Row Template (rowFormatter) — DO THIS FIRST**
+This is the centerpiece. The style token file defines the row layout structure. Generate the complete `rowFormatter` JSON that composes all columns into the styled row design.
+
+**B. Column Formatters — FOR COLUMNS NOT HANDLED BY rowFormatter**
+If the row template covers Status, Progress, and Deadline inline, you may not need separate column formatters for those. But any column NOT included in the rowFormatter still needs its own formatter.
+
+**C. View Formatting — IF the style uses alternating rows or row highlighting**
+Add `additionalRowClass` only if the style specifies it AND only if you're NOT using a `rowFormatter` (the two conflict — `rowFormatter` replaces the row entirely, so `additionalRowClass` has no effect when `rowFormatter` is active).
+
+**D. Tile Formatting — IF the user wants a gallery/card view**
+Generate tile formatting for card-based layouts.
+
+### Step 5: Create a custom view
+Tell the user to create a new view named after the style (e.g., "Neobrutalism") so the formatting doesn't affect the default "All Items" view.
+
+### Step 6: Apply and verify
+
+---
+
+## rowFormatter Structure
+
+This is the most powerful tool. It replaces the entire row with a custom layout.
 
 ```json
 {
   "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/view-formatting.schema.json",
-  "additionalRowClass": "{row_class_expression}"
+  "hideSelection": false,
+  "hideColumnHeaders": true,
+  "rowFormatter": {
+    "elmType": "div",
+    "style": { ... },
+    "children": [ ... ]
+  }
 }
 ```
 
-If the style uses alternating rows:
-```json
-"additionalRowClass": "=if(@rowIndex % 2 == 0, 'ms-bgColor-neutralLighter', '')"
-```
+**Key behaviors:**
+- `hideColumnHeaders: true` — hides the default column headers since the row template defines its own layout
+- Access any column value with `[$InternalColumnName]`
+- Can compose multiple columns into a single visual element
+- Supports all the same style properties as column formatters
+- Can include buttons, links, icons, conditional elements
 
-If the style does not use alternating rows, skip view formatting entirely.
+**Layout patterns the style file can define:**
+- **Card row**: Full-width card per item with sidebar + main content
+- **Split row**: Left panel (metadata) + right panel (details)
+- **Compact row**: Single line with composed inline elements
+- **Summary card**: Tile-style card within a list view
 
 ---
 
-## SharePoint Formatting Rules
-
-These are hard constraints. Never violate them.
+## SharePoint JSON Formatting Reference
 
 ### Supported
 - `elmType`: `div`, `span`, `a`, `img`, `svg`, `path`, `button`
-- Inline styles only (no custom CSS classes — only built-in SP classes via `additionalRowClass`)
-- `border-radius` — works fine
-- `text-transform` — `uppercase`, `lowercase`, `capitalize`
-- `box-shadow` — works but can be inconsistent
-- Colors: hex (`#ffffff`) or named (`red`)
-- Expressions: `@currentField`, `[$ColumnInternalName]`, `@now`, `@me`, `@rowIndex`
-- Operators: `==`, `!=`, `<`, `>`, `<=`, `>=`, `&&`, `||`
-- Functions: `if()`, `toString()`, `Number()`, `toLocaleDateString()`, `indexOf()`, `substring()`
+- All CSS properties via inline `style` object
+- `border-radius`, `text-transform`, `box-shadow`, `overflow`, `gap` — all work
+- Colors: hex only (`#ffffff`)
+- Emoji in `txtContent` — works for icons
+- `customRowAction` with `action: "defaultClick"` — makes elements clickable to open the item
+- `forEach` — iterate over multi-value fields
+- Expressions: `@currentField`, `[$ColumnName]`, `@now`, `@me`, `@rowIndex`
+- `toString()`, `Number()`, `toLocaleDateString()`, `if()`, `indexOf()`, `substring()`
 
-### NOT Supported — Never Use These
-- `backdrop-filter` (no blur effects)
-- `background` with gradients (use `background-color` with solid hex only)
-- `rgb()`, `rgba()`, `hsl()` color values (hex only)
-- Custom CSS classes in column formatters
-- CSS variables (`var(--x)`)
-- `hover` pseudo-states in column formatters
-- Nested `if` beyond ~10 levels (will break)
+### NOT Supported
+- `backdrop-filter`, gradients, `rgb()`/`rgba()`/`hsl()`
+- Custom CSS classes in column formatters (only built-in SP classes in `additionalRowClass`)
+- CSS variables, hover pseudo-states
+- Nested `if()` beyond ~10 levels
 
 ### Common Mistakes
-- Forgetting `$schema` — always include it
-- Using display names instead of internal column names — internal names use `_x0020_` for spaces
-- Case-sensitivity on Choice values — `"Draft"` ≠ `"draft"` ≠ `"DRAFT"`
-- Using `Number` column for progress when the column stores 0.72 not 72 — check and multiply by 100 if needed
+- Forgetting `$schema`
+- Display names vs internal names (spaces → `_x0020_`)
+- Case-sensitivity on Choice values
+- Number column stores 0.72 not 72
+- Trailing commas (invalid JSON)
+- Using `additionalRowClass` WITH `rowFormatter` (they conflict — rowFormatter wins)
 
 ---
 
-## Column Type → Formatter Mapping
+## What "11/10 Ambition" Looks Like
 
-| Column Type | Formatter Pattern | Required? |
+The difference between "formatted" and "I can't believe that's SharePoint":
+
+| Formatted (3/10) | Styled (7/10) | Art-Directed (11/10) |
 |---|---|---|
-| Choice (Status) | Status Badge | Yes — highest visual impact |
-| Number (Progress) | Progress Bar | Yes — second highest impact |
-| DateTime (Deadline) | Date with Overdue | Yes |
-| Single Line of Text (Title/Name) | Usually skip — default is fine | No |
-| Person | Skip — default rendering is fine | No |
-| Multi-line Text | Skip unless style has card-cell pattern | No |
+| Colored status pills | Status badges with style-specific shape/border | Full row template with composed status + progress + deadline in a card layout |
+| Default progress bar colors | Styled progress bar (height, border, colors) | Progress bar integrated into the row card with contextual coloring and inline label |
+| Date string | Date with overdue coloring | Composed deadline block with icon, date, sublabel, and conditional overdue treatment — all positioned within the row card |
+| Default row grid | Alternating row colors | Complete row template that recomposes the entire layout into the style's signature pattern |
+| No view changes | Custom view name | Custom view with rowFormatter + style-specific header treatment |
+
+**The token file defines the row template. The engine generates it. RALPH iterates until it hits 11/10.**
 
 ---
 
-## Rules
+## Application Instructions
 
-1. **Always read the style token file first.** Never invent tokens.
-2. **Every color, radius, border, and font value comes from the style tokens.** Do not freestyle.
-3. **Handle missing columns gracefully.** If the list lacks a column type, skip it.
-4. **Ask for Choice values if not known.** Status colors are mapped to specific values — you need the exact strings.
-5. **Keep formatters independent.** Each column formatter works standalone.
-6. **Provide ready-to-paste JSON.** No explanations mixed into the JSON itself.
-7. **Include $schema in every formatter.**
+**Creating a styled view:**
+1. Go to the list/library
+2. Click "Add view" → name it after the style (e.g., "Neobrutalism")
+3. Select columns to include: Name/Title, Status, Progress, Deadline, plus any additional
+4. Save the view
+5. Click the view dropdown → "Format current view" → "Advanced mode"
+6. Paste the rowFormatter JSON
+7. For any columns NOT covered by the rowFormatter, apply individual column formatters
+
+**Important:** Always create a new view. Never modify "All Items" or "All Documents" directly.
