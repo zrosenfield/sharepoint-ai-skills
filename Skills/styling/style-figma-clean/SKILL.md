@@ -56,6 +56,8 @@ Top-stripe card with a horizontal metadata row.
 
 ## rowFormatter JSON
 
+**Adapt before applying.** The column names below (`[$Status]`, `[$Progress]`, `[$Deadline]`) are example placeholders — replace them with the actual internal column names from the user's list. Also update every status value string ('Draft', 'In Review', 'Revising', etc.) to match the user's actual Choice values. Follow list-styling Step 3.
+
 ```json
 {
   "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/view-formatting.schema.json",

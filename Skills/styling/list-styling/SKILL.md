@@ -40,13 +40,13 @@ Gallery/card view layouts. Each item renders as a card instead of a row.
 
 ## The Style Application Workflow
 
-### Step 1: Read the style token file
-Load the matching `style-{name}/SKILL.md`. It contains design tokens AND a `rowFormatter` template AND the style's signature layout pattern.
+### Step 1: Read the list schema — required before generating any JSON
+Know the columns, their internal names, types, and Choice values. Get this from SHAREPOINT.md if available, or ask the user. **Do not generate any JSON until you have the actual column names and Choice values.**
 
-### Step 2: Read the list schema
-Know the columns, types, internal names, and Choice values.
+### Step 2: Read the style token file
+Load the matching `style-{name}/SKILL.md`. It contains design tokens and a `rowFormatter` reference template. The column names in that template (`[$Status]`, `[$Progress]`, `[$Deadline]`) are **example placeholders** that almost certainly do not match the user's list.
 
-### Step 3: Map columns to the rowFormatter
+### Step 3: Map the user's columns to the template
 
 The style file's rowFormatter uses reference column names: `[$Title]`, `[$FileLeafRef]`, `[$Status]`, `[$Progress]`, `[$Deadline]`. These are examples — the user's list will likely have different column names.
 
@@ -174,7 +174,7 @@ The difference between "formatted" and "I can't believe that's SharePoint":
 **Creating a styled view:**
 1. Go to the list/library
 2. Click "Add view" → name it after the style (e.g., "Neobrutalism")
-3. Select columns to include: Name/Title, Status, Progress, Deadline, plus any additional
+3. Select columns to include: the columns identified in your Step 3 mapping
 4. Save the view
 5. Click the view dropdown → "Format current view" → "Advanced mode"
 6. Paste the rowFormatter JSON
