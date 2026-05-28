@@ -133,7 +133,7 @@ body{
 <!-- ① STATUS GRID — open role urgency leads, not metrics -->
 <section class="card">
   <h2>Open role urgency</h2>
-  <div class="sub">14 open requisitions · critical path roles highlighted</div>
+  <div class="sub">14 open requisitions · sorted by urgency</div>
   <div class="status-list">
     <div class="status-row">
       <span class="status-dot status-dot--red"></span>
@@ -152,8 +152,13 @@ body{
     </div>
     <div class="status-row">
       <span class="status-dot status-dot--amber"></span>
-      <span class="status-name">Senior Backend Engineer — Engineering</span>
+      <span class="status-name">Sr. Backend Engineer — Engineering</span>
       <span class="status-val">In progress · 45 days open</span>
+    </div>
+    <div class="status-row">
+      <span class="status-dot status-dot--amber"></span>
+      <span class="status-name">Solutions Engineer — Sales</span>
+      <span class="status-val">In progress · 15 days open</span>
     </div>
     <div class="status-row">
       <span class="status-dot status-dot--amber"></span>
@@ -162,8 +167,13 @@ body{
     </div>
     <div class="status-row">
       <span class="status-dot status-dot--amber"></span>
-      <span class="status-name">Revenue Operations Analyst — Sales</span>
+      <span class="status-name">Revenue Ops Analyst — Sales</span>
       <span class="status-val">In progress · 22 days open</span>
+    </div>
+    <div class="status-row">
+      <span class="status-dot status-dot--amber"></span>
+      <span class="status-name">Customer Success Manager — Customer Success</span>
+      <span class="status-val">In progress · 8 days open</span>
     </div>
     <div class="status-row">
       <span class="status-dot status-dot--blue"></span>
@@ -171,8 +181,18 @@ body{
       <span class="status-val">In review · JD pending</span>
     </div>
     <div class="status-row">
+      <span class="status-dot status-dot--blue"></span>
+      <span class="status-name">Technical Recruiter — G&amp;A</span>
+      <span class="status-val">In review · JD pending</span>
+    </div>
+    <div class="status-row">
       <span class="status-dot status-dot--gray"></span>
       <span class="status-name">Data Analyst — Engineering</span>
+      <span class="status-val">Q3 req · not yet posted</span>
+    </div>
+    <div class="status-row">
+      <span class="status-dot status-dot--gray"></span>
+      <span class="status-name">Senior Data Engineer — Engineering</span>
       <span class="status-val">Q3 req · not yet posted</span>
     </div>
   </div>
@@ -261,7 +281,7 @@ body{
 <!-- ③ TABLE — open roles is the centerpiece, not a KPI -->
 <section class="card">
   <h2>Open roles detail</h2>
-  <div class="sub">All active requisitions · sorted by urgency</div>
+  <div class="sub">All 14 active requisitions · sorted by urgency</div>
   <div class="data-table-wrap">
     <table class="data-table">
       <thead>
@@ -272,7 +292,17 @@ body{
       </thead>
       <tbody>
         <tr>
-          <td>Account Executive (×3)</td><td>Sales</td><td>34 avg</td>
+          <td>Account Executive</td><td>Sales</td><td>37</td>
+          <td>Jul 31</td><td>Critical</td>
+          <td><span class="tbl-badge tbl-badge--red">Urgent</span></td>
+        </tr>
+        <tr>
+          <td>Account Executive</td><td>Sales</td><td>34</td>
+          <td>Jul 31</td><td>Critical</td>
+          <td><span class="tbl-badge tbl-badge--red">Urgent</span></td>
+        </tr>
+        <tr>
+          <td>Account Executive</td><td>Sales</td><td>31</td>
           <td>Jul 31</td><td>Critical</td>
           <td><span class="tbl-badge tbl-badge--red">Urgent</span></td>
         </tr>
@@ -292,6 +322,11 @@ body{
           <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
         </tr>
         <tr>
+          <td>Solutions Engineer</td><td>Sales</td><td>15</td>
+          <td>Aug 15</td><td>High</td>
+          <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
+        </tr>
+        <tr>
           <td>DevOps Engineer</td><td>Operations</td><td>38</td>
           <td>Aug 1</td><td>Medium</td>
           <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
@@ -302,12 +337,27 @@ body{
           <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
         </tr>
         <tr>
-          <td>Product Marketing Mgr</td><td>Marketing</td><td>5</td>
+          <td>Customer Success Manager</td><td>Customer Success</td><td>8</td>
+          <td>Aug 31</td><td>Medium</td>
+          <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
+        </tr>
+        <tr>
+          <td>Product Marketing Manager</td><td>Marketing</td><td>5</td>
+          <td>Sep 1</td><td>Medium</td>
+          <td><span class="tbl-badge tbl-badge--blue">In Review</span></td>
+        </tr>
+        <tr>
+          <td>Technical Recruiter</td><td>G&amp;A</td><td>3</td>
           <td>Sep 1</td><td>Medium</td>
           <td><span class="tbl-badge tbl-badge--blue">In Review</span></td>
         </tr>
         <tr>
           <td>Data Analyst</td><td>Engineering</td><td>—</td>
+          <td>Sep 30</td><td>Low</td>
+          <td><span class="tbl-badge tbl-badge--gray">Not Posted</span></td>
+        </tr>
+        <tr>
+          <td>Senior Data Engineer</td><td>Engineering</td><td>—</td>
           <td>Sep 30</td><td>Low</td>
           <td><span class="tbl-badge tbl-badge--gray">Not Posted</span></td>
         </tr>
@@ -366,7 +416,7 @@ body{
 
 <div class="rpt-footer">
   <div>Generated May 28, 2026 · Prepared by Dani Cruz, VP People</div>
-  <div>148 employees · 14 open roles · 6 departments</div>
+  <div>148 employees · 14 open roles across 5 departments</div>
 </div>
 
 </main>
