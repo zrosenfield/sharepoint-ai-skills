@@ -32,10 +32,15 @@ If the data or intent is not fully clear, ask these questions in a single messag
 
 1. **Topic**: What is this report about? (e.g., "Q2 pipeline health," "IT project status," "department spend overview")
 2. **Audience**: Who is reading it? Exec team, department head, all-hands? This determines detail level.
-3. **Key numbers**: What are the 2–4 metrics that matter most?
-4. **Headline message**: What should the reader walk away knowing? This becomes the hero sentence.
+3. **Narrative intent**: What is the *shape* of the story? Pick the closest match:
+   - **Achievement** — "we hit a goal, here's how" (lead with the win: kpi-row + trend dominate)
+   - **Problem** — "something needs attention, here's what" (lead with urgency: status-grid or table comes first)
+   - **Status** — "here's where everything stands" (balanced overview: status-grid early, kpi-row supporting)
+4. **Headline message**: What should the reader walk away knowing? This becomes the hero sentence — one sentence.
 5. **Sections wanted**: Any specific sections — comparison to prior period, breakdown by category, status of open items, narrative highlights?
 6. **Palette**: Warm paper (cream/terra-cotta), deep ink (dark/gold), clean white (white/green), or slate (gray/blue)? Default to warm paper if no preference.
+
+If the user's prompt already signals narrative intent (e.g., "the headline is the gap," "lead with urgency," "show the wins"), skip question 3 — you already have the answer.
 
 Confirm your understanding before building the JSON.
 
@@ -45,29 +50,38 @@ Confirm your understanding before building the JSON.
 
 The component sequence IS the story. Read `references/components.md` for the full component catalog, props schemas, and HTML patterns.
 
-**Fixed rules:**
-- Always open with `hero` — it sets the company, report label, and hero sentence.
-- Always follow hero with `kpi-row` if you have 2–4 headline metrics.
-- Always close with `highlights` — the narrative "so what" cards belong last.
-- `trend`, `bar-list`, `compare`, `table`, and `status-grid` fill the middle in whatever order tells the story best.
+**Always true:**
+- Open with `hero` — sets the company, label, and hero sentence.
+- Close with `highlights` — narrative "so what" belongs last.
+- Maximum one `trend`, one `table`, and one `highlights` per report.
+- Keep total block count to 4–8.
+
+**Narrative intent drives the block order:**
+
+| Intent | Typical sequence | Hero sentence shape |
+|---|---|---|
+| **Achievement** | hero → kpi-row → trend → bar-list → compare → status-grid → highlights | "We closed $X, up Y% from last quarter." |
+| **Problem** | hero → status-grid → compare → table → bar-list → highlights | "We enter Q3 with X open roles and a gap in Y." |
+| **Status** | hero → status-grid → kpi-row → compare → bar-list → highlights | "Here's where all six workstreams stand heading into Q3." |
+
+The hero sentence signals intent to the reader. Achievement heroes lead with a number and a direction. Problem heroes lead with a situation. Status heroes lead with a scope statement.
 
 **Component selection guide:**
 
 | Data shape | Component |
 |---|---|
-| 2–4 headline numbers | `kpi-row` |
+| 2–4 headline numbers worth celebrating or tracking | `kpi-row` |
 | Values over time (3+ periods) | `trend` |
 | Category breakdown with relative sizes | `bar-list` |
 | Structured numeric comparison (QoQ, YoY, plan vs. actual) | `compare` |
 | Detailed row data (5+ items with 3+ fields) | `table` |
-| Health status of multiple workstreams or items | `status-grid` |
+| Health or urgency status of multiple items | `status-grid` |
 | Narrative insights: bright spots, risks, actions | `highlights` |
 
 **Hard rules:**
-- Never put a headline number in a prose sentence when `kpi-row` can show it larger and faster.
+- Never put a headline number in prose when `kpi-row` can show it larger.
 - Never use `table` for 2–4 numbers — use `kpi-row`.
-- Maximum one `trend`, one `table`, and one `highlights` per report.
-- Keep total block count to 4–8. More than 8 is a wall.
+- `kpi-row` is not mandatory — omit it when the story is problem- or urgency-forward and metrics are supporting context, not the lead.
 
 ---
 
@@ -94,6 +108,7 @@ Run every check before rendering. Fix any failure before proceeding.
 - [ ] `blocks` array has at least one entry
 - [ ] First block `type` is `hero`
 - [ ] Last block `type` is `highlights`
+- [ ] Block order reflects the declared narrative intent (achievement / problem / status)
 
 **Per block:**
 - [ ] `type` is one of: `hero`, `kpi-row`, `trend`, `bar-list`, `compare`, `table`, `status-grid`, `highlights`
