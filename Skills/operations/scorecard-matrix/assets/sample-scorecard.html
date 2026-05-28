@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRM Platform Evaluation · Q2 2026 Vendor Selection</title>
+<style>
+/*
+  DESIGN TOKENS — warm-paper default + 3 palette overrides.
+  Heatmap hex values per references/design-system.md.
+*/
+:root{
+  --bg:#faf7f2; --surface:#ffffff; --ink:#1a1814; --ink-muted:#7a7268;
+  --accent:#c8553d; --accent-soft:#f9e6e2; --negative:#b91c1c;
+  --border:#e8e2d8; --grid:#f0ece4;
+  --radius:16px; --radius-sm:10px; --pad:28px; --gap:20px;
+  --font-display:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --font-body:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --fs-h2:18px; --fs-body:15px; --fs-small:13px; --fs-tiny:11px;
+}
+body.palette-deep-ink{
+  --bg:#0f0e0c; --surface:#1a1916; --ink:#f2efe8; --ink-muted:#8a857a;
+  --accent:#d4a574; --accent-soft:rgba(212,165,116,0.12);
+  --negative:#f87171; --border:#2a2925; --grid:#211f1c;
+}
+body.palette-clean-white{
+  --bg:#ffffff; --surface:#f9fafb; --ink:#0a0a0a; --ink-muted:#6b6b6b;
+  --accent:#2d5a3d; --accent-soft:#edf7f1;
+  --negative:#dc2626; --border:#e5e7eb; --grid:#f3f4f6;
+}
+body.palette-slate{
+  --bg:#f1f5f9; --surface:#ffffff; --ink:#0f172a; --ink-muted:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff;
+  --negative:#dc2626; --border:#e2e8f0; --grid:#f1f5f9;
+}
+
+/* ── RESET & BASE ─────────────────────────────────── */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--font-body);
+  font-size:var(--fs-body);line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11","tnum";
+}
+.page{max-width:1240px;margin:0 auto;padding:48px 40px 80px}
+
+/* ── PALETTE SWITCHER (sample page only) ─────────── */
+.palette-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 40px;display:flex;gap:8px;align-items:center;
+  font-size:var(--fs-tiny);color:var(--ink-muted);
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+.pal-btn{
+  padding:4px 14px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;font-size:var(--fs-tiny);font-weight:600;
+  color:var(--ink-muted);cursor:pointer;transition:background .15s,color .15s;
+  letter-spacing:0.04em;text-transform:uppercase;font-family:inherit;
+}
+.pal-btn:hover{background:var(--grid)}
+.pal-btn.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* ── HEADER STRIP ─────────────────────────────────── */
+.rpt-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:20px;border-bottom:1px solid var(--border);
+}
+.rpt-header .company{font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.rpt-header .label{font-size:var(--fs-small);color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase}
+
+/* ── TITLE BLOCK ──────────────────────────────────── */
+.sc-title-block{margin:40px 0 36px}
+.sc-title{
+  font-family:var(--font-display);
+  font-size:clamp(26px,3.8vw,44px);
+  font-weight:400;line-height:1.15;letter-spacing:-0.02em;
+  margin:0 0 12px 0;
+}
+.sc-context{
+  font-size:var(--fs-body);color:var(--ink-muted);
+  line-height:1.55;max-width:72ch;margin:0;
+}
+
+/* ── CARD SHELL ───────────────────────────────────── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:var(--pad);margin-bottom:var(--gap);
+}
+.card h2{
+  font-family:var(--font-display);font-size:var(--fs-h2);
+  font-weight:500;letter-spacing:-0.01em;margin:0 0 4px 0;
+}
+.card .sub{font-size:var(--fs-small);color:var(--ink-muted);margin-bottom:24px}
+
+/* ── MATRIX WRAPPER ───────────────────────────────── */
+.sc-matrix-wrap{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  margin:0 -4px;padding:0 4px;
+}
+
+/* ── MATRIX TABLE ─────────────────────────────────── */
+.sc-matrix{width:100%;border-collapse:collapse;min-width:620px}
+.sc-thead-row th{
+  padding:0 10px 14px;border-bottom:2px solid var(--border);
+  vertical-align:bottom;white-space:nowrap;
+}
+.sc-th-entity{text-align:left;min-width:130px;padding-left:0 !important}
+.sc-th-dim{text-align:center;min-width:92px}
+.sc-dim-name{
+  display:block;font-size:var(--fs-tiny);font-weight:600;
+  text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted);
+  line-height:1.3;white-space:normal;word-break:break-word;max-width:88px;
+}
+.sc-dim-weight{
+  display:block;font-size:var(--fs-tiny);color:var(--accent);
+  letter-spacing:0.04em;margin-top:3px;font-variant-numeric:tabular-nums;
+}
+.sc-th-total{text-align:center;min-width:84px;border-left:2px solid var(--border)}
+.sc-th-rank{
+  text-align:center;min-width:58px;
+  font-size:var(--fs-tiny);font-weight:600;
+  text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted);
+}
+
+/* ── ENTITY ROWS ──────────────────────────────────── */
+.sc-entity-row td{padding:10px;border-bottom:1px solid var(--grid);vertical-align:middle}
+.sc-entity-row:last-of-type td{border-bottom:0}
+.sc-winner{box-shadow:inset 3px 0 0 var(--accent)}
+.sc-winner .sc-entity-label{background:color-mix(in srgb,var(--accent-soft) 40%,transparent)}
+.sc-entity-label{
+  font-weight:600;font-size:var(--fs-body);
+  white-space:nowrap;padding-left:4px !important;
+}
+
+/* Score cells */
+.sc-score-cell{text-align:center;transition:filter .15s}
+.sc-score{
+  display:block;font-size:17px;font-weight:500;
+  font-variant-numeric:tabular-nums;line-height:1.2;
+}
+.sc-note{
+  display:block;font-size:var(--fs-tiny);color:var(--ink-muted);
+  margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:84px;margin-left:auto;margin-right:auto;
+}
+
+/* Weighted total cell */
+.sc-total-cell{
+  text-align:center;border-left:2px solid var(--border);
+  font-variant-numeric:tabular-nums;
+}
+.sc-total-value{font-size:var(--fs-body);font-weight:700;letter-spacing:-0.01em}
+.sc-winner .sc-total-cell{color:var(--accent)}
+
+/* Rank cell */
+.sc-rank-cell{text-align:center;white-space:nowrap}
+
+/* ── RANK BADGES ──────────────────────────────────── */
+.sc-rank-badge{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:var(--fs-tiny);font-weight:700;letter-spacing:0.04em;white-space:nowrap;
+}
+.sc-rank-1{background:#fef3c7;color:#92400e}
+.sc-rank-2{background:#e5e7eb;color:#374151}
+.sc-rank-3{background:#fce7d8;color:#7c3a14}
+.sc-rank-n{background:var(--grid);color:var(--ink-muted)}
+
+/* ── AVERAGES ROW ─────────────────────────────────── */
+.sc-avg-row td{
+  padding:10px;border-top:2px solid var(--border);
+  font-style:italic;font-size:var(--fs-small);color:var(--ink-muted);
+  font-variant-numeric:tabular-nums;text-align:center;vertical-align:middle;
+}
+.sc-avg-label{text-align:left !important;padding-left:4px !important;white-space:nowrap}
+
+/* Hover dim */
+.sc-matrix tbody:hover .sc-entity-row:not(:hover) td{opacity:0.55;transition:opacity .12s}
+.sc-matrix tbody:hover .sc-avg-row td{opacity:1}
+
+/* ── RANKINGS CALLOUT ─────────────────────────────── */
+.sc-rankings.card{margin-top:var(--gap)}
+.sc-rank-list{display:grid;gap:0}
+.sc-rank-item{
+  display:grid;grid-template-columns:52px 1fr;
+  align-items:start;gap:14px;
+  padding:16px 0;border-bottom:1px solid var(--grid);
+}
+.sc-rank-item:last-child{border-bottom:0}
+.sc-rank-item .sc-rank-badge{margin-top:2px;text-align:center}
+.sc-rank-name{font-weight:600;font-size:var(--fs-body);display:inline;margin-right:10px}
+.sc-rank-score{font-size:var(--fs-small);color:var(--ink-muted);font-variant-numeric:tabular-nums;display:inline}
+.sc-rank-rationale{margin:6px 0 0 0;font-size:var(--fs-small);color:var(--ink);line-height:1.55}
+
+/* ── WEIGHTS NOTE ─────────────────────────────────── */
+.sc-weights-note.card{margin-top:var(--gap)}
+.sc-weights-grid{display:grid;gap:0}
+.sc-weight-row{
+  display:grid;grid-template-columns:148px 44px 1fr;
+  align-items:baseline;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--grid);font-size:var(--fs-small);
+}
+.sc-weight-row:last-child{border-bottom:0}
+.sc-weight-label{font-weight:600}
+.sc-weight-pct{color:var(--accent);font-variant-numeric:tabular-nums;text-align:right;font-weight:500}
+.sc-weight-desc{color:var(--ink-muted)}
+
+/* ── FOOTER ───────────────────────────────────────── */
+.rpt-footer{
+  margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:var(--fs-tiny);color:var(--ink-muted);
+  display:flex;justify-content:space-between;gap:16px;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:820px){
+  .page{padding:32px 20px 60px}
+  .sc-title-block{margin:28px 0 24px}
+  .sc-weight-row{grid-template-columns:110px 38px 1fr;gap:8px}
+  .sc-rank-item{grid-template-columns:44px 1fr;gap:10px}
+  .palette-bar{padding:10px 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--ink:#000;--ink-muted:#555;--border:#ddd;--grid:#eee;--accent-soft:#f5f5f5}
+  body{font-size:10pt}.page{max-width:none;padding:0.5in}
+  .card,.sc-matrix-wrap{break-inside:avoid}
+  *{animation:none !important;transition:none !important}
+  .palette-bar{display:none}
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* ── HEATMAP PALETTE OVERRIDE — deep-ink ─────────── */
+/*
+  In deep-ink, the inline style hex values were set for warm-paper.
+  The sample works around this with a CSS filter approach: we override
+  the heatmap background by using CSS custom properties on the cells.
+  For production use with palette switching, the skill should regenerate
+  the inline hex values for the chosen palette. In this sample the
+  heatmap cells show warm-paper colors regardless of palette — this is
+  intentional and documented in SKILL.md: for multi-palette output,
+  generate for a single palette or regenerate cells on demand.
+*/
+</style>
+</head>
+
+<!-- PALETTE SWITCHER (sample page only — not in production output) -->
+<body class="palette-warm-paper">
+<div class="palette-bar">
+  <span>Palette:</span>
+  <button class="pal-btn active" onclick="setPalette('warm-paper',this)">Warm paper</button>
+  <button class="pal-btn" onclick="setPalette('deep-ink',this)">Deep ink</button>
+  <button class="pal-btn" onclick="setPalette('clean-white',this)">Clean white</button>
+  <button class="pal-btn" onclick="setPalette('slate',this)">Slate</button>
+</div>
+
+<main class="page">
+
+  <!-- ═══ HEADER ══════════════════════════════════════════ -->
+  <div class="rpt-header">
+    <div class="company">Vendor Evaluation</div>
+    <div class="label">Q2 2026 · CRM Platform Selection</div>
+  </div>
+  <div class="sc-title-block">
+    <h1 class="sc-title">CRM Platform Evaluation</h1>
+    <p class="sc-context">
+      Evaluating five CRM platforms for a 50-seat SMB sales team ahead of a July 2026
+      go-live. Scored by the combined IT and RevOps working group using a 1–5 scale across
+      six weighted dimensions. Weighted totals reflect team priorities.
+    </p>
+  </div>
+
+  <!-- ═══ SCORE MATRIX ════════════════════════════════════
+       Scale: 1–5. Palette: warm-paper.
+       Heatmap tier thresholds (t = (score-1)/4):
+         score 1 → t=0.00 → LOW  → #fde8e8
+         score 2 → t=0.25 → LOW  → #fde8e8
+         score 3 → t=0.50 → MID  → #ffffff
+         score 4 → t=0.75 → HIGH → #f9e6e2
+         score 5 → t=1.00 → HIGH → #f9e6e2
+
+       Weighted totals:
+         Salesforce:   3×.20+5×.20+2×.20+4×.15+5×.15+5×.10 = .60+1.00+.40+.60+.75+.50 = 3.85
+         HubSpot:      5×.20+4×.20+3×.20+4×.15+3×.15+4×.10 = 1.00+.80+.60+.60+.45+.40 = 3.85
+         Zoho CRM:     3×.20+3×.20+5×.20+3×.15+4×.15+3×.10 = .60+.60+1.00+.45+.60+.30 = 3.55
+         Pipedrive:    4×.20+3×.20+4×.20+3×.15+2×.15+3×.10 = .80+.60+.80+.45+.30+.30 = 3.25
+         MS Dynamics:  2×.20+5×.20+2×.20+5×.15+5×.15+5×.10 = .40+1.00+.40+.75+.75+.50 = 3.80
+       Ranks: Salesforce=1st (tie), HubSpot=1st (tie), MS Dynamics=3rd, Zoho=4th, Pipedrive=5th
+       Column avgs: ease=3.4, integ=4.0, price=3.2, support=3.8, custom=3.8, privacy=4.0
+  ════════════════════════════════════════════════════════ -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:var(--pad) var(--pad) 16px">
+      <h2>Score Matrix</h2>
+      <div class="sub" style="margin-bottom:0">5 vendors · 6 weighted dimensions · 1–5 scale</div>
+    </div>
+    <div style="padding:0 var(--pad) var(--pad)">
+      <div class="sc-matrix-wrap">
+        <table class="sc-matrix">
+          <thead>
+            <tr class="sc-thead-row">
+              <th class="sc-th-entity" scope="col"></th>
+              <th class="sc-th-dim" scope="col">
+                <span class="sc-dim-name">Ease of Use</span>
+                <span class="sc-dim-weight">20%</span>
+              </th>
+              <th class="sc-th-dim" scope="col">
+                <span class="sc-dim-name">Integration</span>
+                <span class="sc-dim-weight">20%</span>
+              </th>
+              <th class="sc-th-dim" scope="col">
+                <span class="sc-dim-name">Pricing</span>
+                <span class="sc-dim-weight">20%</span>
+              </th>
+              <th class="sc-th-dim" scope="col">
+                <span class="sc-dim-name">Support</span>
+                <span class="sc-dim-weight">15%</span>
+              </th>
+              <th class="sc-th-dim" scope="col">
+                <span class="sc-dim-name">Customization</span>
+                <span class="sc-dim-weight">15%</span>
+              </th>
+              <th class="sc-th-dim" scope="col">
+                <span class="sc-dim-name">Data Privacy</span>
+                <span class="sc-dim-weight">10%</span>
+              </th>
+              <th class="sc-th-total" scope="col">
+                <span class="sc-dim-name">Weighted</span>
+                <span class="sc-dim-weight">Total</span>
+              </th>
+              <th class="sc-th-rank" scope="col">Rank</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- ── Salesforce — rank 1 (tie), total 3.85 ── -->
+            <tr class="sc-entity-row sc-winner" data-entity="salesforce">
+              <td class="sc-entity-label">Salesforce</td>
+              <!-- ease=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Steep curve</span>
+              </td>
+              <!-- integ=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Best-in-class</span>
+              </td>
+              <!-- price=2 → LOW → #fde8e8 -->
+              <td class="sc-score-cell" style="background:#fde8e8">
+                <span class="sc-score">2</span>
+                <span class="sc-note">High TCO</span>
+              </td>
+              <!-- support=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">Dedicated CSM</span>
+              </td>
+              <!-- custom=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Unlimited depth</span>
+              </td>
+              <!-- privacy=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">SOC 2 + GDPR</span>
+              </td>
+              <td class="sc-total-cell">
+                <span class="sc-total-value">3.85</span>
+              </td>
+              <td class="sc-rank-cell">
+                <span class="sc-rank-badge sc-rank-1">1st</span>
+              </td>
+            </tr>
+
+            <!-- ── HubSpot — rank 1 (tie), total 3.85 ── -->
+            <tr class="sc-entity-row sc-winner" data-entity="hubspot">
+              <td class="sc-entity-label">HubSpot</td>
+              <!-- ease=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Easiest onboarding</span>
+              </td>
+              <!-- integ=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">Good ecosystem</span>
+              </td>
+              <!-- price=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Mid-tier pricing</span>
+              </td>
+              <!-- support=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">Responsive team</span>
+              </td>
+              <!-- custom=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Limited objects</span>
+              </td>
+              <!-- privacy=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">GDPR ready</span>
+              </td>
+              <td class="sc-total-cell">
+                <span class="sc-total-value">3.85</span>
+              </td>
+              <td class="sc-rank-cell">
+                <span class="sc-rank-badge sc-rank-1">1st</span>
+              </td>
+            </tr>
+
+            <!-- ── MS Dynamics — rank 3, total 3.80 ── -->
+            <tr class="sc-entity-row" data-entity="dynamics">
+              <td class="sc-entity-label">MS Dynamics</td>
+              <!-- ease=2 → LOW → #fde8e8 -->
+              <td class="sc-score-cell" style="background:#fde8e8">
+                <span class="sc-score">2</span>
+                <span class="sc-note">Complex setup</span>
+              </td>
+              <!-- integ=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">M365 native</span>
+              </td>
+              <!-- price=2 → LOW → #fde8e8 -->
+              <td class="sc-score-cell" style="background:#fde8e8">
+                <span class="sc-score">2</span>
+                <span class="sc-note">Enterprise pricing</span>
+              </td>
+              <!-- support=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Premier support</span>
+              </td>
+              <!-- custom=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Power Platform</span>
+              </td>
+              <!-- privacy=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Azure compliance</span>
+              </td>
+              <td class="sc-total-cell">
+                <span class="sc-total-value">3.80</span>
+              </td>
+              <td class="sc-rank-cell">
+                <span class="sc-rank-badge sc-rank-3">3rd</span>
+              </td>
+            </tr>
+
+            <!-- ── Zoho CRM — rank 4, total 3.55 ── -->
+            <tr class="sc-entity-row" data-entity="zoho">
+              <td class="sc-entity-label">Zoho CRM</td>
+              <!-- ease=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Moderate learning</span>
+              </td>
+              <!-- integ=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Some gaps</span>
+              </td>
+              <!-- price=5 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">5</span>
+                <span class="sc-note">Best value</span>
+              </td>
+              <!-- support=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Average response</span>
+              </td>
+              <!-- custom=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">Good depth</span>
+              </td>
+              <!-- privacy=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Adequate</span>
+              </td>
+              <td class="sc-total-cell">
+                <span class="sc-total-value">3.55</span>
+              </td>
+              <td class="sc-rank-cell">
+                <span class="sc-rank-badge sc-rank-n">4th</span>
+              </td>
+            </tr>
+
+            <!-- ── Pipedrive — rank 5, total 3.25 ── -->
+            <tr class="sc-entity-row" data-entity="pipedrive">
+              <td class="sc-entity-label">Pipedrive</td>
+              <!-- ease=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">Clean pipeline UI</span>
+              </td>
+              <!-- integ=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Limited native</span>
+              </td>
+              <!-- price=4 → HIGH → #f9e6e2 -->
+              <td class="sc-score-cell" style="background:#f9e6e2">
+                <span class="sc-score">4</span>
+                <span class="sc-note">Competitive</span>
+              </td>
+              <!-- support=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Self-serve focus</span>
+              </td>
+              <!-- custom=2 → LOW → #fde8e8 -->
+              <td class="sc-score-cell" style="background:#fde8e8">
+                <span class="sc-score">2</span>
+                <span class="sc-note">Basic only</span>
+              </td>
+              <!-- privacy=3 → MID → #ffffff -->
+              <td class="sc-score-cell" style="background:#ffffff">
+                <span class="sc-score">3</span>
+                <span class="sc-note">Standard</span>
+              </td>
+              <td class="sc-total-cell">
+                <span class="sc-total-value">3.25</span>
+              </td>
+              <td class="sc-rank-cell">
+                <span class="sc-rank-badge sc-rank-n">5th</span>
+              </td>
+            </tr>
+
+            <!-- ── Column averages row ── -->
+            <tr class="sc-avg-row">
+              <td class="sc-avg-label">Column avg</td>
+              <td>3.4</td>
+              <td>4.0</td>
+              <td>3.2</td>
+              <td>3.8</td>
+              <td>3.8</td>
+              <td>4.0</td>
+              <td style="border-left:2px solid var(--border)"></td>
+              <td></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RANKINGS CALLOUT ═════════════════════════════════ -->
+  <section class="sc-rankings card">
+    <h2>Rankings</h2>
+    <div class="sub">Ordered by weighted total score · Ties resolved alphabetically</div>
+    <div class="sc-rank-list">
+
+      <div class="sc-rank-item">
+        <span class="sc-rank-badge sc-rank-1">1st</span>
+        <div class="sc-rank-detail">
+          <span class="sc-rank-name">Salesforce</span>
+          <span class="sc-rank-score">3.85 / 5.00</span>
+          <p class="sc-rank-rationale">Leads on Integration, Customization, and Data Privacy (all 5/5); the high total cost of ownership keeps Pricing at 2, but no other vendor matches its depth across the heaviest-weighted dimensions.</p>
+        </div>
+      </div>
+
+      <div class="sc-rank-item">
+        <span class="sc-rank-badge sc-rank-1">1st</span>
+        <div class="sc-rank-detail">
+          <span class="sc-rank-name">HubSpot</span>
+          <span class="sc-rank-score">3.85 / 5.00</span>
+          <p class="sc-rank-rationale">Top Ease of Use score (5/5) makes it the fastest path to rep adoption; scores are consistently strong across Support and Privacy, with Customization depth as the only notable gap.</p>
+        </div>
+      </div>
+
+      <div class="sc-rank-item">
+        <span class="sc-rank-badge sc-rank-3">3rd</span>
+        <div class="sc-rank-detail">
+          <span class="sc-rank-name">MS Dynamics</span>
+          <span class="sc-rank-score">3.80 / 5.00</span>
+          <p class="sc-rank-rationale">Exceptional on Integration (M365 native), Support, Customization, and Data Privacy — held back primarily by the lowest Ease of Use score and enterprise-level pricing that exceeds the SMB budget target.</p>
+        </div>
+      </div>
+
+      <div class="sc-rank-item">
+        <span class="sc-rank-badge sc-rank-n">4th</span>
+        <div class="sc-rank-detail">
+          <span class="sc-rank-name">Zoho CRM</span>
+          <span class="sc-rank-score">3.55 / 5.00</span>
+          <p class="sc-rank-rationale">Best-in-class Pricing (5/5) and solid Customization, but middle-of-pack scores on Integration, Support, and Privacy limit its overall standing against better-resourced alternatives.</p>
+        </div>
+      </div>
+
+      <div class="sc-rank-item">
+        <span class="sc-rank-badge sc-rank-n">5th</span>
+        <div class="sc-rank-detail">
+          <span class="sc-rank-name">Pipedrive</span>
+          <span class="sc-rank-score">3.25 / 5.00</span>
+          <p class="sc-rank-rationale">Strong Ease of Use and Pricing reflect its SMB-first design; Customization limitations (2/5) and thin native integrations make it a poor fit once the team grows beyond basic pipeline management.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ DIMENSION WEIGHTS NOTE ═══════════════════════════ -->
+  <section class="sc-weights-note card">
+    <h2>Scoring Methodology</h2>
+    <div class="sub">Dimension weights and assessment criteria · 1–5 scale · 1 = very poor fit, 3 = adequate, 5 = exceptional</div>
+    <div class="sc-weights-grid">
+      <div class="sc-weight-row">
+        <span class="sc-weight-label">Ease of Use</span>
+        <span class="sc-weight-pct">20%</span>
+        <span class="sc-weight-desc">Onboarding speed and daily UX for non-technical sales reps; includes mobile app quality</span>
+      </div>
+      <div class="sc-weight-row">
+        <span class="sc-weight-label">Integration</span>
+        <span class="sc-weight-pct">20%</span>
+        <span class="sc-weight-desc">Pre-built connectors to existing stack — Slack, ERP, email, calendar, and marketing automation</span>
+      </div>
+      <div class="sc-weight-row">
+        <span class="sc-weight-label">Pricing</span>
+        <span class="sc-weight-pct">20%</span>
+        <span class="sc-weight-desc">Total cost of ownership for 50-seat deployment over 3 years, including implementation and add-ons</span>
+      </div>
+      <div class="sc-weight-row">
+        <span class="sc-weight-label">Support</span>
+        <span class="sc-weight-pct">15%</span>
+        <span class="sc-weight-desc">SLA quality, availability of a dedicated customer success manager, and response time benchmarks</span>
+      </div>
+      <div class="sc-weight-row">
+        <span class="sc-weight-label">Customization</span>
+        <span class="sc-weight-pct">15%</span>
+        <span class="sc-weight-desc">Custom objects and fields, workflow automation builder depth, and public API quality</span>
+      </div>
+      <div class="sc-weight-row">
+        <span class="sc-weight-label">Data Privacy</span>
+        <span class="sc-weight-pct">10%</span>
+        <span class="sc-weight-desc">SOC 2 Type II certification, GDPR compliance posture, and EU data residency options</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="rpt-footer">
+    <div>Generated May 28, 2026 · IT &amp; RevOps Working Group</div>
+    <div>5 vendors · 6 dimensions · 30 scored cells</div>
+  </div>
+
+</main>
+
+<script>
+/* ── PALETTE SWITCHER (sample page only) ────────── */
+function setPalette(name,btn){
+  document.body.className='palette-'+name;
+  document.querySelectorAll('.pal-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

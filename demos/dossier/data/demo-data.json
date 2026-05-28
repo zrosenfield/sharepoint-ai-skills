@@ -1,0 +1,123 @@
+{
+  "report": {
+    "title": "Competitor Landscape — Q2 FY2026",
+    "subtitle": "4 direct competitors · Board prep brief",
+    "palette": "deep-ink",
+    "mode": "grid",
+    "footer": "Generated for Maya Chen · Board Meeting June 2026 · Confidential"
+  },
+  "subjects": [
+    {
+      "id": "notion",
+      "name": "Notion",
+      "type": "Competitor",
+      "status": "Watch closely",
+      "status_color": "amber",
+      "key_facts": [
+        { "label": "Founded", "value": "2013" },
+        { "label": "HQ", "value": "San Francisco, CA" },
+        { "label": "Stage", "value": "Private · $10B val." },
+        { "label": "ARR", "value": "~$300M est." },
+        { "label": "Employees", "value": "~800" },
+        { "label": "Primary Market", "value": "SMB + Mid-market" }
+      ],
+      "tags": [
+        "Document-first",
+        "Series C+",
+        "Consumer viral",
+        "Expanding to enterprise"
+      ],
+      "summary": "Notion built a dominant position in the document/wiki space and is aggressively expanding into project management and workflow automation — Zava's core territory. Their 2026 push into Notion AI and structured databases brings them closer to Zava Ops' rev ops use cases. Zava beats them on workflow depth and CRM integrations; Notion beats them on brand recognition and bottom-up adoption.",
+      "activity": [
+        { "date": "Jun 2026", "text": "Launched Notion AI Workflows beta, targeting ops teams directly." },
+        { "date": "Apr 2026", "text": "Raised $50M strategic round led by Sequoia; hinted at enterprise tier expansion." },
+        { "date": "Feb 2026", "text": "Announced partnership with Salesforce for CRM data sync." },
+        { "date": "Jan 2026", "text": "30M+ registered users milestone announced at company all-hands." }
+      ]
+    },
+    {
+      "id": "monday-com",
+      "name": "Monday.com",
+      "type": "Competitor",
+      "status": "Primary threat",
+      "status_color": "red",
+      "key_facts": [
+        { "label": "Founded", "value": "2012" },
+        { "label": "HQ", "value": "Tel Aviv, Israel" },
+        { "label": "Stage", "value": "Public · MNDY" },
+        { "label": "ARR", "value": "~$900M" },
+        { "label": "Employees", "value": "~2,000" },
+        { "label": "Primary Market", "value": "Mid-market + Enterprise" }
+      ],
+      "tags": [
+        "Public",
+        "Work OS",
+        "Enterprise-ready",
+        "APAC expansion"
+      ],
+      "summary": "Monday.com is Zava's most direct and best-funded competitor. Their Work OS positioning overlaps heavily with Zava Ops, and their 2026 enterprise push has them targeting the same ICP. They outspend Zava 5:1 on sales and marketing. Zava's advantage is deeper rev ops specificity and superior CRM integration — Monday is a general-purpose work tool, Zava is purpose-built for revenue teams.",
+      "activity": [
+        { "date": "May 2026", "text": "Launched monday CRM with native pipeline and deal management — direct competitive move." },
+        { "date": "Mar 2026", "text": "Q1 FY2026 earnings: $228M revenue (+32% YoY), raised full-year guidance." },
+        { "date": "Feb 2026", "text": "Opened Singapore office; named APAC regional head — expanding into Zava's growth market." },
+        { "date": "Jan 2026", "text": "Announced enterprise security suite (SSO, SCIM, custom data retention)." }
+      ]
+    },
+    {
+      "id": "clickup",
+      "name": "ClickUp",
+      "type": "Competitor",
+      "status": "Aggressive on price",
+      "status_color": "amber",
+      "key_facts": [
+        { "label": "Founded", "value": "2017" },
+        { "label": "HQ", "value": "San Diego, CA" },
+        { "label": "Stage", "value": "Private · Series C" },
+        { "label": "ARR", "value": "~$180M est." },
+        { "label": "Employees", "value": "~1,000" },
+        { "label": "Primary Market", "value": "SMB + Startup" }
+      ],
+      "tags": [
+        "Series C",
+        "Price disruptor",
+        "Feature velocity",
+        "Freemium"
+      ],
+      "summary": "ClickUp competes primarily on price and feature breadth, offering a freemium tier that converts aggressively into SMB deals. Their 2026 AI push (ClickUp Brain) adds automation capabilities, but execution quality lags behind Zava's rev ops depth. Their churn rate is reportedly high in enterprise. Zava should monitor their enterprise tier pricing moves — ClickUp has a history of undercutting to gain logos.",
+      "activity": [
+        { "date": "Jun 2026", "text": "ClickUp Brain GA: AI-native task creation, summarization, and workflow suggestions." },
+        { "date": "Apr 2026", "text": "Launched ClickUp Enterprise with SSO and dedicated CSM — moving upmarket." },
+        { "date": "Mar 2026", "text": "Cut Business plan price by 20%; aggressive win-back campaign targeting Asana and Zava customers." },
+        { "date": "Jan 2026", "text": "Reported 10M+ teams milestone; announced $150M secondary tender at flat valuation." }
+      ]
+    },
+    {
+      "id": "coda",
+      "name": "Coda",
+      "type": "Competitor",
+      "status": "Niche overlap",
+      "status_color": "blue",
+      "key_facts": [
+        { "label": "Founded", "value": "2014" },
+        { "label": "HQ", "value": "San Francisco, CA" },
+        { "label": "Stage", "value": "Private · Series D" },
+        { "label": "ARR", "value": "~$60M est." },
+        { "label": "Employees", "value": "~350" },
+        { "label": "Primary Market", "value": "Technical SMB + Mid-market" }
+      ],
+      "tags": [
+        "Series D",
+        "Doc+database",
+        "Technical buyers",
+        "AI-native"
+      ],
+      "summary": "Coda serves a technical buyer who wants the flexibility of a database wrapped in a document interface — closest to Zava's ICP in terms of buyer sophistication. They don't compete on volume, but they win deals in engineering-led orgs where Zava also has strong presence. Their 2026 Coda AI features are genuinely impressive for structured data, though they lack Zava's CRM depth. Worth watching in the technical mid-market segment.",
+      "activity": [
+        { "date": "May 2026", "text": "Coda AI Actions: AI can now write and modify doc data autonomously — strong feature." },
+        { "date": "Mar 2026", "text": "Launched Coda for Enterprises: compliance, SSO, audit logs." },
+        { "date": "Feb 2026", "text": "Partnership with Figma for embedded design-to-doc workflows." },
+        { "date": "Dec 2025", "text": "Named a Gartner Cool Vendor in Collaboration Tools 2025." }
+      ]
+    }
+  ]
+}

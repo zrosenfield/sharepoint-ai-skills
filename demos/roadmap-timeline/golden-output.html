@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zava Industries · H2 FY2026 Roadmap</title>
+<style>
+/*
+  PRODUCTION OUTPUT — Zava Industries H2 FY2026 Roadmap
+  Palette: slate
+  Date range: Jul 1 – Dec 31, 2026 (184 days, 0-indexed)
+
+  Month ruler positions (left%, width%):
+    Jul : left=  0.00%  w=16.85%  (31 days / 184)
+    Aug : left= 16.85%  w=16.85%  (31 days / 184)
+    Sep : left= 33.70%  w=15.76%  (29 days / 184)
+    Oct : left= 49.46%  w=16.85%  (31 days / 184)
+    Nov : left= 66.30%  w=16.30%  (30 days / 184)
+    Dec : left= 82.61%  w=17.39%  (32 days incl Dec 31 / 184)
+
+  Today = Jul 14, 2026 → day 13 → left = 13/184 = 7.07%
+
+  Phase block positions (left%, width%) — day offsets / 184 × 100:
+    p1  API v3                    d0–d76    left=  0.00%  w=41.30%  on-track
+    p2  Multi-tenant Support      d31–d137  left= 16.85%  w=57.61%  planned
+    p3  SOC 2 Type II Audit       d0–d61    left=  0.00%  w=33.15%  on-track
+    p4  Salesforce Deep Integ.    d14–d91   left=  7.61%  w=41.85%  on-track
+    p5  HubSpot Connector         d62–d122  left= 33.70%  w=32.61%  planned
+    p6  Zapier 2.0                d92–d167  left= 50.00%  w=40.76%  planned
+    p7  Self-Serve Onboarding v2  d0–d45    left=  0.00%  w=24.46%  on-track
+    p8  Partner Program Launch    d31–d91   left= 16.85%  w=32.61%  at-risk
+    p9  Enterprise Tier Launch    d92–d152  left= 50.00%  w=32.61%  planned
+    p10 FY27 Planning             d123–d183 left= 66.85%  w=32.61%  planned
+
+  Milestone diamond positions (left%):
+    m1  API v3 Beta               d31  left=16.85%  on-track
+    m2  SOC 2 Report Received     d76  left=41.30%  on-track
+    m3  Salesforce GA             d92  left=50.00%  planned
+    m4  Enterprise Tier GA        d123 left=66.85%  planned
+*/
+
+:root{
+  /* Palette defaults: slate */
+  --bg:          #f1f5f9;
+  --surface:     #ffffff;
+  --ink:         #0f172a;
+  --ink-muted:   #64748b;
+  --accent:      #2563eb;
+  --accent-soft: #eff6ff;
+  --negative:    #dc2626;
+  --border:      #e2e8f0;
+  --grid:        #f1f5f9;
+
+  /* Shape */
+  --radius:        16px;
+  --radius-sm:     10px;
+  --pad:           28px;
+  --gap:           20px;
+  --label-col-w:   120px;
+  --track-h:       48px;
+  --block-h:       32px;
+
+  /* Type */
+  --font-display: ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --font-body:    ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --font-mono:    ui-monospace,"SF Mono",Menlo,monospace;
+
+  --fs-h2:    18px;
+  --fs-body:  15px;
+  --fs-small: 13px;
+  --fs-tiny:  11px;
+}
+
+/* ── PALETTES ──────────────────────────────────── */
+body.palette-warm-paper{
+  --bg:#faf7f2; --surface:#ffffff; --ink:#1a1814; --ink-muted:#7a7268;
+  --accent:#c8553d; --accent-soft:#f9e6e2;
+  --negative:#b91c1c; --border:#e8e2d8; --grid:#f0ece4;
+}
+body.palette-deep-ink{
+  --bg:#0f0e0c; --surface:#1a1916; --ink:#f2efe8; --ink-muted:#8a857a;
+  --accent:#d4a574; --accent-soft:rgba(212,165,116,0.12);
+  --negative:#f87171; --border:#2a2925; --grid:#211f1c;
+}
+body.palette-clean-white{
+  --bg:#ffffff; --surface:#f9fafb; --ink:#0a0a0a; --ink-muted:#6b6b6b;
+  --accent:#2d5a3d; --accent-soft:#edf7f1;
+  --negative:#dc2626; --border:#e5e7eb; --grid:#f3f4f6;
+}
+
+/* ── RESET & BASE ──────────────────────────────── */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:var(--fs-body);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11","tnum";
+}
+.page{max-width:1240px;margin:0 auto;padding:48px 40px 80px}
+
+/* ── REPORT HEADER ─────────────────────────────── */
+.rpt-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);
+  margin-bottom:32px;
+}
+.rpt-header-left{display:flex;flex-direction:column;gap:4px}
+.rpt-title{font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.rpt-subtitle{font-size:var(--fs-small);color:var(--ink-muted)}
+.rpt-date-range{
+  font-size:var(--fs-small);color:var(--ink-muted);
+  white-space:nowrap;padding-top:2px;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ── ROADMAP WRAPPER ───────────────────────────── */
+.roadmap-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+
+/* ── RULER ─────────────────────────────────────── */
+.roadmap-ruler{
+  display:flex;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.ruler-label-col{
+  flex:0 0 var(--label-col-w);
+  min-width:var(--label-col-w);
+  border-right:1px solid var(--border);
+}
+.ruler-track{
+  flex:1;
+  position:relative;
+  height:28px;
+  overflow:hidden;
+}
+.ruler-month{
+  position:absolute;
+  top:0;bottom:0;
+  display:flex;align-items:center;
+  padding-left:8px;
+  font-family:var(--font-mono);
+  font-size:var(--fs-tiny);
+  color:var(--ink-muted);
+  border-right:1px solid var(--border);
+  white-space:nowrap;overflow:hidden;
+}
+.today-label{
+  position:absolute;
+  top:4px;
+  transform:translateX(-50%);
+  background:var(--accent);
+  color:#fff;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  padding:2px 6px;
+  border-radius:20px;
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:10;
+}
+
+/* ── SWIMLANE ROWS ─────────────────────────────── */
+.swimlane{
+  display:flex;
+  border-bottom:1px solid var(--border);
+  min-height:var(--track-h);
+  position:relative;
+}
+.swimlane:last-child{border-bottom:0}
+.swimlane-label{
+  flex:0 0 var(--label-col-w);
+  min-width:var(--label-col-w);
+  padding:0 12px;
+  display:flex;align-items:center;
+  font-size:var(--fs-small);
+  font-weight:500;
+  color:var(--ink-muted);
+  border-right:1px solid var(--border);
+  background:var(--bg);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.swimlane-track{
+  flex:1;
+  position:relative;
+  background:var(--surface);
+  height:var(--track-h);
+}
+/* Swimlanes with stacked blocks need extra height */
+.swimlane.stacked .swimlane-track{
+  height:calc(var(--track-h) * 2 + 4px);
+}
+
+/* ── PHASE BLOCKS ──────────────────────────────── */
+.phase-block{
+  position:absolute;
+  height:var(--block-h);
+  border-radius:6px;
+  display:flex;align-items:center;
+  padding:0 10px;
+  cursor:default;
+  overflow:hidden;
+  transition:filter .15s,opacity .15s;
+  min-width:2px;
+}
+.phase-block:hover{filter:brightness(1.08)}
+.phase-label{
+  font-size:var(--fs-tiny);
+  font-weight:500;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  pointer-events:none;
+}
+.phase-dep{
+  font-size:9px;
+  color:rgba(255,255,255,0.7);
+  margin-left:6px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+/* Status variants — phase blocks */
+.phase-block.status-on-track {background:var(--accent);opacity:0.88}
+.phase-block.status-at-risk  {background:#d97706;opacity:0.88}
+.phase-block.status-delayed  {background:var(--negative);opacity:0.88}
+.phase-block.status-complete {background:#059669;opacity:0.88}
+.phase-block.status-planned  {
+  background:var(--accent-soft);
+  border:1px dashed var(--border);
+  opacity:1;
+}
+.phase-block.status-planned .phase-label{color:var(--ink-muted)}
+
+/* ── MILESTONE DIAMONDS ────────────────────────── */
+.milestone-diamond{
+  position:absolute;
+  top:50%;
+  transform:translateX(-50%) translateY(-50%) rotate(45deg);
+  width:14px;height:14px;
+  border-radius:2px;
+  cursor:default;
+  transition:transform .15s;
+  z-index:5;
+}
+.milestone-diamond:hover{
+  transform:translateX(-50%) translateY(-50%) rotate(45deg) scale(1.25);
+}
+.milestone-diamond.status-on-track{background:var(--accent)}
+.milestone-diamond.status-at-risk  {background:#d97706}
+.milestone-diamond.status-delayed  {background:var(--negative)}
+.milestone-diamond.status-complete {background:#059669}
+.milestone-diamond.status-planned  {background:var(--ink-muted)}
+
+/* ── TODAY LINE ────────────────────────────────── */
+.today-line-bar{
+  position:absolute;
+  top:0;bottom:0;
+  width:2px;
+  background:var(--accent);
+  opacity:0.7;
+  pointer-events:none;
+  z-index:8;
+}
+
+/* ── LEGEND ────────────────────────────────────── */
+.legend{
+  display:flex;gap:20px;margin-top:18px;flex-wrap:wrap;
+  font-size:var(--fs-tiny);color:var(--ink-muted);align-items:center;
+}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-swatch{width:20px;height:10px;border-radius:3px;display:inline-block}
+.legend-diamond{
+  width:10px;height:10px;border-radius:2px;
+  background:var(--ink-muted);transform:rotate(45deg);display:inline-block;
+}
+
+/* ── TOOLTIP ───────────────────────────────────── */
+.rdm-tooltip{
+  position:fixed;
+  pointer-events:none;
+  background:var(--ink);
+  color:var(--bg);
+  font-size:var(--fs-small);
+  padding:10px 14px;
+  border-radius:10px;
+  opacity:0;
+  transition:opacity .15s;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+  z-index:200;
+  max-width:280px;
+  white-space:normal;
+  line-height:1.45;
+}
+.rdm-tooltip .tt-title{font-weight:600;margin-bottom:4px}
+.rdm-tooltip .tt-meta{font-size:var(--fs-tiny);color:rgba(255,255,255,0.65);line-height:1.6}
+
+/* ── FOOTER ────────────────────────────────────── */
+.rpt-footer{
+  margin-top:48px;padding-top:20px;
+  border-top:1px solid var(--border);
+  font-size:var(--fs-tiny);color:var(--ink-muted);
+  display:flex;justify-content:space-between;gap:16px;
+}
+
+/* ── MOTION ────────────────────────────────────── */
+.phase-block{opacity:0;animation:block-in .4s forwards ease-out}
+.swimlane:nth-child(2) .phase-block{animation-delay:.05s}
+.swimlane:nth-child(3) .phase-block{animation-delay:.10s}
+.swimlane:nth-child(4) .phase-block{animation-delay:.15s}
+@keyframes block-in{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:0.88;transform:translateY(0)}
+}
+.phase-block.status-planned{animation-name:block-in-planned}
+@keyframes block-in-planned{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.milestone-diamond{opacity:0;animation:diamond-in .3s .22s both}
+@keyframes diamond-in{
+  from{opacity:0;transform:translateX(-50%) translateY(-50%) rotate(45deg) scale(0.4)}
+  to{  opacity:1;transform:translateX(-50%) translateY(-50%) rotate(45deg) scale(1)}
+}
+.today-line-bar{opacity:0;animation:fade-in .4s .4s forwards}
+@keyframes fade-in{from{opacity:0}to{opacity:0.7}}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .phase-block{opacity:0.88;transform:none}
+  .phase-block.status-planned{opacity:1}
+  .milestone-diamond{opacity:1}
+  .today-line-bar{opacity:0.7}
+}
+
+/* ── RESPONSIVE ────────────────────────────────── */
+@media(max-width:720px){
+  .page{padding:24px 16px 60px}
+  :root{--label-col-w:80px}
+  .rpt-date-range{display:none}
+}
+
+/* ── PRINT ─────────────────────────────────────── */
+@media print{
+  :root{
+    --bg:#fff;--surface:#fff;--ink:#000;--ink-muted:#555;
+    --border:#ddd;--grid:#eee;--accent-soft:#f5f5f5;
+  }
+  body{font-size:11pt}
+  .page{max-width:none;padding:0.5in}
+  .roadmap-wrap{break-inside:avoid}
+  .phase-block{opacity:1 !important}
+  .milestone-diamond{opacity:1 !important}
+  .today-line-bar{opacity:0.7 !important}
+  *{animation:none !important;transition:none !important}
+}
+
+/* ── FOCUS ─────────────────────────────────────── */
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+</style>
+</head>
+<body class="palette-slate">
+<main class="page">
+
+  <!-- ═══ REPORT HEADER ══════════════════════════════════════ -->
+  <div class="rpt-header">
+    <div class="rpt-header-left">
+      <div class="rpt-title">Zava Industries · H2 FY2026 Roadmap</div>
+      <div class="rpt-subtitle">Platform · Integrations · Go-to-Market &nbsp;·&nbsp; Jul 1 – Dec 31, 2026</div>
+    </div>
+    <div class="rpt-date-range">Jul 2026 – Dec 2026</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ROADMAP
+       Date range: 2026-07-01 → 2026-12-31 = 184 days
+       Today: 2026-07-14 = day 13 → 7.07%
+
+       Month ruler (days in window / 184 × 100):
+         Jul  d0–d30   31 days  left= 0.00%  w=16.85%
+         Aug  d31–d61  31 days  left=16.85%  w=16.85%
+         Sep  d62–d90  29 days  left=33.70%  w=15.76%
+         Oct  d91–d121 31 days  left=49.46%  w=16.85%
+         Nov  d122–d151 30 days left=66.30%  w=16.30%
+         Dec  d152–d183 32 days left=82.61%  w=17.39%
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="roadmap-wrap">
+
+    <!-- Month ruler -->
+    <div class="roadmap-ruler">
+      <div class="ruler-label-col"></div>
+      <div class="ruler-track">
+        <div class="ruler-month" style="left:0%;width:16.85%">Jul</div>
+        <div class="ruler-month" style="left:16.85%;width:16.85%">Aug</div>
+        <div class="ruler-month" style="left:33.70%;width:15.76%">Sep</div>
+        <div class="ruler-month" style="left:49.46%;width:16.85%">Oct</div>
+        <div class="ruler-month" style="left:66.30%;width:16.30%">Nov</div>
+        <div class="ruler-month" style="left:82.61%;width:17.39%">Dec</div>
+        <!-- Today: Jul 14 = day 13 / 184 = 7.07% -->
+        <div class="today-label" style="left:7.07%">Today</div>
+      </div>
+    </div>
+
+    <!-- ══ PLATFORM ══════════════════════════════════════════
+         Row 1 (top):    p1  API v3              d0–d76   left=0.00%  w=41.30%  on-track
+         Row 2 (bottom): p3  SOC 2 Type II Audit d0–d61   left=0.00%  w=33.15%  on-track
+                         p2  Multi-tenant Suppt  d31–d137 left=16.85% w=57.61%  planned
+         m1  API v3 Beta diamond                 d31      left=16.85%            on-track
+         m2  SOC 2 Report Received diamond       d76      left=41.30%            on-track
+    ══ -->
+    <div class="swimlane stacked">
+      <div class="swimlane-label">Platform</div>
+      <div class="swimlane-track">
+        <!-- Today line -->
+        <div class="today-line-bar" style="left:7.07%"></div>
+        <!-- Row 1: p1 API v3 -->
+        <div class="phase-block status-on-track" style="left:0%;width:41.30%;top:10px"
+             data-title="API v3" data-dates="Jul 1 – Sep 15, 2026"
+             data-owner="Raj Patel" data-status="On track">
+          <span class="phase-label">API v3</span>
+        </div>
+        <!-- Row 2: p3 SOC 2 Type II Audit -->
+        <div class="phase-block status-on-track" style="left:0%;width:33.15%;top:50px"
+             data-title="SOC 2 Type II Audit" data-dates="Jul 1 – Aug 31, 2026"
+             data-owner="Priya Nair" data-status="On track">
+          <span class="phase-label">SOC 2 Type II Audit</span>
+        </div>
+        <!-- Row 2: p2 Multi-tenant Support -->
+        <div class="phase-block status-planned" style="left:16.85%;width:57.61%;top:50px"
+             data-title="Multi-tenant Support" data-dates="Aug 1 – Nov 15, 2026"
+             data-owner="Priya Nair" data-status="Planned">
+          <span class="phase-label">Multi-tenant Support</span>
+        </div>
+        <!-- m1 API v3 Beta diamond — placed on row boundary between rows 1 and 2 -->
+        <div class="milestone-diamond status-on-track" style="left:16.85%;top:42px;transform:translateX(-50%) rotate(45deg)"
+             data-title="API v3 Beta" data-dates="Aug 1, 2026"
+             data-owner="Raj Patel" data-status="On track · External beta opens to 20 customers"></div>
+        <!-- m2 SOC 2 Report Received diamond -->
+        <div class="milestone-diamond status-on-track" style="left:41.30%;top:42px;transform:translateX(-50%) rotate(45deg)"
+             data-title="SOC 2 Report Received" data-dates="Sep 15, 2026"
+             data-owner="Priya Nair" data-status="On track · Audit complete, report in hand"></div>
+      </div>
+    </div>
+
+    <!-- ══ INTEGRATIONS ══════════════════════════════════════
+         Row 1 (top):    p4  Salesforce Deep Integ  d14–d91  left=7.61%  w=41.85%  on-track
+                         p6  Zapier 2.0             d92–d167 left=50.00% w=40.76%  planned
+         Row 2 (bottom): p5  HubSpot Connector      d62–d122 left=33.70% w=32.61%  planned
+         m3  Salesforce GA diamond                  d92      left=50.00%            planned
+    ══ -->
+    <div class="swimlane stacked">
+      <div class="swimlane-label">Integrations</div>
+      <div class="swimlane-track">
+        <!-- Today line -->
+        <div class="today-line-bar" style="left:7.07%"></div>
+        <!-- Row 1: p4 Salesforce Deep Integration -->
+        <div class="phase-block status-on-track" style="left:7.61%;width:41.85%;top:10px"
+             data-title="Salesforce Deep Integration" data-dates="Jul 15 – Sep 30, 2026"
+             data-owner="Dev Team" data-status="On track">
+          <span class="phase-label">Salesforce Deep Integration</span>
+        </div>
+        <!-- Row 1: p6 Zapier 2.0 (starts after p4 ends, same row) -->
+        <div class="phase-block status-planned" style="left:50.00%;width:40.76%;top:10px"
+             data-title="Zapier 2.0" data-dates="Oct 1 – Dec 15, 2026"
+             data-owner="Dev Team" data-status="Planned">
+          <span class="phase-label">Zapier 2.0</span>
+        </div>
+        <!-- Row 2: p5 HubSpot Connector (overlaps both p4 end and p6 start, offset to row 2) -->
+        <div class="phase-block status-planned" style="left:33.70%;width:32.61%;top:50px"
+             data-title="HubSpot Connector" data-dates="Sep 1 – Oct 31, 2026"
+             data-owner="Dev Team" data-status="Planned">
+          <span class="phase-label">HubSpot Connector</span>
+        </div>
+        <!-- m3 Salesforce GA diamond -->
+        <div class="milestone-diamond status-planned" style="left:50.00%;top:42px;transform:translateX(-50%) rotate(45deg)"
+             data-title="Salesforce GA" data-dates="Oct 1, 2026"
+             data-owner="Dev Team" data-status="Planned · General availability release"></div>
+      </div>
+    </div>
+
+    <!-- ══ GO-TO-MARKET ══════════════════════════════════════
+         Row 1 (top):    p7  Self-Serve Onboarding v2  d0–d45   left=0.00%  w=24.46%  on-track
+                         p9  Enterprise Tier Launch    d92–d152 left=50.00% w=32.61%  planned
+         Row 2 (bottom): p8  Partner Program Launch    d31–d91  left=16.85% w=32.61%  at-risk
+                         p10 FY27 Planning             d123–d183 left=66.85% w=32.61% planned
+         m4  Enterprise Tier GA diamond                d123     left=66.85%            planned
+    ══ -->
+    <div class="swimlane stacked">
+      <div class="swimlane-label">Go-to-Market</div>
+      <div class="swimlane-track">
+        <!-- Today line -->
+        <div class="today-line-bar" style="left:7.07%"></div>
+        <!-- Row 1: p7 Self-Serve Onboarding v2 -->
+        <div class="phase-block status-on-track" style="left:0%;width:24.46%;top:10px"
+             data-title="Self-Serve Onboarding v2" data-dates="Jul 1 – Aug 15, 2026"
+             data-owner="Jordan Kim" data-status="On track">
+          <span class="phase-label">Onboarding v2</span>
+        </div>
+        <!-- Row 2: p8 Partner Program Launch — AT RISK (overlaps p7 window, offset to row 2) -->
+        <div class="phase-block status-at-risk" style="left:16.85%;width:32.61%;top:50px"
+             data-title="Partner Program Launch" data-dates="Aug 1 – Sep 30, 2026"
+             data-owner="Jordan Kim" data-status="At risk">
+          <span class="phase-label">Partner Program</span>
+        </div>
+        <!-- Row 1: p9 Enterprise Tier Launch -->
+        <div class="phase-block status-planned" style="left:50.00%;width:32.61%;top:10px"
+             data-title="Enterprise Tier Launch" data-dates="Oct 1 – Nov 30, 2026"
+             data-owner="Maya Chen" data-status="Planned">
+          <span class="phase-label">Enterprise Tier</span>
+        </div>
+        <!-- Row 2: p10 FY27 Planning -->
+        <div class="phase-block status-planned" style="left:66.85%;width:32.61%;top:50px"
+             data-title="FY27 Planning" data-dates="Nov 1 – Dec 31, 2026"
+             data-owner="Maya Chen" data-status="Planned">
+          <span class="phase-label">FY27 Planning</span>
+        </div>
+        <!-- m4 Enterprise Tier GA diamond — between rows -->
+        <div class="milestone-diamond status-planned" style="left:66.85%;top:42px;transform:translateX(-50%) rotate(45deg)"
+             data-title="Enterprise Tier GA" data-dates="Nov 1, 2026"
+             data-owner="Maya Chen" data-status="Planned · Enterprise pricing available to all"></div>
+      </div>
+    </div>
+
+  </div><!-- /.roadmap-wrap -->
+
+  <!-- Legend -->
+  <div class="legend">
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:var(--accent);opacity:0.88"></span>On track
+    </span>
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:#d97706;opacity:0.88"></span>At risk
+    </span>
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:var(--accent-soft);border:1px dashed var(--border)"></span>Planned
+    </span>
+    <span class="legend-item">
+      <span class="legend-diamond"></span>Milestone
+    </span>
+    <span class="legend-item" style="margin-left:8px">
+      <span style="width:2px;height:14px;background:var(--accent);display:inline-block;opacity:0.7"></span>
+      &nbsp;Today (Jul 14)
+    </span>
+  </div>
+
+  <div class="rpt-footer">
+    <div>Generated Jul 14, 2026 &nbsp;·&nbsp; Zava Industries Program Office &nbsp;·&nbsp; Prepared for Board Review</div>
+    <div>3 swimlanes &nbsp;·&nbsp; 10 phases &nbsp;·&nbsp; 4 milestones &nbsp;·&nbsp; H2 FY2026</div>
+  </div>
+
+</main>
+
+<div class="rdm-tooltip" id="rdm-tooltip"></div>
+
+<script>
+/* ── ENHANCED TOOLTIPS ───────────────────────────── */
+(function(){
+  var tip = document.getElementById('rdm-tooltip');
+  if (!tip) return;
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function showTip(el, e) {
+    var title  = el.dataset.title  || '';
+    var dates  = el.dataset.dates  || '';
+    var owner  = el.dataset.owner  || '';
+    var status = el.dataset.status || '';
+    var html = '<div class="tt-title">' + escHtml(title) + '</div>';
+    if (dates)  html += '<div class="tt-meta">' + escHtml(dates) + '</div>';
+    if (owner)  html += '<div class="tt-meta">' + escHtml(owner) + '</div>';
+    if (status) html += '<div class="tt-meta" style="margin-top:3px;opacity:0.8">' + escHtml(status) + '</div>';
+    tip.innerHTML = html;
+    positionTip(e);
+    tip.style.opacity = '1';
+  }
+
+  function positionTip(e) {
+    var x = e.clientX + 14;
+    var y = e.clientY - 10;
+    var tw = Math.max(tip.offsetWidth, 160);
+    var th = Math.max(tip.offsetHeight, 48);
+    if (x + tw > window.innerWidth  - 8) x = e.clientX - tw - 14;
+    if (y + th > window.innerHeight - 8) y = e.clientY - th - 10;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+
+  function hideTip() { tip.style.opacity = '0'; }
+
+  document.querySelectorAll('.phase-block, .milestone-diamond').forEach(function(el) {
+    el.addEventListener('mouseenter', function(e){ showTip(el, e); });
+    el.addEventListener('mousemove',  function(e){ positionTip(e); });
+    el.addEventListener('mouseleave', hideTip);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+Vendor,Dimension,Weight,Score,Notes
+HubSpot,Ease of Use,0.20,5,Best UX; limited deep custom
+HubSpot,Integration Depth,0.25,4,Best UX; limited deep custom
+HubSpot,Pricing Fit,0.20,4,Best UX; limited deep custom
+HubSpot,Support Quality,0.15,4,Best UX; limited deep custom
+HubSpot,Customization,0.10,3,Best UX; limited deep custom
+HubSpot,Data Privacy,0.10,4,Best UX; limited deep custom
+Salesforce,Ease of Use,0.20,3,Powerful but overbuilt for stage
+Salesforce,Integration Depth,0.25,5,Powerful but overbuilt for stage
+Salesforce,Pricing Fit,0.20,2,Powerful but overbuilt for stage
+Salesforce,Support Quality,0.15,4,Powerful but overbuilt for stage
+Salesforce,Customization,0.10,5,Powerful but overbuilt for stage
+Salesforce,Data Privacy,0.10,5,Powerful but overbuilt for stage
+Pipedrive,Ease of Use,0.20,4,Simple; weak enterprise features
+Pipedrive,Integration Depth,0.25,3,Simple; weak enterprise features
+Pipedrive,Pricing Fit,0.20,5,Simple; weak enterprise features
+Pipedrive,Support Quality,0.15,3,Simple; weak enterprise features
+Pipedrive,Customization,0.10,3,Simple; weak enterprise features
+Pipedrive,Data Privacy,0.10,3,Simple; weak enterprise features
+Close.io,Ease of Use,0.20,4,Great support; limited integrations
+Close.io,Integration Depth,0.25,3,Great support; limited integrations
+Close.io,Pricing Fit,0.20,4,Great support; limited integrations
+Close.io,Support Quality,0.15,5,Great support; limited integrations
+Close.io,Customization,0.10,3,Great support; limited integrations
+Close.io,Data Privacy,0.10,3,Great support; limited integrations
+Freshsales,Ease of Use,0.20,4,Good value; newer ecosystem
+Freshsales,Integration Depth,0.25,4,Good value; newer ecosystem
+Freshsales,Pricing Fit,0.20,4,Good value; newer ecosystem
+Freshsales,Support Quality,0.15,3,Good value; newer ecosystem
+Freshsales,Customization,0.10,3,Good value; newer ecosystem
+Freshsales,Data Privacy,0.10,4,Good value; newer ecosystem

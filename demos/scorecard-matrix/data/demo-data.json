@@ -1,0 +1,128 @@
+{
+  "report": {
+    "title": "CRM Platform Evaluation",
+    "subtitle": "Q3 FY2026 · Vendor Selection",
+    "context": "Zava evaluating CRM platforms to replace their legacy Salesforce setup as they scale past 150 employees and move upmarket. Five vendors scored across six weighted dimensions by the Sales and RevOps teams using a 1–5 scale.",
+    "palette": "clean-white",
+    "footer": "Generated Q3 FY2026 · Zava Industries · 5 vendors · 6 dimensions"
+  },
+  "scale": 5,
+  "dimensions": [
+    {
+      "id": "ease",
+      "label": "Ease of Use",
+      "weight": 0.20,
+      "description": "Onboarding speed, UI clarity, rep adoption"
+    },
+    {
+      "id": "integration",
+      "label": "Integration Depth",
+      "weight": 0.25,
+      "description": "Native connectors to Zava Ops, Slack, billing"
+    },
+    {
+      "id": "pricing",
+      "label": "Pricing Fit",
+      "weight": 0.20,
+      "description": "Total cost at 50-seat enterprise plan"
+    },
+    {
+      "id": "support",
+      "label": "Support Quality",
+      "weight": 0.15,
+      "description": "Response time, dedicated CSM, docs"
+    },
+    {
+      "id": "custom",
+      "label": "Customization",
+      "weight": 0.10,
+      "description": "Custom fields, workflows, API access"
+    },
+    {
+      "id": "privacy",
+      "label": "Data Privacy",
+      "weight": 0.10,
+      "description": "SOC 2, GDPR compliance, data residency"
+    }
+  ],
+  "entities": [
+    {
+      "id": "hubspot",
+      "label": "HubSpot",
+      "scores": {
+        "ease":        { "score": 5, "note": "Best UX" },
+        "integration": { "score": 4, "note": "Strong ecosystem" },
+        "pricing":     { "score": 4, "note": "Fair enterprise rate" },
+        "support":     { "score": 4, "note": "Responsive" },
+        "custom":      { "score": 3, "note": "Limited deep custom" },
+        "privacy":     { "score": 4, "note": "GDPR ready" }
+      },
+      "weighted_total": 4.10,
+      "rank": 1
+    },
+    {
+      "id": "salesforce",
+      "label": "Salesforce",
+      "scores": {
+        "ease":        { "score": 3, "note": "Steep learning curve" },
+        "integration": { "score": 5, "note": "Best-in-class" },
+        "pricing":     { "score": 2, "note": "High TCO" },
+        "support":     { "score": 4, "note": "Dedicated CSM" },
+        "custom":      { "score": 5, "note": "Unlimited depth" },
+        "privacy":     { "score": 5, "note": "SOC 2 + GDPR" }
+      },
+      "weighted_total": 3.85,
+      "rank": 2
+    },
+    {
+      "id": "freshsales",
+      "label": "Freshsales",
+      "scores": {
+        "ease":        { "score": 4, "note": "Clean UI" },
+        "integration": { "score": 4, "note": "Growing ecosystem" },
+        "pricing":     { "score": 4, "note": "Good value" },
+        "support":     { "score": 3, "note": "Newer CSM team" },
+        "custom":      { "score": 3, "note": "Adequate depth" },
+        "privacy":     { "score": 4, "note": "SOC 2 certified" }
+      },
+      "weighted_total": 3.75,
+      "rank": 3
+    },
+    {
+      "id": "closeio",
+      "label": "Close.io",
+      "scores": {
+        "ease":        { "score": 4, "note": "Focused UI" },
+        "integration": { "score": 3, "note": "Limited connectors" },
+        "pricing":     { "score": 4, "note": "Competitive" },
+        "support":     { "score": 5, "note": "Best-in-class" },
+        "custom":      { "score": 3, "note": "Basic workflows" },
+        "privacy":     { "score": 3, "note": "Standard" }
+      },
+      "weighted_total": 3.70,
+      "rank": 4
+    },
+    {
+      "id": "pipedrive",
+      "label": "Pipedrive",
+      "scores": {
+        "ease":        { "score": 4, "note": "Clean pipeline UI" },
+        "integration": { "score": 3, "note": "Weak enterprise" },
+        "pricing":     { "score": 5, "note": "Best price" },
+        "support":     { "score": 3, "note": "Self-serve focus" },
+        "custom":      { "score": 3, "note": "Limited" },
+        "privacy":     { "score": 3, "note": "Standard" }
+      },
+      "weighted_total": 3.60,
+      "rank": 5
+    }
+  ],
+  "column_averages": {
+    "ease": 4.0,
+    "integration": 3.8,
+    "pricing": 3.8,
+    "support": 3.8,
+    "custom": 3.4,
+    "privacy": 3.8
+  }
+}

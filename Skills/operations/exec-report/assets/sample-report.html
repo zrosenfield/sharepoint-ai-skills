@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACME Corp · Q2 FY2026 Revenue Report</title>
+<style>
+:root{
+  --bg:#faf7f2; --surface:#ffffff; --ink:#1a1814; --ink-muted:#7a7268;
+  --accent:#c8553d; --accent-soft:#f9e6e2; --negative:#b91c1c;
+  --border:#e8e2d8; --grid:#f0ece4;
+  --radius:16px; --radius-sm:10px; --pad:28px; --gap:20px;
+  --font-display:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --font-body:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --fs-hero:clamp(28px,4.2vw,52px); --fs-kpi:clamp(42px,5.8vw,72px);
+  --fs-h2:18px; --fs-body:15px; --fs-small:13px; --fs-tiny:11px;
+}
+body.palette-deep-ink{
+  --bg:#0f0e0c; --surface:#1a1916; --ink:#f2efe8; --ink-muted:#8a857a;
+  --accent:#d4a574; --accent-soft:rgba(212,165,116,0.12);
+  --negative:#f87171; --border:#2a2925; --grid:#211f1c;
+}
+body.palette-clean-white{
+  --bg:#ffffff; --surface:#f9fafb; --ink:#0a0a0a; --ink-muted:#6b6b6b;
+  --accent:#2d5a3d; --accent-soft:#edf7f1; --negative:#dc2626; --border:#e5e7eb; --grid:#f3f4f6;
+}
+body.palette-slate{
+  --bg:#f1f5f9; --surface:#ffffff; --ink:#0f172a; --ink-muted:#64748b;
+  --accent:#2563eb; --accent-soft:#eff6ff; --negative:#dc2626; --border:#e2e8f0; --grid:#f1f5f9;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--font-body);
+  font-size:var(--fs-body);line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11","tnum";
+}
+.page{max-width:1240px;margin:0 auto;padding:48px 40px 80px}
+
+/* header */
+.rpt-header{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.rpt-header .company{font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.rpt-header .label{font-size:var(--fs-small);color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase}
+
+/* hero */
+.hero{margin:56px 0 48px;font-family:var(--font-display);font-size:var(--fs-hero);font-weight:400;line-height:1.15;letter-spacing:-0.02em;max-width:22ch}
+.hero .accent{color:var(--accent)}
+.hero .num{font-feature-settings:"tnum";font-variant-numeric:tabular-nums}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);margin-bottom:48px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--pad);display:flex;flex-direction:column}
+.kpi .kpi-label{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:14px}
+.kpi .kpi-value{font-family:var(--font-display);font-size:var(--fs-kpi);font-weight:300;line-height:1;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
+.kpi .kpi-delta{margin-top:auto;padding-top:12px;font-size:var(--fs-small);display:inline-flex;align-items:center;gap:6px}
+.kpi .kpi-delta.up{color:var(--accent)}
+.kpi .kpi-delta.down{color:var(--negative)}
+
+/* card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--pad);margin-bottom:var(--gap)}
+.card h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:500;letter-spacing:-0.01em;margin:0 0 4px 0}
+.card .sub{font-size:var(--fs-small);color:var(--ink-muted);margin-bottom:24px}
+
+/* trend */
+.trend-card svg{display:block;width:100%;height:auto;overflow:visible}
+.trend-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.trend-prior{fill:none;stroke:var(--ink-muted);stroke-width:1;stroke-dasharray:3 4;opacity:0.45}
+.trend-area{fill:var(--accent-soft);opacity:0.4}
+.trend-grid{stroke:var(--grid);stroke-width:1}
+.trend-axis-label{font-size:11px;fill:var(--ink-muted);font-family:var(--font-mono)}
+.trend-dot{fill:var(--bg);stroke:var(--accent);stroke-width:2;opacity:0;transition:opacity .15s}
+.trend-dot.active{opacity:1}
+.trend-guideline{stroke:var(--ink-muted);stroke-width:1;opacity:0;stroke-dasharray:2 3}
+.trend-guideline.active{opacity:0.5}
+.trend-tooltip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:var(--fs-small);padding:8px 12px;border-radius:8px;transform:translate(-50%,-130%);opacity:0;transition:opacity .15s;font-variant-numeric:tabular-nums;white-space:nowrap;z-index:10}
+.trend-wrap{position:relative;-webkit-user-select:none;user-select:none}
+
+/* segments */
+.seg-row{display:grid;grid-template-columns:140px 1fr auto;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);transition:opacity .15s}
+.seg-row:last-child{border-bottom:0}
+.seg-row .seg-name{font-size:var(--fs-body);font-weight:500}
+.seg-row .seg-track{height:8px;background:var(--grid);border-radius:999px;overflow:hidden}
+.seg-row .seg-fill{height:100%;background:var(--accent);border-radius:999px;transform-origin:left;transform:scaleX(0);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.seg-row .seg-amt{font-variant-numeric:tabular-nums;font-size:var(--fs-body);min-width:100px;text-align:right}
+.seg-row .seg-pct{display:block;font-size:var(--fs-tiny);color:var(--ink-muted);margin-top:2px;text-align:right}
+.segments:hover .seg-row:not(:hover){opacity:0.4}
+
+/* compare */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-bottom:var(--gap)}
+.cmp-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--pad)}
+.compare h3{font-size:var(--fs-tiny);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 16px 0}
+.cmp-rows{display:grid;gap:0}
+.cmp-row{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:baseline;font-variant-numeric:tabular-nums;padding:8px 0;border-bottom:1px solid var(--grid)}
+.cmp-row:last-child{border-bottom:0}
+.cmp-row .ck{font-size:var(--fs-small);color:var(--ink-muted)}
+.cmp-row .ca{text-align:right;font-size:var(--fs-body)}
+.cmp-row .cb{text-align:right;font-size:var(--fs-small);color:var(--ink-muted)}
+.cmp-row .cd{text-align:right;font-size:var(--fs-small);min-width:48px}
+.cmp-row .cd.up{color:var(--accent)}
+.cmp-row .cd.down{color:var(--negative)}
+
+/* highlights */
+.highlights{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
+.highlight{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.highlight .hl-tag{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:10px}
+.highlight .hl-body{font-size:var(--fs-body);line-height:1.5;color:var(--ink)}
+
+/* table */
+.data-table-wrap{overflow-x:auto;margin-top:4px}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);text-align:left;padding:0 8px 12px 0;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:12px 8px 12px 0;font-size:var(--fs-small);border-bottom:1px solid var(--grid);vertical-align:middle;font-variant-numeric:tabular-nums}
+.data-table tr:last-child td{border-bottom:0}
+.tbl-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:var(--fs-tiny);font-weight:600;letter-spacing:0.03em;white-space:nowrap}
+.tbl-badge--green{background:#d1fae5;color:#065f46}
+.tbl-badge--amber{background:#fef3c7;color:#92400e}
+.tbl-badge--red  {background:#fee2e2;color:#991b1b}
+.tbl-badge--gray {background:#f1f5f9;color:#475569}
+.tbl-badge--blue {background:#dbeafe;color:#1e40af}
+
+/* status grid */
+.status-list{display:grid;gap:0}
+.status-row{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--grid)}
+.status-row:last-child{border-bottom:0}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin:0 2px}
+.status-dot--green{background:#059669}
+.status-dot--amber{background:#d97706}
+.status-dot--red  {background:#dc2626}
+.status-dot--gray {background:#94a3b8}
+.status-dot--blue {background:#0284c7}
+.status-name{font-size:var(--fs-body)}
+.status-val{font-size:var(--fs-small);color:var(--ink-muted);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* footer */
+.rpt-footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);font-size:var(--fs-tiny);color:var(--ink-muted);display:flex;justify-content:space-between;gap:16px}
+
+/* motion */
+.kpi .kpi-value,.hero .num{opacity:0;animation:rise .7s .1s both}
+.kpi:nth-child(2) .kpi-value{animation-delay:.18s}
+.kpi:nth-child(3) .kpi-value{animation-delay:.26s}
+.kpi:nth-child(4) .kpi-value{animation-delay:.34s}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.trend-line{stroke-dasharray:2000;stroke-dashoffset:2000;animation:draw 1.2s .3s forwards ease-out}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .seg-row .seg-fill{transform:scaleX(1)}
+  .trend-line{stroke-dashoffset:0}
+}
+
+@media(max-width:820px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .compare{grid-template-columns:1fr}
+  .page{padding:32px 20px 60px}
+  .hero{margin:36px 0 32px}
+  .seg-row{grid-template-columns:90px 1fr auto}
+}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--ink:#000;--ink-muted:#555;--border:#ddd;--grid:#eee;--accent-soft:#f5f5f5}
+  body{font-size:11pt}.page{max-width:none;padding:0.5in}
+  .card,.kpi,.cmp-block,.highlight{break-inside:avoid}
+  .trend-line{stroke-dashoffset:0}.seg-row .seg-fill{transform:scaleX(1)}
+  *{animation:none !important;transition:none !important}
+  .palette-bar{display:none}
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* palette switcher (sample only) */
+.palette-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 40px;display:flex;gap:8px;align-items:center;
+  font-size:var(--fs-tiny);color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase;
+}
+.pal-btn{
+  padding:4px 14px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;font-size:var(--fs-tiny);font-weight:600;
+  color:var(--ink-muted);cursor:pointer;transition:background .15s,color .15s;
+  letter-spacing:0.04em;text-transform:uppercase;font-family:inherit;
+}
+.pal-btn:hover{background:var(--grid)}
+.pal-btn.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+</style>
+</head>
+<body class="palette-warm-paper">
+
+<!-- PALETTE SWITCHER (sample page only — not in production output) -->
+<div class="palette-bar">
+  <span>Palette:</span>
+  <button class="pal-btn active" onclick="setPalette('warm-paper',this)">Warm paper</button>
+  <button class="pal-btn" onclick="setPalette('deep-ink',this)">Deep ink</button>
+  <button class="pal-btn" onclick="setPalette('clean-white',this)">Clean white</button>
+  <button class="pal-btn" onclick="setPalette('slate',this)">Slate</button>
+</div>
+
+<main class="page">
+
+  <!-- ═══ HERO ═══════════════════════════════════════════ -->
+  <div class="rpt-header">
+    <div class="company">ACME Corp</div>
+    <div class="label">Q2 FY2026 · Revenue Report</div>
+  </div>
+  <h1 class="hero">
+    ACME Corp closed <span class="accent num">$4.2M</span> across
+    <span class="num">47</span> deals in Q2 FY2026,
+    <span class="accent">up 8%</span> from Q1.
+  </h1>
+
+  <!-- ═══ KPI ROW ════════════════════════════════════════ -->
+  <section class="kpis">
+    <div class="kpi">
+      <div class="kpi-label">Total revenue</div>
+      <div class="kpi-value">$4.2M</div>
+      <div class="kpi-delta up">↑ 8% QoQ</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Deals closed</div>
+      <div class="kpi-value">47</div>
+      <div class="kpi-delta up">↑ 5 QoQ</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Avg deal size</div>
+      <div class="kpi-value">$89K</div>
+      <div class="kpi-delta down">↓ 3% QoQ</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Top segment</div>
+      <div class="kpi-value" style="font-size:clamp(24px,3vw,36px);font-weight:400">Enterprise</div>
+      <div class="kpi-delta">44% of total</div>
+    </div>
+  </section>
+
+  <!-- ═══ TREND CHART ════════════════════════════════════
+       Data: Jan–Jun 2026 revenue [$820K,$910K,$880K,$1050K,$1120K,$1310K]
+       Prior Q: Oct–Mar 2025/26   [$700K,$780K,$760K,$840K,$870K,$910K]
+       Combined: min=700 max=1310 range=610
+       Plot area: viewBox 800×220, left=60 right=780 top=20 bottom=184
+       y = 184 - ((v-700)/610)*164
+       Current: 60,151.7 204,127.5 348,135.6 492,89.9 636,71.0 780,20.0
+       Prior:   60,184.0 204,162.5 348,167.9 492,146.4 636,138.3 780,127.5
+       Grid @ $800K→y157.1  $900K→y130.2  $1.0M→y103.3  $1.1M→y76.5  $1.2M→y49.6
+  ═══════════════════════════════════════════════════════ -->
+  <section class="card trend-card">
+    <h2>Revenue trend</h2>
+    <div class="sub">Monthly revenue · Q2 FY2026 — ghost line shows Q1 FY2026</div>
+    <div class="trend-wrap">
+      <svg id="trend-svg" viewBox="0 0 800 220" preserveAspectRatio="none"
+           role="img" aria-label="Monthly revenue trend Jan–Jun 2026">
+
+        <!-- Grid lines -->
+        <g class="grid">
+          <line class="trend-grid" x1="60" y1="157.1" x2="780" y2="157.1"/>
+          <line class="trend-grid" x1="60" y1="130.2" x2="780" y2="130.2"/>
+          <line class="trend-grid" x1="60" y1="103.3" x2="780" y2="103.3"/>
+          <line class="trend-grid" x1="60" y1="76.5"  x2="780" y2="76.5"/>
+          <line class="trend-grid" x1="60" y1="49.6"  x2="780" y2="49.6"/>
+          <!-- Y-axis labels -->
+          <text class="trend-axis-label" x="52" y="160.6" text-anchor="end">$800K</text>
+          <text class="trend-axis-label" x="52" y="133.7" text-anchor="end">$900K</text>
+          <text class="trend-axis-label" x="52" y="106.8" text-anchor="end">$1.0M</text>
+          <text class="trend-axis-label" x="52" y="80.0"  text-anchor="end">$1.1M</text>
+          <text class="trend-axis-label" x="52" y="53.1"  text-anchor="end">$1.2M</text>
+        </g>
+
+        <!-- Prior quarter ghost line -->
+        <path class="trend-prior"
+              d="M60,184.0 L204,162.5 L348,167.9 L492,146.4 L636,138.3 L780,127.5"/>
+
+        <!-- Current area fill -->
+        <path class="trend-area"
+              d="M60,151.7 L204,127.5 L348,135.6 L492,89.9 L636,71.0 L780,20.0 L780,184 L60,184 Z"/>
+
+        <!-- Current trend line (animated draw) -->
+        <path class="trend-line"
+              d="M60,151.7 L204,127.5 L348,135.6 L492,89.9 L636,71.0 L780,20.0"/>
+
+        <!-- Hover dots (shown on hover via JS) -->
+        <g class="dots">
+          <circle class="trend-dot" data-i="0" cx="60"  cy="151.7" r="5"/>
+          <circle class="trend-dot" data-i="1" cx="204" cy="127.5" r="5"/>
+          <circle class="trend-dot" data-i="2" cx="348" cy="135.6" r="5"/>
+          <circle class="trend-dot" data-i="3" cx="492" cy="89.9"  r="5"/>
+          <circle class="trend-dot" data-i="4" cx="636" cy="71.0"  r="5"/>
+          <circle class="trend-dot" data-i="5" cx="780" cy="20.0"  r="5"/>
+        </g>
+
+        <!-- Vertical guideline (shown on hover via JS) -->
+        <line class="trend-guideline" id="trend-guideline" x1="60" y1="20" x2="60" y2="184"/>
+
+        <!-- X-axis month labels -->
+        <g class="x-labels">
+          <text class="trend-axis-label" x="60"  y="204" text-anchor="middle">Jan</text>
+          <text class="trend-axis-label" x="204" y="204" text-anchor="middle">Feb</text>
+          <text class="trend-axis-label" x="348" y="204" text-anchor="middle">Mar</text>
+          <text class="trend-axis-label" x="492" y="204" text-anchor="middle">Apr</text>
+          <text class="trend-axis-label" x="636" y="204" text-anchor="middle">May</text>
+          <text class="trend-axis-label" x="780" y="204" text-anchor="middle">Jun</text>
+        </g>
+      </svg>
+      <div class="trend-tooltip" id="trend-tooltip"></div>
+    </div>
+  </section>
+
+  <!-- ═══ BAR-LIST (segments) ═══════════════════════════ -->
+  <section class="card">
+    <h2>By region</h2>
+    <div class="sub">Revenue share and QoQ change</div>
+    <div class="segments">
+      <div class="seg-row">
+        <span class="seg-name">North America</span>
+        <div class="seg-track"><div class="seg-fill" data-share="1.00"></div></div>
+        <div class="seg-amt">$1.84M<span class="seg-pct">44% · ↑ 12%</span></div>
+      </div>
+      <div class="seg-row">
+        <span class="seg-name">Europe</span>
+        <div class="seg-track"><div class="seg-fill" data-share="0.60"></div></div>
+        <div class="seg-amt">$1.10M<span class="seg-pct">26% · ↑ 4%</span></div>
+      </div>
+      <div class="seg-row">
+        <span class="seg-name">Asia Pacific</span>
+        <div class="seg-track"><div class="seg-fill" data-share="0.43"></div></div>
+        <div class="seg-amt">$790K<span class="seg-pct">19% · ↓ 7%</span></div>
+      </div>
+      <div class="seg-row">
+        <span class="seg-name">Latin America</span>
+        <div class="seg-track"><div class="seg-fill" data-share="0.18"></div></div>
+        <div class="seg-amt">$340K<span class="seg-pct">8% · ↑ 2%</span></div>
+      </div>
+      <div class="seg-row">
+        <span class="seg-name">Other</span>
+        <div class="seg-track"><div class="seg-fill" data-share="0.07"></div></div>
+        <div class="seg-amt">$130K<span class="seg-pct">3% · ↑ 1%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMPARE ════════════════════════════════════════ -->
+  <section class="compare">
+    <div class="cmp-block">
+      <h3>Quarter over quarter</h3>
+      <div class="cmp-rows">
+        <div class="cmp-row">
+          <span class="ck">Total revenue</span>
+          <span class="ca">$4.2M</span>
+          <span class="cb">$3.9M</span>
+          <span class="cd up">+8%</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">Deals closed</span>
+          <span class="ca">47</span>
+          <span class="cb">42</span>
+          <span class="cd up">+5</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">Avg deal size</span>
+          <span class="ca">$89K</span>
+          <span class="cb">$93K</span>
+          <span class="cd down">−4%</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">Win rate</span>
+          <span class="ca">34%</span>
+          <span class="cb">31%</span>
+          <span class="cd up">+3 pt</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">New logos</span>
+          <span class="ca">11</span>
+          <span class="cb">9</span>
+          <span class="cd up">+2</span>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-block">
+      <h3>Year over year</h3>
+      <div class="cmp-rows">
+        <div class="cmp-row">
+          <span class="ck">Total revenue</span>
+          <span class="ca">$4.2M</span>
+          <span class="cb">$3.1M</span>
+          <span class="cd up">+35%</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">Deals closed</span>
+          <span class="ca">47</span>
+          <span class="cb">33</span>
+          <span class="cd up">+14</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">Avg deal size</span>
+          <span class="ca">$89K</span>
+          <span class="cb">$94K</span>
+          <span class="cd down">−5%</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">Win rate</span>
+          <span class="ca">34%</span>
+          <span class="cb">27%</span>
+          <span class="cd up">+7 pt</span>
+        </div>
+        <div class="cmp-row">
+          <span class="ck">New logos</span>
+          <span class="ca">11</span>
+          <span class="cb">7</span>
+          <span class="cd up">+4</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TABLE ══════════════════════════════════════════ -->
+  <section class="card">
+    <h2>Open pipeline</h2>
+    <div class="sub">Deals above $200K currently in late-stage</div>
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Owner</th>
+            <th>Stage</th>
+            <th>Value</th>
+            <th>Close date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Helix Financial</td><td>Sam Lee</td><td>Proposal</td>
+            <td>$480K</td><td>Jul 12</td>
+            <td><span class="tbl-badge tbl-badge--green">On Track</span></td>
+          </tr>
+          <tr>
+            <td>Nova Logistics</td><td>Kai Osei</td><td>Final round</td>
+            <td>$310K</td><td>Jul 5</td>
+            <td><span class="tbl-badge tbl-badge--amber">At Risk</span></td>
+          </tr>
+          <tr>
+            <td>Cedarwood Health</td><td>Mira Tan</td><td>Negotiation</td>
+            <td>$290K</td><td>Jul 20</td>
+            <td><span class="tbl-badge tbl-badge--green">On Track</span></td>
+          </tr>
+          <tr>
+            <td>Apex Manufacturing</td><td>Ryo Patel</td><td>Proposal</td>
+            <td>$260K</td><td>Jul 31</td>
+            <td><span class="tbl-badge tbl-badge--blue">In Review</span></td>
+          </tr>
+          <tr>
+            <td>Stratos Capital</td><td>Dani Cruz</td><td>Demo</td>
+            <td>$240K</td><td>Aug 8</td>
+            <td><span class="tbl-badge tbl-badge--gray">Early Stage</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ STATUS GRID ════════════════════════════════════ -->
+  <section class="card">
+    <h2>Go-to-market workstreams</h2>
+    <div class="sub">End-of-quarter health by initiative</div>
+    <div class="status-list">
+      <div class="status-row">
+        <span class="status-dot status-dot--green"></span>
+        <span class="status-name">Enterprise expansion playbook</span>
+        <span class="status-val">Complete</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--green"></span>
+        <span class="status-name">Partner channel enablement</span>
+        <span class="status-val">On track</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--amber"></span>
+        <span class="status-name">APAC territory rebuild</span>
+        <span class="status-val">At risk · Q3</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--amber"></span>
+        <span class="status-name">CRM data migration</span>
+        <span class="status-val">At risk · Jul 15</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--red"></span>
+        <span class="status-name">ERP vendor selection</span>
+        <span class="status-val">Blocked</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--blue"></span>
+        <span class="status-name">FY27 quota planning</span>
+        <span class="status-val">In review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HIGHLIGHTS ═════════════════════════════════════ -->
+  <section class="highlights">
+    <div class="highlight">
+      <div class="hl-tag">Bright spot</div>
+      <div class="hl-body">Enterprise ACV reached an all-time high of $142K, driven by two seven-figure expansions in June. The cohort of customers renewing at &gt;120% NRR grew to nine accounts.</div>
+    </div>
+    <div class="highlight">
+      <div class="hl-tag">Risk</div>
+      <div class="hl-body">APAC missed Q2 by $60K. Three pipeline deals slipped to Q3 due to procurement delays. Regional leadership alignment meeting scheduled for June 10.</div>
+    </div>
+    <div class="highlight">
+      <div class="hl-tag">Action needed</div>
+      <div class="hl-body">ERP vendor decision is stalled — preferred vendor declined to extend pricing hold beyond June 15. Finance and Ops leads need to decide by end of week to avoid a 12-week delay to go-live.</div>
+    </div>
+    <div class="highlight">
+      <div class="hl-tag">Next quarter</div>
+      <div class="hl-body">Q3 pipeline stands at $6.1M (1.5× coverage). Focus areas: close Nova Logistics, activate two new partner channels, and complete APAC territory re-segmentation.</div>
+    </div>
+  </section>
+
+  <div class="rpt-footer">
+    <div>Generated May 28, 2026</div>
+    <div>47 deals · 5 regions analyzed</div>
+  </div>
+
+</main>
+
+<script>
+/* ── PALETTE SWITCHER (sample page only) ────────── */
+function setPalette(name,btn){
+  document.body.className='palette-'+name;
+  document.querySelectorAll('.pal-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  /* re-trigger bar animation on palette change */
+  document.querySelectorAll('.seg-fill').forEach(function(el){
+    el.style.transition='none';
+    el.style.transform='scaleX(0)';
+    void el.offsetWidth;
+    el.style.transition='';
+    el.style.transform='scaleX('+el.dataset.share+')';
+  });
+}
+
+/* ── SEGMENT BAR FILL-IN ────────────────────────── */
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.seg-fill').forEach(function(el){
+    el.style.transform='scaleX('+parseFloat(el.dataset.share||0)+')';
+  });
+});
+
+/* ── TREND CHART TOOLTIP ────────────────────────── */
+(function(){
+  /* Data points: {xi,yi} are SVG viewBox coords; viewBox is 800×220 */
+  var TREND_DATA=[
+    {xi:60,  yi:151.7, label:'Jan 2026', val:'$820K'},
+    {xi:204, yi:127.5, label:'Feb 2026', val:'$910K'},
+    {xi:348, yi:135.6, label:'Mar 2026', val:'$880K'},
+    {xi:492, yi:89.9,  label:'Apr 2026', val:'$1.05M'},
+    {xi:636, yi:71.0,  label:'May 2026', val:'$1.12M'},
+    {xi:780, yi:20.0,  label:'Jun 2026', val:'$1.31M'}
+  ];
+  var VB_W=800, VB_H=220;
+
+  var svg=document.getElementById('trend-svg');
+  var tooltip=document.getElementById('trend-tooltip');
+  var guideline=document.getElementById('trend-guideline');
+  var dots=document.querySelectorAll('.trend-dot');
+  if(!svg||!tooltip) return;
+
+  function nearest(svgX){
+    var best=0, bestDist=Infinity;
+    for(var i=0;i<TREND_DATA.length;i++){
+      var d=Math.abs(TREND_DATA[i].xi-svgX);
+      if(d<bestDist){bestDist=d;best=i}
+    }
+    return best;
+  }
+
+  svg.addEventListener('pointermove',function(e){
+    var rect=svg.getBoundingClientRect();
+    var scaleX=VB_W/rect.width;
+    var scaleY=VB_H/rect.height;
+    var svgX=(e.clientX-rect.left)*scaleX;
+    var idx=nearest(svgX);
+    var pt=TREND_DATA[idx];
+
+    /* show dot */
+    dots.forEach(function(d){d.classList.remove('active')});
+    dots[idx].classList.add('active');
+
+    /* move guideline */
+    guideline.setAttribute('x1',pt.xi);
+    guideline.setAttribute('x2',pt.xi);
+    guideline.classList.add('active');
+
+    /* position tooltip in screen coords relative to .trend-wrap */
+    var wrap=svg.closest('.trend-wrap');
+    var wrapRect=wrap.getBoundingClientRect();
+    var screenX=(pt.xi/VB_W)*rect.width;
+    var screenY=(pt.yi/VB_H)*rect.height;
+    tooltip.style.left=screenX+'px';
+    tooltip.style.top=screenY+'px';
+    tooltip.textContent=pt.label+' · '+pt.val;
+    tooltip.style.opacity='1';
+  });
+
+  svg.addEventListener('pointerleave',function(){
+    dots.forEach(function(d){d.classList.remove('active')});
+    guideline.classList.remove('active');
+    tooltip.style.opacity='0';
+  });
+})();
+</script>
+</body>
+</html>

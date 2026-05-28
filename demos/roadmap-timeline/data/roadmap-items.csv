@@ -1,0 +1,15 @@
+Item Title,Swimlane,Start Date,End Date,Status,Owner,Is Milestone,Description
+API v3,Platform,2026-07-01,2026-09-15,on-track,Raj Patel,No,
+Multi-tenant Support,Platform,2026-08-01,2026-11-15,planned,Priya Nair,No,
+SOC 2 Type II Audit,Platform,2026-07-01,2026-08-31,on-track,Priya Nair,No,
+Salesforce Deep Integration,Integrations,2026-07-15,2026-09-30,on-track,Dev Team,No,
+HubSpot Connector,Integrations,2026-09-01,2026-10-31,planned,Dev Team,No,
+Zapier 2.0,Integrations,2026-10-01,2026-12-15,planned,Dev Team,No,
+Self-Serve Onboarding v2,Go-to-Market,2026-07-01,2026-08-15,on-track,Jordan Kim,No,
+Partner Program Launch,Go-to-Market,2026-08-01,2026-09-30,at-risk,Jordan Kim,No,
+Enterprise Tier Launch,Go-to-Market,2026-10-01,2026-11-30,planned,Maya Chen,No,
+FY27 Planning,Go-to-Market,2026-11-01,2026-12-31,planned,Maya Chen,No,
+API v3 Beta,Platform,2026-08-01,2026-08-01,on-track,Raj Patel,Yes,External beta opens to 20 customers
+SOC 2 Report Received,Platform,2026-09-15,2026-09-15,on-track,Priya Nair,Yes,Audit complete, report in hand
+Salesforce GA,Integrations,2026-10-01,2026-10-01,planned,Dev Team,Yes,General availability release
+Enterprise Tier GA,Go-to-Market,2026-11-01,2026-11-01,planned,Maya Chen,Yes,Enterprise pricing available to all
