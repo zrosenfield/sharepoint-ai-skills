@@ -16,8 +16,7 @@
   --fs-hero:clamp(28px,4.2vw,52px);--fs-kpi:clamp(42px,5.8vw,72px);
   --fs-h2:18px;--fs-body:15px;--fs-small:13px;--fs-tiny:11px;
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
 body{
   background:var(--bg);color:var(--ink);font-family:var(--font-body);
   font-size:var(--fs-body);line-height:1.5;-webkit-font-smoothing:antialiased;
@@ -35,43 +34,20 @@ body{
 .hero .accent{color:var(--accent)}
 .hero .num{font-feature-settings:"tnum";font-variant-numeric:tabular-nums}
 
-/* kpis */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);margin-bottom:48px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--pad);display:flex;flex-direction:column}
-.kpi .kpi-label{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:14px}
-.kpi .kpi-value{font-family:var(--font-display);font-size:var(--fs-kpi);font-weight:300;line-height:1;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
-.kpi .kpi-delta{margin-top:auto;padding-top:12px;font-size:var(--fs-small);display:inline-flex;align-items:center;gap:6px}
-.kpi .kpi-delta.up{color:var(--accent)}
-.kpi .kpi-delta.down{color:var(--negative)}
-
 /* card */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:var(--pad);margin-bottom:var(--gap)}
 .card h2{font-family:var(--font-display);font-size:var(--fs-h2);font-weight:500;letter-spacing:-0.01em;margin:0 0 4px 0}
 .card .sub{font-size:var(--fs-small);color:var(--ink-muted);margin-bottom:24px}
 
-/* trend */
-.trend-card svg{display:block;width:100%;height:auto;overflow:visible}
-.trend-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.trend-prior{fill:none;stroke:var(--ink-muted);stroke-width:1;stroke-dasharray:3 4;opacity:0.45}
-.trend-area{fill:var(--accent-soft);opacity:0.4}
-.trend-grid{stroke:var(--grid);stroke-width:1}
-.trend-axis-label{font-size:11px;fill:var(--ink-muted);font-family:var(--font-mono)}
-.trend-dot{fill:var(--bg);stroke:var(--accent);stroke-width:2;opacity:0;transition:opacity .15s}
-.trend-dot.active{opacity:1}
-.trend-guideline{stroke:var(--ink-muted);stroke-width:1;opacity:0;stroke-dasharray:2 3}
-.trend-guideline.active{opacity:0.5}
-.trend-tooltip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:var(--fs-small);padding:8px 12px;border-radius:8px;transform:translate(-50%,-130%);opacity:0;transition:opacity .15s;font-variant-numeric:tabular-nums;white-space:nowrap;z-index:10}
-.trend-wrap{position:relative;-webkit-user-select:none;user-select:none}
-
-/* segments */
-.seg-row{display:grid;grid-template-columns:140px 1fr auto;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);transition:opacity .15s}
-.seg-row:last-child{border-bottom:0}
-.seg-name{font-size:var(--fs-body);font-weight:500}
-.seg-track{height:8px;background:var(--grid);border-radius:999px;overflow:hidden}
-.seg-fill{height:100%;background:var(--accent);border-radius:999px;transform-origin:left;transform:scaleX(0);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
-.seg-amt{font-variant-numeric:tabular-nums;font-size:var(--fs-body);min-width:100px;text-align:right}
-.seg-pct{display:block;font-size:var(--fs-tiny);color:var(--ink-muted);margin-top:2px;text-align:right}
-.segments:hover .seg-row:not(:hover){opacity:0.4}
+/* status grid */
+.status-list{display:grid;gap:0}
+.status-row{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--grid)}
+.status-row:last-child{border-bottom:0}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin:0 2px}
+.status-dot--green{background:#059669}.status-dot--amber{background:#d97706}
+.status-dot--red{background:#dc2626}.status-dot--gray{background:#94a3b8}.status-dot--blue{background:#0284c7}
+.status-name{font-size:var(--fs-body)}
+.status-val{font-size:var(--fs-small);color:var(--ink-muted);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 
 /* compare */
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin-bottom:var(--gap)}
@@ -84,17 +60,30 @@ body{
 .ca{text-align:right;font-size:var(--fs-body)}
 .cb{text-align:right;font-size:var(--fs-small);color:var(--ink-muted)}
 .cd{text-align:right;font-size:var(--fs-small);min-width:48px}
-.cd.up{color:var(--accent)}.cd.down{color:var(--negative)}
+.cd.up{color:var(--accent)}.cd.down{color:var(--negative)}.cd.warn{color:#d97706}
 
-/* status */
-.status-list{display:grid;gap:0}
-.status-row{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--grid)}
-.status-row:last-child{border-bottom:0}
-.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin:0 2px}
-.status-dot--green{background:#059669}.status-dot--amber{background:#d97706}
-.status-dot--red{background:#dc2626}.status-dot--gray{background:#94a3b8}.status-dot--blue{background:#0284c7}
-.status-name{font-size:var(--fs-body)}
-.status-val{font-size:var(--fs-small);color:var(--ink-muted);text-align:right;white-space:nowrap}
+/* table */
+.data-table-wrap{overflow-x:auto;margin-top:4px}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-muted);text-align:left;padding:0 8px 12px 0;border-bottom:1px solid var(--border);white-space:nowrap}
+.data-table td{padding:12px 8px 12px 0;font-size:var(--fs-small);border-bottom:1px solid var(--grid);vertical-align:middle;font-variant-numeric:tabular-nums}
+.data-table tr:last-child td{border-bottom:0}
+.tbl-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:var(--fs-tiny);font-weight:600;white-space:nowrap}
+.tbl-badge--green{background:#d1fae5;color:#065f46}
+.tbl-badge--amber{background:#fef3c7;color:#92400e}
+.tbl-badge--red  {background:#fee2e2;color:#991b1b}
+.tbl-badge--gray {background:#f1f5f9;color:#475569}
+.tbl-badge--blue {background:#dbeafe;color:#1e40af}
+
+/* segments */
+.seg-row{display:grid;grid-template-columns:140px 1fr auto;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);transition:opacity .15s}
+.seg-row:last-child{border-bottom:0}
+.seg-name{font-size:var(--fs-body);font-weight:500}
+.seg-track{height:8px;background:var(--grid);border-radius:999px;overflow:hidden}
+.seg-fill{height:100%;background:var(--accent);border-radius:999px;transform-origin:left;transform:scaleX(0);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.seg-amt{font-variant-numeric:tabular-nums;font-size:var(--fs-body);min-width:100px;text-align:right}
+.seg-pct{display:block;font-size:var(--fs-tiny);color:var(--ink-muted);margin-top:2px;text-align:right}
+.segments:hover .seg-row:not(:hover){opacity:0.4}
 
 /* highlights */
 .highlights{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
@@ -106,31 +95,26 @@ body{
 .rpt-footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);font-size:var(--fs-tiny);color:var(--ink-muted);display:flex;justify-content:space-between;gap:16px}
 
 /* motion */
-.kpi .kpi-value,.hero .num{opacity:0;animation:rise .7s .1s both}
-.kpi:nth-child(2) .kpi-value{animation-delay:.18s}
-.kpi:nth-child(3) .kpi-value{animation-delay:.26s}
-.kpi:nth-child(4) .kpi-value{animation-delay:.34s}
+.hero .num{opacity:0;animation:rise .7s .1s both}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.trend-line{stroke-dasharray:2000;stroke-dashoffset:2000;animation:draw 1.2s .3s forwards ease-out}
-@keyframes draw{to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
-  .seg-fill{transform:scaleX(1)}.trend-line{stroke-dashoffset:0}
+  .seg-fill{transform:scaleX(1)}
 }
 @media(max-width:820px){
-  .kpis{grid-template-columns:repeat(2,1fr)}.compare{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr}
   .page{padding:32px 20px 60px}.hero{margin:36px 0 32px}
   .seg-row{grid-template-columns:90px 1fr auto}
 }
 @media print{
-  :root{--bg:#fff;--surface:#fff;--ink:#000;--ink-muted:#555;--border:#ddd;--grid:#eee;--accent-soft:#f5f5f5}
+  :root{--bg:#fff;--surface:#fff;--ink:#000;--ink-muted:#555;--border:#ddd;--grid:#eee}
   body{font-size:11pt}.page{max-width:none;padding:0.5in}
-  .trend-line{stroke-dashoffset:0}.seg-fill{transform:scaleX(1)}
+  .seg-fill{transform:scaleX(1)}
   *{animation:none !important;transition:none !important}
 }
 </style>
 </head>
-<body class="palette-warm-paper">
+<body>
 <main class="page">
 
 <!-- HEADER -->
@@ -139,294 +123,259 @@ body{
   <div class="label">Q2 FY2026 · People &amp; Culture Report</div>
 </div>
 
-<!-- HERO -->
+<!-- HERO — problem statement, not an achievement -->
 <h1 class="hero">
-  Zava grew to <span class="accent num">148</span> employees in Q2,
-  cutting time-to-hire by <span class="accent">18 days</span>
-  while holding attrition <span class="accent">below industry average.</span>
+  Zava enters Q3 with <span class="accent num">14 open roles</span>
+  and a <span class="accent">6-person gap in Sales</span> — heading
+  into the October enterprise tier launch.
 </h1>
 
-<!-- KPI ROW -->
-<section class="kpis">
-  <div class="kpi">
-    <div class="kpi-label">Headcount</div>
-    <div class="kpi-value">148</div>
-    <div class="kpi-delta up">↑ 11 this quarter</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Attrition rate</div>
-    <div class="kpi-value">6.2<span style="font-size:clamp(20px,2.5vw,36px);font-weight:300">%</span></div>
-    <div class="kpi-delta up">↓ 1.9 pts vs Q1</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Open roles</div>
-    <div class="kpi-value">14</div>
-    <div class="kpi-delta down">↑ 3 vs Q1</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">eNPS score</div>
-    <div class="kpi-value">82</div>
-    <div class="kpi-delta up">↑ 4 pts vs Q1</div>
-  </div>
-</section>
-
-<!-- TREND
-  Data: Monthly headcount Jan–Jun [130,133,136,138,143,148]
-  Prior H2 FY2025: [122,124,126,128,130,133]
-  Combined: min=122 max=148 range=26  ViewBox 800×220  plot L=60 R=780 T=20 B=184
-  y = 184 - ((v-122)/26)*164
-  Current: 60,133.5  204,114.6  348,95.7  492,83.1  636,51.6  780,20.0
-  Prior:   60,184.0  204,171.4  348,158.8  492,146.2  636,133.5  780,114.6
-  Grid @125→165.1  @130→133.5  @135→102.0  @140→70.5  @145→38.9
--->
-<section class="card trend-card">
-  <h2>Headcount growth</h2>
-  <div class="sub">Monthly headcount · Q2 FY2026 — ghost line shows H2 FY2025</div>
-  <div class="trend-wrap">
-    <svg id="trend-svg" viewBox="0 0 800 220" preserveAspectRatio="none"
-         role="img" aria-label="Monthly headcount trend Jan–Jun 2026">
-      <g class="grid">
-        <line class="trend-grid" x1="60" y1="165.1" x2="780" y2="165.1"/>
-        <line class="trend-grid" x1="60" y1="133.5" x2="780" y2="133.5"/>
-        <line class="trend-grid" x1="60" y1="102.0" x2="780" y2="102.0"/>
-        <line class="trend-grid" x1="60" y1="70.5"  x2="780" y2="70.5"/>
-        <line class="trend-grid" x1="60" y1="38.9"  x2="780" y2="38.9"/>
-        <text class="trend-axis-label" x="52" y="168.6" text-anchor="end">125</text>
-        <text class="trend-axis-label" x="52" y="137.0" text-anchor="end">130</text>
-        <text class="trend-axis-label" x="52" y="105.5" text-anchor="end">135</text>
-        <text class="trend-axis-label" x="52" y="74.0"  text-anchor="end">140</text>
-        <text class="trend-axis-label" x="52" y="42.4"  text-anchor="end">145</text>
-      </g>
-      <path class="trend-prior"
-            d="M60,184.0 L204,171.4 L348,158.8 L492,146.2 L636,133.5 L780,114.6"/>
-      <path class="trend-area"
-            d="M60,133.5 L204,114.6 L348,95.7 L492,83.1 L636,51.6 L780,20.0 L780,184 L60,184 Z"/>
-      <path class="trend-line"
-            d="M60,133.5 L204,114.6 L348,95.7 L492,83.1 L636,51.6 L780,20.0"/>
-      <g class="dots">
-        <circle class="trend-dot" data-i="0" cx="60"  cy="133.5" r="5"/>
-        <circle class="trend-dot" data-i="1" cx="204" cy="114.6" r="5"/>
-        <circle class="trend-dot" data-i="2" cx="348" cy="95.7"  r="5"/>
-        <circle class="trend-dot" data-i="3" cx="492" cy="83.1"  r="5"/>
-        <circle class="trend-dot" data-i="4" cx="636" cy="51.6"  r="5"/>
-        <circle class="trend-dot" data-i="5" cx="780" cy="20.0"  r="5"/>
-      </g>
-      <line class="trend-guideline" id="trend-guideline" x1="60" y1="20" x2="60" y2="184"/>
-      <g class="x-labels">
-        <text class="trend-axis-label" x="60"  y="204" text-anchor="middle">Jan</text>
-        <text class="trend-axis-label" x="204" y="204" text-anchor="middle">Feb</text>
-        <text class="trend-axis-label" x="348" y="204" text-anchor="middle">Mar</text>
-        <text class="trend-axis-label" x="492" y="204" text-anchor="middle">Apr</text>
-        <text class="trend-axis-label" x="636" y="204" text-anchor="middle">May</text>
-        <text class="trend-axis-label" x="780" y="204" text-anchor="middle">Jun</text>
-      </g>
-    </svg>
-    <div class="trend-tooltip" id="trend-tooltip"></div>
-  </div>
-</section>
-
-<!-- BAR LIST — headcount by department -->
+<!-- ① STATUS GRID — open role urgency leads, not metrics -->
 <section class="card">
-  <h2>Headcount by department</h2>
-  <div class="sub">Full-time employees as of June 30, 2026</div>
-  <div class="segments">
-    <div class="seg-row">
-      <span class="seg-name">Engineering</span>
-      <div class="seg-track"><div class="seg-fill" data-share="1.00"></div></div>
-      <div class="seg-amt">54<span class="seg-pct">36% · ↑ 5 this quarter</span></div>
-    </div>
-    <div class="seg-row">
-      <span class="seg-name">Sales</span>
-      <div class="seg-track"><div class="seg-fill" data-share="0.59"></div></div>
-      <div class="seg-amt">32<span class="seg-pct">22% · ↑ 2 this quarter</span></div>
-    </div>
-    <div class="seg-row">
-      <span class="seg-name">Customer Success</span>
-      <div class="seg-track"><div class="seg-fill" data-share="0.41"></div></div>
-      <div class="seg-amt">22<span class="seg-pct">15% · ↑ 1 this quarter</span></div>
-    </div>
-    <div class="seg-row">
-      <span class="seg-name">Marketing</span>
-      <div class="seg-track"><div class="seg-fill" data-share="0.30"></div></div>
-      <div class="seg-amt">16<span class="seg-pct">11% · no change</span></div>
-    </div>
-    <div class="seg-row">
-      <span class="seg-name">Operations</span>
-      <div class="seg-track"><div class="seg-fill" data-share="0.26"></div></div>
-      <div class="seg-amt">14<span class="seg-pct">9% · ↑ 2 this quarter</span></div>
-    </div>
-    <div class="seg-row">
-      <span class="seg-name">G&amp;A</span>
-      <div class="seg-track"><div class="seg-fill" data-share="0.19"></div></div>
-      <div class="seg-amt">10<span class="seg-pct">7% · ↑ 1 this quarter</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- COMPARE -->
-<section class="compare">
-  <div class="cmp-block">
-    <h3>Quarter over quarter</h3>
-    <div class="cmp-rows">
-      <div class="cmp-row">
-        <span class="ck">Headcount</span><span class="ca">148</span>
-        <span class="cb">137</span><span class="cd up">+11</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">Attrition rate</span><span class="ca">6.2%</span>
-        <span class="cb">8.1%</span><span class="cd up">−1.9 pt</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">Time to hire</span><span class="ca">34 days</span>
-        <span class="cb">52 days</span><span class="cd up">−18 days</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">Offer acceptance</span><span class="ca">91%</span>
-        <span class="cb">86%</span><span class="cd up">+5 pt</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">New hires</span><span class="ca">14</span>
-        <span class="cb">8</span><span class="cd up">+6</span>
-      </div>
-    </div>
-  </div>
-  <div class="cmp-block">
-    <h3>Year over year</h3>
-    <div class="cmp-rows">
-      <div class="cmp-row">
-        <span class="ck">Headcount</span><span class="ca">148</span>
-        <span class="cb">103</span><span class="cd up">+45</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">Attrition rate</span><span class="ca">6.2%</span>
-        <span class="cb">11.4%</span><span class="cd up">−5.2 pt</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">Time to hire</span><span class="ca">34 days</span>
-        <span class="cb">78 days</span><span class="cd up">−44 days</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">Offer acceptance</span><span class="ca">91%</span>
-        <span class="cb">74%</span><span class="cd up">+17 pt</span>
-      </div>
-      <div class="cmp-row">
-        <span class="ck">eNPS</span><span class="ca">82</span>
-        <span class="cb">61</span><span class="cd up">+21 pt</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- STATUS GRID -->
-<section class="card">
-  <h2>Hiring &amp; people initiatives</h2>
-  <div class="sub">End-of-quarter status by workstream</div>
+  <h2>Open role urgency</h2>
+  <div class="sub">14 open requisitions · critical path roles highlighted</div>
   <div class="status-list">
     <div class="status-row">
-      <span class="status-dot status-dot--green"></span>
-      <span class="status-name">Engineering hiring (8 roles)</span>
-      <span class="status-val">On track · 7 of 8 filled</span>
-    </div>
-    <div class="status-row">
-      <span class="status-dot status-dot--green"></span>
-      <span class="status-name">Q2 performance review cycle</span>
-      <span class="status-val">Complete</span>
-    </div>
-    <div class="status-row">
-      <span class="status-dot status-dot--amber"></span>
-      <span class="status-name">Sales hiring (6 roles)</span>
-      <span class="status-val">At risk · 2 of 6 filled</span>
+      <span class="status-dot status-dot--red"></span>
+      <span class="status-name">Account Executive (3 open) — Sales</span>
+      <span class="status-val">Critical · target close Jul 31</span>
     </div>
     <div class="status-row">
       <span class="status-dot status-dot--red"></span>
-      <span class="status-name">APAC recruiting</span>
+      <span class="status-name">Sr. Account Executive — Sales</span>
+      <span class="status-val">Critical · 28 days open</span>
+    </div>
+    <div class="status-row">
+      <span class="status-dot status-dot--red"></span>
+      <span class="status-name">CS Manager, APAC — Customer Success</span>
       <span class="status-val">Blocked · no local agency</span>
     </div>
     <div class="status-row">
+      <span class="status-dot status-dot--amber"></span>
+      <span class="status-name">Senior Backend Engineer — Engineering</span>
+      <span class="status-val">In progress · 45 days open</span>
+    </div>
+    <div class="status-row">
+      <span class="status-dot status-dot--amber"></span>
+      <span class="status-name">DevOps Engineer — Operations</span>
+      <span class="status-val">In progress · 38 days open</span>
+    </div>
+    <div class="status-row">
+      <span class="status-dot status-dot--amber"></span>
+      <span class="status-name">Revenue Operations Analyst — Sales</span>
+      <span class="status-val">In progress · 22 days open</span>
+    </div>
+    <div class="status-row">
       <span class="status-dot status-dot--blue"></span>
-      <span class="status-name">L&amp;D program rollout</span>
-      <span class="status-val">In review · Jul 15</span>
+      <span class="status-name">Product Marketing Manager — Marketing</span>
+      <span class="status-val">In review · JD pending</span>
     </div>
     <div class="status-row">
       <span class="status-dot status-dot--gray"></span>
-      <span class="status-name">FY27 headcount planning</span>
-      <span class="status-val">Not started · due Jul 18</span>
+      <span class="status-name">Data Analyst — Engineering</span>
+      <span class="status-val">Q3 req · not yet posted</span>
     </div>
   </div>
 </section>
 
-<!-- HIGHLIGHTS -->
+<!-- ② COMPARE — headcount vs target (not QoQ financial metrics) -->
+<section class="compare">
+  <div class="cmp-block">
+    <h3>Headcount vs. Q3 target</h3>
+    <div class="cmp-rows">
+      <div class="cmp-row">
+        <span class="ck">Sales</span>
+        <span class="ca">32</span>
+        <span class="cb">target 38</span>
+        <span class="cd warn">−6</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">Engineering</span>
+        <span class="ca">54</span>
+        <span class="cb">target 56</span>
+        <span class="cd warn">−2</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">Customer Success</span>
+        <span class="ca">22</span>
+        <span class="cb">target 24</span>
+        <span class="cd warn">−2</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">Marketing</span>
+        <span class="ca">16</span>
+        <span class="cb">target 16</span>
+        <span class="cd up">on plan</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">Operations</span>
+        <span class="ca">14</span>
+        <span class="cb">target 14</span>
+        <span class="cd up">on plan</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">G&amp;A</span>
+        <span class="ca">10</span>
+        <span class="cb">target 10</span>
+        <span class="cd up">on plan</span>
+      </div>
+    </div>
+  </div>
+  <div class="cmp-block">
+    <h3>Key people metrics — QoQ</h3>
+    <div class="cmp-rows">
+      <div class="cmp-row">
+        <span class="ck">Attrition rate</span>
+        <span class="ca">6.2%</span>
+        <span class="cb">Q1: 8.1%</span>
+        <span class="cd up">−1.9 pt</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">Time to hire</span>
+        <span class="ca">34 days</span>
+        <span class="cb">Q1: 52 days</span>
+        <span class="cd up">−18 days</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">Offer acceptance</span>
+        <span class="ca">91%</span>
+        <span class="cb">Q1: 86%</span>
+        <span class="cd up">+5 pt</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">eNPS</span>
+        <span class="ca">82</span>
+        <span class="cb">Q1: 78</span>
+        <span class="cd up">+4 pt</span>
+      </div>
+      <div class="cmp-row">
+        <span class="ck">New hires</span>
+        <span class="ca">14</span>
+        <span class="cb">Q1: 8</span>
+        <span class="cd up">+6</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ③ TABLE — open roles is the centerpiece, not a KPI -->
+<section class="card">
+  <h2>Open roles detail</h2>
+  <div class="sub">All active requisitions · sorted by urgency</div>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Role</th><th>Department</th><th>Days Open</th>
+          <th>Target Close</th><th>Priority</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Account Executive (×3)</td><td>Sales</td><td>34 avg</td>
+          <td>Jul 31</td><td>Critical</td>
+          <td><span class="tbl-badge tbl-badge--red">Urgent</span></td>
+        </tr>
+        <tr>
+          <td>Sr. Account Executive</td><td>Sales</td><td>28</td>
+          <td>Jul 31</td><td>Critical</td>
+          <td><span class="tbl-badge tbl-badge--red">Urgent</span></td>
+        </tr>
+        <tr>
+          <td>CS Manager, APAC</td><td>Customer Success</td><td>61</td>
+          <td>Aug 15</td><td>High</td>
+          <td><span class="tbl-badge tbl-badge--red">Blocked</span></td>
+        </tr>
+        <tr>
+          <td>Sr. Backend Engineer</td><td>Engineering</td><td>45</td>
+          <td>Jul 15</td><td>High</td>
+          <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
+        </tr>
+        <tr>
+          <td>DevOps Engineer</td><td>Operations</td><td>38</td>
+          <td>Aug 1</td><td>Medium</td>
+          <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
+        </tr>
+        <tr>
+          <td>Revenue Ops Analyst</td><td>Sales</td><td>22</td>
+          <td>Aug 15</td><td>Medium</td>
+          <td><span class="tbl-badge tbl-badge--amber">In Progress</span></td>
+        </tr>
+        <tr>
+          <td>Product Marketing Mgr</td><td>Marketing</td><td>5</td>
+          <td>Sep 1</td><td>Medium</td>
+          <td><span class="tbl-badge tbl-badge--blue">In Review</span></td>
+        </tr>
+        <tr>
+          <td>Data Analyst</td><td>Engineering</td><td>—</td>
+          <td>Sep 30</td><td>Low</td>
+          <td><span class="tbl-badge tbl-badge--gray">Not Posted</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ④ BAR LIST — supporting data, not the lead -->
+<section class="card">
+  <h2>Time to hire by department</h2>
+  <div class="sub">Average days from req open to offer accepted · Q2 FY2026</div>
+  <div class="segments">
+    <div class="seg-row">
+      <span class="seg-name">Sales</span>
+      <div class="seg-track"><div class="seg-fill" data-share="1.00"></div></div>
+      <div class="seg-amt">47 days<span class="seg-pct">was 61 days in Q1</span></div>
+    </div>
+    <div class="seg-row">
+      <span class="seg-name">Customer Success</span>
+      <div class="seg-track"><div class="seg-fill" data-share="0.74"></div></div>
+      <div class="seg-amt">35 days<span class="seg-pct">was 58 days in Q1</span></div>
+    </div>
+    <div class="seg-row">
+      <span class="seg-name">Operations</span>
+      <div class="seg-track"><div class="seg-fill" data-share="0.64"></div></div>
+      <div class="seg-amt">30 days<span class="seg-pct">was 44 days in Q1</span></div>
+    </div>
+    <div class="seg-row">
+      <span class="seg-name">Engineering</span>
+      <div class="seg-track"><div class="seg-fill" data-share="0.60"></div></div>
+      <div class="seg-amt">28 days<span class="seg-pct">was 67 days in Q1</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ HIGHLIGHTS — close with what to do, not what happened -->
 <section class="highlights">
   <div class="highlight">
     <div class="hl-tag">Bright spot</div>
-    <div class="hl-body">Engineering hiring is the strongest it's ever been — 7 of 8 open roles filled this quarter with an average time-to-hire of 28 days, down from 67 a year ago. The new structured interview process is working.</div>
+    <div class="hl-body">Engineering time-to-hire dropped from 67 to 28 days — the structured panel process and sourcer partnership are working. 7 of 8 Q2 engineering reqs closed on time.</div>
   </div>
   <div class="highlight">
     <div class="hl-tag">Risk</div>
-    <div class="hl-body">Sales is at 32 headcount against a Q3 target of 38. With 6 roles open and only 2 filled, the team enters Q3 under-resourced heading into the enterprise tier launch in October. Sourcing pipeline needs immediate attention.</div>
+    <div class="hl-body">Sales enters Q3 six heads short of target — and the October enterprise tier launch requires full capacity. At current hiring pace, Sales won't reach 38 headcount until November.</div>
   </div>
   <div class="highlight">
     <div class="hl-tag">Action needed</div>
-    <div class="hl-body">APAC recruiting is blocked — Zava has no retained agency in Singapore or Sydney. Jordan Kim and Priya Nair need to approve an agency engagement by June 20 to avoid slipping the Q3 APAC headcount target.</div>
+    <div class="hl-body">APAC CS Manager is blocked — no retained agency in Singapore or Sydney. Jordan Kim and Dani Cruz must approve an agency engagement by June 20 or the Q3 APAC CS target slips to Q4.</div>
   </div>
   <div class="highlight">
     <div class="hl-tag">Next quarter</div>
-    <div class="hl-body">FY27 headcount plan submissions are due July 18. Department heads should expect 15–20% growth targets as Zava prepares its Series C. The People team will run calibration sessions the week of July 21.</div>
+    <div class="hl-body">FY27 headcount plan submissions due July 18. Expect 15–20% growth targets across all departments as Zava prepares for Series C. People team running calibration sessions July 21–25.</div>
   </div>
 </section>
 
 <div class="rpt-footer">
   <div>Generated May 28, 2026 · Prepared by Dani Cruz, VP People</div>
-  <div>148 employees · 6 departments analyzed</div>
+  <div>148 employees · 14 open roles · 6 departments</div>
 </div>
 
 </main>
 <script>
-/* Segment bar fill-in */
 document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.seg-fill').forEach(function(el){
     el.style.transform='scaleX('+parseFloat(el.dataset.share||0)+')';
   });
 });
-
-/* Trend tooltip */
-(function(){
-  var TREND_DATA=[
-    {xi:60,  yi:133.5,label:'Jan 2026',val:'130 employees'},
-    {xi:204, yi:114.6,label:'Feb 2026',val:'133 employees'},
-    {xi:348, yi:95.7, label:'Mar 2026',val:'136 employees'},
-    {xi:492, yi:83.1, label:'Apr 2026',val:'138 employees'},
-    {xi:636, yi:51.6, label:'May 2026',val:'143 employees'},
-    {xi:780, yi:20.0, label:'Jun 2026',val:'148 employees'}
-  ];
-  var VB_W=800,VB_H=220;
-  var svg=document.getElementById('trend-svg');
-  var tooltip=document.getElementById('trend-tooltip');
-  var guideline=document.getElementById('trend-guideline');
-  var dots=document.querySelectorAll('.trend-dot');
-  if(!svg||!tooltip)return;
-  function nearest(x){var best=0,dist=Infinity;for(var i=0;i<TREND_DATA.length;i++){var d=Math.abs(TREND_DATA[i].xi-x);if(d<dist){dist=d;best=i}}return best}
-  svg.addEventListener('pointermove',function(e){
-    var r=svg.getBoundingClientRect();
-    var svgX=(e.clientX-r.left)*(VB_W/r.width);
-    var idx=nearest(svgX);var pt=TREND_DATA[idx];
-    dots.forEach(function(d){d.classList.remove('active')});
-    dots[idx].classList.add('active');
-    guideline.setAttribute('x1',pt.xi);guideline.setAttribute('x2',pt.xi);
-    guideline.classList.add('active');
-    var wrap=svg.closest('.trend-wrap');
-    var wr=wrap.getBoundingClientRect();
-    tooltip.style.left=((pt.xi/VB_W)*r.width)+'px';
-    tooltip.style.top=((pt.yi/VB_H)*r.height)+'px';
-    tooltip.textContent=pt.label+' · '+pt.val;
-    tooltip.style.opacity='1';
-  });
-  svg.addEventListener('pointerleave',function(){
-    dots.forEach(function(d){d.classList.remove('active')});
-    guideline.classList.remove('active');
-    tooltip.style.opacity='0';
-  });
-})();
 </script>
 </body>
 </html>
