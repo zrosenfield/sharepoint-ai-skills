@@ -8,28 +8,16 @@
 
 ## DEMO PROMPT
 
+*Attach `data/crm-evaluation.csv` before sending.*
+
 ```
-I need a CRM evaluation scorecard for the exec team. We're replacing our legacy Salesforce setup — we've outgrown it and the sales team is frustrated. Here are our scores across the five shortlisted vendors on a 1–5 scale:
-
-Dimensions and weights:
-- Ease of Use: 20%
-- Integration Depth: 25%
-- Pricing Fit: 20%
-- Support Quality: 15%
-- Customization: 10%
-- Data Privacy: 10%
-
-Vendor scores:
-| Vendor      | Ease | Integration | Pricing | Support | Custom | Privacy | Notes                        |
-|-------------|------|-------------|---------|---------|--------|---------|------------------------------|
-| HubSpot     | 5    | 4           | 4       | 4       | 3      | 4       | Best UX; limited deep custom |
-| Salesforce  | 3    | 5           | 2       | 4       | 5      | 5       | Powerful but overbuilt for stage |
-| Pipedrive   | 4    | 3           | 5       | 3       | 3      | 3       | Simple; weak enterprise features |
-| Close.io    | 4    | 3           | 4       | 5       | 3      | 3       | Great support; limited integrations |
-| Freshsales  | 4    | 4           | 4       | 3       | 3      | 4       | Good value; newer ecosystem  |
-
-Use the clean-white palette — this is going straight into the board deck. Can you build the scorecard?
+Build a CRM evaluation scorecard for the exec team from crm-evaluation.csv.
+We're replacing our legacy Salesforce setup — the team has outgrown it.
+Clean-white palette — this is going straight into the board deck.
 ```
+
+**Fallback prompt** (if file can't be attached — paste inline from `data/crm-evaluation.csv`):
+> "Build a CRM evaluation scorecard. Here are our scores: [paste CSV contents]. Clean-white palette."
 
 ---
 
@@ -37,7 +25,7 @@ Use the clean-white palette — this is going straight into the board deck. Can 
 
 **Who:** Jordan Kim, VP Sales at Zava Industries. Zava just closed a strong Q2 FY2026 ($4.2M revenue) and is pushing past 150 employees. The sales team has been running on a patchwork of spreadsheets and a legacy Salesforce instance that was never properly configured. Jordan's team spent the last three weeks scoring five CRM vendors — now she needs to turn that raw data into a decision document she can drop into the exec deck for Maya Chen.
 
-**What she has:** A raw table of scores she's been tracking in a Teams chat. She pastes it into the AI alongside her weights and a one-line description of the context.
+**What she has:** A CSV of scores she's been tracking in a spreadsheet (`crm-evaluation.csv`). She attaches it with a two-line prompt.
 
 **What she needs in return:** A polished, standalone HTML scorecard she can send to the exec team before the Thursday review meeting.
 
@@ -45,8 +33,8 @@ Use the clean-white palette — this is going straight into the board deck. Can 
 
 ## Beat-by-Beat Walkthrough
 
-**Beat 1 — Data parsing (0:00–0:20)**  
-The skill immediately recognizes the pasted table as a complete data source. No interview needed — it has vendors, dimensions, weights, and scores. It parses the six weighted dimensions (weights sum to 1.0: 0.20+0.25+0.20+0.15+0.10+0.10), confirms the 1–5 scale, and identifies the clean-white palette.
+**Beat 1 — File parsing (0:00–0:20)**  
+The skill reads `crm-evaluation.csv` directly — no interview needed. It parses vendors, dimensions, weights, and scores in one pass, confirms weights sum to 1.0, and identifies the clean-white palette.
 
 **Beat 2 — JSON construction + validation (0:20–0:50)**  
 The skill builds the JSON document internally: five entities, six dimensions, 30 scored cells. It computes weighted totals for each vendor and assigns ranks. HubSpot surfaces at 4.10 — highest weighted total. Salesforce lands at 3.85 (second) despite its perfect integration and customization scores, dragged down by the 2/5 on pricing. Freshsales comes in as the dark horse at 3.75 (third). All validation checks pass.
@@ -88,4 +76,4 @@ The presenter can point directly at the visual contrast: "See how Salesforce's p
 
 5. **Suggest deep-ink for drama.** If the audience is small and the room is dark, say: "This also renders in a dark exec theme — same data, higher contrast. Want to see it?" (Switch `palette-clean-white` to `palette-deep-ink` on the body tag to demo.)
 
-6. **Show it took one paste.** Scroll back up to the prompt. The entire scorecard — 30 scored cells, computed totals, heatmap, rank badges, methodology — came from one pasted table.
+6. **Show it took one file.** Scroll back up to the prompt. The entire scorecard — 30 scored cells, computed totals, heatmap, rank badges, methodology — came from one attached CSV.

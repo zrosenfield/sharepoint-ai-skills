@@ -2,31 +2,15 @@
 
 ## DEMO PROMPT
 
+*Attach `data/q2-deals.csv` and `data/q2-projects.csv` before sending.*
+
 ```
-Build me a Q2 executive summary for Zava. Here's our data:
-
-Revenue: $4.2M total, up 8% from Q1 ($3.9M) and up 35% year over year ($3.1M).
-Deals closed: 47 (Q1: 42). Avg deal size $89K (Q1: $93K). Win rate 34% (Q1: 31%).
-New logos: 11 (Q1: 9).
-
-Monthly revenue Jan–Jun: $820K, $910K, $880K, $1.05M, $1.12M, $1.31M.
-Prior year same months: $700K, $780K, $760K, $840K, $870K, $910K.
-
-By region:
-  North America $1.84M (44%)
-  Europe $1.10M (26%)
-  Asia-Pacific $790K (19%) — missed plan by $60K
-  Latin America $340K (8%)
-  Other $130K (3%)
-
-Top deals in pipe: Helix Financial $480K Proposal On Track Jul 12; Nova Logistics $310K Final Round At Risk Jul 5; Cedarwood Health $290K Negotiation On Track Jul 20; Apex Manufacturing $260K Proposal In Review Jul 31; Stratos Capital $240K Demo Early Stage Aug 8.
-
-Workstreams: Enterprise expansion playbook complete (green); Partner channel enablement on track (green); APAC territory rebuild at risk Q3 (amber); CRM migration at risk Jul 15 (amber); ERP vendor selection blocked (red); FY27 quota planning in review (blue).
-
-Bright spot: Enterprise ACV at all-time high $142K. Risk: APAC $60K miss due to procurement delays. Action needed: ERP pricing hold expires June 15 — decision this week. Next quarter: Q3 pipeline $6.1M (1.5× coverage).
-
-Audience: exec team (Maya Chen, Raj Patel, Jordan Kim). Palette: warm paper.
+Build me a Q2 executive summary for Zava from q2-deals.csv and q2-projects.csv.
+Audience: exec team (Maya Chen, Raj Patel, Jordan Kim). Warm paper palette.
 ```
+
+**Fallback prompt** (if files can't be attached — paste inline from `data/q2-deals.csv`):
+> "Build me a Q2 executive summary for Zava. Here's our deals data: [paste CSV contents]. Warm paper palette."
 
 ---
 
@@ -38,8 +22,8 @@ You're Jordan Kim, VP of Sales at Zava Industries, doing Monday morning prep bef
 
 ## What Happens — Beat by Beat
 
-**Beat 1: Paste and go (0:00–0:20)**
-You paste the prompt above into the SharePoint agent chat. The skill reads the data immediately — no back-and-forth because you've provided everything it needs. It skips straight to building the JSON.
+**Beat 1: Attach and go (0:00–0:20)**
+Attach `q2-deals.csv` and `q2-projects.csv`, type the two-line prompt, and send. The skill reads both files immediately — no back-and-forth because all the data is there. It skips straight to building the JSON.
 
 **Beat 2: The skill narrates its work (0:20–0:45)**
 The agent confirms the data in a quick bullet list: "Confirmed Q2 revenue $4.2M, 47 deals, 6 monthly data points, 5 pipeline deals, 6 workstreams." Then it announces the component sequence: hero → KPI row → trend → by-region bar list → QoQ/YoY compare → pipeline table → workstream status → highlights. This is a good moment to point out that the skill is making editorial decisions, not just formatting data.
