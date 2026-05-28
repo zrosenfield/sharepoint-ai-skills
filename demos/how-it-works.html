@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How It Works · Zava AI Report Skills</title>
+<style>
+:root{
+  --bg:#faf7f2;--surface:#ffffff;--ink:#1a1814;--ink-muted:#7a7268;
+  --accent:#c8553d;--accent-soft:#f9e6e2;--negative:#b91c1c;
+  --border:#e8e2d8;--grid:#f0ece4;
+  --radius:16px;--pad:28px;--gap:20px;
+  --font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --fs-hero:clamp(28px,4.2vw,52px);
+  --fs-h2:18px;--fs-body:15px;--fs-small:13px;--fs-tiny:11px;
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:var(--fs-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:1100px;margin:0 auto;padding:48px 40px 80px}
+
+/* header */
+.rpt-header{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:56px}
+.rpt-header .company{font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.rpt-header .label{font-size:var(--fs-small);color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase}
+
+/* hero */
+.hero{margin-bottom:56px}
+.hero h1{font-size:var(--fs-hero);font-weight:400;line-height:1.15;letter-spacing:-0.02em;max-width:22ch;margin:0 0 16px 0}
+.hero .accent{color:var(--accent)}
+.hero p{font-size:18px;color:var(--ink-muted);line-height:1.5;max-width:56ch;margin:0}
+
+/* section titles */
+.section-eyebrow{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-muted);margin-bottom:8px}
+.section-title{font-size:var(--fs-h2);font-weight:500;letter-spacing:-0.01em;margin:0 0 28px 0}
+
+section{margin-bottom:56px}
+
+/* ── PIPELINE DIAGRAM ──────────────────────────── */
+.pipeline{display:flex;align-items:stretch;gap:0;margin-bottom:8px;overflow-x:auto}
+.pipe-step{
+  flex:1;min-width:120px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:0;padding:20px 16px;
+  position:relative;
+  display:flex;flex-direction:column;gap:8px;
+}
+.pipe-step:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.pipe-step:last-child{border-radius:0 var(--radius) var(--radius) 0}
+.pipe-step+.pipe-step{border-left:none}
+/* arrow connector */
+.pipe-step:not(:last-child)::after{
+  content:'→';
+  position:absolute;right:-14px;top:50%;transform:translateY(-50%);
+  font-size:18px;color:var(--accent);z-index:1;
+  background:var(--bg);padding:0 2px;
+  line-height:1;
+}
+.pipe-step.highlight{background:var(--accent-soft);border-color:var(--accent)}
+.pipe-num{font-size:var(--fs-tiny);font-weight:700;color:var(--ink-muted);letter-spacing:0.06em;text-transform:uppercase}
+.pipe-label{font-size:15px;font-weight:600;color:var(--ink);line-height:1.2}
+.pipe-sub{font-size:var(--fs-tiny);color:var(--ink-muted);line-height:1.4}
+.pipe-tag{
+  display:inline-block;align-self:flex-start;
+  padding:2px 8px;border-radius:20px;
+  background:var(--accent);color:#fff;
+  font-size:var(--fs-tiny);font-weight:700;letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.pipe-tag.muted{background:var(--grid);color:var(--ink-muted)}
+
+.pipeline-note{font-size:var(--fs-small);color:var(--ink-muted);font-style:italic;line-height:1.5}
+
+/* ── THREE LAYERS ──────────────────────────────── */
+.layers{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+.layer-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:var(--pad);
+  display:flex;flex-direction:column;gap:12px;
+}
+.layer-card.accent-card{background:var(--accent-soft);border-color:var(--accent)}
+.layer-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  font-size:var(--fs-small);font-weight:700;flex-shrink:0;
+}
+.layer-card.accent-card .layer-num{background:var(--ink)}
+.layer-name{font-size:var(--fs-h2);font-weight:600;letter-spacing:-0.01em}
+.layer-desc{font-size:var(--fs-small);color:var(--ink-muted);line-height:1.55}
+.layer-rule{
+  margin-top:auto;padding-top:12px;border-top:1px solid var(--border);
+  font-size:var(--fs-small);font-weight:600;color:var(--ink);
+}
+.layer-card.accent-card .layer-rule{border-color:rgba(200,85,61,0.25)}
+.code-pill{
+  display:inline-block;padding:1px 7px;border-radius:6px;
+  background:var(--grid);font-family:var(--mono);font-size:12px;color:var(--ink);
+}
+
+/* ── SAME STYLE / TWO STORIES ──────────────────── */
+.two-reports{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.mini-report{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+.mini-header{
+  background:var(--ink);color:var(--bg);
+  padding:14px 20px;display:flex;justify-content:space-between;align-items:center;
+}
+.mini-company{font-weight:600;font-size:14px;letter-spacing:-0.01em}
+.mini-tag-pill{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;opacity:0.6;font-weight:500}
+.mini-body{padding:20px}
+.mini-hero{font-size:18px;font-weight:400;line-height:1.25;letter-spacing:-0.01em;margin:0 0 20px 0;max-width:18ch}
+.mini-hero .accent{color:var(--accent)}
+.mini-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.mini-kpi{
+  border:1px solid var(--border);border-radius:10px;padding:12px;
+}
+.mini-kpi-val{font-size:24px;font-weight:300;line-height:1;letter-spacing:-0.02em;margin-bottom:4px}
+.mini-kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-muted)}
+.mini-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.mini-bar-label{font-size:11px;color:var(--ink-muted);width:72px;flex-shrink:0;text-align:right}
+.mini-bar-track{flex:1;height:5px;background:var(--grid);border-radius:3px;overflow:hidden}
+.mini-bar-fill{height:100%;background:var(--accent);border-radius:3px}
+
+.same-system-callout{
+  grid-column:1/-1;
+  background:var(--accent-soft);border:1px solid var(--accent);
+  border-radius:var(--radius);padding:20px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+.same-system-callout .icon{font-size:24px;flex-shrink:0}
+.same-system-callout p{margin:0;font-size:var(--fs-body);line-height:1.5}
+.same-system-callout strong{color:var(--accent)}
+
+/* ── THE ORIGIN STORY ──────────────────────────── */
+.origin-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.origin-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:var(--pad);
+}
+.origin-card h3{font-size:var(--fs-h2);font-weight:500;letter-spacing:-0.01em;margin:0 0 12px 0}
+.origin-card p{font-size:var(--fs-body);color:var(--ink-muted);line-height:1.55;margin:0 0 16px 0}
+.origin-card p:last-child{margin-bottom:0}
+.origin-card p strong{color:var(--ink)}
+.step-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.step-item{display:flex;gap:12px;align-items:flex-start}
+.step-dot{
+  width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.step-text{font-size:var(--fs-small);color:var(--ink);line-height:1.5}
+.step-text strong{font-weight:600}
+
+/* ── FOOTER ──────────────────────────────────────── */
+.rpt-footer{
+  margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:var(--fs-tiny);color:var(--ink-muted);
+  display:flex;justify-content:space-between;gap:16px;
+}
+
+/* responsive */
+@media(max-width:820px){
+  .layers,.two-reports,.origin-row{grid-template-columns:1fr}
+  .page{padding:32px 20px 60px}
+  .pipeline{flex-direction:column}
+  .pipe-step:first-child{border-radius:var(--radius) var(--radius) 0 0}
+  .pipe-step:last-child{border-radius:0 0 var(--radius) var(--radius)}
+  .pipe-step+.pipe-step{border-left:1px solid var(--border);border-top:none}
+  .pipe-step:not(:last-child)::after{content:'↓';right:auto;left:50%;top:auto;bottom:-14px;transform:translateX(-50%)}
+  .same-system-callout{grid-column:1}
+}
+</style>
+</head>
+<body>
+<main class="page">
+
+<!-- HEADER -->
+<div class="rpt-header">
+  <div class="company">Zava Industries</div>
+  <div class="label">How the AI report skills work</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>One design system.<br><span class="accent">Four kinds of reports.</span></h1>
+  <p>Each skill starts with a beautiful HTML example. The AI extracts the design into a reusable template, then assembles any data into the same visual language — automatically, every time.</p>
+</div>
+
+
+<!-- ── SECTION 1: THE PIPELINE ──────────────────── -->
+<section>
+  <div class="section-eyebrow">How it's built</div>
+  <div class="section-title">From HTML example to repeatable skill</div>
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-num">Start</div>
+      <div class="pipe-label">Beautiful HTML example</div>
+      <div class="pipe-sub">Designer or found template — the visual target</div>
+      <span class="pipe-tag muted">Once</span>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">Extract</div>
+      <div class="pipe-label">AI reads the design</div>
+      <div class="pipe-sub">Pulls palette tokens, typography, component patterns</div>
+      <span class="pipe-tag muted">Once</span>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">Codify</div>
+      <div class="pipe-label">Template + SKILL.md</div>
+      <div class="pipe-sub">CSS template file and interview instructions written once</div>
+      <span class="pipe-tag muted">Once</span>
+    </div>
+    <div class="pipe-step highlight">
+      <div class="pipe-num">Every time</div>
+      <div class="pipe-label">User sends prompt + data</div>
+      <div class="pipe-sub">A two-line prompt and a CSV file — that's it</div>
+      <span class="pipe-tag">Live demo</span>
+    </div>
+    <div class="pipe-step highlight">
+      <div class="pipe-num">Output</div>
+      <div class="pipe-label">JSON document</div>
+      <div class="pipe-sub">Validated data blob — the consistency layer</div>
+      <span class="pipe-tag">Live demo</span>
+    </div>
+    <div class="pipe-step highlight">
+      <div class="pipe-num">Result</div>
+      <div class="pipe-label">Self-contained HTML</div>
+      <div class="pipe-sub">No CDN, no server — opens in any browser, runs in SharePoint</div>
+      <span class="pipe-tag">Live demo</span>
+    </div>
+  </div>
+  <p class="pipeline-note">The first three steps happen once when the skill is authored. In the live demo you only see the last three.</p>
+</section>
+
+
+<!-- ── SECTION 2: THREE LAYERS ───────────────────── -->
+<section>
+  <div class="section-eyebrow">The architecture</div>
+  <div class="section-title">Three layers — only one changes per report</div>
+  <div class="layers">
+    <div class="layer-card">
+      <div class="layer-num">1</div>
+      <div class="layer-name">Style</div>
+      <div class="layer-desc">CSS custom properties define every visual decision — color, type, spacing, radius. The same four palette classes (<span class="code-pill">palette-warm-paper</span>, <span class="code-pill">palette-deep-ink</span>, <span class="code-pill">palette-clean-white</span>, <span class="code-pill">palette-slate</span>) apply to all four skills identically.</div>
+      <div class="layer-rule">Deterministic — same class, same output, always.</div>
+    </div>
+    <div class="layer-card accent-card">
+      <div class="layer-num">2</div>
+      <div class="layer-name">Components</div>
+      <div class="layer-desc">Each skill has a catalog of named blocks — hero sentence, KPI row, trend chart, bar list, compare strip, highlights. The AI reads the data and decides which blocks to use and in what order. A sales report gets a trend. A headcount report gets a status grid.</div>
+      <div class="layer-rule">AI-assembled — the skill picks the right blocks for the story.</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-num">3</div>
+      <div class="layer-name">Data</div>
+      <div class="layer-desc">Before rendering, the skill builds a validated JSON document — the "consistency layer." Every block, every value, every label is in the JSON. The HTML is 100% determined by the JSON. You can regenerate the same report from the JSON at any time.</div>
+      <div class="layer-rule">Same JSON → same HTML. Every time. No drift.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 3: SAME STYLE / TWO STORIES ──────── -->
+<section>
+  <div class="section-eyebrow">The proof</div>
+  <div class="section-title">Same design system — completely different data</div>
+  <div class="two-reports">
+
+    <!-- Mini report: Sales -->
+    <div class="mini-report">
+      <div class="mini-header">
+        <div class="mini-company">Zava Industries</div>
+        <div class="mini-tag-pill">Q2 FY2026 · Revenue Report</div>
+      </div>
+      <div class="mini-body">
+        <p class="mini-hero">Zava closed <span class="accent">$4.2M</span> across 47 deals, <span class="accent">up 8%</span> from Q1.</p>
+        <div class="mini-kpis">
+          <div class="mini-kpi">
+            <div class="mini-kpi-val">$4.2M</div>
+            <div class="mini-kpi-lbl">Total Revenue</div>
+          </div>
+          <div class="mini-kpi">
+            <div class="mini-kpi-val">47</div>
+            <div class="mini-kpi-lbl">Deals Closed</div>
+          </div>
+        </div>
+        <div class="mini-bar-row"><span class="mini-bar-label">N. America</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%"></div></div></div>
+        <div class="mini-bar-row"><span class="mini-bar-label">Europe</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:60%"></div></div></div>
+        <div class="mini-bar-row"><span class="mini-bar-label">Asia-Pacific</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:43%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Mini report: People -->
+    <div class="mini-report">
+      <div class="mini-header">
+        <div class="mini-company">Zava Industries</div>
+        <div class="mini-tag-pill">Q2 FY2026 · People &amp; Culture Report</div>
+      </div>
+      <div class="mini-body">
+        <p class="mini-hero">Zava grew to <span class="accent">148 employees</span>, cutting time-to-hire by <span class="accent">18 days.</span></p>
+        <div class="mini-kpis">
+          <div class="mini-kpi">
+            <div class="mini-kpi-val">148</div>
+            <div class="mini-kpi-lbl">Headcount</div>
+          </div>
+          <div class="mini-kpi">
+            <div class="mini-kpi-val">6.2%</div>
+            <div class="mini-kpi-lbl">Attrition Rate</div>
+          </div>
+        </div>
+        <div class="mini-bar-row"><span class="mini-bar-label">Engineering</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%"></div></div></div>
+        <div class="mini-bar-row"><span class="mini-bar-label">Sales</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:59%"></div></div></div>
+        <div class="mini-bar-row"><span class="mini-bar-label">Cust. Success</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:41%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="same-system-callout">
+      <div class="icon">↔</div>
+      <p>Both reports use the exact same <strong>warm-paper palette</strong>, the same font stack, the same 16px border-radius, the same <strong>hero sentence + KPI row + bar-list component sequence</strong>. The only thing that changed was the data. The skill assembled the right story from the same vocabulary.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SECTION 4: THE ORIGIN STORY ──────────────── -->
+<section>
+  <div class="section-eyebrow">How you could build the next one</div>
+  <div class="section-title">The HTML-first workflow</div>
+  <div class="origin-row">
+
+    <div class="origin-card">
+      <h3>Start with a beautiful HTML</h3>
+      <p>You don't write a design spec. You make (or find) the HTML you want the output to look like — a mockup, a reference, a template you already have.</p>
+      <p>Then you hand it to the AI: <strong>"Turn this into a reusable skill."</strong></p>
+      <p>The AI reads the HTML, extracts the visual language, and writes the template file and SKILL.md automatically. The design becomes the spec.</p>
+    </div>
+
+    <div class="origin-card">
+      <h3>What the AI extracts</h3>
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-dot">1</div>
+          <div class="step-text"><strong>Palette tokens</strong> — color variables pulled from the CSS, named and documented</div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot">2</div>
+          <div class="step-text"><strong>Component patterns</strong> — recurring structures (KPI card, bar row, callout) identified and catalogued</div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot">3</div>
+          <div class="step-text"><strong>Template slots</strong> — placeholder tokens added where data goes (<span class="code-pill">{{BLOCKS}}</span>, <span class="code-pill">{{HERO}}</span>)</div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot">4</div>
+          <div class="step-text"><strong>Interview questions</strong> — written into SKILL.md so the skill knows what to ask the user</div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot">5</div>
+          <div class="step-text"><strong>JSON schema</strong> — the data shape that drives the render, documented and validated</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<div class="rpt-footer">
+  <div>Zava Industries · AI Report Skills · May 2026</div>
+  <div>exec-report · roadmap-timeline · scorecard-matrix · dossier</div>
+</div>
+
+</main>
+</body>
+</html>
