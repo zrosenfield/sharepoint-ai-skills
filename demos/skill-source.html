@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zava Industries · CEO Monday Briefing</title>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────── */
+:root{
+  --bg:#faf7f2;
+  --surface:#ffffff;
+  --ink:#1a1814;
+  --ink-muted:#7a7268;
+  --accent:#c8553d;
+  --accent-soft:#f9e6e2;
+  --border:#e8e2d8;
+  --grid:#f0ece4;
+  --radius:16px;
+  --pad:28px;
+  --gap:20px;
+  --font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11","tnum";
+}
+
+/* ── PAGE ──────────────────────────────────────── */
+.page{max-width:880px;margin:0 auto;padding:48px 40px 80px}
+
+/* ── HEADER ────────────────────────────────────── */
+.header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:20px;border-bottom:1px solid var(--border);
+  margin-bottom:52px;
+}
+.header-company{font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.header-meta{font-size:13px;color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase}
+
+/* ── HERO SENTENCE ─────────────────────────────── */
+.hero{
+  margin-bottom:44px;
+  font-size:clamp(24px,3.6vw,42px);
+  font-weight:400;line-height:1.2;
+  letter-spacing:-0.02em;max-width:26ch;
+}
+.hero .accent{color:var(--accent)}
+
+/* ── METRIC ROW ────────────────────────────────── */
+.metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:var(--gap);margin-bottom:40px;
+}
+.metric{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px 22px;
+  display:flex;flex-direction:column;
+}
+.metric-label{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--ink-muted);margin-bottom:12px;
+}
+.metric-value{
+  font-size:clamp(36px,4.8vw,56px);font-weight:300;
+  line-height:1;letter-spacing:-0.03em;
+  font-variant-numeric:tabular-nums;
+}
+.metric-delta{
+  margin-top:auto;padding-top:10px;
+  font-size:13px;display:flex;align-items:center;gap:5px;
+}
+.metric-delta.up{color:var(--accent)}
+.metric-delta.down{color:#b91c1c}
+.metric-delta.flat{color:var(--ink-muted)}
+
+/* ── STATUS LIST ───────────────────────────────── */
+.section-label{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--ink-muted);font-weight:600;margin-bottom:14px;
+}
+.status-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:0 22px;
+  margin-bottom:var(--gap);
+}
+.status-row{
+  display:grid;grid-template-columns:10px 1fr auto;
+  align-items:center;gap:16px;
+  padding:14px 0;border-bottom:1px solid var(--grid);
+}
+.status-row:last-child{border-bottom:0}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-dot--green{background:#059669}
+.status-dot--amber{background:#d97706}
+.status-dot--red  {background:#dc2626}
+.status-dot--blue {background:#0284c7}
+.status-dot--gray {background:#94a3b8}
+.status-name{font-size:15px}
+.status-note{font-size:13px;color:var(--ink-muted);text-align:right;white-space:nowrap}
+
+/* ── HIGHLIGHTS ────────────────────────────────── */
+.highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+.highlight{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px;
+}
+.highlight-tag{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--accent);margin-bottom:10px;font-weight:600;
+}
+.highlight-body{font-size:15px;line-height:1.5;color:var(--ink)}
+
+/* ── FOOTER ────────────────────────────────────── */
+.footer{
+  margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:11px;color:var(--ink-muted);
+  display:flex;justify-content:space-between;
+}
+
+/* ── RESPONSIVE ────────────────────────────────── */
+@media(max-width:700px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .highlights{grid-template-columns:1fr}
+  .page{padding:32px 20px 60px}
+  .hero{margin-bottom:32px}
+}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--border:#ddd;--grid:#eee}
+  body{font-size:11pt}.page{max-width:none;padding:0.5in}
+}
+</style>
+</head>
+<body>
+<main class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-company">Zava Industries</div>
+    <div class="header-meta">CEO Monday Briefing · Week of May 26, 2026</div>
+  </div>
+
+  <!-- HERO -->
+  <p class="hero">
+    A strong close to May —
+    <span class="accent">$480K in new pipeline,</span>
+    Atlas at 70%, and the
+    <span class="accent">ERP decision finally unblocked</span>
+    after three weeks.
+  </p>
+
+  <!-- METRICS -->
+  <section>
+    <div class="section-label">This week at a glance</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">New pipeline</div>
+        <div class="metric-value">$480K</div>
+        <div class="metric-delta up">↑ $120K vs last week</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Deals to proposal</div>
+        <div class="metric-value">4</div>
+        <div class="metric-delta up">↑ 2 vs last week</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Active projects</div>
+        <div class="metric-value">12</div>
+        <div class="metric-delta flat">no change</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Open blockers</div>
+        <div class="metric-value">2</div>
+        <div class="metric-delta up">↓ 3 resolved this week</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS -->
+  <section>
+    <div class="section-label">Workstream status</div>
+    <div class="status-card">
+      <div class="status-row">
+        <span class="status-dot status-dot--green"></span>
+        <span class="status-name">Atlas Data Migration</span>
+        <span class="status-note">On track · 70% complete</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--green"></span>
+        <span class="status-name">Enterprise Tier Launch</span>
+        <span class="status-note">On track · Oct 1 target</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--amber"></span>
+        <span class="status-name">APAC Recruiting</span>
+        <span class="status-note">At risk · agency approval pending</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--green"></span>
+        <span class="status-name">ERP Vendor Selection</span>
+        <span class="status-note">Unblocked · HubSpot signed</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot status-dot--blue"></span>
+        <span class="status-name">FY27 Headcount Planning</span>
+        <span class="status-note">In review · due Jul 18</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section>
+    <div class="section-label">What to know</div>
+    <div class="highlights">
+      <div class="highlight">
+        <div class="highlight-tag">Win</div>
+        <div class="highlight-body">Enterprise pipeline hit $6.1M — 1.5× coverage heading into Q3. Nova Logistics and Helix Financial both moved to final round this week.</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-tag">Watch</div>
+        <div class="highlight-body">APAC recruiting still needs agency sign-off by June 20. Without it the CS Manager hire slips to Q4 — which creates a coverage gap when the enterprise tier launches.</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-tag">Decision made</div>
+        <div class="highlight-body">ERP: signed with HubSpot at $47K/year for 50 seats. Implementation kickoff scheduled June 10. Jordan is leading the migration alongside the sales process handoff.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div>Prepared by Maya Chen · CEO · Zava Industries</div>
+    <div>For internal distribution only</div>
+  </div>
+
+</main>
+</body>
+</html>
