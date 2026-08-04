@@ -1,0 +1,65 @@
+# Live Dashboard — Warranty Cost Chain
+# Four-hop cost aggregation across five SharePoint lists.
+
+[var: SITE = https://contoso.sharepoint.com/sites/CONFIGURE_ME/]
+[category: Dashboards]
+
+[section: setup]
+
+[navigate: ${SITE}]
+[login-if-needed]
+[open-chat]
+[new-chat]
+
+[prompt: Create five lists for fictional drone company Zava. Customers: Title, Region (Pacific Northwest, Southwest, Mountain, Midwest), Contract Tier (Standard, Premium, Enterprise), Customer Since (date). Fleet Units: Title as tail number, Customer lookup to Customers Title, Model (AeroSight One, AeroSight Pro, AeroSight Max), In Service, Flight Hours, Retired yes/no. Parts Catalog: Title, Part Number, Unit Cost in US dollars, Category (Airframe, Battery, Optics, Avionics, Propulsion). Service Tickets: Title, Fleet Unit lookup, Opened, Closed which may be empty, Category (Airframe, Battery, Optics, Avionics, Software), Under Warranty yes/no. Parts Used: Title, Ticket lookup, Part lookup, Quantity. Do not create Person or Group columns or any columns not listed.]
+[wait]
+
+[new-chat]
+[prompt: Fill the five lists with realistic data: 6 customers, 16 fleet units, 12 parts, 28 service tickets, and about 42 Parts Used records. Use realistic drone parts, tail numbers, fault descriptions, costs from about $40 to $4,000, and dates across the last 18 months.
+
+Plant these conditions: the survey and mapping customer has repeated battery failures across four AeroSight Pro aircraft and becomes the largest cost path; one aircraft has five tickets; AeroSight Max units are visibly cleaner than Pro units; three Parts Used rows deliberately have an empty Part lookup; two fleet units are Retired but retain ticket history; and four tickets remain open. Make most failures warranty-covered and close most completed tickets within 2 to 20 days.]
+[wait]
+
+[pause]
+
+[section: demo]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+
+Warranty cost per customer is not stored anywhere. It appears only after four joins and a quantity-times-unit-cost calculation.
+
+[pause]
+
+[prompt: Build a single HTML page named Warranty Cost Chain that reads Customers, Fleet Units, Parts Catalog, Service Tickets, and Parts Used live. Compute every cost by joining part to ticket to fleet unit to customer and multiplying Quantity by Unit Cost.
+
+Use a technical parts-catalog visual system: pale warm-grey manual stock, graphite hairlines, and oxide red only for cost concentration. Use a mechanical geometric heading face, monospace identifiers and currency, tabular figures, and small uppercase tracked labels.
+
+The main element is a left-to-right cost flow through part category, ticket category, aircraft model, and customer. Ribbon thickness represents dollars. Hover or keyboard focus isolates a complete path and shows its exact cost and ticket count. The battery-to-survey-customer path should be immediately visible as the largest. Vary ribbon weight and oxide-red intensity, never hue. Do not use rainbow palettes or pie charts.
+
+Below the flow, rank fleet units by warranty cost with tail number, customer, model, flight hours, ticket count, and cost. Strike through retired tail numbers instead of using badges. Beside it, rank customers by warranty cost per flight hour. Add a quiet data-integrity note showing the count of Parts Used rows without a catalog part and the cost attributed to retired aircraft.
+
+Across the top show total warranty cost, fleet-wide cost per flight hour, and the worst customer's share of total cost. Animate the ribbons drawing once. At phone width, use a readable stacked flow instead of shrinking the visualization.
+
+Keep all script inline in one HTML file. Never use external scripts or CDNs and never modify the sandbox-generated script tag or attributes. Do not scale text, use emoji, default SharePoint blue, gradients, cards, shadows, or decorative color. Respect reduced motion and provide keyboard access, visible focus, honest loading, and named empty-list failures.]
+[wait]
+
+[new-chat]
+[prompt: Add automatic refreshing without changing the Warranty Cost Chain design. Re-read all five lists whenever the page becomes visible and every sixty seconds while foregrounded. Preserve current focus and selection, update calculations in place, show a last-read timestamp, and retain the last good data after a failed refresh.]
+[wait]
+
+Focus the fattest ribbon and explain the customer, model, failure category, ticket count, and dollar impact.
+
+[pause]
+
+[screenshot: tools/screenshots/25-warranty-cost-chain-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+[prompt: Delete the Warranty Cost Chain page and the Customers, Fleet Units, Parts Catalog, Service Tickets, and Parts Used lists created for this demo. Do not delete unrelated content.]
+[wait]
+[confirm: Confirm any SharePoint deletion dialogs, then continue.]

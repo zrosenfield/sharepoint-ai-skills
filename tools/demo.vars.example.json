@@ -8,6 +8,19 @@
     "metadata-at-scale": {
       "SITE": "https://contoso.sharepoint.com/sites/legal/",
       "LIBRARY": "https://contoso.sharepoint.com/sites/legal/Shared%20Documents/Contracts/"
+    },
+    "23-program-portfolio-review": {
+      "SITE": "https://contoso.sharepoint.com/sites/live-dashboards/"
+    },
+    "24-crew-certification-coverage": {
+      "SITE": "https://contoso.sharepoint.com/sites/live-dashboards/"
+    },
+    "25-warranty-cost-chain": {
+      "SITE": "https://contoso.sharepoint.com/sites/live-dashboards/"
+    },
+    "26-transaction-pivot": {
+      "SITE": "https://contoso.sharepoint.com/sites/live-dashboards/",
+      "TRANSACTIONS": "https://contoso.sharepoint.com/sites/live-dashboards/Lists/Transactions/"
     }
   }
 }

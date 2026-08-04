@@ -1,0 +1,66 @@
+# Live Dashboard — Transaction Pivot
+# Large-list demonstration using an existing 30,000-item Transactions list.
+
+[var: SITE = https://contoso.sharepoint.com/sites/CONFIGURE_ME/]
+[var: TRANSACTIONS = https://contoso.sharepoint.com/sites/CONFIGURE_ME/Lists/Transactions/]
+[category: Dashboards]
+
+[section: setup]
+
+[navigate: ${TRANSACTIONS}]
+[login-if-needed]
+[open-chat]
+[new-chat]
+
+[prompt: Inspect the Transactions list and report its exact internal column names, total item count, earliest and latest Date values, and currently indexed columns. Add indexes to Date, Category, and Merchant only if they are not already indexed. Do not change data, add or remove columns, or create views. Also report whether Amount contains negative values and whether Tags appears comma-delimited, semicolon-delimited, or freeform.]
+[wait]
+
+Confirm the list has the expected columns and approximately 30,000 items before presenting the demo.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+
+The list-view threshold governs server-side views. This demo pages through the full list once, then performs every pivot locally.
+
+[pause]
+
+[prompt: Build a single HTML page named Transaction Pivot that reads the complete Transactions list in pages and keeps all records in browser memory. Request only Transaction ID, Date, Category, Subcategory, Merchant, Amount, Payment Method, Status, and Tags. Do not request Description or the Created, Modified, Created By, or Modified By system fields. Never return to SharePoint to answer a pivot after the initial read.
+
+Show a running loaded-record count against the total, and render progressively while pages continue arriving. If Amount contains negatives, treat negatives as money out and positives as money in. Otherwise infer direction from Category, treating income, salary, refund, transfer in, interest, and dividend as money in. State the detected convention in the footer.
+
+Use a banknote-and-ledger visual system: deep saturated ink green, warm bone text, cream hairlines, and copper only for money coming in. No red. Use high-contrast serif headline figures, monospace tabular data, and small uppercase tracked labels.
+
+The main element is a full-width stacked spend river across the complete date range. Let the user split it by Category, Subcategory, Merchant, Payment Method, or Tags. Morph between dimensions, cap each split to the top eight values plus Everything else, and let dragging select a time range.
+
+Below it, provide a pivot grid with independently selectable row and column dimensions. Let cell values switch among total amount, transaction count, and average amount. Show row and column totals, cap rows to the top 25 plus Everything else, sort by a selected column, and let a cell drill through to merchant, date, and amount records.
+
+Add Status and Payment Method filters and a debounced Merchant text filter. Every filter updates the visible record count, river, figures, and pivot without a server round trip. Show Clear all only while filtering. Across the top show total out, total in, and net for the current selection.
+
+Keep interaction smooth with 30,000 records. Do not re-render the full grid on every merchant-filter keystroke. Support arrow-key navigation in the pivot. On phones, keep the river full width and allow horizontal grid scrolling with row labels pinned. If loading fails partway, keep received records, state how many are missing, and offer retry.
+
+Keep all script inline in one HTML file. Never use external scripts or CDNs and never modify the sandbox-generated script tag or attributes. Do not scale text, use emoji, default SharePoint blue, gradients, floating cards, shadows, or excessive rounding. Respect reduced motion and provide visible focus, honest loading, and named empty-list errors.]
+[wait]
+
+[new-chat]
+[prompt: Add refresh-on-visibility to Transaction Pivot without changing its design. When the page returns from a background tab, re-read the list in pages and update the view in place while preserving filters and selections. Keep a manual refresh control and last-read timestamp. Do not add an interval refresh. If refreshing fails, retain the last good data and report its age.]
+[wait]
+
+Pause while the load counter passes 5,000, then pivot repeatedly across dimensions to show that every later aggregation is local.
+
+[pause]
+
+[screenshot: tools/screenshots/26-transaction-pivot-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+[prompt: Delete only the Transaction Pivot page created for this demo. Do not delete or modify the Transactions list.]
+[wait]
+[confirm: Confirm any SharePoint deletion dialog, then continue.]

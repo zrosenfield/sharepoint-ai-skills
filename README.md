@@ -1,44 +1,53 @@
-# SharePoint AI Skills
+# SharePoint AI Experiments and Demo Lab
 
-A curated library of AI skills and end-to-end demo setups for the latest AI features in Microsoft 365 SharePoint.
+Experimental AI skills, prototypes, automated demo scripts, sample data, and presentation assets for AI in Microsoft 365 SharePoint.
 
-> **Status:** Active — new content added regularly.
+> **Repository status:** This is an incubation and demonstration repository. For maintained community skills, use the official [PnP SharePoint Skills repository](https://github.com/pnp/sharepoint-skills).
 
----
+## What Is Here
 
-## What's Inside
-
-| Folder | Purpose |
+| Path | Purpose |
 |---|---|
-| [`Skills/`](./Skills/) | AI skills — each skill in its own folder, ready to install into a SharePoint agent |
-| [`demos/`](./demos/) | End-to-end demo setups with sample content, configuration steps, and screenshots |
-| [`tools/`](./tools/) | Automated demo runner — connects to Edge via CDP, slow-types prompts, and steps through scenarios with a floating widget controller |
+| [`Skills/`](./Skills/) | Experimental skills that have not graduated to the PnP repository |
+| [`demos/`](./demos/) | Demo documentation, sample data, golden outputs, and presentation assets |
+| [`tools/scripts/`](./tools/scripts/) | Automated browser demo scripts |
+| [`tools/`](./tools/) | The Playwright-based demo runner and local configuration examples |
 
----
+## Skill Lifecycle
+
+Skills in this repository are prototypes. They may change quickly and should be reviewed before production use.
+
+1. New ideas are developed and demonstrated here.
+2. Mature skills are contributed to [`pnp/sharepoint-skills`](https://github.com/pnp/sharepoint-skills).
+3. After graduation, the local copy is removed and [`Skills/README.md`](./Skills/README.md) links to the maintained PnP version.
+
+Do not submit updates for graduated skills here. Open issues and pull requests against the official repository instead.
+
+## Running Demos
+
+Demo scripts use site-agnostic defaults. Put real SharePoint URLs in the gitignored `tools/demo.vars.json`; never edit a `.demo` file to insert a tenant or site URL.
+
+```powershell
+npm install
+npm run demo -- tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo
+```
+
+Most scripts support `--setup`, the default demo section, and `--reset`.
 
 ## Prerequisites
 
-- Microsoft 365 tenant with **Copilot license**
-- SharePoint contributor permissions (to add/upload a skill, but only reader needed to consume)
----
+- Microsoft 365 tenant with a Copilot license
+- SharePoint contributor permissions for setup and skill installation
+- Node.js for the automated demo runner
 
 ## Contributing
 
-Contributions and corrections are welcome!
-
-1. Fork the repo and create a branch: `git checkout -b skill/your-skill-name`
-2. Add your skill folder under `Skills/` (e.g., `Skills/my-skill/SKILL.md`)
-3. Ensure the `name` field in frontmatter matches the folder name exactly
-4. Open a pull request with a short description of what the skill does
-
----
+Contributions are welcome for experimental skills, demo scenarios, runner improvements, and sample assets. Stable reusable skills should be proposed to [PnP SharePoint Skills](https://github.com/pnp/sharepoint-skills).
 
 ## License
 
 [MIT](./LICENSE) © 2026 [zrosenfield](https://github.com/zrosenfield)
 
----
-
 ## Disclaimer
 
-These skills and demos are provided as-is for learning and experimentation. They are not official Microsoft documentation. Always verify against the latest [Microsoft Learn](https://learn.microsoft.com) docs before deploying to production.
+This repository is provided as-is for learning and experimentation. It is not official Microsoft documentation. Verify behavior against current Microsoft Learn documentation before production deployment.

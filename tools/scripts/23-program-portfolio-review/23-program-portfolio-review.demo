@@ -1,0 +1,65 @@
+# Live Dashboard — Program Portfolio Review
+# Fan-out relationship: Programs with independent Milestones and Risks children.
+
+[var: SITE = https://contoso.sharepoint.com/sites/CONFIGURE_ME/]
+[category: Dashboards]
+
+[section: setup]
+
+[navigate: ${SITE}]
+[login-if-needed]
+[open-chat]
+[new-chat]
+
+[prompt: Create three lists on this site for the fictional drone company Zava. Create Programs with Title (program name), Program Code (single line), Owner (single line), Phase (Concept, Design, Pilot, Production, Sustaining), Target Launch (date), Budget (US currency), and Status (On Track, At Risk, Critical). Create Milestones with Title, Program (lookup to Programs Title), Due Date, Actual Date which may be empty, Status (Not Started, In Progress, Complete, Late), and Owner (single line). Create Risks with Title, Program (lookup to Programs Title), Severity (Low, Medium, High, Critical), Likelihood (Low, Medium, High), Status (Open, Mitigating, Closed), Opened (date), and Owner (single line). Do not create Person or Group columns or any columns not listed.]
+[wait]
+
+[new-chat]
+[prompt: Fill Programs, Milestones, and Risks with realistic Zava AeroSight sample data: 8 programs, about 55 milestones, and about 32 risks, with at least four milestones and two risks per program. Include an AeroSight Pro launch with four late milestones and two open critical risks; a program with no late milestones but three open high risks; two clean programs; one program with milestones clustered in the same two weeks; and one program stored as On Track even though its children indicate trouble. Use realistic program names, risk statements, owners, dates across the next fourteen months, and budgets from $200,000 to $4,000,000. Complete milestones need Actual Dates near Due Dates. Late milestones need past Due Dates and empty Actual Dates.]
+[wait]
+
+Confirm that Programs has 8 items and that Milestones and Risks contain the requested sample records.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+
+The parent list cannot show the schedule and risk pressure hidden in its two child lists. This page joins all three live.
+
+[pause]
+
+[prompt: Build a single HTML page named Program Portfolio Review that reads the Programs, Milestones, and Risks lists live on every load. Never embed a copied data snapshot.
+
+Use an aviation sectional-chart visual system: very light blue-grey ground, muted-violet hairlines, neutral cool ink, and amber-to-red only for schedule or risk pressure. Use condensed headings, a clean sans-serif body face, and tabular figures.
+
+The main element is one shared timeline from the earliest relevant date to the latest target launch. Draw one row per program with a thin program-duration rule, square milestone marks positioned by Due Date, and triangle risk marks positioned by Opened date. Complete milestones are dark filled squares; future or in-progress milestones are hollow; late milestones are amber. Open high and critical risks use amber triangles; medium and low risks use grey triangles. Nudge collisions vertically. Draw a today line through the stack. Sort programs by late milestone count and repeat that sort after every refresh.
+
+Show late milestone and open critical-risk counts at the right of each row. Include a compact legend. Below the timeline, place a portfolio table beside a severity-by-likelihood risk grid. The table shows program, stored status, late milestones, open critical, open high, and budget. Selecting a risk-grid cell shows full risk statements and their programs beneath the grid.
+
+Across the top show programs behind schedule, total late milestones, open critical risks, and total budget in At Risk or Critical programs. Compute these from current list data. Keep at least seven program rows visible initially.
+
+Keep all script inline in this single HTML file. Never reference a CDN or external script, and never modify the sandbox-generated script tag or its attributes. Do not scale text to fit. Fit the available width without horizontal scrolling. Do not use emoji, default SharePoint blue, gradients, floating cards, shadows, or excessive rounded corners. Respect reduced motion. Make every interaction keyboard reachable with visible focus. Show an honest loading state and name any empty list and the dependent views it prevents.]
+[wait]
+
+[new-chat]
+[prompt: Add automatic refreshing to Program Portfolio Review without changing its design or rendering rules. Re-read all three lists whenever the page becomes visible after being in a background tab and every sixty seconds while it remains in the foreground. Keep a manual refresh control. Refresh in place without reloading, resetting selections, replaying the load animation, or losing filters. Re-run sorting after every refresh. Show a quiet last-read timestamp. If refresh fails, keep the last good data, state when it was read, and retry at the next interval.]
+[wait]
+
+Open Milestones in another tab, change a clean program's milestone to Late, and return. The affected program should re-sort upward.
+
+[pause]
+
+[screenshot: tools/screenshots/23-program-portfolio-review-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+[prompt: Delete the Program Portfolio Review page and the Programs, Milestones, and Risks lists created for this demo. Do not delete similarly named content unless it is clearly part of this demo.]
+[wait]
+[confirm: Confirm any SharePoint deletion dialogs, then continue.]

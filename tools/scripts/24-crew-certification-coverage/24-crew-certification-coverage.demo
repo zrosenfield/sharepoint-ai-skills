@@ -1,0 +1,67 @@
+# Live Dashboard — Crew Certification Coverage
+# Many-to-many relationship through the Crew Certifications junction list.
+
+[var: SITE = https://contoso.sharepoint.com/sites/CONFIGURE_ME/]
+[category: Dashboards]
+
+[section: setup]
+
+[navigate: ${SITE}]
+[login-if-needed]
+[open-chat]
+[new-chat]
+
+[prompt: Create four lists for fictional drone operator Zava. Crew: Title (full name), Crew ID, Base (Portland, Reno, Tucson, Boise), Role (Pilot, Visual Observer, Maintenance Tech, Instructor), Active (yes/no). Certifications: Title, Code, Category (Regulatory, Platform, Payload, Safety), Renewal Months (number). Crew Certifications: Title, Crew Member (lookup to Crew Title), Certification (lookup to Certifications Title), Earned (date), Expires (date), Level (Certified, Instructor). Missions: Title, Customer, Mission Date, Base using the same four choices, Required Certifications as a lookup to Certifications Title allowing multiple values, and Status (Scheduled, Staffed, At Risk). Do not create Person or Group columns or any columns not listed.]
+[wait]
+
+[new-chat]
+[prompt: Fill the four lists with realistic data: 18 crew, 10 certifications, about 58 Crew Certifications records, and 12 missions. Use realistic commercial-drone certifications and renewal periods of 12 to 36 months. Spread crew across all four bases. Title each junction row as person name, a middle dot, and certification name.
+
+Plant these conditions exactly: Tucson has six certifications expiring within 45 days, including two beyond-visual-line-of-sight endorsements; exactly one mission about five weeks out is At Risk because nobody at its base holds every required certification; two crew are one certification short of that mission; one certification is held by only one person company-wide; that person's certification expires shortly after the mission; and instructors have broad certification coverage. Remaining missions occur over the next four months and require two to four certifications.]
+[wait]
+
+Confirm that the Crew Certifications list visibly represents the many-to-many relationship.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+
+SharePoint has no native many-to-many field. The junction list stores the relationship; this dashboard turns it into an operational picture.
+
+[pause]
+
+[prompt: Build a single HTML page named Crew Certification Coverage that reads Crew, Certifications, Crew Certifications, and Missions live and answers who can be put in the air.
+
+Use a hangar operations-board visual system: deep desaturated slate, pale bone text, muted steel-blue structure, and sodium-lamp amber only for expiry pressure. Use wide headings, monospace dates and axes, and a quiet body face.
+
+The main element is a full-width coverage matrix with crew as rows and certifications as columns. A large solid mark means held; a ring means Instructor level; empty means missing. Amber is binary and means expiry within 60 days. Group rows by base under full-width headers. Show each base's expiring count only when nonzero. Tint a crew name amber when any certification expires within 60 days. Show certification abbreviations with full names on hover and keyboard focus.
+
+Above the matrix, show all missions in a horizontal strip. Selecting a mission dims certifications it does not require and crew who cannot qualify. For the selected mission, name crew who are one certification short and identify the missing certification. Beside or below the matrix, list upcoming expirations and certifications held by only one person.
+
+Fit all ten certification columns on a laptop without clipping. On phones, allow horizontal matrix scrolling with crew names pinned. Animate the initial matrix fill once and nothing else. If Crew Certifications is empty, explicitly explain that it is the junction list connecting crew and certifications.
+
+Keep all script inline in one HTML file. Do not use external scripts or CDNs and do not modify the sandbox-generated script tag or attributes. Do not scale text to fit. Do not use emoji, default SharePoint blue, gradients, cards, shadows, or a red-amber-green palette. Respect reduced motion and provide keyboard access, visible focus, loading states, and named empty-list failures.]
+[wait]
+
+[new-chat]
+[prompt: Add automatic refreshing without changing the Crew Certification Coverage design. Re-read all four lists when the page becomes visible and every sixty seconds in the foreground. Preserve mission selection and filters, update in place, re-run all qualification calculations, show a quiet last-read timestamp, and retain the last good data if a refresh fails.]
+[wait]
+
+Select the At Risk mission. The board should go nearly dark and reveal the two crew who are one certification short.
+
+[pause]
+
+[screenshot: tools/screenshots/24-crew-certification-coverage-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+[open-chat]
+[new-chat]
+[prompt: Delete the Crew Certification Coverage page and the Crew, Certifications, Crew Certifications, and Missions lists created for this demo. Do not remove unrelated content.]
+[wait]
+[confirm: Confirm any SharePoint deletion dialogs, then continue.]

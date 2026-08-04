@@ -48,7 +48,19 @@
     "demo:skills-job-postings:reset": "node tools/run-demo.mjs tools/scripts/14-skills-job-postings/14-skills-job-postings.demo --reset",
     "demo:skills-rfp-response": "node tools/run-demo.mjs tools/scripts/15-skills-rfp-response/15-skills-rfp-response.demo",
     "demo:skills-rfp-response:setup": "node tools/run-demo.mjs tools/scripts/15-skills-rfp-response/15-skills-rfp-response.demo --setup",
-    "demo:skills-rfp-response:reset": "node tools/run-demo.mjs tools/scripts/15-skills-rfp-response/15-skills-rfp-response.demo --reset"
+    "demo:skills-rfp-response:reset": "node tools/run-demo.mjs tools/scripts/15-skills-rfp-response/15-skills-rfp-response.demo --reset",
+    "demo:program-portfolio": "node tools/run-demo.mjs tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo",
+    "demo:program-portfolio:setup": "node tools/run-demo.mjs tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo --setup",
+    "demo:program-portfolio:reset": "node tools/run-demo.mjs tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo --reset",
+    "demo:crew-certifications": "node tools/run-demo.mjs tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo",
+    "demo:crew-certifications:setup": "node tools/run-demo.mjs tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo --setup",
+    "demo:crew-certifications:reset": "node tools/run-demo.mjs tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo --reset",
+    "demo:warranty-cost": "node tools/run-demo.mjs tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo",
+    "demo:warranty-cost:setup": "node tools/run-demo.mjs tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo --setup",
+    "demo:warranty-cost:reset": "node tools/run-demo.mjs tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo --reset",
+    "demo:transaction-pivot": "node tools/run-demo.mjs tools/scripts/26-transaction-pivot/26-transaction-pivot.demo",
+    "demo:transaction-pivot:setup": "node tools/run-demo.mjs tools/scripts/26-transaction-pivot/26-transaction-pivot.demo --setup",
+    "demo:transaction-pivot:reset": "node tools/run-demo.mjs tools/scripts/26-transaction-pivot/26-transaction-pivot.demo --reset"
   },
   "dependencies": {
     "obs-websocket-js": "^5.0.8",

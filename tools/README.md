@@ -477,6 +477,10 @@ The repo also contains `demos/tool/` — an earlier demo runner built on the [Pl
 | `tools/scripts/list-3-ways.demo` | Three approaches to building a SharePoint list — guided, specified, and autonomous |
 | `tools/scripts/citations.demo` | Three-skill pipeline extracts assertions, searches a corpus, and writes citation records |
 | `tools/scripts/brand-review.demo` | Custom skill audits marketing assets against brand guidelines with scored remediation |
+| `tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo` | Live fan-out dashboard joining programs, milestones, and risks |
+| `tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo` | Many-to-many crew certification coverage matrix |
+| `tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo` | Four-hop warranty cost aggregation across five lists |
+| `tools/scripts/26-transaction-pivot/26-transaction-pivot.demo` | Client-side pivoting over a 30,000-item Transactions list |
 
 ---
 
