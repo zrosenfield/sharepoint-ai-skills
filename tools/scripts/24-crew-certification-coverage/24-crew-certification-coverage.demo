@@ -34,7 +34,7 @@ SharePoint has no native many-to-many field. The junction list stores the relati
 
 [pause]
 
-[prompt: Build a single HTML page named Crew Certification Coverage that reads Crew, Certifications, Crew Certifications, and Missions live and answers who can be put in the air.
+[prompt: Build a single HTML live-linked page named Crew Certification Coverage that reads Crew, Certifications, Crew Certifications, and Missions and answers who can be put in the air.
 
 Use a hangar operations-board visual system: deep desaturated slate, pale bone text, muted steel-blue structure, and sodium-lamp amber only for expiry pressure. Use wide headings, monospace dates and axes, and a quiet body face.
 

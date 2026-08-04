@@ -47,7 +47,7 @@ Write real fault descriptions. "Battery pack swelling detected during preflight"
 ## Step 3: Build the Dashboard
 
 ```text
-Build a single HTML page on this site that reads live from Customers, Fleet Units, Parts Catalog, Service Tickets and Parts Used and answers one question: where is warranty cost actually going. Every figure is computed by joining parts to tickets to fleet units to customers and multiplying quantity by unit cost — none of it is stored. The page queries on every load and never contains a copied snapshot.
+Build a single HTML live-linked page on this site that reads from Customers, Fleet Units, Parts Catalog, Service Tickets and Parts Used and answers one question: where is warranty cost actually going. Every figure is computed by joining parts to tickets to fleet units to customers and multiplying quantity by unit cost — none of it is stored. The page queries on every load and never contains a copied snapshot.
 
 Art direction. The visual world is a parts catalog and an exploded assembly drawing: precise, technical, printed. Ground the page in a very pale warm grey, the tone of good manual stock. Everything structural is a true hairline in graphite. Oxide red is the single accent, spent only on cost concentration. Nothing decorative gets color.
 

@@ -32,7 +32,7 @@ Warranty cost per customer is not stored anywhere. It appears only after four jo
 
 [pause]
 
-[prompt: Build a single HTML page named Warranty Cost Chain that reads Customers, Fleet Units, Parts Catalog, Service Tickets, and Parts Used live. Compute every cost by joining part to ticket to fleet unit to customer and multiplying Quantity by Unit Cost.
+[prompt: Build a single HTML live-linked page named Warranty Cost Chain that reads Customers, Fleet Units, Parts Catalog, Service Tickets, and Parts Used. Compute every cost by joining part to ticket to fleet unit to customer and multiplying Quantity by Unit Cost.
 
 Use a technical parts-catalog visual system: pale warm-grey manual stock, graphite hairlines, and oxide red only for cost concentration. Use a mechanical geometric heading face, monospace identifiers and currency, tabular figures, and small uppercase tracked labels.
 

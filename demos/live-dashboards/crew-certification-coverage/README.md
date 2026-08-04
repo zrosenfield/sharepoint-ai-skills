@@ -48,7 +48,7 @@ Before continuing, open the Crew Certifications list and show that each row is o
 ## Step 3: Build the Dashboard
 
 ```text
-Build a single HTML page on this site that reads live from the Crew, Certifications, Crew Certifications and Missions lists and answers one question: who can we put in the air. The page queries the lists on every load and never contains a copied snapshot.
+Build a single HTML live-linked page on this site that reads from the Crew, Certifications, Crew Certifications and Missions lists and answers one question: who can we put in the air. The page queries the lists on every load and never contains a copied snapshot.
 
 Art direction. The visual world is a hangar operations board under working light: a deep desaturated slate ground, information sitting on it as dense marks rather than floating cards. Pale bone white for text, muted steel blue for structural lines. Exactly one warm color — sodium-lamp amber — spent only on expiry pressure. Missing coverage is not a color at all; it is an empty cell.
 

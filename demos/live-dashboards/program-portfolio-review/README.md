@@ -45,7 +45,7 @@ Verify that Programs has 8 items and that every program has milestones and risks
 ## Step 3: Build the Dashboard
 
 ```text
-Build a single HTML page on this site that reads live from the Programs, Milestones and Risks lists and presents a program portfolio review. The page queries the lists on every load and never contains a copied snapshot — edit a milestone in the list, reload, and the page changes.
+Build a single HTML live-linked page on this site that reads from the Programs, Milestones and Risks lists and presents a program portfolio review. The page queries the lists on every load and never contains a copied snapshot — edit a milestone in the list, reload, and the page changes.
 
 Art direction. The visual world is an aviation sectional chart: pale, cool, technical paper. Ground the page in a very light blue-grey, not white and not cream. Draw structure with hairlines in a muted violet. Reserve one signal color — amber into red — exclusively for schedule and risk pressure. Nothing else on the page is warm.
 

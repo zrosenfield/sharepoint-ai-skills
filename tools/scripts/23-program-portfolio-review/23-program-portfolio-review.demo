@@ -32,7 +32,7 @@ The parent list cannot show the schedule and risk pressure hidden in its two chi
 
 [pause]
 
-[prompt: Build a single HTML page named Program Portfolio Review that reads the Programs, Milestones, and Risks lists live on every load. Never embed a copied data snapshot.
+[prompt: Build a single HTML live-linked page named Program Portfolio Review that reads the Programs, Milestones, and Risks lists on every load. Never embed a copied data snapshot.
 
 Use an aviation sectional-chart visual system: very light blue-grey ground, muted-violet hairlines, neutral cool ink, and amber-to-red only for schedule or risk pressure. Use condensed headings, a clean sans-serif body face, and tabular figures.
 

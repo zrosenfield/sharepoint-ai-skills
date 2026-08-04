@@ -29,7 +29,7 @@ The list-view threshold governs server-side views. This demo pages through the f
 
 [pause]
 
-[prompt: Build a single HTML page named Transaction Pivot that reads the complete Transactions list in pages and keeps all records in browser memory. Request only Transaction ID, Date, Category, Subcategory, Merchant, Amount, Payment Method, Status, and Tags. Do not request Description or the Created, Modified, Created By, or Modified By system fields. Never return to SharePoint to answer a pivot after the initial read.
+[prompt: Build a single HTML live-linked page named Transaction Pivot that reads the complete Transactions list in pages and keeps all records in browser memory. Request only Transaction ID, Date, Category, Subcategory, Merchant, Amount, Payment Method, Status, and Tags. Do not request Description or the Created, Modified, Created By, or Modified By system fields. Never return to SharePoint to answer a pivot after the initial read.
 
 Show a running loaded-record count against the total, and render progressively while pages continue arriving. If Amount contains negatives, treat negatives as money out and positives as money in. Otherwise infer direction from Category, treating income, salary, refund, transfer in, interest, and dividend as money in. State the detected convention in the footer.
 

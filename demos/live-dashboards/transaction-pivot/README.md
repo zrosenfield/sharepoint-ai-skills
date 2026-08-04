@@ -32,7 +32,7 @@ Verify the item count and internal names before building the page.
 ## Step 3: Build the Dashboard
 
 ```text
-Build a single HTML page on this site that reads the full Transactions list and lets someone pivot across all thirty thousand records interactively. The interaction has to feel instant once the data is in.
+Build a single HTML live-linked page on this site that reads the full Transactions list and lets someone pivot across all thirty thousand records interactively. The interaction has to feel instant once the data is in.
 
 How it loads. Read the list in pages, requesting only these columns and no others: Transaction ID, Date, Category, Subcategory, Merchant, Amount, Payment Method, Status and Tags. Do not request Description, and do not request Created, Modified, Created By or Modified By.
 
