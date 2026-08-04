@@ -1,66 +1,67 @@
 # Live-Linked SharePoint Dashboard Demos
 
-Four demos showing how a single-file HTML page can read SharePoint lists live and calculate views that are not stored in any one list.
+Manual, copy/paste-ready walkthroughs for building live HTML dashboards with Copilot in SharePoint. The guides are the primary demo artifacts; the automated runner is optional.
 
-| Demo | Data shape | Main point |
+Run the relational demos in order, then finish with the large-list scenario:
+
+| Demo | Data shape | Manual guide |
 |---|---|---|
-| Program Portfolio Review | One parent with two child lists | Roll up milestones and risks into a live portfolio view |
-| Crew Certification Coverage | Many-to-many through a junction list | Pivot relationships into a coverage matrix |
-| Warranty Cost Chain | Four joins across five lists | Calculate warranty cost per customer |
-| Transaction Pivot | One flat list with 30,000 items | Read once and pivot locally without repeated round trips |
+| Program Portfolio Review | One parent with two independent children | [Setup and prompts](./program-portfolio-review/) |
+| Crew Certification Coverage | Many-to-many through a junction list | [Setup and prompts](./crew-certification-coverage/) |
+| Warranty Cost Chain | Four joins across five lists | [Setup and prompts](./warranty-cost-chain/) |
+| Transaction Pivot | One flat list with 30,000 items | [Setup and prompts](./transaction-pivot/) |
 
-The executable scripts are:
+All four target Copilot in SharePoint, use plain-English prompts, avoid Person columns, and use the fictional Zava/AeroSight brand.
 
-- `tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo`
-- `tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo`
-- `tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo`
-- `tools/scripts/26-transaction-pivot/26-transaction-pivot.demo`
+## Before Presenting
 
-## Prompting Rules
+- Save a copy the moment a page looks presentable. A bad edit can undo several good renders.
+- Never say only "make this live." Scope each change to one thing and explicitly freeze everything else.
+- Separate data turns from design turns.
+- Describe what is visibly wrong and why it matters instead of prescribing pixel values.
+- When behavior looks wrong, first ask the agent to explain its current rule.
 
-- Save a copy as soon as a page reaches a presentable state.
-- Never ask to "make this live." Scope each change narrowly and freeze everything else.
-- Separate data changes from design changes.
-- Describe the observed problem and its consequence rather than prescribing pixel values.
-- When behavior looks wrong, ask the agent to explain its current rule before changing it.
-- Keep all script inline in one HTML file. Do not introduce external scripts or CDNs.
-- Do not modify the sandbox-generated script tag or its attributes.
-- Require keyboard access, visible focus, reduced-motion support, honest loading states, and named empty-list errors.
+## Optional Automation
 
-## Refresh Pattern
+The same scenarios are available as `.demo` scripts for the repository's niche Playwright runner:
 
-For demos 1 through 3, refresh when the page becomes visible and every 60 seconds while it remains in the foreground. Preserve current selections and filters, keep the last good data after failures, and show when the data was last read.
+- [`23-program-portfolio-review.demo`](../../tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo)
+- [`24-crew-certification-coverage.demo`](../../tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo)
+- [`25-warranty-cost-chain.demo`](../../tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo)
+- [`26-transaction-pivot.demo`](../../tools/scripts/26-transaction-pivot/26-transaction-pivot.demo)
 
-Demo 4 refreshes only when the page becomes visible. Re-reading 30,000 rows every minute is unnecessary.
+## Retrofitting an Existing Static Page
 
-## Demo Notes
+Use three turns and verify after each one.
 
-### Program Portfolio Review
+### Turn 1: Diagnose Without Changes
 
-Open Milestones in a second tab and change a clean program's milestone to `Late`. Returning to the dashboard should move that program upward because the ordering is computed from child records.
+```text
+Don't change anything yet. Tell me where the data in this page currently comes from: the exact names of the variables or blocks holding the static data, and the name of the function that takes that data and renders the page. Just report it.
+```
 
-### Crew Certification Coverage
+### Turn 2: Replace One Source
 
-Show the Crew Certifications junction list before showing the matrix. The contrast demonstrates why many-to-many data is difficult to interpret in a normal list view.
+```text
+Make one change and nothing else. Replace only the static data for the [first] list with a live read from the [first] list on this site. Leave the static data for every other list exactly as it is.
 
-### Warranty Cost Chain
+Do not change any HTML structure, any CSS, any layout, any rendering logic, or the script tag or its attributes. Everything stays inline in this single file. The rendering function must keep the same input shape it has now — you're changing where the data comes from, not what it looks like.
 
-Ask where warranty cost per customer is stored. It is not: the dashboard joins parts, tickets, aircraft, and customers, then multiplies quantity by unit cost.
+When the page loads, print the number of records read into the existing footer text so I can confirm it worked.
+```
 
-### Transaction Pivot
+### Turn 3: Replace the Remaining Sources
 
-Pause while the load counter passes 5,000 records. The list-view threshold limits server-side views; it does not prevent a client from paging through the complete list.
+```text
+That worked. Now do the same for the [second] and [third] lists, one at a time, using the identical approach. Same constraints: no structural, styling, or layout changes, and no changes to the rendering logic.
+```
 
-## Retrofitting a Static Page
+If turn 2 changes the layout, revert to the saved copy rather than correcting forward.
 
-Use three separate turns:
+## If It Says Scripting Is Unavailable
 
-1. Ask where the current static data is stored and which function renders it. Make no changes.
-2. Replace one static source with one live list read while preserving the rendering input shape and all HTML and CSS.
-3. Repeat for each remaining list, one at a time.
+```text
+This page already runs JavaScript successfully — it has a working refresh control, a load timestamp that updates, and live queries against the lists. So inline script is clearly permitted. Don't externalize anything: keep all script inline in this single HTML file, with no external files or CDN references. Do not modify the script tag's attributes — preserve whatever nonce the sandbox emits, exactly as it emits it. Tell me specifically which change you just made that failed, rather than concluding scripting is unavailable.
+```
 
-If an edit changes the layout, revert to the saved copy instead of correcting forward.
-
-## Script Policy Troubleshooting
-
-If the agent claims scripting is unavailable, point out the page's existing working JavaScript, refresh control, or live list reads. Require it to preserve the current inline script tag exactly. A rewritten tag can lose the sandbox-provided nonce and cause a valid script to be blocked.
+The usual cause is an edit that rewrote the script tag and dropped the sandbox-injected nonce.
