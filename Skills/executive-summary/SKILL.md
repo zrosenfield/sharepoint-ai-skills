@@ -5,8 +5,6 @@ description: Distills long documents, reports, meeting transcripts, or briefing 
 
 # Executive Summary
 
-This skill distills long source material — documents, reports, transcripts, data briefings — into tight, standalone executive summaries for leadership or decision-making audiences. The output can be read in under two minutes and stands alone without the source.
-
 > **Scope:** Produces prose and Markdown only. Does not write code, scripts, or formulas.
 
 ---
@@ -15,18 +13,9 @@ This skill distills long source material — documents, reports, transcripts, da
 
 An executive summary is written for a specific reader with a specific need. Before drafting, establish two things:
 
-**Who is reading this?**
-Ask the user if they have not specified. The answer shapes tone, level of detail, and what counts as essential:
-- Senior leadership (need: orient quickly, understand stakes, make a call)
-- Peer colleagues (need: understand conclusions, check their own understanding)
-- External stakeholders (need: see the key points without internal context)
+**Who is reading this?** Ask if not specified — senior leadership, peer colleagues, or external stakeholders. The answer shapes tone and detail level.
 
-**What do you need the reader to do?**
-Every executive summary should leave the reader knowing what to do next. Ask if not clear from the source:
-- Approve or reject something?
-- Be informed and take no action?
-- Prepare for a conversation or meeting?
-- Act on a recommendation?
+**What do you need the reader to do?** Ask if not clear — approve/reject, be informed, prepare for a discussion, or act on a recommendation.
 
 If both are clear from context, proceed without asking.
 
@@ -34,19 +23,15 @@ If both are clear from context, proceed without asking.
 
 ## Reading the Source Material
 
-Work through the source in a single pass, tagging:
+Work through the source in a single pass, tagging content into five categories:
 
-**The core situation** — What is this document about? What is the problem, opportunity, or question it addresses?
+1. **Core situation** — the problem, opportunity, or question
+2. **Key findings or conclusions** — what the source establishes as true or resolved
+3. **Recommendations or decisions** — proposed or taken course of action
+4. **Reader action** — what the reader needs to do, approve, or know
+5. **Risks, caveats, or open questions** — anything that could change the picture
 
-**Key findings or conclusions** — What does the source establish as true, confirmed, or resolved? For data reports: what the numbers show. For proposals: what was recommended. For meeting transcripts: what was decided.
-
-**Recommendations or decisions** — What course of action is proposed or taken? If there are multiple options, which one is preferred and why?
-
-**What the reader needs to know or do** — The ask. What action, approval, or awareness is this summary driving toward?
-
-**Critical risks, caveats, or open questions** — Anything that could change the picture. Flag these even if they are buried in the source.
-
-Discard everything that does not bear on one of these five categories. Background context earns its place only if the reader cannot understand the situation without it.
+Discard everything outside these categories. Background context earns its place only if the reader cannot understand the situation without it.
 
 ---
 
@@ -109,15 +94,9 @@ What the reader needs to do, by when, and who else is involved. Write as a short
 
 ## Length and Tone
 
-**Target length:** 200–400 words for the body. If it runs longer, cut — every sentence that could be removed should be.
-
-**Tone:** Clear, direct, confident. Write for a reader who is busy and senior. Avoid:
-- Passive voice when the actor matters ("The team decided" not "It was decided")
-- Hedging language that buries the point ("It may be worth considering...")
-- Jargon without definition
-- Preamble before the finding ("This document describes the results of a study that examined...")
-
-**Tense:** Use present tense for current state and recommendations. Use past tense for completed events.
+- **Target:** 200–400 words for the body — if it runs longer, cut
+- **Voice:** Clear, direct, confident — active voice, present tense for current state, past tense for events
+- **Cut:** hedging, preamble, undefined jargon, passive constructions where the actor matters
 
 ---
 

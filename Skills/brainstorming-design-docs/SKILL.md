@@ -13,15 +13,11 @@ This skill runs a structured dialogue that takes a raw idea and builds it into a
 
 ## Core Principles
 
-**Ask one question at a time.** Asking multiple questions at once creates cognitive load and produces vague answers. Work through clarifications sequentially — each answer shapes the next question.
-
-**Prefer multiple choice.** When asking clarifying questions, offer 2–4 options where possible. "Which of these best describes your goal: (a) reduce manual work, (b) improve visibility for stakeholders, or (c) standardize how teams do X?" gets a better answer than "what is your goal?"
-
-**Propose alternatives before committing.** Never design toward a single solution from the start. Generate two or three distinct approaches, present their trade-offs, and recommend one — then get buy-in before building out the detail.
-
-**Cut scope ruthlessly.** Only include what the idea actually needs right now. If a feature, section, or requirement sounds like "it would also be nice to..." it belongs in an open questions section, not in the design.
-
-**Validate incrementally.** Present the design one section at a time and confirm each before moving to the next. A surprise at section six wastes the work of sections two through five.
+- **Ask one question at a time.** Work through clarifications sequentially — each answer shapes the next question.
+- **Prefer multiple choice.** Offer 2–4 options where possible rather than open-ended questions.
+- **Propose alternatives before committing.** Generate two or three approaches with trade-offs, recommend one, get buy-in.
+- **Cut scope ruthlessly.** Only what the idea needs now. "Nice to have" goes in Open Questions.
+- **Validate incrementally.** Present one section at a time, confirm each before moving on.
 
 ---
 
@@ -68,37 +64,18 @@ Work through the design document one section at a time. After completing each se
 
 Scale section depth to complexity. Straightforward items get two to four sentences. Nuanced topics that require decision-making or involve risk get more detail. Never pad a simple section to look thorough.
 
-**Standard sections and their purpose:**
+**Standard sections** (see [sections-reference.md](sections-reference.md) for detailed guidance on each):
 
-**Executive Summary**
-One paragraph. States the problem, the proposed solution, and the expected outcome. Written last but presented first in the document — draft a placeholder and return to finalize it once the full design is clear.
-
-**Problem or Opportunity**
-Describes the current state: what is happening today, why it is a problem or a missed opportunity, and what the cost of inaction is. Grounded in specifics, not generalities.
-
-**Goals and Success Criteria**
-Distinguishes between goals (directional statements of intent) and success criteria (observable or measurable conditions that confirm a goal was met). Pairs each goal with at least one criterion. Cuts goals that cannot be paired with a criterion — they are wishes, not goals.
-
-**Proposed Approach**
-The selected approach from Phase 2, elaborated in detail. Covers the key components, how they interact, what happens at each stage, and how the approach addresses the problem.
-
-**Alternatives Considered**
-A brief record of the approaches from Phase 2 that were not selected, and why they were set aside. Keeps the document honest and prevents second-guessing later.
-
-**Scope**
-Two explicit lists: what is in scope, and what is out of scope. Out-of-scope items are as important as in-scope ones — capturing what this does NOT do prevents scope creep and sets expectations.
-
-**Stakeholders and Dependencies**
-Who is involved, who is affected, and who needs to approve or be informed. Identifies any external teams, systems, or decisions this initiative depends on.
-
-**Risks and Mitigations**
-The two or three most significant risks, each paired with a mitigation. Risks without mitigations are concerns, not risk entries — if there is no mitigation, note it as an open question instead.
-
-**Timeline and Phases**
-A phased breakdown of how this will be executed, with approximate milestones. Does not have to be a precise schedule — directional phases with relative timing ("Phase 1: 4–6 weeks") are enough at the design stage.
-
-**Open Questions and Decisions Needed**
-Any unresolved questions, deferred decisions, or items that require input from specific people before implementation can begin. Each entry should identify who needs to answer it.
+1. Executive Summary — one paragraph; written last, presented first
+2. Problem or Opportunity — current state, why it matters, cost of inaction
+3. Goals and Success Criteria — pair each goal with an observable criterion
+4. Proposed Approach — selected approach from Phase 2, elaborated
+5. Alternatives Considered — approaches not selected and why
+6. Scope — explicit in-scope and out-of-scope lists
+7. Stakeholders and Dependencies — who is involved, affected, or blocking
+8. Risks and Mitigations — top risks paired with mitigations
+9. Timeline and Phases — phased breakdown with approximate milestones
+10. Open Questions and Decisions Needed — who needs to answer what
 
 ---
 
@@ -145,16 +122,3 @@ Not every design needs every section. Apply judgment:
 
 If none of the above fits, use the full standard order.
 
----
-
-## Anti-Patterns to Avoid
-
-**Solving before understanding.** Do not propose approaches or draft any section until Phase 1 is complete and the summary is confirmed.
-
-**Presenting a single approach.** Even when one solution is obvious, propose at least two alternatives. The comparison itself is valuable — it shows the decision was considered.
-
-**Bundling questions.** "What is the problem, who is the audience, and what are the constraints?" is three questions. Ask one. Get the answer. Then ask the next.
-
-**Vague success criteria.** "Improve collaboration" is not a success criterion. "Teams can find relevant documents without asking in chat" is. Push until each goal has a concrete, observable test.
-
-**Designing for every possible future.** Only document what the current initiative will actually do. Features that might be added later go in Open Questions, not in Scope.
