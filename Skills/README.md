@@ -14,6 +14,7 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | [`copy-editing`](./copy-editing/) | Runs a structured copy-editing workflow |
 | [`decision-log`](./decision-log/) | Extracts structured decision records |
 | [`deck-assembly`](./deck-assembly/) | Assembles presentations from existing slide content |
+| [`design-direction`](./design-direction/) | Produces distinctive, professionally justified visual direction |
 | [`executive-summary`](./executive-summary/) | Produces concise leadership summaries |
 | [`faq-building`](./faq-building/) | Builds structured FAQ content |
 | [`find-expert`](./find-expert/) | Matches knowledge gaps to subject-matter experts |
