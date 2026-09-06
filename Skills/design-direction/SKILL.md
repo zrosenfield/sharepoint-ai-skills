@@ -1,87 +1,92 @@
 ---
 name: design-direction
-description: Produces visually distinctive, professional design instead of generic AI defaults. Use this whenever generating any visual artifact — an HTML page, dashboard, report, deck, slide, form, email template, or app UI — even when the user's prompt is short and gives no design guidance. Especially use it when the user says a previous design looked bland, generic, plain, templated, or "AI-generated," or when multiple artifacts in a set are coming out with the same layout.
+description: Creates distinctive, intentional visual designs for interfaces, websites, dashboards, reports, slides, forms, email templates, and other visual artifacts. Use whenever Terra, Sol, or another AI agent designs or redesigns a visual surface, especially when the brief is sparse, prior output feels generic or AI-generated, or a set of artifacts risks repeating the same layout. Establishes a brief-specific design logic without turning it into a reusable visual template.
 ---
 
 # Design Direction
 
-Language models are mode-seekers. At each decision they emit the most probable choice, which is why unguided output converges on the same page: same layout, same palette, same rhythm. This skill does not tell you what to make. It changes how you decide, so that two runs on the same brief produce genuinely different work that is defensible in either case.
+Act as a design lead, not a theme picker. Make every design feel specific to its subject, audience, content, and constraints. Distinctive does not mean loud. It means coherent, purposeful, and difficult to reuse unchanged for an unrelated brief.
 
-## Step 1 — Read the brief
+Build and render the requested artifact with the runtime's available tools. Do not return implementation code unless the user explicitly asks for it. The deliverable is the working artifact, not a design plan, token list, or code sample.
 
-Establish three things before anything else:
+## 1. Read the brief and the content
 
-- **Surface and constraints.** What is it rendered in, and what must it survive? Honor any platform rules already in effect.
-- **Audience and stakes.** An internal dashboard, a customer-facing pitch, and a conference demo have different floors.
-- **Mandated system.** If a brand or design system applies, it supplies color and component vocabulary. Everything below still governs composition, hierarchy, density, motif, and rhythm — a design system constrains the palette, not the imagination.
+Before building, identify:
 
-## Step 2 — Source entropy from outside the model
+- the surface, environment, and technical constraints
+- the audience, stakes, and primary action or takeaway
+- the content hierarchy, density, sequence, and repeated structures
+- the subject's own visual vocabulary, materials, language, and tensions
+- any existing brand requirements or surrounding product conventions
 
-You cannot choose randomly; you can only predict. So take variation from outside yourself.
+If the brief is incomplete, infer a sensible direction from the available content. Ask only when a missing decision would materially change the outcome.
 
-Use a varying value already available in the environment, such as a timestamp to the millisecond, an item ID, or a file hash.
+## 2. Explore before committing
 
-Read that value as raw material. Look for subpatterns, runs, numeric relationships, anything suggestive. Map what you find onto these axes:
+Generate three genuinely different design directions internally. Vary the underlying logic, not just colors or fonts. Consider different approaches to hierarchy, composition, rhythm, density, typography, imagery, interaction, and motion.
 
-- Compositional structure — how the space is divided and where the eye enters
-- Typographic voice — scale relationships, weight contrast, character
-- Color logic — the rule generating the palette, not the palette itself
-- Density and rhythm — where it compresses, where it breathes
-- Depth and material — flat, layered, lit, tactile
-- Motif — one recurring device that ties the piece together
+Use runtime-generated entropy when useful to avoid repeating familiar solutions, but do not let randomness override the brief. Every major choice must be defensible from the content or context.
 
-Produce **three candidate directions**, one sentence each. Do not reveal the random value in the output; it is fuel, not content.
+Choose the strongest direction and commit to it. Do not present a style menu unless the user asks for options.
 
-## Step 3 — The justification gate
+## 3. Create a temporary direction contract
 
-For each candidate, state in one sentence why this direction serves *this* content and *this* audience.
+Define a short, brief-specific design logic covering:
 
-A direction justified by the subject matter reads as intentional. A direction justified only by being unusual reads as a gimmick. This is the difference between bold and unprofessional, and it is the only filter you need — discard any candidate that fails it, and do not soften a candidate to make it pass.
+- **Hierarchy:** what dominates, supports, and recedes
+- **Composition:** how the content shape determines the layout
+- **Typography:** the intended voice, contrast, and reading rhythm
+- **Color and material:** a restrained palette and surface treatment tied to the subject
+- **Motif:** one recognizable idea used selectively
+- **Behavior:** interaction and motion that clarify state, sequence, or cause
 
-Pick one survivor. Write a **direction statement**: two or three sentences naming the direction, its rationale, and the one thing it refuses to do. Everything downstream answers to this statement.
+Treat this as a temporary decision system for the current artifact, not a reusable template.
 
-## Step 4 — Build against the direction
+## 4. Compose from content
 
-The direction statement is the constraint. Every visible decision should be traceable to it. When you feel the pull toward a familiar default — the centered hero, the three-column feature row, the gradient that means nothing — that pull is the mode you are trying to escape. Resolve it from the direction instead.
+Let the content determine the form. Do not begin with a default hero, card grid, dashboard shell, bento layout, or repeated section pattern.
 
-**The direction is an influence, not a stencil.** For multi-artifact sets — decks, page series, form sequences — the direction holds constant while composition varies with what each piece actually contains. If every slide has the same skeleton, the direction has become a template and the work has failed regardless of how good the skeleton is.
+Use containers only when they express real grouping, state, or interaction. Allow related screens, pages, or slides to share a visual language without forcing them into the same composition.
 
-Use real content. Placeholder text hides every hierarchy problem you have.
+Create emphasis through scale, spacing, alignment, contrast, pacing, and selective detail. Prefer a few strong decisions over many decorative ones.
 
-## Step 5 — Critique with fresh eyes
+Use imagery, illustration, diagrams, or generated visuals when they carry meaning or establish the intended atmosphere. Do not use decoration as a substitute for composition.
 
-You cannot review your own work, because you can see your reasons for it. Get an independent read.
+## 5. Avoid generic AI design
 
-Render the artifact and hand a **screenshot only** — no code, no rationale, no prior critiques — to a fresh context. Where a subagent or second model is available, use the strongest one for this; the critic makes few tokens' worth of judgment calls and taste scales with capability. Where none is available, open a clean pass, look only at the rendered output, and do not reread the source.
+Reject outputs that could be swapped into an unrelated product with only a title change. Avoid habitual purple-blue gradients, excessive glow, floating glass panels, ornamental grids, random pills, uniform rounded cards, icon badges for every heading, fake data, empty hero space, and decorative motion.
 
-The critic returns two independent scores:
+Do not imitate a named design style mechanically. Borrow principles only when they support the brief.
 
-- **Fidelity** — how completely does this execute its stated direction, compared to how a top studio would execute the same direction? Judge against the direction it committed to, never against a general notion of good design.
-- **Floor** — does it clear every non-negotiable below?
+## 6. Build the real artifact
 
-Where reference artifacts exist, prefer ranking over scoring: put the work among three or four real professional examples and ask which is which. Ranking is concrete; absolute scores drift and inflate.
+Use the runtime to create, execute, and render the artifact. Preserve required functionality and content. When redesigning, improve the experience rather than merely reskinning it.
 
-Feedback must be specific and few. **Cap at two iterations** — an uncapped loop always finds another gap and will burn tokens indefinitely.
+Meet the quality floor:
 
-## Step 6 — Subtract
+- readable hierarchy and clear primary action
+- intentional responsive behavior and no accidental overflow
+- accessible contrast, focus states, labels, and interaction targets
+- concise interface writing without filler or invented claims
+- motion that is restrained and respects reduced-motion settings
+- complete states for the experience being shown
 
-You add readily and remove almost never, which is itself a tell. Before delivering, list everything that could be removed without loss: redundant labels, containers holding one thing, glows and gradients doing no work, explanatory text the visual already says, ornament that survived only because it was already there.
+## 7. Critique the render
 
-Remove it. Restraint is the cheapest thing that reads as expensive.
+Inspect the rendered result or screenshot, preferably in a fresh critic context. Evaluate the artifact itself rather than the effort or implementation.
 
-## The floor
+Ask:
 
-These are non-negotiable at any stakes. They are stated as prohibitions on purpose — they rule out failure without dictating an outcome:
+- Is the primary idea obvious at first glance?
+- Does the composition follow the content, or fall back to a familiar template?
+- Is the design specific to this brief?
+- Is anything competing with the main job?
+- Does the artifact feel finished at its intended size?
 
-- Text does not fall below WCAG AA contrast, and body copy does not fall below comfortable reading size
-- No lorem ipsum, no placeholder names, no invented statistics presented as real
-- Nothing decorative that reduces comprehension of the thing it decorates
-- Data is legible before it is beautiful: no chart that requires effort to read a value
-- No element survives that cannot answer why it is there
-- The artifact degrades gracefully — content remains reachable when enhancement fails
+Make at most two critique passes. In each pass, fix only the one or two changes with the greatest effect.
 
-## Known defaults
+## 8. Subtract and deliver
 
-Purple-to-blue gradients, glassmorphic cards on dark grounds, emoji as iconography, three evenly weighted feature columns, centered hero with a rounded button, generic stock-abstract shapes.
+Remove anything that does not improve meaning, hierarchy, usability, or atmosphere. Challenge every extra container, label, divider, shadow, gradient, border, badge, icon, and repeated treatment.
 
-These are not banned because they are ugly. They are the highest-probability tokens, so their appearance is evidence that you took the predictable path rather than executing your direction. Treat each one as a prompt to check your work — if it genuinely follows from the direction statement, keep it and be able to say why.
+Deliver the finished artifact and a concise note describing the central design idea and any important constraints. Do not expose internal exploration, entropy, critique, or code unless requested.
