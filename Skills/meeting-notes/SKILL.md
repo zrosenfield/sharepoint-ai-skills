@@ -23,7 +23,7 @@ Ask: "This transcript uses generic speaker labels. Can you tell me who each spea
 If the user can only identify some speakers, proceed with those and label unresolved speakers as "Unidentified participant" in the notes.
 
 **Auto-captioning artifacts**
-Auto-generated transcripts often contain: repeated words, false starts ("I — I think we should"), filler words ("um", "uh", "like", "you know"), and occasional word substitutions from mishearing. Silently clean these when extracting meaning. Do not preserve transcription artifacts in the notes unless the exact wording is significant.
+Silently clean transcription artifacts (filler words, false starts, repetitions, mishearings) when extracting meaning. Do not preserve them in the notes unless the exact wording is significant.
 
 **Missing timestamps or metadata**
 If the transcript has no timestamps, date, or attendee list, note the gaps at the top of the output and ask the user to fill them in before publishing.
@@ -37,128 +37,30 @@ Transcripts capture everything, including off-topic exchanges. Do not include sm
 
 Work through the transcript in a single pass, tagging content into five categories:
 
-**Decisions** — any statement where the group agrees on a course of action, selects an option, or commits to a direction. Indicators: "we decided", "we're going to go with", "let's do", "agreed", "that's what we'll do", "confirmed".
+**Decisions** — any statement where the group agrees on a course of action, selects an option, or commits to a direction.
 
-**Action items** — any commitment by a named person to do something by a certain time. Indicators: "I'll", "can you", "who's going to", "by [date]", "let's make sure [person]", "take an action". Capture the owner, the task, and the deadline. If no deadline was stated, mark it as "No deadline set".
+**Action items** — any commitment by a named person to do something by a certain time. Capture the owner, the task, and the deadline. If no deadline was stated, mark it as "No deadline set".
 
-**Discussion threads** — the substantive topics the group worked through. Group related exchanges together even if they were not contiguous in the meeting. A topic that was raised, dropped, and returned to later is one thread, not two.
+**Discussion threads** — the substantive topics the group worked through. Group related exchanges together even if they were not contiguous in the meeting — a topic raised, dropped, and returned to later is one thread.
 
-**Key quotes** — statements that are particularly clear, significant, or that capture the essence of a position or decision. Preserve these verbatim (cleaned of artifacts). Limit to four or fewer — if everything seems quotable, nothing is.
+**Key quotes** — statements that capture the essence of a position or decision. Preserve verbatim (cleaned of artifacts). Limit to four or fewer.
 
-**Parking lot items** — questions raised but explicitly deferred, topics someone flagged for a future meeting, or issues that could not be resolved in this session.
+**Parking lot items** — questions raised but explicitly deferred, or issues that could not be resolved in this session.
 
 ---
 
 ## Output Structure
 
-Always deliver the notes in this order. Omit a section only if there is genuinely nothing to put in it — do not include empty sections.
+Always deliver the notes in this order. Omit a section only if there is genuinely nothing to put in it — do not include empty sections. See [templates-reference.md](templates-reference.md) for Markdown templates for each section.
 
----
-
-### Meeting header
-
-```
-# [Meeting Title or Topic]
-
-**Date:** [Date]
-**Duration:** [Approximate duration if determinable from transcript]
-**Attendees:** [Names and roles where known]
-**Purpose:** [One sentence: why this meeting was held]
-```
-
-If the transcript does not contain this information, include the header with blank fields marked as "[Not provided — please fill in]".
-
----
-
-### Executive Summary
-
-Two to four sentences capturing the full arc of the meeting: why it was held, what the group worked through, what was resolved, and what remains open. Write this for someone who will not read the rest of the document. It should stand alone.
-
----
-
-### Discussion Threads
-
-One subsection per major topic. Each subsection:
-
-- Opens with a one-sentence framing of what the group was trying to figure out or accomplish on this topic
-- Summarizes the key points raised and any significant disagreements or concerns surfaced
-- Closes with the outcome: resolved (and how), deferred, or still open
-
-Scale depth to significance. A topic that took 25 minutes of substantive back-and-forth deserves a full paragraph. A topic that was covered in two minutes gets two to three sentences.
-
-Use this format:
-
-```
-## Discussion: [Topic Name]
-
-[Framing sentence]
-
-[Summary of discussion — key points, positions, concerns]
-
-**Outcome:** [Resolved / Deferred / Open — and what that means]
-```
-
----
-
-### Decisions
-
-A numbered list. Each decision is a single clear, unambiguous sentence in active voice. Write decisions as statements of fact, not as meeting summaries ("The team will migrate to the new platform in Q3" not "It was discussed that migration might happen").
-
-If a decision was made with conditions or caveats, include those: "The team will migrate to the new platform in Q3, contingent on security review completion by end of July."
-
-```
-## Decisions
-
-1. [Decision stated clearly]
-2. [Decision stated clearly]
-```
-
----
-
-### Action Items
-
-A table with four columns. Every row must have an owner and a task. Deadline and notes are filled in where stated; left blank or flagged otherwise.
-
-```
-## Action Items
-
-| # | Action | Owner | Deadline | Notes |
-|---|--------|-------|----------|-------|
-| 1 | [What needs to happen] | [Name] | [Date or "Not set"] | [Any context] |
-| 2 | ... | ... | ... | ... |
-```
-
-If the same person owns multiple actions, give each its own row. Do not group actions under one owner into a single cell.
-
----
-
-### Key Quotes
-
-Verbatim statements (cleaned of filler) worth preserving. Use these sparingly — only for statements that are unusually clear, represent an important commitment, or capture a significant position.
-
-Format:
-
-```
-## Key Quotes
-
-> "[Quote]" — [Speaker name], [context in a few words if needed]
-```
-
-Omit this section entirely if there are no quotes that genuinely warrant preservation.
-
----
-
-### Next Steps
-
-What happens after this meeting. This is distinct from action items — next steps describe the overall forward motion of the initiative or project, not individual tasks. Write as a short bulleted list.
-
-Include the next meeting date, topic, and expected attendees if mentioned.
-
----
-
-### Parking Lot
-
-Items that were raised but explicitly deferred or that could not be resolved in this session. Format as a bulleted list, each item with the name of the person who raised it if known.
+1. **Meeting header** — title, date, duration, attendees, purpose (mark unknowns as "[Not provided — please fill in]")
+2. **Executive summary** — two to four standalone sentences covering why, what, resolved, and open
+3. **Discussion threads** — one subsection per topic: framing sentence, summary, outcome (Resolved / Deferred / Open). Scale depth to significance.
+4. **Decisions** — numbered list of clear, unambiguous statements in active voice
+5. **Action items** — table with columns: #, Action, Owner, Deadline, Notes. One row per action, even for same owner.
+6. **Key quotes** — verbatim (cleaned), sparingly. Omit if none warrant preservation.
+7. **Next steps** — overall forward motion, not individual tasks
+8. **Parking lot** — deferred items with the person who raised them
 
 ---
 
