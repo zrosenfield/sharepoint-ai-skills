@@ -7,13 +7,24 @@
 
 [section: setup]
 
-Verify the "Q4 Planning" library exists with a "Strategy Docs" folder
-containing four files: market-analysis.docx, product-priorities.docx,
-sales-forecast.xlsx, budget-request.docx. This demo is read-only.
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Q4 Planning" if it doesn't already exist. Then create a folder called "Strategy Docs" inside it.]
+
+[wait]
+
+[assert: ${LIBRARY}]
 
 [navigate: ${LIBRARY}]
 
-[open-chat]
+[upload-library: tools/scripts/05-summarize-folder/assets/market-analysis.docx]
+[upload-library: tools/scripts/05-summarize-folder/assets/product-priorities.docx]
+[upload-library: tools/scripts/05-summarize-folder/assets/sales-forecast.xlsx]
+[upload-library: tools/scripts/05-summarize-folder/assets/budget-request.docx]
 
 [new-chat]
 

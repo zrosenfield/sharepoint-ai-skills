@@ -7,12 +7,22 @@
 
 [section: setup]
 
-Verify the "Contracts" library exists with two files: Northwind-MSA-v1.docx
-and Northwind-MSA-v2.docx. This demo is read-only.
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Contracts" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
 
 [navigate: ${LIBRARY}]
 
-[open-chat]
+[upload-library: tools/scripts/04-comparison-report/assets/Northwind-MSA-v1.docx]
+[upload-library: tools/scripts/04-comparison-report/assets/Northwind-MSA-v2.docx]
 
 [new-chat]
 

@@ -1,0 +1,199 @@
+# Expense Reports
+# Shows how the AI extracts structured data from a pile of messy invoices, learns your fiscal calendar from a single instruction, and generates a quarter-close HTML expense report — then converts it to a PowerPoint for the exec team.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/CONFIGURE_ME/]
+[var: INVOICES = ${SITE}Invoices/]
+[var: EXPENSES = ${SITE}Expenses/]
+[var: REPORTS = ${SITE}Reports/]
+[var: AGENT_ASSETS = ${SITE}AgentAssets/]
+[var: SKILLS = ${SITE}AgentAssets/Skills/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[login-if-needed]
+
+[enable-site-feature: Agent Assets | 9E14D30C-1E0D-4C8C-8DCB-A8D29F7D4C15]
+
+[navigate: ${AGENT_ASSETS}]
+
+[upload-library: tools/scripts/20-expense-reports/assets/SHAREPOINT.md]
+
+[upload-skill: Skills/quarterly-expense-report | Skills]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Invoices" on this site if it doesn't already exist.]
+
+[wait]
+
+[navigate: ${INVOICES}]
+
+[upload-library: tools/scripts/20-expense-reports/assets/INVOICE DETAILS Invoice # INV-2025-002 Vendor BetaCorp Indus.pdf]
+[upload-library: tools/scripts/20-expense-reports/assets/INVOICE DETAILS Invoice # INV-2025-003 Vendor Delta Systems.pdf]
+[upload-library: tools/scripts/20-expense-reports/assets/Invoice for Epsilon charges.docx]
+[upload-library: tools/scripts/20-expense-reports/assets/Invoice_LambdaTech_Final_vFF.docx]
+[upload-library: tools/scripts/20-expense-reports/assets/Screen shot 2025-11-04-23 01.25.05 AM.png]
+[upload-library: tools/scripts/20-expense-reports/assets/Screenshot 2025-11-11 171619.png]
+[upload-library: tools/scripts/20-expense-reports/assets/Screenshot 2025-NOTE 11-05 141308.png]
+[upload-library: tools/scripts/20-expense-reports/assets/Sigma receipt_expenses.docx]
+[upload-library: tools/scripts/20-expense-reports/assets/ThetaExpense_USE THIS ONE_final version.docx]
+[upload-library: tools/scripts/20-expense-reports/assets/Zeta_Final Invoice_details_finance review complete.docx]
+
+[assert: ${INVOICES}Invoice_LambdaTech_Final_vFF.docx]
+
+Confirm the quarterly-expense-report skill is installed in AgentAssets/Skills, the Invoices library has ten files visible, and the chat pane shows a fresh session.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${INVOICES}]
+
+[open-chat]
+
+[new-chat]
+
+Ten invoice files from the past quarter. A mix of PDFs, Word docs, and screenshots. Filenames like "USE THIS ONE_final version" and "Screen shot 2025-NOTE." This is what real invoice management looks like. The AI is going to read every single one.
+
+[pause]
+
+[prompt: Extract Vendor Name (single line of text), Transaction Date (date), and Total Spend (currency)]
+
+[wait]
+
+[assert: ${EXPENSES}]
+
+It read through all ten files regardless of format or filename. PDFs, docx, images — it handled them all. Open the Expenses library.
+
+[pause]
+
+[navigate: ${EXPENSES}]
+
+Point out the three metadata columns: Vendor Name, Transaction Date, Total Spend. Every row is filled in. The original files are still here — nothing was moved or deleted. The chaos in the Invoices library is now clean, queryable data in Expenses.
+
+[pause]
+
+--- Scene 2: Teaching the Agent ---
+
+Now we're going to tell the AI something about how this team works — and watch it write that into its own memory.
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Please remember newly generated Reports should be saved to a document library called Reports on this site — create it if it doesn't exist yet. Second, our fiscal year starts in July.]
+
+[wait]
+
+It updated the SHAREPOINT.md file in AgentAssets. Navigate there and open the file.
+
+[pause]
+
+[navigate: ${AGENT_ASSETS}]
+
+Point out the two new facts in SHAREPOINT.md — the Reports library and the July fiscal year start. This isn't a one-time chat response. The next time any conversation opens on this site, those facts are already loaded. The agent doesn't need to be told again.
+
+[pause]
+
+--- Scene 3: Quarterly Report ---
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Generate our Q1 financial summary as an interactive HTML report.]
+
+[wait]
+
+It knows Q1 means July through September because the fiscal year starts in July — that's in the context file now. It reads the Expenses library, runs the Quarterly Expense Report skill, and saves the output to the Reports library. Open the file it produced.
+
+[pause]
+
+[navigate: ${REPORTS}]
+
+Walk through the report. Summary bar at the top — total spend, vendor count, transaction count, largest vendor. Spend-by-vendor chart showing who got the most budget this quarter. Monthly breakdown showing how spend was distributed across July, August, and September. Transaction table at the bottom with every line item. All calculated from the metadata the AI extracted twenty minutes ago from those ten chaotic invoice files.
+
+[pause]
+
+--- Scene 4: Executive Slide ---
+
+[prompt: Convert this report into a PowerPoint presentation for the exec team.]
+
+[wait]
+
+Same data, exec-ready format. Key figures, top vendors, and any notable spend patterns — composed as a slide deck. One quarter, three outputs: structured library, interactive HTML, executive presentation.
+
+[pause]
+
+[screenshot: tools/screenshots/20-expense-reports-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the Expenses document library from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Expenses library in the browser dialog]
+
+[new-chat]
+
+[prompt: Delete the Invoices document library from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Invoices library in the browser dialog]
+
+[new-chat]
+
+[prompt: Delete the Reports document library from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Reports library in the browser dialog]
+
+[navigate: ${AGENT_ASSETS}]
+
+[upload-library: tools/scripts/20-expense-reports/assets/SHAREPOINT.md]
+
+[new-chat]
+
+# ─── Prompt backup (copy/paste if automation fails) ──────────────────────────
+#
+# SETUP — Invoices library
+#   Create a document library called "Invoices" on this site if it doesn't already exist.
+#
+# SCENE 1 — Extract to Expenses
+#   Create a document library called "Expenses" with three additional columns: Vendor Name (single line of text), Transaction Date (date), and Total Spend (currency). Then read every file in the Invoices library, extract the vendor name, transaction date, and total amount from each one, and add an item to the Expenses library for each invoice with those fields filled in.
+#
+# SCENE 2 — Remember
+#   Please update the site context to remember two things: first, expense reports and financial summaries should always be saved to a document library called Reports on this site — create it if it doesn't exist yet. Second, our fiscal year starts in July.
+#
+# SCENE 3 — Q1 Report
+#   Generate our Q1 financial summary as an interactive HTML report.
+#
+# SCENE 4 — PPT
+#   Convert this report into a PowerPoint presentation for the exec team.
+#
+# RESET
+#   Delete the Expenses document library from this site.
+#   Delete the Invoices document library from this site.
+#   Delete the Reports document library from this site.
+#
+# ─────────────────────────────────────────────────────────────────────────────

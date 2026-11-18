@@ -137,6 +137,17 @@ Same as `[pause]` but the label appears in the step list shown before the demo s
 
 ---
 
+### Select items in a list or library
+
+```
+[select: 1]
+[select: 1-3]
+[select: all]
+```
+Selects items in the currently visible SharePoint list or document library by their visible position (1-indexed). `1-3` selects the first three items; `all` clicks the Select All checkbox in the header. Use before prompts that operate on selected files, or to set up a demo state.
+
+---
+
 ### File upload
 
 ```
@@ -161,6 +172,33 @@ Shows a prominent warning box in the terminal and waits for the presenter to com
 [screenshot: tools/screenshots/my-demo-result.png]
 ```
 Saves a screenshot of the current browser state. Use at the end of key moments. Screenshots are excluded from git automatically.
+
+---
+
+### Clip boundaries (for video production)
+
+```
+[clip]
+```
+Marks a split point for video production. Has no effect during a live demo run. When the runner is invoked with `--clips`, it stops and restarts the OBS recording at each `[clip]` marker, producing one video file per segment. Use `[clip]` between major demo beats that you expect to edit into separate short-form clips.
+
+---
+
+### Button clicking
+
+```
+[click-button: Save]
+```
+Clicks a button by its visible label. The runner waits 2 seconds before clicking (giving the UI time to render), searches the Copilot chat frame first and then the full page, and logs a warning rather than failing if the button is not found. Use this when Copilot presents an action button (e.g. "Save", "Create", "Accept") that should be clicked as part of the flow.
+
+---
+
+### Following a link from a chat response
+
+```
+[follow-chat-link]
+```
+Navigates to the most relevant SharePoint link visible in the current Copilot response. The runner prefers `.docx`/`.pptx` document links over plain page links, and skips data files (`.xlsx`, `.csv`, `.json`), citation-style links, and list-item form URLs. Use this after a prompt that generates a document — it clicks through to the result without needing to hard-code a URL.
 
 ---
 

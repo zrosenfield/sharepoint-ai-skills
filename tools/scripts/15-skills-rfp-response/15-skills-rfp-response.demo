@@ -1,0 +1,198 @@
+# Skills Lifecycle: RFP Response Drafter
+# A skill that searches a document library, synthesizes institutional knowledge, and cites its sources.
+
+[var: SITE = https://contoso.sharepoint.com/sites/demo/]
+[var: ARCHIVE = ${SITE}Proposal%20Archive/]
+[var: LIST = ${SITE}Lists/RFP%20Questions/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Proposal Archive" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${ARCHIVE}]
+
+[navigate: ${ARCHIVE}]
+
+Uploading the five past proposal documents.
+
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Cloud Migration Proposal - Contoso 2024.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Data Analytics Platform - Fabrikam 2024.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Enterprise Support Services - Woodgrove 2024.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Security and Compliance Overview - Northwind 2025.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Professional Services and Training - Adatum 2025.docx]
+
+[navigate: ${SITE}]
+
+[new-chat]
+
+[prompt: Delete the list called "RFP Questions" if it exists.]
+
+[wait]
+
+[sleep: 3s]
+
+[new-chat]
+
+[prompt: Create a new SharePoint list called "RFP Questions" with these columns: Title (single line of text, the question label — built-in Title column), Full Question (Multiple lines of text), Category (Choice: Technical, Security, Support, Pricing, Compliance, General), Priority (Choice: Must Answer, Nice to Have), Status (Choice: Open, Drafted, Reviewed, Submitted), Draft Response (Multiple lines of text), Sources Used (Multiple lines of text), Confidence (Single line of text).]
+
+[wait]
+
+[sleep: 5s]
+
+[assert: ${LIST}]
+
+[navigate: ${LIST}]
+
+[new-chat]
+
+[prompt: Add these 5 items to the RFP Questions list: 1. Title: "Cloud Migration Approach" | Full Question: "Describe your methodology for migrating enterprise workloads to Azure, including typical timelines, risk mitigation strategies, and references from similar engagements." | Category: Technical | Priority: Must Answer | Status: Open. 2. Title: "Data Security Standards" | Full Question: "Detail your security certifications, data encryption standards, and approach to zero-trust architecture. Include your incident response procedures and most recent third-party audit results." | Category: Security | Priority: Must Answer | Status: Open. 3. Title: "Support Model & SLAs" | Full Question: "What support tiers do you offer? Provide SLA response times, escalation procedures, and customer satisfaction metrics for your enterprise support program." | Category: Support | Priority: Must Answer | Status: Open. 4. Title: "Training & Change Management" | Full Question: "How do you ensure successful adoption post-implementation? Describe your training programs, change management methodology, and knowledge transfer approach." | Category: General | Priority: Nice to Have | Status: Open. 5. Title: "Analytics & Reporting" | Full Question: "Describe your data analytics capabilities, including AI/ML integration, dashboard options, and how you handle data governance and compliance for reporting workflows." | Category: Technical | Priority: Must Answer | Status: Open.]
+
+[wait]
+
+[new-chat]
+
+Confirm 5 RFP questions are visible with Status: Open and Draft Response column empty.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIST}]
+
+Sales gets an RFP. Five questions. Answering each one normally means digging
+through old proposals, copying pieces, rewriting for the new client. Hours of
+work. Watch what happens when we turn institutional knowledge into a skill.
+
+[pause]
+
+[open-chat]
+
+[prompt: Create a skill called "Draft RFP Response" that takes an RFP question from this list, searches our Proposal Archive library for relevant past proposals, and drafts a response. The response should pull specific facts, metrics, and capabilities from the source documents. In the output, list which documents were used as sources. Write the response in a professional proposal tone, not a casual summary.]
+
+[wait]
+
+Skill created. Let's start with a question that has strong source material.
+
+[pause]
+
+[prompt: Draft a response to the Cloud Migration Approach question]
+
+[wait]
+
+Look at what it produced. A professional 2-3 paragraph response, specific
+numbers from real past proposals — the 12-16 week timeline, the Woodgrove Bank
+reference, the 6-phase methodology. And at the bottom: Sources. It's not
+generating from thin air. It's pulling from your actual archive.
+
+[pause]
+
+Let's try one that has to pull from multiple documents at once.
+
+[prompt: Draft a response to the Data Security Standards question]
+
+[wait]
+
+This one drew from the Northwind security doc and the Fabrikam analytics doc —
+two different proposals, synthesized into one coherent answer. Zero-trust
+architecture, AES-256 encryption, SOC 2 Type II. Real specifics, real citations.
+
+[pause]
+
+Now let's do all the Must Answer questions at once.
+
+[prompt: Draft responses for all the Must Answer questions and save the drafts to each item]
+
+[wait]
+
+Three questions drafted. Draft Response column populated. Sources Used filled
+in. Status updated to Drafted. That used to take half a day. We just did it in
+under a minute.
+
+[pause]
+
+Now I want to add a trust layer. The team needs to know when the AI is
+confident and when something needs human review.
+
+[prompt: Update my Draft RFP Response skill to also include a Confidence score — High if the answer is well-supported by multiple source documents, Medium if it draws from only one source or the source is a partial match, and Low if the skill couldn't find strong supporting content and had to generalize. Save the confidence score to the Confidence column. For any Low confidence response, add a note at the top: "Needs human review — limited source material found."]
+
+[wait]
+
+[prompt: Re-draft all the open RFP questions with the updated skill]
+
+[wait]
+
+Same quality responses — but now each one has a confidence score. Most are
+High or Medium because we have strong source material. If a question didn't
+have backing in the archive, it would show Low and flag itself for review.
+
+That's the trust layer. The skill searches your knowledge, cites its sources,
+and tells you when it's not sure. That's how you put AI into a real workflow.
+
+[pause]
+
+[screenshot: tools/screenshots/15-skills-rfp-response-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the skill called "Draft RFP Response" if it exists.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Delete the list called "RFP Questions" if it exists.]
+
+[wait]
+
+[sleep: 3s]
+
+[new-chat]
+
+[prompt: Create a new SharePoint list called "RFP Questions" with these columns: Title (single line of text, the question label — built-in Title column), Full Question (Multiple lines of text), Category (Choice: Technical, Security, Support, Pricing, Compliance, General), Priority (Choice: Must Answer, Nice to Have), Status (Choice: Open, Drafted, Reviewed, Submitted), Draft Response (Multiple lines of text), Sources Used (Multiple lines of text), Confidence (Single line of text).]
+
+[wait]
+
+[sleep: 5s]
+
+[assert: ${LIST}]
+
+[navigate: ${LIST}]
+
+[new-chat]
+
+[prompt: Add these 5 items to the RFP Questions list: 1. Title: "Cloud Migration Approach" | Full Question: "Describe your methodology for migrating enterprise workloads to Azure, including typical timelines, risk mitigation strategies, and references from similar engagements." | Category: Technical | Priority: Must Answer | Status: Open. 2. Title: "Data Security Standards" | Full Question: "Detail your security certifications, data encryption standards, and approach to zero-trust architecture. Include your incident response procedures and most recent third-party audit results." | Category: Security | Priority: Must Answer | Status: Open. 3. Title: "Support Model & SLAs" | Full Question: "What support tiers do you offer? Provide SLA response times, escalation procedures, and customer satisfaction metrics for your enterprise support program." | Category: Support | Priority: Must Answer | Status: Open. 4. Title: "Training & Change Management" | Full Question: "How do you ensure successful adoption post-implementation? Describe your training programs, change management methodology, and knowledge transfer approach." | Category: General | Priority: Nice to Have | Status: Open. 5. Title: "Analytics & Reporting" | Full Question: "Describe your data analytics capabilities, including AI/ML integration, dashboard options, and how you handle data governance and compliance for reporting workflows." | Category: Technical | Priority: Must Answer | Status: Open.]
+
+[wait]
+
+[navigate: ${ARCHIVE}]
+
+[new-chat]
+
+[prompt: Delete all files from this Proposal Archive library — remove all 5 documents.]
+
+[wait]
+
+[sleep: 3s]
+
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Cloud Migration Proposal - Contoso 2024.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Data Analytics Platform - Fabrikam 2024.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Enterprise Support Services - Woodgrove 2024.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Security and Compliance Overview - Northwind 2025.docx]
+[upload-library: tools/scripts/15-skills-rfp-response/assets/Zava Professional Services and Training - Adatum 2025.docx]
+
+[new-chat]

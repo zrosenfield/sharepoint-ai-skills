@@ -2,7 +2,7 @@
 name: site-analyzer
 description: >
   Performs comprehensive analysis of a SharePoint project site by systematically reading ALL lists and ALL documents
-  using KA tools, then producing a tailored, data-driven analysis. Use when asked to analyze a site holistically,
+  using AI in SharePoint tools, then producing a tailored, data-driven analysis. Use when asked to analyze a site holistically,
   create scorecards, audit project health, prepare meeting briefings, assess risks, or perform any exhaustive
   site-wide analysis. Works with any SharePoint team site.
 metadata:

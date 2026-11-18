@@ -7,18 +7,32 @@
 
 [section: setup]
 
-Verify the "Marketing Assets" library exists with 8 files including the
-intentional duplicates. This demo is read-only.
-
-[navigate: ${LIBRARY}]
+[navigate: ${SITE}]
 
 [open-chat]
 
 [new-chat]
 
-Confirm all 8 files are visible: Brand-Guidelines-2024.pdf, Brand Guide
-Final.pdf, brand_guide_BACKUP.pdf, Sales-Deck-Q3.pptx, Q3 Sales Deck -
-FINAL.pptx, Event-Banner.png, event-banner-v2.png, Case-Study-Fabrikam.docx.
+[prompt: Create a document library called "Marketing Assets" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+[upload-library: tools/scripts/06-duplicate-detective/assets/Brand-Guidelines-2024.pdf]
+[upload-library: tools/scripts/06-duplicate-detective/assets/Brand Guide Final.pdf]
+[upload-library: tools/scripts/06-duplicate-detective/assets/brand_guide_BACKUP.pdf]
+[upload-library: tools/scripts/06-duplicate-detective/assets/Sales-Deck-Q3.pptx]
+[upload-library: tools/scripts/06-duplicate-detective/assets/Q3 Sales Deck - FINAL.pptx]
+[upload-library: tools/scripts/06-duplicate-detective/assets/Event-Banner.png]
+[upload-library: tools/scripts/06-duplicate-detective/assets/event-banner-v2.png]
+[upload-library: tools/scripts/06-duplicate-detective/assets/Case-Study-Fabrikam.docx]
+
+[new-chat]
+
+Confirm all 8 files are visible and the chat pane is fresh.
 
 [pause]
 

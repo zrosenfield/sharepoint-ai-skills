@@ -1,4 +1,17 @@
 {
   "typeChunkSize": 5,
-  "typeDelayMs": 10
+  "typeDelayMs": 10,
+
+  "_comment_edge": "Edge launch options — only used when Edge is auto-launched by the tool",
+  "userDataDir": "%TEMP%\\edge-debug",
+  "profileDirectory": "Default",
+  "inPrivate": false,
+  "cdpUrl": "http://localhost:9222",
+
+  "_comment_obs": "OBS WebSocket settings for --record mode (OBS 28+ built-in, port 4455)",
+  "_comment_obs2": "Find the password in OBS → Tools → WebSocket Server Settings",
+  "obsPassword": "",
+
+  "_comment_overrides": "Per-demo overrides — keys match the demo folder name",
+  "overrides": {}
 }

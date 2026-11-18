@@ -7,13 +7,24 @@
 
 [section: setup]
 
-Verify the "Company Policies" library exists with four files:
-Travel-Policy.docx, Expense-Policy.docx, Remote-Work-Policy.docx,
-PTO-Policy.docx. This demo is read-only so no reset is needed between runs.
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Company Policies" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
 
 [navigate: ${LIBRARY}]
 
-[open-chat]
+[upload-library: tools/scripts/03-find-the-needle/assets/Travel-Policy.docx]
+[upload-library: tools/scripts/03-find-the-needle/assets/Expense-Policy.docx]
+[upload-library: tools/scripts/03-find-the-needle/assets/Remote-Work-Policy.docx]
+[upload-library: tools/scripts/03-find-the-needle/assets/PTO-Policy.docx]
 
 [new-chat]
 

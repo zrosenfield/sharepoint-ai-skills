@@ -21,14 +21,16 @@ columns and files are still in place.
 
 [wait]
 
-Now upload 6 sample files to the library — a mix of departments and types.
-Good examples: an HR policy, a marketing proposal, a legal contract, a finance
-report, an NDA, and a salary bands document. Files with real text content work
-best since Copilot reads the actual text to infer the metadata.
+[assert: ${LIBRARY}]
 
 [navigate: ${LIBRARY}]
 
-[confirm: Upload 6 sample files to this library, then press Enter]
+[upload-library: tools/scripts/07-auto-tag-everything/assets/HR-Policy.docx]
+[upload-library: tools/scripts/07-auto-tag-everything/assets/Marketing-Proposal.docx]
+[upload-library: tools/scripts/07-auto-tag-everything/assets/Legal-Contract.docx]
+[upload-library: tools/scripts/07-auto-tag-everything/assets/Finance-Report.docx]
+[upload-library: tools/scripts/07-auto-tag-everything/assets/NDA-Agreement.docx]
+[upload-library: tools/scripts/07-auto-tag-everything/assets/Salary-Bands.docx]
 
 [new-chat]
 

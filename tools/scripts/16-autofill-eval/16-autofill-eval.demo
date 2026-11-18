@@ -1,0 +1,205 @@
+# Autofill Eval Framework
+# Test your autofill prompts against ground truth, score every column, and iterate until accuracy improves.
+
+[var: SITE = https://contoso.sharepoint.com/sites/demo/]
+[var: LIBRARY = ${SITE}Zava%20Test%20Documents/]
+[var: EXPECTED = ${SITE}Lists/Expected%20Outputs/]
+[var: RESULTS = ${SITE}Lists/Eval%20Results/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Zava Test Documents" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+[new-chat]
+
+[prompt: Add these 10 columns to the "Zava Test Documents" library and enable Autofill (AI) on each one with the prompt shown: 1. Document Type (Choice: Contract, Financial Report, Product Brief, RFP Response, Strategic Plan, Policy Document, Technical Spec, Other) — Autofill prompt: "Classify this document into one of these categories: Contract, Financial Report, Product Brief, RFP Response, Strategic Plan, Policy Document, Technical Spec, or Other." 2. Primary Company (Single line of text) — Autofill prompt: "Extract the name of the primary company or organization that authored or owns this document." 3. Counterparty (Single line of text) — Autofill prompt: "If this document involves a second party (client, vendor, partner, or audience), extract their name. If there is no counterparty, respond with 'N/A'." 4. Total Dollar Value (Currency) — Autofill prompt: "Extract the primary dollar amount or total deal/contract/revenue value mentioned in this document. Format as a number without currency symbols. If multiple amounts exist, use the total or largest aggregate figure." 5. Time Period or Term (Single line of text) — Autofill prompt: "Extract the primary time period, contract term, or fiscal period referenced in this document (e.g., '36 months', 'Q1 FY2026', 'FY2026-FY2030')." 6. Key Risk or Limitation (Multiple lines of text) — Autofill prompt: "Identify the single most significant risk, limitation, liability cap, or caveat mentioned in this document. Summarize in one sentence." 7. Target Audience (Single line of text) — Autofill prompt: "Identify the intended audience or recipient role for this document (e.g., 'Board of Directors', 'Procurement Team', 'VP of Knowledge Management', 'Investors')." 8. Compliance Certifications (Multiple lines of text) — Autofill prompt: "List any compliance certifications, regulatory standards, or security frameworks mentioned in this document (e.g., SOC 2, ISO 27001, FedRAMP, GDPR). If none are mentioned, respond with 'None mentioned'." 9. Executive Summary (Multiple lines of text) — Autofill prompt: "Write a 2-3 sentence executive summary of this document capturing its purpose, key parties involved, and the most important takeaway." 10. Action Required (Single line of text) — Autofill prompt: "Based on the content, what is the most likely next action someone reading this document would need to take? Respond with a single clear action statement."]
+
+[wait]
+
+Uploading the five test documents — autofill will process them on upload.
+
+[upload-library: tools/scripts/16-autofill-eval/assets/Zava-MSA-Contoso-2025.docx]
+[upload-library: tools/scripts/16-autofill-eval/assets/Zava-Q1-2026-Earnings-Summary.docx]
+[upload-library: tools/scripts/16-autofill-eval/assets/Zava-ProductBrief-KnowledgeHub.docx]
+[upload-library: tools/scripts/16-autofill-eval/assets/Zava-RFP-Response-Northwind.docx]
+[upload-library: tools/scripts/16-autofill-eval/assets/Zava-BoardDeck-StrategicPlan-2026.docx]
+
+[navigate: ${SITE}]
+
+[new-chat]
+
+[prompt: Create a list called "Expected Outputs" if it doesn't already exist, with these columns: Document Name (rename the Title column to this), Expected Document Type (Choice: Contract, Financial Report, Product Brief, RFP Response, Strategic Plan), Expected Primary Company (Single line of text), Expected Counterparty (Single line of text), Expected Total Dollar Value (Currency), Expected Time Period (Single line of text), Expected Key Risk (Multiple lines of text), Expected Target Audience (Single line of text), Expected Compliance Certs (Multiple lines of text), Expected Executive Summary (Multiple lines of text), Expected Action Required (Single line of text).]
+
+[wait]
+
+[assert: ${EXPECTED}]
+
+[navigate: ${EXPECTED}]
+
+[new-chat]
+
+[prompt: Add these 5 items to the Expected Outputs list: 1. Document Name: Zava-MSA-Contoso-2025.docx | Expected Document Type: Contract | Expected Primary Company: Zava Corp | Expected Counterparty: Contoso Ltd | Expected Total Dollar Value: 4500000 | Expected Time Period: 36 months | Expected Key Risk: Total liability is capped at 12 months of fees paid, excluding IP indemnification claims. | Expected Target Audience: Legal / Procurement Team | Expected Compliance Certs: SOC 2 Type II, ISO 27001, GDPR | Expected Executive Summary: Master services agreement between Zava Corp and Contoso Ltd for a 36-month enterprise AI platform license valued at $4.5M, covering implementation services, SLA commitments of 99.9% uptime, and mutual IP protections. | Expected Action Required: Route to legal for redline review and signature authorization. 2. Document Name: Zava-Q1-2026-Earnings-Summary.docx | Expected Document Type: Financial Report | Expected Primary Company: Zava Corp | Expected Counterparty: N/A | Expected Total Dollar Value: 2400000000 | Expected Time Period: Q1 FY2026 | Expected Key Risk: Cloud ARR growth rate decelerated from 24% to 18% YoY, signaling potential market saturation in mid-market segment. | Expected Target Audience: Investors | Expected Compliance Certs: None mentioned | Expected Executive Summary: Zava Corp's Q1 FY2026 earnings report shows $2.4B revenue (18% YoY growth) with a 31.2% operating margin. Cloud ARR reached $1.1B with 4,200+ enterprise customers, though growth rate deceleration warrants monitoring. | Expected Action Required: Review forward guidance assumptions and update financial model. 3. Document Name: Zava-ProductBrief-KnowledgeHub.docx | Expected Document Type: Product Brief | Expected Primary Company: Zava Corp | Expected Counterparty: N/A | Expected Total Dollar Value: 28 | Expected Time Period: N/A | Expected Key Risk: Premium tier required for API access and custom model training, which may limit adoption among cost-sensitive mid-market buyers. | Expected Target Audience: VP of Knowledge Management | Expected Compliance Certs: SOC 2 Type II, HIPAA eligible, GDPR | Expected Executive Summary: Product brief for Zava KnowledgeHub, an AI-powered knowledge management platform with semantic search and auto-classification. Priced from $12-$28/user/month across Standard and Premium tiers, positioned against Guru, Notion, and Confluence. | Expected Action Required: Schedule product demo with target customer segment. 4. Document Name: Zava-RFP-Response-Northwind.docx | Expected Document Type: RFP Response | Expected Primary Company: Zava Corp | Expected Counterparty: Northwind Traders | Expected Total Dollar Value: 1850000 | Expected Time Period: 24 weeks (3 phases) | Expected Key Risk: Phase 2 build timeline of 12 weeks assumes Northwind provides API access to legacy systems within the first 2 weeks of the phase. | Expected Target Audience: Procurement Team | Expected Compliance Certs: SOC 2 Type II, ISO 27001, FedRAMP Moderate | Expected Executive Summary: Zava's $1.85M RFP response to Northwind Traders proposes a 3-phase enterprise AI content platform implementation over 24 weeks, with 14 named team members and 99.95% uptime SLA backed by SOC 2, ISO 27001, and FedRAMP certifications. | Expected Action Required: Evaluate against competing RFP responses and schedule vendor presentation. 5. Document Name: Zava-BoardDeck-StrategicPlan-2026.docx | Expected Document Type: Strategic Plan | Expected Primary Company: Zava Corp | Expected Counterparty: N/A | Expected Total Dollar Value: 500000000 | Expected Time Period: FY2026-FY2030 | Expected Key Risk: Achieving $8B revenue target by FY2030 depends on successful vertical expansion into healthcare and financial services, both of which face heavy regulatory scrutiny. | Expected Target Audience: Board of Directors | Expected Compliance Certs: FedRAMP High (planned), HITRUST (planned) | Expected Executive Summary: Zava Corp's 2026 strategic plan outlines 3 pillars — AI-First Platform, Vertical Expansion, and Global Scale — targeting $8B revenue by FY2030 with $500M allocated for M&A and headcount growth from 6,200 to 9,500. | Expected Action Required: Board vote to approve M&A allocation and headcount plan.]
+
+[wait]
+
+[navigate: ${SITE}]
+
+[new-chat]
+
+[prompt: Create a skill called "Autofill Eval Judge" that evaluates how well the autofill prompts on the "Zava Test Documents" library are extracting information. The skill uses two inputs: the "Zava Test Documents" library (which has 10 autofill columns: Document Type, Primary Company, Counterparty, Total Dollar Value, Time Period or Term, Key Risk or Limitation, Target Audience, Compliance Certifications, Executive Summary, Action Required) and the "Expected Outputs" list (which has matching ground-truth values for each column per document). If the "Eval Results" list doesn't exist, create it first with these columns: Document Name (text), Column Name (text), Extracted Value (multiple lines of text), Expected Value (multiple lines of text), Score (number 0-5), Match Type (choice: Exact, Semantic, Partial, Weak, Mismatch, Failure), Reasoning (multiple lines of text), Improvement Suggestion (multiple lines of text), Eval Run ID (text), Eval Timestamp (date/time). For each document in the test library, compare every autofill column value against the corresponding expected value. Write one row per document-column pair (50 rows total). Score each extraction: 5 = exact or semantic match (formatting differences like "$4.5M" vs "4500000" are fine), 4 = near match (core info correct, minor omissions), 3 = partial match (some right, missing key elements), 2 = weak match (right domain, wrong point), 1 = mismatch (incorrect or irrelevant), 0 = failure (empty, error, or nonsense). Treat currency formats as equivalent, treat "36 months" and "3 years" as equivalent, allow list items in any order, and accept "N/A"/"None"/"Not applicable" as equivalent. Include 1-2 sentences of reasoning per row and an improvement suggestion for any score below 5. Set Eval Run ID to the current timestamp. After writing all 50 rows, output a summary: overall average score, average per column, average per document, top 3 columns needing improvement, and count of scores 4 or higher vs 2 or lower.]
+
+[wait]
+
+[navigate: ${SITE}]
+
+[new-chat]
+
+Confirm the Eval Results list exists and the Autofill Eval Judge skill is visible. Verify the 5 expected output rows are in place.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+You've got autofill running on a document library. Ten columns. Five documents.
+The AI is extracting document type, parties, dollar values, risk flags,
+summaries. But here's the question nobody asks: how do you actually know it's
+working? You can eyeball a few cells and feel good about it. Or you can
+measure it.
+
+[pause]
+
+This is an eval framework. We have ground-truth expected values for every
+column across every document. And we have a skill that acts as a judge —
+comparing what autofill actually produced against what it should have produced,
+scoring each one zero to five, and telling us exactly where the prompts are
+weak.
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Run the Autofill Eval Judge skill now against the Zava Test Documents library and the Expected Outputs list.]
+
+[wait]
+
+Fifty rows written. One per document-column pair. Look at the summary. Most
+columns are scoring 4s and 5s — currency formatting differences, semantic
+matches, list order variations — the judge is handling those correctly. But
+a few columns are pulling averages in the 3s. Those are the prompts that
+need work.
+
+[pause]
+
+[navigate: ${RESULTS}]
+
+[new-chat]
+
+Let's dig into the bottom performers.
+
+[open-chat]
+
+[prompt: Look at the Eval Results list. Which autofill prompts scored lowest on average across all 5 documents? For the bottom 3 prompts, show me the extracted value vs expected value side by side, and give me your recommended prompt rewrites.]
+
+[wait]
+
+Here's what you get from eyeballing: "looks pretty good." Here's what you get
+from the eval: the Total Dollar Value prompt is failing on the product brief
+because it's grabbing the per-user price instead of recognizing there's no
+aggregate total. The Key Risk prompt is writing summaries instead of extracting
+the actual stated risk. The AI knows exactly why the score is low and has
+written better prompts to fix both.
+
+[pause]
+
+Now let's close the loop. First, update the weakest prompt.
+
+[navigate: ${LIBRARY}]
+
+[new-chat]
+
+[prompt: Update the autofill prompt for the lowest-scoring column using the improvement suggestion from the eval results.]
+
+[wait]
+
+Prompt updated. Now we need to re-run autofill on the existing files so they
+get re-processed with the new prompt.
+
+[confirm: In the library settings, re-run autofill on all 5 documents — select all files, then run autofill]
+
+Now let's re-score with the eval judge and compare against the previous run.
+
+[new-chat]
+
+[prompt: Run the Autofill Eval Judge skill and compare the new scores to the previous Eval Run ID. Did the rewrite improve accuracy?]
+
+[wait]
+
+Score went up. The new prompt is more specific — it handles the edge case the
+original missed. And now you have a before/after comparison stored in the list,
+timestamped by run ID, so you can track every iteration.
+
+That's the loop: write prompts, measure against ground truth, improve, measure
+again. Instead of guessing whether your autofill is working, you know.
+
+[pause]
+
+[screenshot: tools/screenshots/16-autofill-eval-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the skill called "Autofill Eval Judge" if it exists.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Delete the list called "Eval Results" if it exists.]
+
+[wait]
+
+[confirm: Click "Delete" in the SharePoint confirmation dialog]
+
+[new-chat]
+
+[prompt: Delete the list called "Expected Outputs" if it exists.]
+
+[wait]
+
+[confirm: Click "Delete" in the SharePoint confirmation dialog]
+
+[navigate: ${LIBRARY}]
+
+[new-chat]
+
+[prompt: Remove all autofill columns from this library — delete Document Type, Primary Company, Counterparty, Total Dollar Value, Time Period or Term, Key Risk or Limitation, Target Audience, Compliance Certifications, Executive Summary, and Action Required columns.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Delete all 5 documents from this Zava Test Documents library.]
+
+[wait]
+
+[new-chat]

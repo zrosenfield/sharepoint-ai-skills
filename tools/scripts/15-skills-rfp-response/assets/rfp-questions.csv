@@ -1,0 +1,6 @@
+Title,Full Question,Category,Priority,Status,Draft Response,Sources Used,Confidence
+Cloud Migration Approach,"Describe your methodology for migrating enterprise workloads to Azure, including typical timelines, risk mitigation strategies, and references from similar engagements.",Technical,Must Answer,Open,,,
+Data Security Standards,"Detail your security certifications, data encryption standards, and approach to zero-trust architecture. Include your incident response procedures and most recent third-party audit results.",Security,Must Answer,Open,,,
+Support Model & SLAs,"What support tiers do you offer? Provide SLA response times, escalation procedures, and customer satisfaction metrics for your enterprise support program.",Support,Must Answer,Open,,,
+Training & Change Management,"How do you ensure successful adoption post-implementation? Describe your training programs, change management methodology, and knowledge transfer approach.",General,Nice to Have,Open,,,
+Analytics & Reporting,"Describe your data analytics capabilities, including AI/ML integration, dashboard options, and how you handle data governance and compliance for reporting workflows.",Technical,Must Answer,Open,,,

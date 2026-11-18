@@ -35,6 +35,117 @@ CDP_URL=http://localhost:9223 node tools/run-demo.mjs tools/scripts/site-overvie
 
 ---
 
+## Record mode (automated end-to-end run for video generation)
+
+Add `--record` to run the demo fully unattended — all `[pause]` steps auto-advance without waiting for a keypress. The runner executes every step, waits for all Copilot responses to complete, and writes a timing log to disk.
+
+```
+node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.demo --record
+```
+
+Add `--clips` instead of (or in addition to) `--record` to split the recording at each `[clip]` marker in the script. Each segment between markers becomes a separate OBS recording file. `--clips` implies `--record` — you don't need both flags.
+
+```
+node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.demo --clips
+```
+
+**What `--record` does:**
+- Skips all `[pause]` waits — the demo runs straight through from start to finish
+- All automated steps (`[navigate]`, `[open-chat]`, `[prompt]`, `[wait]`, `[screenshot]`) still execute normally
+- Writes `recordings/<demo-name>/events.json` with per-step timing data and talking points
+
+**What `--clips` adds on top of `--record`:**
+- At each `[clip]` marker in the script, the OBS recording is stopped and a new one immediately started
+- Each clip becomes its own OBS output file alongside `events.json` in `recordings/<demo-name>/`
+- `events.json` switches to a `clips` array format — each entry has its own `videoFile`, `videoOffsetMs`, and `steps` slice
+- Screenshot frame numbers continue globally across clip boundaries
+
+**Claude Code is not required.** This is a plain Node.js command you can run in any terminal. Claude Code was used to build the Remotion video project (`C:\repos\remotion`) but has no role in day-to-day recording.
+
+**Output example** (`recordings/04-comparison-report/events.json`):
+```json
+{
+  "demoName": "04-comparison-report",
+  "steps": [
+    { "name": "Navigate to …", "durationMs": 7766, "talkingPoints": "Legal just sent over the revised MSA…", "isPause": false },
+    { "name": "Wait for Copilot response", "durationMs": 51811, "talkingPoints": "", "isPause": false },
+    …
+  ]
+}
+```
+
+### Steps that need a human in record mode
+
+`--record` cannot replace human interaction for:
+
+| Command | Behavior in `--record` |
+|---|---|
+| `[pause]` | **Auto-advances** (this is the whole point) |
+| `[confirm]` | Auto-advances — the UI action is skipped. Run setup manually first if confirm steps are required. |
+| `[upload]` | Auto-advances — file won't be attached. Use `[upload-library]` instead if possible. |
+| `[login-if-needed]` | Auto-advances — requires you to already be signed in before running. |
+| `[clip]` | In `--clips` mode: stops/starts OBS recording. In `--record` mode (no `--clips`): no-op. |
+
+**Recommendation:** run `--setup` manually once before doing a `--record` run so the environment is ready.
+
+### What `--record` captures
+
+Every step produces a timing entry in `recordings/<demo-name>/events.json`. If OBS is connected, the full-motion video is also captured (see OBS section below). Playwright screenshots are intentionally skipped in record and clip mode — OBS is the screen capture source and any Playwright screenshot causes a visible flash in the recording.
+
+### OBS WebSocket integration (optional — for smooth video output)
+
+Requires **OBS Studio 28 or later** (28+ has the WebSocket server built in).
+
+If OBS is open and its WebSocket server is enabled, `--record` will automatically start and stop an OBS recording alongside the demo run.
+
+**One-time OBS setup:**
+1. Open OBS → Tools → WebSocket Server Settings
+2. Check **Enable WebSocket Server** (port 4455, password optional)
+3. Create a scene with a **Window Capture** source pointed at the Edge browser window. Name the scene whatever you like — use `[scene: Name]` in your `.demo` scripts to switch to it.
+
+**Setting the OBS password (persistent):**
+
+Add `obsPassword` to `tools/demo.config.json` so you don't have to set it every time:
+```json
+{
+  "obsPassword": "yourpassword"
+}
+```
+
+Or pass it inline as an env var for a one-off run:
+```
+OBS_PASSWORD=yourpassword node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.demo --record
+```
+
+If no password is set, the runner connects without one (works when OBS has no password configured).
+
+**Running with OBS:**
+```
+node tools/run-demo.mjs tools/scripts/04-comparison-report/04-comparison-report.demo --record
+```
+
+The runner prints `⏺ OBS recording started (WxH @ Nfps)` when it connects — it also auto-corrects any output downscaling so the recording matches your canvas resolution. After the demo, `events.json` gains a `videoFile` field with the absolute path to the recording, and `videoOffsetMs` for Remotion sync. If OBS is not running, the run proceeds normally with screenshots only.
+
+### Generating a video from the recording
+
+See `C:\repos\remotion` for the Remotion video project. Two compositions are available:
+
+| Composition | Source | How to use |
+|---|---|---|
+| `*-slideshow` | Step screenshots | Works immediately after `--record` |
+| `*-video` | OBS full-motion recording | Also requires OBS connected during `--record` |
+
+**Steps:**
+1. Copy `recordings/<demo-name>/` into `C:\repos\remotion\public\recordings\<demo-name>\`
+2. For the video composition: also copy the OBS recording file to `public/recordings/<demo-name>/recording.mp4`
+3. In `src/Root.tsx`, add your demo (follow the pattern for `04-comparison-report`)
+4. Run `npm run studio` (from `C:\repos\remotion`) to preview in the browser
+5. Run `npm run render` to produce a `.mp4`
+
+**Claude Code is not required** for any of these steps once the Remotion project is set up.
+
+---
+
 ## Widget mode (full-screen presentations)
 
 Add `--widget` to open a small floating controller window alongside the demo browser.
@@ -135,6 +246,10 @@ Talking points are word-wrapped at 72 characters and printed to the terminal bef
 | `[upload: path]` | Open the Attach menu in the chat input, then wait for the presenter to select the local file in the OS dialog (the OS file picker cannot be automated) |
 | `[confirm: message]` | Destructive action required in the browser — shows a warning box and waits for Enter after the user has completed the action |
 | `[screenshot: path]` | Save a screenshot to the given path |
+| `[scene: Name]` | Switch the OBS program scene (e.g. `[scene: Zoom SPAI]`). No-op if OBS is not connected. |
+| `[clip]` | Mark a clip boundary. In `--clips` mode, stops and restarts the OBS recording here. No-op in all other modes. |
+| `[click-button: text]` | Click a button by its visible label — searched in the chat frame first, then the full page. Waits 2 seconds before clicking so the UI can settle. Logs a warning (rather than failing) if the button is not found. |
+| `[follow-chat-link]` | Navigate to the most-relevant SharePoint link in the current Copilot response. Prefers `.docx`/`.pptx` document links over page links; skips citation-style links, data files (`.xlsx`, `.csv`), and list-item `DispForm` URLs. Useful after a prompt that generates a document to jump straight to the result. |
 
 ---
 
@@ -228,6 +343,7 @@ Per-script overrides are merged on top of the global vars, so you only need to s
 |-----|---------|-------------|
 | `typeChunkSize` | `5` | Characters typed per fill() call when slow-typing a prompt |
 | `typeDelayMs` | `10` | Milliseconds between fill() calls (controls perceived typing speed) |
+| `cdpUrl` | `http://localhost:9222` | CDP endpoint for the Edge/Chrome instance. Override here (or via the `CDP_URL` env var) when using a non-standard debugging port, e.g. `9223` for an InPrivate browser. Per-demo overrides in `demo.config.json` take precedence over the top-level value. |
 
 To type faster, increase `typeChunkSize` or decrease `typeDelayMs`. To type slower (e.g. for a live audience that needs more reading time), decrease `typeChunkSize` or increase `typeDelayMs`.
 
@@ -258,6 +374,30 @@ After submitting a prompt the runner watches the DOM for Copilot's generation li
 1. Wait for the **Stop** button (`[aria-label*="Stop"]`) to appear — confirms generation started.
 2. Wait for the Stop button to **disappear** — confirms generation finished.
 3. **Fallback**: if the Stop button never appears, poll for new Like/Dislike feedback buttons — these only appear on completed responses.
+
+---
+
+## Local (gitignored) scripts
+
+Scripts that depend on unreleased or experimental features can live in
+`tools/scripts/local/`. This folder is gitignored, so nothing in it is
+committed or pushed.
+
+Local scripts use the same `.demo` format and the same numbered-folder
+convention as committed scripts:
+
+```
+tools/scripts/local/
+  19-my-experiment/
+    19-my-experiment.demo
+```
+
+They appear in the interactive launcher (`npm start`) and can be run
+directly by path — no special flag needed:
+
+```
+node tools/run-demo.mjs tools/scripts/local/19-my-experiment/19-my-experiment.demo
+```
 
 ---
 
@@ -337,6 +477,10 @@ The repo also contains `demos/tool/` — an earlier demo runner built on the [Pl
 | `tools/scripts/list-3-ways.demo` | Three approaches to building a SharePoint list — guided, specified, and autonomous |
 | `tools/scripts/citations.demo` | Three-skill pipeline extracts assertions, searches a corpus, and writes citation records |
 | `tools/scripts/brand-review.demo` | Custom skill audits marketing assets against brand guidelines with scored remediation |
+| `tools/scripts/23-program-portfolio-review/23-program-portfolio-review.demo` | Live fan-out dashboard joining programs, milestones, and risks |
+| `tools/scripts/24-crew-certification-coverage/24-crew-certification-coverage.demo` | Many-to-many crew certification coverage matrix |
+| `tools/scripts/25-warranty-cost-chain/25-warranty-cost-chain.demo` | Four-hop warranty cost aggregation across five lists |
+| `tools/scripts/26-transaction-pivot/26-transaction-pivot.demo` | Client-side pivoting over a 30,000-item Transactions list |
 
 ---
 

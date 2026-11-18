@@ -2,27 +2,43 @@
 # AI reads file names and contents, then renames files to a consistent naming convention.
 
 [var: SITE = https://contoso.sharepoint.com/sites/demo/]
-[var: LIBRARY = ${SITE}Project%20Files/]
+[var: LIBRARY = ${SITE}Messy%20Files/]
 [category: Documents & Files]
 
 [section: setup]
 
-Verify the "Project Files" library exists and contains six messy-named files.
-If this is the first run, upload them now. If files from a previous run have
-clean names, rename them back: meeting notes jan.docx, FINAL budget v3 (2).xlsx,
-deck for sarah.pptx, IMG_4021.png, Untitled document.docx, asdfgh.pdf.
-
-[navigate: ${LIBRARY}]
-
-[confirm: Upload or rename files so all six messy names are present, then press Enter]
+[navigate: ${SITE}]
+[login-if-needed]
 
 [open-chat]
 
 [new-chat]
 
-Confirm the chat pane shows a fresh session and the library shows six files
-with messy names: meeting notes jan.docx, FINAL budget v3 (2).xlsx,
-deck for sarah.pptx, IMG_4021.png, Untitled document.docx, asdfgh.pdf.
+Ask Copilot to create the "Messy Files" library if it doesn't exist yet.
+
+[prompt: Create a document library called "Messy Files" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+Uploading the six messy-named files if they aren't already present.
+
+[upload-library: tools/scripts/01-messy-folder-cleanup/assets/meeting notes jan.docx]
+[upload-library: tools/scripts/01-messy-folder-cleanup/assets/FINAL budget v3 (2).xlsx]
+[upload-library: tools/scripts/01-messy-folder-cleanup/assets/deck for sarah.pptx]
+[upload-library: tools/scripts/01-messy-folder-cleanup/assets/IMG_4021.png]
+[upload-library: tools/scripts/01-messy-folder-cleanup/assets/Untitled document.docx]
+[upload-library: tools/scripts/01-messy-folder-cleanup/assets/asdfgh.pdf]
+
+[open-chat]
+
+[new-chat]
+
+Confirm the chat pane shows a fresh session and the library shows the six
+messy-named files.
 
 [pause]
 
@@ -30,45 +46,44 @@ deck for sarah.pptx, IMG_4021.png, Untitled document.docx, asdfgh.pdf.
 
 [navigate: ${LIBRARY}]
 
-This is what most people's SharePoint folders actually look like. Cryptic file
-names, random versioning, files named after people instead of topics. You can't
-find anything without opening every single file.
+[scene: Main]
+
+This is what most SharePoint folders actually look like. You can't find
+anything without opening every single file.
 
 [pause]
 
 [open-chat]
 
-Let's ask Copilot to read every file and suggest better names using a
-consistent naming convention.
+Let's ask Copilot to read every file and suggest better names.
 
 [prompt: Look at the files in this library. For each file, suggest a better name using the format: [Category] - [Description] - [Date if known]. Show me a table with the current name and your suggested name.]
 
 [wait]
 
-Copilot read the content of every file — not just the file names — and proposed
-clean, descriptive names. Notice how it figured out "asdfgh.pdf" is a Northwind
-Traders contract just from reading the contents. Point out the table.
+Copilot read the content of every file — not just the names — and proposed
+clean, descriptive names. It figured out "asdfgh.pdf" is a Northwind Traders
+contract just from reading the contents.
 
 [pause]
 
-Now let's actually rename one. We'll start with the worst offender.
+Now let's rename one. We'll start with the worst offender.
 
 [prompt: Rename "asdfgh.pdf" to "Contract - Northwind Traders Cloud Migration.pdf"]
 
 [wait]
 
-One down. The file has been renamed in place — no re-uploading, no downloading
-and re-adding. Now let's do the rest in one shot.
+One down. Renamed in place — no re-uploading, no downloading and re-adding.
+Now let's do the rest in one shot.
 
 [pause]
 
 [prompt: Now rename all the other files using the suggestions you just gave me.]
 
+
 [wait]
 
-Refresh the library and look at the file names. Six files cleaned up in about
-30 seconds. Imagine doing this across 500 files in a migration. That's the
-power move.
+Six files, cleaned up in about 30 seconds. Scale that to a 500-file migration.
 
 [pause]
 
@@ -76,11 +91,18 @@ power move.
 
 [section: reset]
 
-Rename all files back to their original messy names for the next run. Manually
-rename each file in the library back to: meeting notes jan.docx, FINAL budget
-v3 (2).xlsx, deck for sarah.pptx, IMG_4021.png, Untitled document.docx,
-asdfgh.pdf.
-
 [navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Rename these files back to their original names exactly as listed — do all six now: "meeting notes jan.docx", "FINAL budget v3 (2).xlsx", "deck for sarah.pptx", "IMG_4021.png", "Untitled document.docx", "asdfgh.pdf".]
+
+[wait]
+
+Confirm all 6 files are back to their original messy names.
+
+[pause]
 
 [new-chat]

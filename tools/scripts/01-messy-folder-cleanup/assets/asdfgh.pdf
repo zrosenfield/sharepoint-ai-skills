@@ -1,0 +1,120 @@
+%PDF-1.4
+1 0 obj
+<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>
+endobj
+2 0 obj
+<</Font<</F1 1 0 R>>>>
+endobj
+4 0 obj
+<</Length 2503>>
+stream
+BT
+/F1 14 Tf
+50 750 Td
+(CLOUD MIGRATION SERVICES AGREEMENT) Tj
+0 -20 Td
+/F1 11 Tf
+(This Cloud Migration Services Agreement \("Agreement"\) is entered into as of) Tj
+0 -16 Td
+(February 1, 2025, between:) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(VENDOR: Northwind Traders, Inc., a Delaware corporation) Tj
+0 -16 Td
+(  \("Northwind Traders" or "Service Provider"\)) Tj
+0 -16 Td
+(  1400 Harbor Boulevard, Wilmington, DE 19801) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(CLIENT: Contoso Ltd., an England and Wales limited company) Tj
+0 -16 Td
+(  \("Contoso" or "Client"\)) Tj
+0 -16 Td
+(  1 Microsoft Way, Reading, RG6 1WG, United Kingdom) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(1. SCOPE OF SERVICES) Tj
+0 -16 Td
+(Northwind Traders agrees to provide cloud migration services to migrate) Tj
+0 -16 Td
+(Contoso's on-premises infrastructure to Microsoft Azure. Services include:) Tj
+0 -16 Td
+(  \(a\) Discovery and assessment of existing on-premises workloads \(Weeks 1-4\)) Tj
+0 -16 Td
+(  \(b\) Migration architecture design and Azure Landing Zone configuration \(Weeks 5-8\)) Tj
+0 -16 Td
+(  \(c\) Pilot migration of non-production workloads \(Weeks 9-12\)) Tj
+0 -16 Td
+(  \(d\) Production workload migration in three waves \(Weeks 13-22\)) Tj
+0 -16 Td
+(  \(e\) Post-migration optimisation and handover \(Weeks 23-26\)) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(2. TIMELINE) Tj
+0 -16 Td
+(The cloud migration engagement shall be completed within six \(6\) months) Tj
+0 -16 Td
+(from the Commencement Date of February 1, 2025, with a target completion) Tj
+0 -16 Td
+(date of July 31, 2025.) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(3. CONTRACT VALUE AND PAYMENT SCHEDULE) Tj
+0 -16 Td
+(Total contract value: USD $180,000 \(one hundred and eighty thousand US dollars\)) Tj
+0 -16 Td
+(  - Milestone 1 \(Assessment complete\):        $36,000  due Week 4) Tj
+0 -16 Td
+(  - Milestone 2 \(Architecture approved\):      $27,000  due Week 8) Tj
+0 -16 Td
+(  - Milestone 3 \(Pilot migration complete\):   $27,000  due Week 12) Tj
+0 -16 Td
+(  - Milestone 4 \(Production migration wave 1\): $36,000  due Week 16) Tj
+0 -16 Td
+(  - Milestone 5 \(Production migration wave 2\): $27,000  due Week 20) Tj
+0 -16 Td
+(  - Milestone 6 \(Final handover and sign-off\): $27,000  due Week 26) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(4. GOVERNING LAW) Tj
+0 -16 Td
+(This Agreement shall be governed by the laws of the State of Delaware.) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Signed on behalf of Northwind Traders, Inc.: _______________________) Tj
+0 -16 Td
+(Signed on behalf of Contoso Ltd.: _______________________) Tj
+0 -16 Td
+ET
+endstream
+endobj
+3 0 obj
+<</Type/Page/Parent 5 0 R/MediaBox[0 0 612 792]/Resources 2 0 R/Contents 4 0 R>>
+endobj
+5 0 obj
+<</Type/Pages/Kids[3 0 R]/Count 1>>
+endobj
+6 0 obj
+<</Type/Catalog/Pages 5 0 R>>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000097 00000 n 
+0000000135 00000 n 
+0000002688 00000 n 
+0000002784 00000 n 
+0000002835 00000 n 
+trailer
+<</Size 7/Root 6 0 R>>
+startxref
+2880
+%%EOF

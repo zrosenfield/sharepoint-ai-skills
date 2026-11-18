@@ -1,0 +1,152 @@
+{
+  "mode": "roadmap",
+  "report": {
+    "title": "Zava Industries · H2 FY2026 Roadmap",
+    "subtitle": "Platform · Integrations · Go-to-Market  ·  Jul 1 – Dec 31, 2026",
+    "date_range_start": "2026-07-01",
+    "date_range_end": "2026-12-31",
+    "palette": "slate",
+    "footer": "Generated Jul 14, 2026  ·  Zava Industries Program Office  ·  Prepared for Board Review"
+  },
+  "swimlanes": [
+    { "id": "platform",     "label": "Platform" },
+    { "id": "integrations", "label": "Integrations" },
+    { "id": "gtm",          "label": "Go-to-Market" }
+  ],
+  "items": [
+    {
+      "id": "p1",
+      "title": "API v3",
+      "swimlane_id": "platform",
+      "start": "2026-07-01",
+      "end": "2026-09-15",
+      "status": "on-track",
+      "owner": "Raj Patel"
+    },
+    {
+      "id": "p2",
+      "title": "Multi-tenant Support",
+      "swimlane_id": "platform",
+      "start": "2026-08-01",
+      "end": "2026-11-15",
+      "status": "planned",
+      "owner": "Priya Nair"
+    },
+    {
+      "id": "p3",
+      "title": "SOC 2 Type II Audit",
+      "swimlane_id": "platform",
+      "start": "2026-07-01",
+      "end": "2026-08-31",
+      "status": "on-track",
+      "owner": "Priya Nair"
+    },
+    {
+      "id": "p4",
+      "title": "Salesforce Deep Integration",
+      "swimlane_id": "integrations",
+      "start": "2026-07-15",
+      "end": "2026-09-30",
+      "status": "on-track",
+      "owner": "Dev Team"
+    },
+    {
+      "id": "p5",
+      "title": "HubSpot Connector",
+      "swimlane_id": "integrations",
+      "start": "2026-09-01",
+      "end": "2026-10-31",
+      "status": "planned",
+      "owner": "Dev Team"
+    },
+    {
+      "id": "p6",
+      "title": "Zapier 2.0",
+      "swimlane_id": "integrations",
+      "start": "2026-10-01",
+      "end": "2026-12-15",
+      "status": "planned",
+      "owner": "Dev Team"
+    },
+    {
+      "id": "p7",
+      "title": "Self-Serve Onboarding v2",
+      "swimlane_id": "gtm",
+      "start": "2026-07-01",
+      "end": "2026-08-15",
+      "status": "on-track",
+      "owner": "Jordan Kim"
+    },
+    {
+      "id": "p8",
+      "title": "Partner Program Launch",
+      "swimlane_id": "gtm",
+      "start": "2026-08-01",
+      "end": "2026-09-30",
+      "status": "at-risk",
+      "owner": "Jordan Kim"
+    },
+    {
+      "id": "p9",
+      "title": "Enterprise Tier Launch",
+      "swimlane_id": "gtm",
+      "start": "2026-10-01",
+      "end": "2026-11-30",
+      "status": "planned",
+      "owner": "Maya Chen"
+    },
+    {
+      "id": "p10",
+      "title": "FY27 Planning",
+      "swimlane_id": "gtm",
+      "start": "2026-11-01",
+      "end": "2026-12-31",
+      "status": "planned",
+      "owner": "Maya Chen"
+    },
+    {
+      "id": "m1",
+      "title": "API v3 Beta",
+      "swimlane_id": "platform",
+      "start": "2026-08-01",
+      "end": "2026-08-01",
+      "status": "on-track",
+      "milestone": true,
+      "owner": "Raj Patel",
+      "description": "External beta opens to 20 customers"
+    },
+    {
+      "id": "m2",
+      "title": "SOC 2 Report Received",
+      "swimlane_id": "platform",
+      "start": "2026-09-15",
+      "end": "2026-09-15",
+      "status": "on-track",
+      "milestone": true,
+      "owner": "Priya Nair",
+      "description": "Audit complete, report in hand"
+    },
+    {
+      "id": "m3",
+      "title": "Salesforce GA",
+      "swimlane_id": "integrations",
+      "start": "2026-10-01",
+      "end": "2026-10-01",
+      "status": "planned",
+      "milestone": true,
+      "owner": "Dev Team",
+      "description": "General availability release"
+    },
+    {
+      "id": "m4",
+      "title": "Enterprise Tier GA",
+      "swimlane_id": "gtm",
+      "start": "2026-11-01",
+      "end": "2026-11-01",
+      "status": "planned",
+      "milestone": true,
+      "owner": "Maya Chen",
+      "description": "Enterprise pricing available to all"
+    }
+  ]
+}

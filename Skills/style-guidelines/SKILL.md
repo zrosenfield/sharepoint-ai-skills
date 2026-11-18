@@ -1,3 +1,8 @@
+---
+name: style-guidelines
+description: Provides a fill-in-the-blank template for creating an organization-specific visual brand skill. Use when drafting, adapting, or documenting brand colors, typography, spacing, component styles, and visual-output rules for AI in SharePoint.
+---
+
 # Brand Style Skill — Template
 
 Use this skill whenever creating any visual output, document, web content, presentation, table, list, or interface element for **[Your Organization]**. This skill ensures all outputs are visually consistent with the brand.

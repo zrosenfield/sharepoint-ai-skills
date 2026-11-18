@@ -1,0 +1,157 @@
+# Zava Deal Room — AI demo
+
+[var: INVENTORY = CONFIGURE_ME]
+[var: DEALS_ROOM = CONFIGURE_ME]
+[var: DEAL_ROOMS = CONFIGURE_ME]
+
+[section: setup]
+
+[navigate: ${INVENTORY}]
+
+[open-chat]
+
+Deam Room Demo Recording
+
+[pause]
+
+[section: demo]
+
+# Clip 1 — Add a product SKU
+
+[open-chat]
+
+[new-chat]
+
+The product team just finalized a new Fleece Vest SKU. Rather than manually adding a list row, we'll ask Copilot to do it from a natural language description.
+
+[pause]
+
+[prompt: Add a new SKU for Fleece Vest, available in black or grey, in S,M,L size and in stock.]
+
+[wait]
+
+[click-button: Create]
+
+Name, variants, sizes, stock status — all added in one step. Now let's make the list easier to scan at a glance.
+
+[pause]
+
+[clip]
+
+# Clip 2 — Style the inventory list + build a deal room
+
+[prompt: style the in stock columns with green or red to be clearer what is in or out of stock.]
+
+[wait]
+
+Now availability is obvious at a glance — no more reading each row. Let's shift gears. When Zava lands a new brand partnership, the team needs a structured SharePoint workspace ready fast. We'll ask Copilot to build one.
+
+[pause]
+
+[clip]
+
+# Clip 3A — Save as a skill
+
+[navigate: ${DEALS_ROOM}]
+
+[new-chat]
+
+[open-chat]
+
+We're on the Zava Deals Room site. We'll ask Copilot to create a complete deal room — library, folders, and templates — for a new Contoso partnership.
+
+[pause]
+
+[prompt: Create a new document library called "Deal - Contoso" in this site — don't check for existing libraries, it won't exist yet. Add folders for Legal, Sales, Commercial, and Meeting Notes. Copy all templates from the Templates library (ZavaDealsRoom/Templates/Forms/AllItems.aspx) to the root of the new library — don't put them in any of the folders. Navigate me to the library when you're done.]
+
+[wait]
+
+Library ready — folders structured, templates copied to the root. No menus, no dragging. Now let's save this entire process as a reusable skill.
+
+[pause]
+
+[clip]
+
+# Clip 3 — Save as a skill
+
+[prompt: Save this as a skill that takes "deal name" and makes a new deal room setup like the one we just did. No followups; just save it.]
+
+[wait]
+
+Copilot has packaged that whole workflow as a skill parameterized by deal name. Anyone on the team can now spin up a new deal room with a single sentence.
+
+[pause]
+
+[clip]
+
+# Clip 4 — Use the skill + brand deal report
+
+[prompt: Make a new deal room for Fabrikam]
+
+[wait]
+
+Full deal room structure for Fabrikam — same folders, same templates, different name. The skill ran the whole setup without any additional instructions.
+
+[pause]
+
+[clip]
+
+# Clip 5 — Brand deal report
+
+[navigate: ${DEAL_ROOMS}]
+
+[new-chat]
+
+[open-chat]
+
+We're on the Zava Deal Rooms site, where all active and closed brand partnerships live. Let's get a fiscal year-to-date recap.
+
+[pause]
+
+[prompt: Create a report that recaps all deals for this year to date.]
+
+[wait]
+
+Partners, values, stages, and timelines — pulled into a structured summary.
+
+[pause]
+
+[clip]
+
+# Clip 6 — View the report
+
+[follow-chat-link]
+
+[pause: View the generated report]
+
+[clip]
+
+# Clip 7 — Press release
+
+[navigate: ${DEAL_ROOMS}]
+
+[open-chat]
+
+Back in the Deals Room — let's turn one of those brand deals into a press release.
+
+[pause]
+
+[prompt: Create a press release based on this brand deal.]
+
+[wait]
+
+A press-ready announcement drafted from the deal data in the room.
+
+[pause]
+
+[clip]
+
+# Clip 8 — View the press release
+
+[follow-chat-link]
+
+[pause: View the press release]
+
+[section: reset]
+
+[navigate: ${DEALS_ROOM}]

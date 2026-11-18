@@ -1,0 +1,140 @@
+# Skills Lifecycle: Job Posting Improver
+# A skill that evaluates content against criteria. Update the skill, update the policy.
+
+[var: SITE = https://contoso.sharepoint.com/sites/demo/]
+[var: LIST = ${SITE}Lists/Job%20Postings/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the list called "Job Postings" if it exists.]
+
+[wait]
+
+[sleep: 3s]
+
+[new-chat]
+
+[prompt: Create a new SharePoint list called "Job Postings" with these columns: Title (single line of text, the job title — this is the built-in Title column), Department (Choice: Engineering, Marketing, Sales, HR, Finance, Operations), Description (Multiple lines of text), Salary Range (Single line of text), Remote Policy (Choice: Remote, Hybrid, On-site), Status (Choice: Draft, Under Review, Approved, Posted).]
+
+[wait]
+
+[sleep: 5s]
+
+[assert: ${LIST}]
+
+[navigate: ${LIST}]
+
+[new-chat]
+
+[prompt: Add these 6 job postings to the list — add them one at a time: 1. Title: "Senior Software Engineer" | Department: Engineering | Description: "We're looking for a Senior Software Engineer to join our platform team. You'll design and build scalable backend systems using Python and Azure. Requirements: 5+ years of backend engineering experience, strong Python skills, experience with cloud infrastructure (Azure preferred), familiarity with React for occasional front-end work. We value clear communication and collaborative problem-solving. You'll work with a team that ships regularly and reviews each other's code carefully." | Salary Range: "$145,000 - $175,000" | Remote Policy: Hybrid | Status: Draft. 2. Title: "Marketing Rockstar" | Department: Marketing | Description: "Are you a marketing ninja who lives and breathes social media? We need a rockstar who is passionate about brand storytelling. He will lead our content calendar and drive viral campaigns. Must be able to hustle in a fast-paced environment. Responsibilities include managing all social channels, creating engaging content, and crushing KPIs." | Salary Range: "" | Remote Policy: Remote | Status: Draft. 3. Title: "Financial Analyst" | Department: Finance | Description: "The Financial Analyst will support the FP&A function by building models, preparing monthly close reports, and contributing to the annual budget process. Requirements: Bachelor's degree in Finance or Accounting, proficiency in Excel, familiarity with ERP systems, experience with financial reporting, ability to manage multiple projects simultaneously, attention to detail, strong communication skills, comfortable with ambiguity, team player, experience with variance analysis, knowledge of GAAP accounting principles, experience with SQL a plus, CPA or CFA a plus, 2+ years in a finance role." | Salary Range: "" | Remote Policy: Hybrid | Status: Draft. 4. Title: "Sales Development Representative" | Department: Sales | Description: "Join our sales team as an SDR. You'll prospect into new accounts, qualify inbound leads, and book meetings for account executives. Requirements: 3-5 years of B2B sales experience, familiarity with Salesforce, excellent communication skills, ability to work in a fast-paced environment. This is an entry-level role with a clear path to Account Executive." | Salary Range: "$52,000 - $62,000 + commission" | Remote Policy: Remote | Status: Under Review. 5. Title: "Head of People Operations" | Department: HR | Description: "Zava is looking for a Head of People Operations to lead our HR function through our next phase of growth. You will synergize cross-functional stakeholder alignment to drive organizational effectiveness. Responsibilities: oversee recruiting, onboarding, performance management, benefits administration, and employee relations. Requirements: 8+ years of HR leadership experience, strong employment law knowledge, experience scaling HR in a growth-stage company. Salary range included — we are serious about pay transparency." | Salary Range: "$135,000 - $155,000" | Remote Policy: Hybrid | Status: Draft. 6. Title: "Operations Coordinator" | Department: Operations | Description: "We need someone to help with operations. Must be detail-oriented." | Salary Range: "" | Remote Policy: "" | Status: Draft.]
+
+[wait]
+
+[new-chat]
+
+Confirm 6 job postings are visible in the list with content populated.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIST}]
+
+HR has a list of job postings. Some are great. Some are not. Right now there
+is no consistent review process. Every posting goes out the door differently.
+Watch what happens when we add a skill.
+
+[pause]
+
+[open-chat]
+
+[prompt: Create a skill called "Review Job Posting" that evaluates a job posting and scores it on four criteria: Clarity (are requirements specific and realistic?), Inclusivity (free of biased or gendered language?), Completeness (salary range, remote policy, and description all filled in?), and Professionalism (no jargon, buzzwords, or vague phrases?). Give each a score from 1-5 and an overall rating. List specific issues found and suggest fixes.]
+
+[wait]
+
+The skill exists. Let's hit the worst one first — maximum impact for the audience.
+
+[pause]
+
+[prompt: Review the Marketing Rockstar posting]
+
+[wait]
+
+Look at the scores. Clarity: low — vague requirements. Inclusivity: flagged
+"ninja," "rockstar," and the gendered "he will lead." Completeness: failing —
+no salary range. It caught everything. Now let's check a good one.
+
+[pause]
+
+[prompt: Review the Senior Software Engineer posting]
+
+[wait]
+
+High scores across the board. The skill isn't just a critic — it recognizes
+good work. One posting is great, one is broken. Same skill, honest output.
+
+Now let's do the whole portfolio at once.
+
+[pause]
+
+[prompt: Review all the Draft postings and rank them from best to worst]
+
+[wait]
+
+That's the fleet scan. Not one posting at a time — the whole pile, ranked.
+Someone in HR can look at this list and know exactly where to focus before
+anything goes live.
+
+[pause]
+
+Now let's add company-specific rules. Zava has standards that the generic
+skill doesn't know about yet.
+
+[prompt: Update my Review Job Posting skill to also check for these Zava-specific rules: all postings must include a salary range, remote policy must be filled in, Engineering roles must mention our tech stack (Python, Azure, React), and no posting should require more than 5 years of experience for roles below Senior level.]
+
+[wait]
+
+[prompt: Review all Draft postings again with the updated skill]
+
+[wait]
+
+Now the Financial Analyst gets flagged for missing salary range — not as a
+suggestion, as a policy violation. The SDR role's "3-5 years experience"
+breaks the rule for entry-level positions. Engineering roles without the tech
+stack get dinged.
+
+The skill learned Zava's rules. When policy changes next quarter, we update
+one skill — not 50 documents.
+
+[pause]
+
+[screenshot: tools/screenshots/14-skills-job-postings-final.png]
+
+[section: reset]
+
+[navigate: ${LIST}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the skill called "Review Job Posting" if it exists.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Delete the list called "Job Postings".]
+
+[wait]
+
+[confirm: Click "Delete" in the SharePoint confirmation dialog to complete the deletion]
+
+[new-chat]

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zava Industries — Hiring Pipeline Report</title>
+<style>
+  :root {
+    --primary: #1B2A4A;
+    --accent: #3B82F6;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #64748B;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .fade-in { animation: fadeIn 0.3s ease-in; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Header */
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header .brand h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  header .brand p {
+    font-size: 14px;
+    font-weight: 300;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+  header .date {
+    font-size: 13px;
+    opacity: 0.7;
+    text-align: right;
+  }
+
+  /* Main */
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* Metric Cards */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .metric-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--accent);
+    animation-delay: 0.05s;
+  }
+  .metric-card:nth-child(2) { border-left-color: var(--success); }
+  .metric-card:nth-child(3) { border-left-color: var(--warning); }
+  .metric-card:nth-child(4) { border-left-color: var(--primary); }
+  .metric-card .number { font-size: 36px; font-weight: 700; color: var(--primary); }
+  .metric-card .label { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* Section */
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--primary); }
+
+  /* Sankey container */
+  .sankey-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  #sankey svg { width: 100%; }
+  .node rect { cursor: default; }
+  .node text { font-size: 13px; fill: var(--text); }
+  .link { fill: none; stroke-opacity: 0.35; }
+  .link:hover { stroke-opacity: 0.55; }
+
+  /* Risks */
+  .risks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .risk-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--warning);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .risk-card.danger { border-left-color: var(--danger); }
+  .risk-card.info { border-left-color: var(--accent); }
+  .risk-card .icon { font-size: 22px; flex-shrink: 0; }
+  .risk-card .risk-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .risk-card .risk-detail { font-size: 13px; color: var(--text-light); }
+
+  /* Table */
+  .table-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--primary); color: white; }
+  th { padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #E2E8F0; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: #F1F5F9; }
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge.critical { background: #FEE2E2; color: #DC2626; }
+  .badge.high { background: #FEF3C7; color: #D97706; }
+  .badge.normal { background: #F1F5F9; color: #64748B; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  @media (max-width: 768px) {
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .risks-grid { grid-template-columns: 1fr; }
+    header { flex-direction: column; text-align: center; gap: 8px; }
+  }
+  @media print {
+    body { background: white; }
+    header { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .sankey-card, .metric-card, .risk-card, .table-card { box-shadow: none; border: 1px solid #E2E8F0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>Zava Industries</h1>
+    <p>Hiring Pipeline Status Report</p>
+  </div>
+  <div class="date">Generated April 3, 2026</div>
+</header>
+
+<main>
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric-card fade-in">
+      <div class="number">8</div>
+      <div class="label">Open Roles</div>
+    </div>
+    <div class="metric-card fade-in">
+      <div class="number">20</div>
+      <div class="label">Active Candidates</div>
+    </div>
+    <div class="metric-card fade-in">
+      <div class="number">6.8</div>
+      <div class="label">Avg Days in Stage</div>
+    </div>
+    <div class="metric-card fade-in">
+      <div class="number">8%</div>
+      <div class="label">Pipeline-to-Offer Rate</div>
+    </div>
+  </div>
+
+  <!-- Sankey Diagram -->
+  <div class="section">
+    <div class="section-title">Candidate Flow by Stage</div>
+    <div class="sankey-card fade-in">
+      <div id="sankey"></div>
+      <div id="sankey-fallback" style="display:none; padding: 40px; text-align: center; color: var(--text-light);">
+        Sankey diagram requires JavaScript and D3.js. Open this file in a modern browser to view.
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk Callouts -->
+  <div class="section">
+    <div class="section-title">Risks &amp; Attention Needed</div>
+    <div class="risks-grid">
+      <div class="risk-card fade-in">
+        <div class="icon">⏳</div>
+        <div>
+          <div class="risk-title">Stale Candidate: Reese Johansson</div>
+          <div class="risk-detail">Account Executive — Interview stage for 18 days. Multiple reschedules noted.</div>
+        </div>
+      </div>
+      <div class="risk-card fade-in">
+        <div class="icon">⏳</div>
+        <div>
+          <div class="risk-title">Stale Candidate: Charlie Bautista</div>
+          <div class="risk-detail">Senior Backend Engineer — Interview stage for 15 days. Scheduling delays on final round.</div>
+        </div>
+      </div>
+      <div class="risk-card fade-in">
+        <div class="icon">⏳</div>
+        <div>
+          <div class="risk-title">Stale Candidate: Alex Rivera</div>
+          <div class="risk-detail">Senior Frontend Engineer — Interview stage for 14 days. Panel scheduling delays.</div>
+        </div>
+      </div>
+      <div class="risk-card fade-in">
+        <div class="icon">⏳</div>
+        <div>
+          <div class="risk-title">Stale Candidate: Casey Kim</div>
+          <div class="risk-detail">Data Analyst — Interview stage for 12 days. Waiting on take-home review.</div>
+        </div>
+      </div>
+      <div class="risk-card danger fade-in">
+        <div class="icon">🚨</div>
+        <div>
+          <div class="risk-title">Starved Role: DevOps Engineer</div>
+          <div class="risk-detail">Only 2 active candidates for a High-priority role. Pipeline needs more sourcing.</div>
+        </div>
+      </div>
+      <div class="risk-card danger fade-in">
+        <div class="icon">🚨</div>
+        <div>
+          <div class="risk-title">Starved Role: Financial Analyst</div>
+          <div class="risk-detail">Only 2 active candidates for this role. Consider expanding sourcing channels.</div>
+        </div>
+      </div>
+      <div class="risk-card info fade-in">
+        <div class="icon">📩</div>
+        <div>
+          <div class="risk-title">Stale Candidate: Rowan Eriksson</div>
+          <div class="risk-detail">Senior Backend Engineer — Phone Screen for 10 days. Interviewer flagged concerns.</div>
+        </div>
+      </div>
+      <div class="risk-card info fade-in">
+        <div class="icon">📩</div>
+        <div>
+          <div class="risk-title">Stale Candidate: Sage Abernathy</div>
+          <div class="risk-detail">Account Executive — Interview for 11 days. Panel interview still pending.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breakdown Table -->
+  <div class="section">
+    <div class="section-title">Pipeline by Role</div>
+    <div class="table-card fade-in">
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Priority</th>
+            <th>Active Candidates</th>
+            <th>Furthest Stage</th>
+            <th>Avg Days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Senior Frontend Engineer</td>
+            <td>Engineering</td>
+            <td><span class="badge critical">Critical</span></td>
+            <td>4</td>
+            <td>Final Round</td>
+            <td>6.8</td>
+          </tr>
+          <tr>
+            <td>Account Executive — Enterprise</td>
+            <td>Sales</td>
+            <td><span class="badge critical">Critical</span></td>
+            <td>4</td>
+            <td>Interview</td>
+            <td>9.8</td>
+          </tr>
+          <tr>
+            <td>Senior Backend Engineer</td>
+            <td>Engineering</td>
+            <td><span class="badge critical">Critical</span></td>
+            <td>4</td>
+            <td>Final Round</td>
+            <td>7.8</td>
+          </tr>
+          <tr>
+            <td>HR Business Partner</td>
+            <td>People</td>
+            <td><span class="badge high">High</span></td>
+            <td>2</td>
+            <td>Final Round</td>
+            <td>8.0</td>
+          </tr>
+          <tr>
+            <td>DevOps Engineer</td>
+            <td>Engineering</td>
+            <td><span class="badge high">High</span></td>
+            <td>2</td>
+            <td>Phone Screen</td>
+            <td>4.0</td>
+          </tr>
+          <tr>
+            <td>Data Analyst</td>
+            <td>Engineering</td>
+            <td><span class="badge high">High</span></td>
+            <td>3</td>
+            <td>Interview</td>
+            <td>6.3</td>
+          </tr>
+          <tr>
+            <td>Product Marketing Manager</td>
+            <td>Marketing</td>
+            <td><span class="badge normal">Normal</span></td>
+            <td>2</td>
+            <td>Offer</td>
+            <td>3.5</td>
+          </tr>
+          <tr>
+            <td>Financial Analyst</td>
+            <td>Finance</td>
+            <td><span class="badge normal">Normal</span></td>
+            <td>2</td>
+            <td>Interview</td>
+            <td>2.5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Generated by Zava AI · Confidential · SharePoint AI Skill Output
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+<script>
+(function() {
+  // Candidate data derived from the lists
+  // Each candidate has flowed through stages up to their current stage
+  // Terminal states: Hired, Rejected, Withdrawn
+  const stageOrder = ['Applied', 'Phone Screen', 'Interview', 'Final Round', 'Offer', 'Hired'];
+  const candidates = [
+    { name: 'Alex Rivera', stage: 'Interview' },
+    { name: 'Jordan Patel', stage: 'Final Round' },
+    { name: 'Sam Okonkwo', stage: 'Phone Screen' },
+    { name: 'Taylor Washington', stage: 'Rejected', exitFrom: 'Applied' },
+    { name: 'Morgan Lee', stage: 'Applied' },
+    { name: 'Casey Kim', stage: 'Interview' },
+    { name: 'Riley Tanaka', stage: 'Phone Screen' },
+    { name: 'Jamie Russo', stage: 'Applied' },
+    { name: 'Avery Nguyen', stage: 'Final Round' },
+    { name: 'Quinn Delgado', stage: 'Offer' },
+    { name: 'Drew Foster', stage: 'Withdrawn', exitFrom: 'Applied' },
+    { name: 'Reese Johansson', stage: 'Interview' },
+    { name: 'Sage Abernathy', stage: 'Interview' },
+    { name: 'Blake Morrison', stage: 'Phone Screen' },
+    { name: 'Cameron Holt', stage: 'Applied' },
+    { name: 'Jules Nakamura', stage: 'Final Round' },
+    { name: 'Parker Singh', stage: 'Phone Screen' },
+    { name: 'Hayden Cross', stage: 'Applied' },
+    { name: 'Robin Marsh', stage: 'Phone Screen' },
+    { name: 'Dakota Voss', stage: 'Interview' },
+    { name: 'Emery Shaw', stage: 'Applied' },
+    { name: 'Charlie Bautista', stage: 'Interview' },
+    { name: 'Finley Zhao', stage: 'Final Round' },
+    { name: 'Rowan Eriksson', stage: 'Phone Screen' },
+    { name: 'Kendall Price', stage: 'Rejected', exitFrom: 'Applied' },
+    { name: 'Milan Torres', stage: 'Applied' }
+  ];
+
+  // Build flow counts
+  const flows = {};
+  function addFlow(from, to) {
+    const key = from + '→' + to;
+    flows[key] = (flows[key] || 0) + 1;
+  }
+
+  candidates.forEach(c => {
+    if (c.stage === 'Rejected') {
+      // Flow through stages up to exitFrom, then branch to Rejected
+      const exitIdx = stageOrder.indexOf(c.exitFrom);
+      for (let i = 0; i < exitIdx; i++) addFlow(stageOrder[i], stageOrder[i+1]);
+      addFlow(c.exitFrom, 'Rejected');
+    } else if (c.stage === 'Withdrawn') {
+      const exitIdx = stageOrder.indexOf(c.exitFrom);
+      for (let i = 0; i < exitIdx; i++) addFlow(stageOrder[i], stageOrder[i+1]);
+      addFlow(c.exitFrom, 'Withdrawn');
+    } else {
+      const idx = stageOrder.indexOf(c.stage);
+      for (let i = 0; i < idx; i++) addFlow(stageOrder[i], stageOrder[i+1]);
+    }
+  });
+
+  // Build nodes and links for D3-Sankey
+  const allNodes = [...stageOrder, 'Rejected', 'Withdrawn'];
+  const nodeMap = {};
+  allNodes.forEach((n, i) => { nodeMap[n] = i; });
+
+  const nodes = allNodes.map(n => ({ name: n }));
+  const links = Object.entries(flows).map(([key, value]) => {
+    const [from, to] = key.split('→');
+    return { source: nodeMap[from], target: nodeMap[to], value };
+  });
+
+  // Color mapping
+  const colorMap = {
+    'Applied': '#93C5FD',
+    'Phone Screen': '#60A5FA',
+    'Interview': '#3B82F6',
+    'Final Round': '#2563EB',
+    'Offer': '#1D4ED8',
+    'Hired': '#10B981',
+    'Rejected': '#EF4444',
+    'Withdrawn': '#94A3B8'
+  };
+
+  // Render
+  try {
+    const container = document.getElementById('sankey');
+    const width = Math.min(container.clientWidth || 900, 900);
+    const height = 420;
+    const margin = { top: 16, right: 120, bottom: 16, left: 16 };
+
+    const svg = d3.select('#sankey').append('svg')
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    const sankey = d3.sankey()
+      .nodeId(d => d.index)
+      .nodeWidth(20)
+      .nodePadding(18)
+      .nodeAlign(d3.sankeyLeft)
+      .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]]);
+
+    const graph = sankey({ nodes: nodes.map(d => ({...d})), links: links.map(d => ({...d})) });
+
+    // Links
+    svg.append('g')
+      .selectAll('path')
+      .data(graph.links)
+      .join('path')
+      .attr('class', 'link')
+      .attr('d', d3.sankeyLinkHorizontal())
+      .attr('stroke', d => colorMap[allNodes[d.target.index]] || '#94A3B8')
+      .attr('stroke-width', d => Math.max(1, d.width))
+      .append('title')
+      .text(d => `${allNodes[d.source.index]} → ${allNodes[d.target.index]}: ${d.value}`);
+
+    // Nodes
+    const node = svg.append('g')
+      .selectAll('g')
+      .data(graph.nodes)
+      .join('g')
+      .attr('class', 'node');
+
+    node.append('rect')
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('height', d => Math.max(1, d.y1 - d.y0))
+      .attr('width', d => d.x1 - d.x0)
+      .attr('fill', d => colorMap[d.name] || '#94A3B8')
+      .attr('rx', 3);
+
+    node.append('text')
+      .attr('x', d => d.x1 + 8)
+      .attr('y', d => (d.y0 + d.y1) / 2)
+      .attr('dy', '0.35em')
+      .attr('text-anchor', 'start')
+      .attr('font-size', '13px')
+      .attr('fill', '#1E293B')
+      .text(d => {
+        // Count candidates currently AT this stage
+        const atStage = candidates.filter(c => c.stage === d.name).length;
+        return `${d.name} (${atStage})`;
+      });
+
+  } catch(e) {
+    document.getElementById('sankey').style.display = 'none';
+    document.getElementById('sankey-fallback').style.display = 'block';
+    console.error('Sankey render error:', e);
+  }
+})();
+</script>
+</body>
+</html>

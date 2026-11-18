@@ -10,6 +10,22 @@
 | `demos/` | End-to-end demo setups. Each demo lives in its own subfolder and may include video recordings, scripts, and supporting assets. Not intended for direct reuse — reference and walkthrough material. |
 | `branding.md` | Quick-reference brand cheat sheet for the forest-style brand system. Human-readable; not a skill. For the AI-instructional version see `Skills/forest-style/SKILL.md`. |
 
+## Demo Scripts
+
+Demo scripts live at `tools/scripts/<demo-name>/<demo-name>.demo`. The `[var: KEY = value]` declarations inside `.demo` files are defaults only — **never edit a `.demo` file to set a site URL**. Site-specific values go in `tools/demo.vars.json` under `overrides["<demo-name>"]`:
+
+```json
+"overrides": {
+  "21-knowledge-base": {
+    "SITE": "https://microsoft.sharepoint-df.com/sites/KnowledgeBaseDemo/"
+  }
+}
+```
+
+The runner merges `demo.vars.json` overrides on top of the script's `[var:]` defaults at load time, so the `.demo` file stays as a site-agnostic template with `CONFIGURE_ME` placeholders.
+
+The SharePoint agent site context file **must be named `SHAREPOINT.md`** — any other name is ignored. Upload it to the `AgentAssets` library root (not inside `Skills/`).
+
 ## Skills
 
 ### Follow the agentskills.io specification

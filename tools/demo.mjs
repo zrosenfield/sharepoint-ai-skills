@@ -21,6 +21,7 @@ import { spawnSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SCRIPTS_DIR = join(__dirname, 'scripts');
+const LOCAL_SCRIPTS_DIR = join(SCRIPTS_DIR, 'local');
 const RUNNER = join(__dirname, 'run-demo.mjs');
 
 // Preferred display order for categories — unlisted categories appear at the end.
@@ -29,35 +30,41 @@ const CATEGORY_ORDER = [
   'Documents & Files',
   'Lists & Data',
   'Skills & Pipelines',
+  'Vertical AI',
 ];
 
 // ─── Demo discovery ───────────────────────────────────────────────────────────
 
-function discoverDemos() {
-  // Each demo lives in its own subfolder: scripts/<name>/<name>.demo
-  return readdirSync(SCRIPTS_DIR)
-    .filter(entry => statSync(join(SCRIPTS_DIR, entry)).isDirectory())
-    .flatMap(dir => {
-      const filePath = join(SCRIPTS_DIR, dir, `${dir}.demo`);
-      try { readFileSync(filePath); } catch { return []; } // skip dirs without matching .demo
-      const src = readFileSync(filePath, 'utf8');
+function discoverDemosIn(dir) {
+  try { readdirSync(dir); } catch { return []; } // folder may not exist
+  return readdirSync(dir)
+    .filter(entry => {
+      try { return statSync(join(dir, entry)).isDirectory(); } catch { return false; }
+    })
+    .flatMap(entry => {
+      const filePath = join(dir, entry, `${entry}.demo`);
+      let src;
+      try { src = readFileSync(filePath, 'utf8'); } catch { return []; }
       const lines = src.split('\n').map(l => l.trim()).filter(Boolean);
 
-      // Title and description from leading # comments
       const comments = lines.filter(l => l.startsWith('#')).slice(0, 2);
-      const title = comments[0]?.replace(/^#+\s*/, '') || dir;
+      const title = comments[0]?.replace(/^#+\s*/, '') || entry;
       const description = comments[1]?.replace(/^#+\s*/, '') || '';
 
-      // Category from [category: Name]
       const catMatch = src.match(/\[category:\s*([^\]]+)\]/);
       const category = catMatch ? catMatch[1].trim() : 'Other';
 
-      // Which sections exist
       const hasSetup = src.includes('[section: setup]');
       const hasReset = src.includes('[section: reset]');
 
-      return [{ name: dir, file: filePath, title, description, category, hasSetup, hasReset }];
-    })
+      return [{ name: entry, file: filePath, title, description, category, hasSetup, hasReset }];
+    });
+}
+
+function discoverDemos() {
+  // Each demo lives in its own subfolder: scripts/<name>/<name>.demo
+  // Local (gitignored) demos live in scripts/local/<name>/<name>.demo
+  return [...discoverDemosIn(SCRIPTS_DIR), ...discoverDemosIn(LOCAL_SCRIPTS_DIR)]
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -251,7 +258,7 @@ async function selectDemo(demos) {
 
 function runSection(demoFile, section, extraFlags = []) {
   const args = [RUNNER, demoFile, ...extraFlags];
-  if (section !== 'demo') args.push(`--${section}`);
+  if (section !== 'demo') args.push(`--${section}`); // handles setup, reset, all
 
   const result = spawnSync('node', args, {
     stdio: 'inherit',
@@ -265,35 +272,13 @@ function clearTerminal() {
   process.stdout.write('\x1B[2J\x1B[H');
 }
 
-function printReadyBanner(demo) {
-  const w = process.stdout.columns || 80;
-  console.log('');
-  console.log(`  \x1B[1;32m✓ Setup complete — ready to demo\x1B[0m`);
-  console.log(`  \x1B[2m${'─'.repeat(Math.min(w - 2, 60))}\x1B[0m`);
-  console.log(`  \x1B[1m${demo.title}\x1B[0m`);
-  if (demo.description) console.log(`  \x1B[2m${demo.description}\x1B[0m`);
-  console.log('');
-  process.stdout.write('  Press Enter to begin the demo... ');
-  return new Promise(resolve => {
-    if (process.stdin.isTTY) process.stdin.setRawMode(true);
-    process.stdin.resume();
-    process.stdin.once('data', buf => {
-      const key = buf.toString();
-      if (key === '\x03') process.exit(0);
-      if (process.stdin.isTTY) process.stdin.setRawMode(false);
-      process.stdin.pause();
-      console.log('');
-      resolve();
-    });
-  });
-}
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
   const flags = process.argv.slice(2).filter(a => a.startsWith('--'));
   const arg = process.argv.slice(2).find(a => !a.startsWith('--'));
-  const extraFlags = flags.filter(f => f === '--widget'); // pass-through flags for the runner
+  const extraFlags = flags.filter(f => ['--widget', '--record', '--clips'].includes(f));
 
   const demos = discoverDemos();
 
@@ -335,29 +320,13 @@ async function main() {
   }
 
   // action === 'setup+demo' or 'demo'
+  clearTerminal();
   if (action === 'setup+demo' && demo.hasSetup) {
-    console.log(`\n  Running setup check for: ${demo.title}\n`);
-    const exitCode = runSection(demo.file, 'setup', extraFlags);
-    if (exitCode !== 0) {
-      console.error('\n  Setup exited with errors. Fix issues before running the demo.');
-      process.stdout.write('  Press Enter to continue anyway, or Ctrl+C to quit... ');
-      await new Promise(r => {
-        if (process.stdin.isTTY) process.stdin.setRawMode(true);
-        process.stdin.resume();
-        process.stdin.once('data', buf => {
-          if (buf.toString() === '\x03') process.exit(1);
-          if (process.stdin.isTTY) process.stdin.setRawMode(false);
-          process.stdin.pause();
-          r();
-        });
-      });
-    }
+    // Run setup + demo in a single browser session via --all
+    runSection(demo.file, 'all', extraFlags);
+  } else {
+    runSection(demo.file, 'demo', extraFlags);
   }
-
-  clearTerminal();
-  await printReadyBanner(demo);
-  clearTerminal();
-  runSection(demo.file, 'demo', extraFlags);
 }
 
 main().catch(err => {

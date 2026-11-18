@@ -1,0 +1,333 @@
+# Living Knowledge Base
+# Demonstrates how an AI assistant captures tacit knowledge from files, transcripts, emails, and typed input — and detects knowledge decay over time.
+
+[var: SITE = https://microsoft.sharepoint-df.com/teams/CONFIGURE_ME/]
+[var: GAPS = ${SITE}Lists/Knowledge%20Gaps/]
+[var: EXPERTS = ${SITE}Lists/Expert%20Directory/]
+[var: KB = ${SITE}Knowledge%20Base/]
+[var: SUBMISSIONS = ${SITE}Submissions/]
+[var: AGENT_ASSETS = ${SITE}AgentAssets/]
+[var: SKILLS = ${SITE}AgentAssets/Skills/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[login-if-needed]
+
+[enable-site-feature: Agent Assets | 9E14D30C-1E0D-4C8C-8DCB-A8D29F7D4C15]
+
+[navigate: ${AGENT_ASSETS}]
+
+[upload-library: tools/scripts/21-knowledge-base/assets/SHAREPOINT.md]
+
+[upload-skill: Skills/log-knowledge-gap | Skills]
+[upload-skill: Skills/ingest-knowledge | Skills]
+[upload-skill: Skills/find-expert | Skills]
+[upload-skill: Skills/kb-admin-report | Skills]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Knowledge Base" on this site if it doesn't already exist.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Create a document library called "Submissions" on this site if it doesn't already exist.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Create a list called "Knowledge Gaps" with these columns: Title (rename to "Question" — single line of text), Topic (single line of text), Asked By (single line of text), Status (choice: Open, Assigned, Resolved, Verify), Assigned Expert (single line of text), Resolved Date (single line of text), KB File (single line of text), Source Type (choice: Gap, Transcript, Email, Document, Slack, Typed, Verification).]
+
+[wait]
+
+[assert: ${GAPS}]
+
+[new-chat]
+
+[prompt: Create a list called "Expert Directory" with these columns: Title (rename to "Name" — single line of text), Expertise Areas (single line of text), Notes (single line of text).]
+
+[wait]
+
+[assert: ${EXPERTS}]
+
+[navigate: ${EXPERTS}]
+
+[new-chat]
+
+[prompt: Add these items to the Expert Directory list: 1. Name: Jordan Lee | Expertise Areas: vendor contracts, procurement, compliance | Notes: 10 years in procurement, built the current vendor assessment framework. 2. Name: Priya Sharma | Expertise Areas: product pricing, licensing, SKU management | Notes: Owns the pricing model, led the 2024 pricing restructure. 3. Name: Marcus Chen | Expertise Areas: customer onboarding, implementation, training | Notes: Runs all enterprise implementations, designed the 90-day framework. 4. Name: Dana Torres | Expertise Areas: IT infrastructure, networking, security policies | Notes: Built the current security architecture, led FedRAMP authorization. 5. Name: Alex Rivera | Expertise Areas: HR policies, benefits, hiring process | Notes: HR business partner for engineering, rewrote the interview process in 2024.]
+
+[wait]
+
+[navigate: ${GAPS}]
+
+[new-chat]
+
+[prompt: Add these items to the Knowledge Gaps list: 1. Question: What's the SLA for vendor contract renewals? | Topic: vendor contracts | Asked By: Sam K | Status: Open | Source Type: Gap. 2. Question: How do we handle pricing for multi-year deals over 3 years? | Topic: product pricing | Asked By: Jamie L | Status: Open | Source Type: Gap. 3. Question: What security certifications do we currently hold? | Topic: security policies | Asked By: Robin M | Status: Open | Source Type: Gap. 4. Question: What's the onboarding timeline for enterprise customers? | Topic: customer onboarding | Asked By: Taylor P | Status: Assigned | Assigned Expert: Marcus Chen | Source Type: Gap. 5. Question: Why did we switch from the old interview rubric? | Topic: hiring process | Asked By: Casey N | Status: Open | Source Type: Gap. 6. Question: What's the policy on vendor contract termination penalties? | Topic: vendor contracts | Asked By: Morgan F | Status: Open | Source Type: Gap. 7. Question: Verify: Vendor contract renewal process — last verified 2024-08-20 | Topic: vendor contracts | Asked By: System | Status: Verify | Assigned Expert: Jordan Lee | Source Type: Verification. 8. Question: Verify: Product pricing tier structure — last verified 2024-11-15 | Topic: product pricing | Asked By: System | Status: Verify | Assigned Expert: Priya Sharma | Source Type: Verification.]
+
+[wait]
+
+[navigate: ${KB}]
+
+[upload-library: tools/scripts/21-knowledge-base/assets/customer-onboarding.md]
+[upload-library: tools/scripts/21-knowledge-base/assets/product-pricing.md]
+[upload-library: tools/scripts/21-knowledge-base/assets/vendor-contracts.md]
+
+[assert: ${KB}customer-onboarding.md]
+[assert: ${KB}product-pricing.md]
+[assert: ${KB}vendor-contracts.md]
+
+Confirm the four skills are installed in AgentAssets/Skills, both document libraries exist, the Knowledge Gaps list has 8 items, the Expert Directory has 5 experts, and the three seed KB files are visible in the Knowledge Base library. Chat pane should show a fresh session.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+This is a living knowledge base — three seed files already loaded. The AI has four skills: log gaps, ingest knowledge, find experts, and generate admin reports. Two of the seed files have Last Verified dates over 90 days old. We'll see that trigger automatically in a moment.
+
+[pause]
+
+--- Scene 1: The Gap ---
+
+[prompt: What's our policy on vendor contract SLA requirements?]
+
+[wait]
+
+It found vendor-contracts.md and answered what it could — the renewal process and the DataStream reasoning behind it. But the SLA question had no answer in the KB. It logged the gap to the Knowledge Gaps list and routed it to Jordan Lee.
+
+[pause]
+
+--- Scene 2: Decay Detection ---
+
+[prompt: How does our vendor contract renewal process work?]
+
+[wait]
+
+Full answer with rationale and history — the DataStream incident, why 90 days, the approval tiers. But notice the flag: last verified August 20, 2024. Over 200 days ago. The AI still answered but created a Verify item in Knowledge Gaps assigned to Jordan Lee. The KB monitors its own trustworthiness automatically — no one had to remember to check.
+
+[pause]
+
+--- Scene 3: The Expert Fills the Gap ---
+
+Now Jordan Lee responds to the logged question — typed directly into the chat. Watch what the AI does with it.
+
+[prompt: I can answer the SLA question. Our standard vendor SLA requirements are: Tier 1 vendors (customer-facing or processing customer data) require 99.5% uptime, 48-hour support ticket response, and quarterly business reviews. Tier 2 (internal operations) requires 99% uptime and 5-business-day response. Tier 3 just needs to meet basic contractual commitments, no SLA scoring. We tightened Tier 1 after the AuthBridge outages in Q4 — their quarterly SLA math technically passed but two 4-hour outages in critical windows was unacceptable. So we added a max single-incident downtime clause: no outage can exceed 2 hours regardless of quarterly SLA averages. One more thing: the vendor renewal process is still accurate, no changes since it was documented.]
+
+[wait]
+
+The SLA gap is resolved and the entry is written with the full reasoning — including the AuthBridge incident that drove the 2-hour clause. And because Jordan confirmed the renewal process is still current, the Last Verified date on that entry was refreshed and the Verify item was closed. One response did double duty.
+
+[pause]
+
+--- Scene 4: The Payoff ---
+
+[prompt: What uptime do we require from critical vendors, and why is it set at that level?]
+
+[wait]
+
+The KB now answers with full context: 99.5% for Tier 1, the AuthBridge incident, why quarterly SLA math isn't enough, the 2-hour max clause and what triggered it. Entry verified today — no staleness flag.
+
+[pause]
+
+--- Scene 5: Transcript Ingestion ---
+
+Uploading the security policy review transcript to the Submissions library.
+
+[navigate: ${SUBMISSIONS}]
+
+[upload-library: tools/scripts/21-knowledge-base/assets/submission-01-security-review-transcript.md]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Process the new transcript in Submissions.]
+
+[wait]
+
+New KB file: security-policies.md. Certifications logged: SOC 2 Type II, ISO 27001, FedRAMP Moderate. But more importantly — the reasoning layer: why CrowdStrike over Rapid7 (the parallel test, the FedRAMP-specific findings), the Meridian incident that forced the 2023 VPC redesign, and why data retention was shortened from 90 to 30 days. The security certifications gap is resolved. Source type: Transcript.
+
+[pause]
+
+--- Scene 6: Email Ingestion ---
+
+[navigate: ${SUBMISSIONS}]
+
+[upload-library: tools/scripts/21-knowledge-base/assets/submission-02-pricing-decision-email.md]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: There's a new email thread in Submissions about pricing. Please process it.]
+
+[wait]
+
+product-pricing.md updated with new reasoning layers: why Starter can't be discounted (priced below cost-to-serve, 34% upgrade rate makes it an acquisition cost), the feature clustering analysis behind the tier boundaries, the API access decision and why it went in Professional instead of Enterprise. Last Verified refreshed on existing entries. The pricing Verify item is resolved. Source type: Email.
+
+[pause]
+
+--- Scene 7: Admin Report ---
+
+[prompt: Give me the full knowledge base admin report.]
+
+[wait]
+
+Walk through what surfaced. Corpus overview — KB files, entry counts, sources. Decay report — what was just refreshed vs. what's still stale (customer-onboarding.md entries from January are still past 90 days). Gap status — resolved gaps, open ones, Verify items. Ingestion activity — knowledge has come in via Typed, Transcript, and Email. Expert coverage — flags that no expert is registered for security policies, and that Alex Rivera's expertise areas don't match the open "hiring process" gap topic. Recommendations at the bottom.
+
+[pause]
+
+--- Scene 8: Postmortem Ingestion (Bonus) ---
+
+[navigate: ${SUBMISSIONS}]
+
+[upload-library: tools/scripts/21-knowledge-base/assets/submission-06-infrastructure-postmortem.md]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: We had an incident last week. The postmortem is in Submissions. Add what we learned.]
+
+[wait]
+
+New KB file: infrastructure-operations.md. The AI captured the incident, the decision to hot-index instead of rolling back and why rollback was rejected (migration state risk), the three process changes going forward, and the rejected option of read replica failover with its reasoning. This is the institutional memory that would normally live in a Confluence page nobody reads.
+
+[pause]
+
+--- Scene 9: Onboarding Retro (Bonus) ---
+
+[navigate: ${SUBMISSIONS}]
+
+[upload-library: tools/scripts/21-knowledge-base/assets/submission-03-onboarding-retro-transcript.md]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Process the Cascade retro from Submissions.]
+
+[wait]
+
+customer-onboarding.md updated: the Integration Discovery Sprint (day 5 vs. day 60 timeline conversation), the escalation contact formalization from the Cascade Phase 2 stall, lessons about training compression. Last Verified refreshed. Source type: Transcript.
+
+[pause]
+
+[screenshot: tools/screenshots/21-knowledge-base-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the Knowledge Gaps list from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Knowledge Gaps list in the browser dialog]
+
+[new-chat]
+
+[prompt: Delete the Expert Directory list from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Expert Directory list in the browser dialog]
+
+[new-chat]
+
+[prompt: Delete the Knowledge Base document library from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Knowledge Base library in the browser dialog]
+
+[new-chat]
+
+[prompt: Delete the Submissions document library from this site.]
+
+[wait]
+
+[confirm: Confirm deletion of the Submissions library in the browser dialog]
+
+[new-chat]
+
+# ─── Prompt backup (copy/paste if automation fails) ──────────────────────────
+#
+# SETUP — Knowledge Base library
+#   Create a document library called "Knowledge Base" on this site if it doesn't already exist.
+#
+# SETUP — Submissions library
+#   Create a document library called "Submissions" on this site if it doesn't already exist.
+#
+# SETUP — Knowledge Gaps list
+#   Create a list called "Knowledge Gaps" with these columns: Title (rename to "Question" — single line of text), Topic (single line of text), Asked By (single line of text), Status (choice: Open, Assigned, Resolved, Verify), Assigned Expert (single line of text), Resolved Date (single line of text), KB File (single line of text), Source Type (choice: Gap, Transcript, Email, Document, Slack, Typed, Verification).
+#
+# SETUP — Expert Directory list
+#   Create a list called "Expert Directory" with these columns: Title (rename to "Name" — single line of text), Expertise Areas (single line of text), Notes (single line of text).
+#
+# SETUP — Expert Directory data
+#   Add these items to the Expert Directory list: 1. Jordan Lee | vendor contracts, procurement, compliance | 10 years in procurement, built the current vendor assessment framework. 2. Priya Sharma | product pricing, licensing, SKU management | Owns the pricing model, led the 2024 pricing restructure. 3. Marcus Chen | customer onboarding, implementation, training | Runs all enterprise implementations, designed the 90-day framework. 4. Dana Torres | IT infrastructure, networking, security policies | Built the current security architecture, led FedRAMP authorization. 5. Alex Rivera | HR policies, benefits, hiring process | HR business partner for engineering, rewrote the interview process in 2024.
+#
+# SETUP — Knowledge Gaps seed data
+#   Add these items to the Knowledge Gaps list: 1. What's the SLA for vendor contract renewals? | vendor contracts | Sam K | Open | Gap. 2. How do we handle pricing for multi-year deals over 3 years? | product pricing | Jamie L | Open | Gap. 3. What security certifications do we currently hold? | security policies | Robin M | Open | Gap. 4. What's the onboarding timeline for enterprise customers? | customer onboarding | Taylor P | Assigned | Marcus Chen | Gap. 5. Why did we switch from the old interview rubric? | hiring process | Casey N | Open | Gap. 6. What's the policy on vendor contract termination penalties? | vendor contracts | Morgan F | Open | Gap. 7. Verify: Vendor contract renewal process — last verified 2024-08-20 | vendor contracts | System | Verify | Jordan Lee | Verification. 8. Verify: Product pricing tier structure — last verified 2024-11-15 | product pricing | System | Verify | Priya Sharma | Verification.
+#
+# SCENE 1 — Gap
+#   What's our policy on vendor contract SLA requirements?
+#
+# SCENE 2 — Decay Detection
+#   How does our vendor contract renewal process work?
+#
+# SCENE 3 — Expert fills the gap
+#   I can answer the SLA question. Our standard vendor SLA requirements are: Tier 1 vendors require 99.5% uptime, 48-hour support ticket response, and quarterly business reviews. Tier 2 requires 99% uptime and 5-business-day response. Tier 3 just needs to meet basic contractual commitments, no SLA scoring. We tightened Tier 1 after the AuthBridge outages in Q4 — their quarterly SLA math technically passed but two 4-hour outages in critical windows was unacceptable. So we added a max single-incident downtime clause: no outage can exceed 2 hours regardless of quarterly SLA averages. One more thing: the vendor renewal process is still accurate, no changes since it was documented.
+#
+# SCENE 4 — Payoff
+#   What uptime do we require from critical vendors, and why is it set at that level?
+#
+# SCENE 5 — Transcript ingestion (upload submission-01 first)
+#   Process the new transcript in Submissions.
+#
+# SCENE 6 — Email ingestion (upload submission-02 first)
+#   There's a new email thread in Submissions about pricing. Please process it.
+#
+# SCENE 7 — Admin report
+#   Give me the full knowledge base admin report.
+#
+# SCENE 8 — Postmortem (bonus, upload submission-06 first)
+#   We had an incident last week. The postmortem is in Submissions. Add what we learned.
+#
+# SCENE 9 — Onboarding retro (bonus, upload submission-03 first)
+#   Process the Cascade retro from Submissions.
+#
+# RESET
+#   Delete the Knowledge Gaps list from this site.
+#   Delete the Expert Directory list from this site.
+#   Delete the Knowledge Base document library from this site.
+#   Delete the Submissions document library from this site.
+#
+# ─────────────────────────────────────────────────────────────────────────────

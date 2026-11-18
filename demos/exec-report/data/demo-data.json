@@ -1,0 +1,153 @@
+{
+  "report": {
+    "palette": "warm-paper",
+    "footer_l": "Generated May 28, 2026",
+    "footer_r": "47 deals · 5 regions analyzed"
+  },
+  "blocks": [
+    {
+      "type": "hero",
+      "props": {
+        "company": "Zava Industries",
+        "report_label": "Q2 FY2026 · Executive Summary",
+        "sentence_html": "Zava closed <span class=\"accent num\">$4.2M</span> across <span class=\"num\">47</span> deals in Q2 FY2026, <span class=\"accent\">up 8%</span> from Q1."
+      }
+    },
+    {
+      "type": "kpi-row",
+      "props": {
+        "items": [
+          {
+            "label": "Total revenue",
+            "value": "$4.2M",
+            "delta": "↑ 8% QoQ",
+            "delta_dir": "up"
+          },
+          {
+            "label": "Deals closed",
+            "value": "47",
+            "delta": "↑ 5 QoQ",
+            "delta_dir": "up"
+          },
+          {
+            "label": "Avg deal size",
+            "value": "$89K",
+            "delta": "↓ 3% QoQ",
+            "delta_dir": "down"
+          },
+          {
+            "label": "Win rate",
+            "value": "34%",
+            "delta": "↑ 3 pt QoQ",
+            "delta_dir": "up"
+          }
+        ]
+      }
+    },
+    {
+      "type": "trend",
+      "props": {
+        "title": "Monthly Revenue",
+        "sub": "Jan–Jun 2026 · ghost line shows Jan–Jun 2025",
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        "data": [820, 910, 880, 1050, 1120, 1310],
+        "prior_data": [700, 780, 760, 840, 870, 910],
+        "value_format": "${{v}}K"
+      }
+    },
+    {
+      "type": "bar-list",
+      "props": {
+        "title": "Revenue by Region",
+        "sub": "Q2 FY2026 revenue share",
+        "items": [
+          { "name": "North America", "amount": "$1.84M", "share": 1.00, "meta": "44% of total" },
+          { "name": "Europe",        "amount": "$1.10M", "share": 0.60, "meta": "26% of total" },
+          { "name": "Asia-Pacific",  "amount": "$790K",  "share": 0.43, "meta": "19% of total" },
+          { "name": "Latin America", "amount": "$340K",  "share": 0.18, "meta": "8% of total"  },
+          { "name": "Other",         "amount": "$130K",  "share": 0.07, "meta": "3% of total"  }
+        ]
+      }
+    },
+    {
+      "type": "compare",
+      "props": {
+        "panels": [
+          {
+            "label": "Quarter over quarter",
+            "rows": [
+              { "metric": "Total revenue", "a": "$4.2M", "b": "$3.9M", "delta": "+8%",   "dir": "up"   },
+              { "metric": "Deals closed",  "a": "47",    "b": "42",    "delta": "+5",    "dir": "up"   },
+              { "metric": "Avg deal size", "a": "$89K",  "b": "$93K",  "delta": "−4%",   "dir": "down" },
+              { "metric": "Win rate",      "a": "34%",   "b": "31%",   "delta": "+3 pt", "dir": "up"   },
+              { "metric": "New logos",     "a": "11",    "b": "9",     "delta": "+2",    "dir": "up"   }
+            ]
+          },
+          {
+            "label": "Year over year",
+            "rows": [
+              { "metric": "Total revenue", "a": "$4.2M", "b": "$3.1M", "delta": "+35%",  "dir": "up"   },
+              { "metric": "Deals closed",  "a": "47",    "b": "33",    "delta": "+14",   "dir": "up"   },
+              { "metric": "Avg deal size", "a": "$89K",  "b": "$94K",  "delta": "−5%",   "dir": "down" },
+              { "metric": "Win rate",      "a": "34%",   "b": "27%",   "delta": "+7 pt", "dir": "up"   },
+              { "metric": "New logos",     "a": "11",    "b": "7",     "delta": "+4",    "dir": "up"   }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "table",
+      "props": {
+        "title": "Open Pipeline",
+        "sub": "Deals above $200K currently in active stage",
+        "headers": ["Account", "Stage", "Value", "Close Date", "Status"],
+        "rows": [
+          ["Helix Financial",   "Proposal",    "$480K", "Jul 12", "badge:green:On Track"  ],
+          ["Nova Logistics",    "Final Round", "$310K", "Jul 5",  "badge:amber:At Risk"   ],
+          ["Cedarwood Health",  "Negotiation", "$290K", "Jul 20", "badge:green:On Track"  ],
+          ["Apex Manufacturing","Proposal",    "$260K", "Jul 31", "badge:blue:In Review"  ],
+          ["Stratos Capital",   "Demo",        "$240K", "Aug 8",  "badge:gray:Early Stage"]
+        ]
+      }
+    },
+    {
+      "type": "status-grid",
+      "props": {
+        "title": "Go-to-Market Workstreams",
+        "sub": "End-of-quarter health by initiative",
+        "items": [
+          { "name": "Enterprise expansion playbook", "status": "green", "value": "Complete"        },
+          { "name": "Partner channel enablement",    "status": "green", "value": "On track"        },
+          { "name": "APAC territory rebuild",        "status": "amber", "value": "At risk · Q3"   },
+          { "name": "CRM data migration",            "status": "amber", "value": "At risk · Jul 15"},
+          { "name": "ERP vendor selection",          "status": "red",   "value": "Blocked"         },
+          { "name": "FY27 quota planning",           "status": "blue",  "value": "In review"       }
+        ]
+      }
+    },
+    {
+      "type": "highlights",
+      "props": {
+        "items": [
+          {
+            "tag": "Bright spot",
+            "body": "Enterprise ACV reached an all-time high of $142K, driven by two seven-figure expansions in June. The cohort of customers renewing at >120% NRR grew to nine accounts — the strongest retention signal since Series A."
+          },
+          {
+            "tag": "Risk",
+            "body": "APAC missed Q2 by $60K due to procurement delays at two strategic accounts. Both deals are now in the Q3 pipe. Regional leadership alignment is scheduled for June 10 to review the territory re-segmentation plan."
+          },
+          {
+            "tag": "Action needed",
+            "body": "ERP vendor selection is blocked. The preferred vendor's pricing hold expires June 15 — roughly 10 business days away. Finance and Ops leads must decide this week or risk a 12-week delay to the go-live target."
+          },
+          {
+            "tag": "Next quarter",
+            "body": "Q3 pipeline stands at $6.1M, giving the team 1.5× coverage heading into the quarter. Priority closes: Nova Logistics (Jul 5), Helix Financial (Jul 12), and Cedarwood Health (Jul 20) represent $1.08M combined."
+          }
+        ]
+      }
+    }
+  ]
+}

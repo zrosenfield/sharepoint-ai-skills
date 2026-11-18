@@ -1,0 +1,201 @@
+# Product Release Announcements — Skills Demo
+# Full skills lifecycle: create, update, run, compose. Product marketing use case on a live document library.
+
+[var: SITE = https://microsoft.sharepoint-df.com/sites/CommunityDemos/]
+[var: LIBRARY = ${SITE}Product%20Announcements/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Product Announcements" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+Uploading the five product announcement documents.
+
+[upload-library: tools/scripts/17-product-announcements/assets/Zava-Spark-AI-Assistant-v3.docx]
+[upload-library: tools/scripts/17-product-announcements/assets/Zava-DataConnect-Platform-Update.docx]
+[upload-library: tools/scripts/17-product-announcements/assets/Zava-SecureVault-Compliance-Pack.docx]
+[upload-library: tools/scripts/17-product-announcements/assets/Zava-FlowBuilder-Integration-Suite.docx]
+[upload-library: tools/scripts/17-product-announcements/assets/Zava-InsightHub-Analytics-Dashboard.docx]
+
+[new-chat]
+
+Confirm all 5 documents are visible in the library.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Five product release announcements. They come in from different product teams,
+different owners, different formats. The filenames are whatever the author
+saved them as. Right now this library is basically a pile. Let's make it useful.
+
+[pause]
+
+[open-chat]
+
+[new-chat]
+
+First thing — let's see what's inside these files without opening any of them.
+
+[prompt: Read these docs and extract product name, release date, and target audience into columns]
+
+[wait]
+
+The AI opened all five documents, found the metadata, and added three columns to
+the library view — Product Name, Release Date, Target Audience — all populated.
+Nobody defined a schema. Nobody set up a form. The AI figured out what to look
+for and structured it. That's the warm-up. Now let's build something reusable.
+
+[pause]
+
+Instead of asking for a one-off rename, I want a skill. A saved prompt that
+anyone on the team can run on any new file that comes in.
+
+[prompt: Create a skill called "rename announcements" that renames files to follow the pattern: YYYY-MM — Product Name — Release Announcement]
+
+[wait]
+
+That's it. The skill exists. I didn't configure a flow, I didn't write a
+macro, I just described what I wanted. Anyone on this site can now run
+"rename announcements" without knowing the naming convention. But I want
+to refine it before we run it.
+
+[pause]
+
+[prompt: Update the rename skill to also add "DRAFT" at the beginning if the target audience is internal only]
+
+[wait]
+
+Skill updated. I didn't create a second skill, didn't copy-paste anything.
+The existing skill just got smarter. This is the part that surprises people —
+skills aren't static. You evolve them the same way you evolve a process.
+
+[pause]
+
+Now let's run it.
+
+[prompt: Run the rename skill on all files]
+
+[wait]
+
+All five files renamed. The pattern is consistent: year-month, product name,
+release announcement. Because none of these are internal-only docs, none
+got the DRAFT prefix — but the logic is there. If someone uploads an internal
+doc next week, it'll be handled correctly automatically.
+
+[pause]
+
+Now let's build a second skill — totally different purpose. File naming is
+one thing. Content quality is another. Our announcements go out to partners
+and customers. If the customer-facing sections have jargon, passive voice,
+fear-based language, or unsupported claims, that's a problem. Let's make
+the AI check for that.
+
+[prompt: Create a skill called "tone review" that checks the customer-facing sections of announcements for: jargon, passive voice, fear-based language, unsupported superlatives, and overly casual tone]
+
+[wait]
+
+Brand compliance skill, created. Now let's run it across the whole library
+and track what it finds.
+
+[pause]
+
+[prompt: Add a Yes/No column called "Updates Needed" and run the tone review skill on all docs — mark Yes for any that need changes]
+
+[wait]
+
+Four out of five flagged. Let's look at what it found. The Spark AI doc is
+clean — that's the control. Now look at DataConnect: the customer-facing
+section is full of technical jargon that an engineer wrote for other engineers.
+"Sharded multi-tenant ingestion pipeline." "Serialization and deserialization
+layers." Customers don't speak that language.
+
+SecureVault has a different problem: fear-based language. "Failure to comply
+will result in..." That's not how you write a product announcement. And it
+keeps switching between "we" and "the company" — inconsistent voice throughout.
+
+FlowBuilder is claiming to be "best-in-class," "industry-leading,"
+"unmatched" — none of those claims are backed by anything in the doc.
+There are also grammar errors in there. The AI caught both.
+
+InsightHub buries the lead by three paragraphs and then calls it "pretty cool
+stuff." That's not an enterprise product announcement.
+
+The Spark doc passes clean. The AI isn't flagging everything — it's flagging
+specific, real issues in the four that have them.
+
+[pause]
+
+Now the last piece. Skills can generate content, not just analyze it.
+These documents are the source of truth for each release. Let's turn
+one of them into a ready-to-post announcement.
+
+[prompt: Create a skill called "social blurb" that writes a tweet-length announcement from the doc — run it on the Spark AI one]
+
+[wait]
+
+One 2-page internal document became a clean, postable announcement in one
+prompt. No copy-paste, no rewriting, no reformatting. And because it's a
+skill, the next person who uploads a release announcement can run the same
+skill. The library becomes a content pipeline.
+
+Three skills. Create, update, run, compose. That's the full lifecycle —
+and every step was a short sentence in plain English.
+
+[pause]
+
+[screenshot: tools/screenshots/17-product-announcements-final.png]
+
+[section: reset]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the skill called "rename announcements" if it exists.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Delete the skill called "tone review" if it exists.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Delete the skill called "social blurb" if it exists.]
+
+[wait]
+
+[navigate: ${LIBRARY}]
+
+[new-chat]
+
+[prompt: Delete all files from this Product Announcements library.]
+
+[wait]
+
+[new-chat]
+
+[prompt: Remove the Product Name, Release Date, Target Audience, and Updates Needed columns from this library.]
+
+[wait]
+
+[new-chat]

@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI HTML Generation · Three Approaches</title>
+<style>
+:root{
+  --bg:#faf7f2;--surface:#ffffff;--ink:#1a1814;--ink-muted:#7a7268;
+  --accent:#c8553d;--accent-soft:#f9e6e2;--negative:#b91c1c;
+  --border:#e8e2d8;--grid:#f0ece4;
+  --radius:16px;--pad:28px;--gap:20px;
+  --font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --fs-hero:clamp(28px,4.2vw,52px);
+  --fs-h2:18px;--fs-body:15px;--fs-small:13px;--fs-tiny:11px;
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:var(--fs-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:1100px;margin:0 auto;padding:48px 40px 80px}
+
+.rpt-header{display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:56px}
+.rpt-header .company{font-weight:600;font-size:16px;letter-spacing:-0.01em}
+.rpt-header .label{font-size:var(--fs-small);color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase}
+
+.hero{margin-bottom:56px}
+.hero h1{font-size:var(--fs-hero);font-weight:400;line-height:1.15;
+  letter-spacing:-0.02em;max-width:24ch;margin:0 0 16px 0}
+.hero .accent{color:var(--accent)}
+.hero p{font-size:18px;color:var(--ink-muted);line-height:1.5;max-width:54ch;margin:0}
+
+.eyebrow{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--ink-muted);margin-bottom:8px}
+.section-title{font-size:var(--fs-h2);font-weight:500;letter-spacing:-0.01em;margin:0 0 28px 0}
+section{margin-bottom:56px}
+
+/* ── THREE TYPE CARDS ──────────────────────────── */
+.type-cards{display:flex;flex-direction:column;gap:var(--gap)}
+
+.type-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  display:grid;grid-template-columns:48px 1fr;
+}
+.type-card.featured{border-color:var(--accent)}
+
+.type-num{
+  background:var(--grid);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:28px 0 0;
+  font-family:var(--mono);font-size:22px;font-weight:700;
+  color:var(--ink-muted);letter-spacing:-0.02em;
+}
+.type-card.featured .type-num{background:var(--accent-soft);color:var(--accent)}
+
+.type-body{padding:var(--pad);display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+
+.type-label{font-size:20px;font-weight:600;letter-spacing:-0.01em;margin:0 0 6px 0}
+.type-tagline{font-size:var(--fs-small);color:var(--ink-muted);margin:0 0 20px 0;line-height:1.5}
+
+.type-traits{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.trait{display:flex;gap:10px;align-items:flex-start;font-size:var(--fs-small);line-height:1.4}
+.trait-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);flex-shrink:0;margin-top:5px;
+}
+.type-card:not(.featured) .trait-dot{background:var(--ink-muted)}
+
+.best-for{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:var(--fs-tiny);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;
+  color:var(--ink-muted);
+}
+.best-for-val{color:var(--ink);font-weight:600}
+.type-card.featured .best-for-val{color:var(--accent)}
+
+/* Anatomy diagram */
+.diagram{display:flex;flex-direction:column;gap:10px}
+.dia-row{display:flex;align-items:center;gap:10px}
+.dia-box{
+  flex:1;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-sm,10px);padding:12px 14px;
+}
+.dia-box.variable{background:var(--accent-soft);border-color:var(--accent)}
+.dia-box.fixed{background:var(--grid);border-color:var(--border);opacity:0.8}
+.dia-box.output{background:var(--surface);border-color:var(--border)}
+.dia-box-label{font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.07em;
+  color:var(--ink-muted);margin-bottom:4px;font-weight:600}
+.dia-box.variable .dia-box-label{color:var(--accent)}
+.dia-box-content{font-family:var(--mono);font-size:11px;color:var(--ink-muted);line-height:1.5}
+.dia-box.variable .dia-box-content{color:var(--ink)}
+.dia-arrow{font-size:18px;color:var(--accent);flex-shrink:0;opacity:0.6}
+.dia-note{font-size:var(--fs-tiny);color:var(--ink-muted);font-style:italic;margin-top:4px}
+
+/* Component chips (for type 3) */
+.dia-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.dia-chip{
+  padding:3px 10px;border-radius:20px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:11px;color:var(--ink-muted);white-space:nowrap;
+}
+.dia-chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:600}
+.dia-seq{display:flex;flex-direction:column;gap:4px}
+.dia-seq-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-muted)}
+.dia-seq-label{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;
+  color:var(--ink-muted);width:56px;flex-shrink:0;font-weight:600}
+.dia-seq-chips{display:flex;flex-wrap:wrap;gap:4px}
+.dia-seq-chip{
+  padding:2px 8px;border-radius:20px;font-size:10px;
+  background:var(--grid);border:1px solid var(--border);color:var(--ink-muted);
+}
+.dia-seq-chip.lead{
+  background:var(--accent-soft);border-color:var(--accent);
+  color:var(--ink);font-weight:600;
+}
+
+/* ── COMPARISON TABLE ──────────────────────────── */
+.compare-table{width:100%;border-collapse:collapse}
+.compare-table th{
+  font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--ink-muted);text-align:left;padding:0 12px 12px 0;
+  border-bottom:1px solid var(--border);
+}
+.compare-table th:first-child{width:160px}
+.compare-table td{
+  padding:12px 12px 12px 0;font-size:var(--fs-small);
+  border-bottom:1px solid var(--grid);vertical-align:top;line-height:1.45;
+}
+.compare-table tr:last-child td{border-bottom:0}
+.compare-table .row-label{font-weight:600;color:var(--ink)}
+.check{color:var(--accent);font-weight:700}
+.cross{color:var(--ink-muted);opacity:0.4}
+.highlight-col{background:var(--accent-soft)}
+.compare-table th.highlight-col{color:var(--accent)}
+
+/* ── GETTING STARTED ───────────────────────────── */
+.getting-started{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+
+.gs-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:var(--pad);
+}
+.gs-card h3{font-size:var(--fs-h2);font-weight:500;letter-spacing:-0.01em;margin:0 0 16px 0}
+
+.step-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px}
+.step-item{display:flex;gap:14px;align-items:flex-start}
+.step-num{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  font-size:var(--fs-tiny);font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.step-body{font-size:var(--fs-small);line-height:1.5}
+.step-body strong{font-weight:600;color:var(--ink);display:block;margin-bottom:2px}
+.step-body span{color:var(--ink-muted)}
+
+.prompt-card{
+  background:var(--grid);border-radius:var(--radius-sm,10px);
+  padding:16px;margin-top:20px;
+}
+.prompt-card-label{font-size:var(--fs-tiny);text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--ink-muted);margin-bottom:8px;font-weight:600}
+.prompt-text{font-family:var(--mono);font-size:12px;color:var(--ink);line-height:1.6}
+
+.demo-list{display:flex;flex-direction:column;gap:10px}
+.demo-item{
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;
+  align-items:center;padding:12px 14px;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm,10px);
+}
+.demo-item-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--accent-soft);border:1px solid var(--accent);
+  color:var(--accent);font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.demo-item-name{font-size:var(--fs-small);font-weight:600;color:var(--ink)}
+.demo-item-sub{font-size:var(--fs-tiny);color:var(--ink-muted);margin-top:1px}
+.demo-item-palette{
+  font-size:var(--fs-tiny);padding:2px 8px;border-radius:10px;
+  background:var(--grid);color:var(--ink-muted);white-space:nowrap;font-weight:600;
+}
+
+/* footer */
+.rpt-footer{
+  margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:var(--fs-tiny);color:var(--ink-muted);
+  display:flex;justify-content:space-between;gap:16px;
+}
+
+@media(max-width:820px){
+  .type-card{grid-template-columns:1fr}
+  .type-num{display:none}
+  .type-body{grid-template-columns:1fr}
+  .getting-started{grid-template-columns:1fr}
+  .page{padding:32px 20px 60px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+
+<div class="rpt-header">
+  <div class="company">Zava Industries · AI Skills</div>
+  <div class="label">HTML Generation · Three Approaches</div>
+</div>
+
+<div class="hero">
+  <h1>Three ways AI generates <span class="accent">HTML reports.</span></h1>
+  <p>The same prompt, the same output quality — but very different architectures underneath. Each approach makes different trade-offs between simplicity, reusability, and flexibility.</p>
+</div>
+
+
+<!-- ── SECTION 1: THE THREE TYPES ────────────────── -->
+<section>
+  <div class="eyebrow">The approaches</div>
+  <div class="section-title">From simplest to most powerful</div>
+  <div class="type-cards">
+
+    <!-- TYPE 1 -->
+    <div class="type-card">
+      <div class="type-num">1</div>
+      <div class="type-body">
+        <div>
+          <h2 class="type-label">Hardcoded output</h2>
+          <p class="type-tagline">The AI writes everything — content and markup — in one shot. Every update means regenerating the whole file.</p>
+          <div class="type-traits">
+            <div class="trait"><span class="trait-dot"></span><span>Simple to prompt — just describe what you want</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>All content lives in the HTML; no separate data file</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>Style varies each generation — not guaranteed consistent</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>To update the data, regenerate the whole report</span></div>
+          </div>
+          <div class="best-for">Best for: <span class="best-for-val">&nbsp;one-off reports, quick wins, exploratory outputs</span></div>
+        </div>
+        <div class="diagram">
+          <div class="dia-row">
+            <div class="dia-box variable">
+              <div class="dia-box-label">Prompt + data</div>
+              <div class="dia-box-content">"Build a hiring report.<br>47 candidates, 8 roles..."</div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:22px;color:var(--ink-muted);opacity:0.5">↓ AI writes everything</div>
+          <div class="dia-row">
+            <div class="dia-box output">
+              <div class="dia-box-label">Complete HTML</div>
+              <div class="dia-box-content">&lt;h1&gt;Hiring Report&lt;/h1&gt;<br>&lt;div&gt;47 candidates&lt;/div&gt;<br>&lt;div&gt;8 open roles&lt;/div&gt;<br>&lt;style&gt;...all CSS...&lt;/style&gt;</div>
+            </div>
+          </div>
+          <div class="dia-note">Every value, every color, every layout decision baked in.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPE 2 -->
+    <div class="type-card">
+      <div class="type-num">2</div>
+      <div class="type-body">
+        <div>
+          <h2 class="type-label">JSON blob + template</h2>
+          <p class="type-tagline">The template defines structure and style (fixed). The JSON blob carries the data (variable). Only the blob changes each run.</p>
+          <div class="type-traits">
+            <div class="trait"><span class="trait-dot"></span><span>Style is guaranteed — the CSS never changes</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>Updates are cheap — swap the JSON, re-render</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>The JSON is the consistency layer — same input, same output</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>Structure is fixed — every report has the same layout</span></div>
+          </div>
+          <div class="best-for">Best for: <span class="best-for-val">&nbsp;recurring reports with a fixed structure (quarterly, weekly)</span></div>
+        </div>
+        <div class="diagram">
+          <div class="dia-row">
+            <div class="dia-box fixed">
+              <div class="dia-box-label">Template (fixed)</div>
+              <div class="dia-box-content">&#123;&#123;REVENUE&#125;&#125;<br>&#123;&#123;DEALS&#125;&#125;<br>&#123;&#123;REGION_BARS&#125;&#125;</div>
+            </div>
+            <div style="width:10px"></div>
+            <div class="dia-box variable">
+              <div class="dia-box-label">JSON blob (changes)</div>
+              <div class="dia-box-content">"revenue": "$4.2M"<br>"deals": 47<br>"regions": [...]</div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:22px;color:var(--ink-muted);opacity:0.5">↓ AI fills the slots</div>
+          <div class="dia-row">
+            <div class="dia-box output">
+              <div class="dia-box-label">Rendered HTML</div>
+              <div class="dia-box-content">$4.2M ← revenue slot filled<br>47 ← deals slot filled<br>████░░ ← bars filled</div>
+            </div>
+          </div>
+          <div class="dia-note">Like a mail merge. The form never changes; only the data does.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPE 3 -->
+    <div class="type-card featured">
+      <div class="type-num">3</div>
+      <div class="type-body">
+        <div>
+          <h2 class="type-label">Component library</h2>
+          <p class="type-tagline">A shared palette and a catalog of named blocks. The AI picks which components to use and in what order — based on what the data's story calls for.</p>
+          <div class="type-traits">
+            <div class="trait"><span class="trait-dot"></span><span>Style is shared across every report in the family</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>Structure varies — the AI assembles the right blocks for the story</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>Revenue report and people report look related but aren't the same layout</span></div>
+            <div class="trait"><span class="trait-dot"></span><span>Adding a new report type means choosing from existing components, not redesigning</span></div>
+          </div>
+          <div class="best-for">Best for: <span class="best-for-val">&nbsp;a family of reports that need to feel like one system</span></div>
+        </div>
+        <div class="diagram">
+          <div style="margin-bottom:6px">
+            <div class="dia-box-label" style="font-size:var(--fs-tiny);text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-muted);font-weight:600;margin-bottom:6px">Component catalog (shared)</div>
+            <div class="dia-chips">
+              <span class="dia-chip on">hero</span>
+              <span class="dia-chip on">kpi-row</span>
+              <span class="dia-chip on">trend</span>
+              <span class="dia-chip on">bar-list</span>
+              <span class="dia-chip on">compare</span>
+              <span class="dia-chip on">table</span>
+              <span class="dia-chip on">status-grid</span>
+              <span class="dia-chip on">highlights</span>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:22px;color:var(--ink-muted);opacity:0.5">↓ AI selects + sequences</div>
+          <div class="dia-seq">
+            <div class="dia-seq-row">
+              <span class="dia-seq-label">Revenue</span>
+              <div class="dia-seq-chips">
+                <span class="dia-seq-chip">hero</span>
+                <span class="dia-seq-chip">kpi-row</span>
+                <span class="dia-seq-chip lead">trend</span>
+                <span class="dia-seq-chip">bar-list</span>
+                <span class="dia-seq-chip">compare</span>
+                <span class="dia-seq-chip">highlights</span>
+              </div>
+            </div>
+            <div class="dia-seq-row">
+              <span class="dia-seq-label">People</span>
+              <div class="dia-seq-chips">
+                <span class="dia-seq-chip">hero</span>
+                <span class="dia-seq-chip lead">status-grid</span>
+                <span class="dia-seq-chip">compare</span>
+                <span class="dia-seq-chip lead">table</span>
+                <span class="dia-seq-chip">bar-list</span>
+                <span class="dia-seq-chip">highlights</span>
+              </div>
+            </div>
+          </div>
+          <div class="dia-note">Same CSS. Different structure. Both unmistakably the same design system.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ── SECTION 2: COMPARISON TABLE ───────────────── -->
+<section>
+  <div class="eyebrow">Trade-offs</div>
+  <div class="section-title">Choosing the right approach</div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>1 · Hardcoded</th>
+        <th>2 · JSON + Template</th>
+        <th class="highlight-col">3 · Component library</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-label">Setup effort</td>
+        <td>None — just prompt</td>
+        <td>Build the template once</td>
+        <td class="highlight-col">Build template + component catalog once</td>
+      </tr>
+      <tr>
+        <td class="row-label">Style consistency</td>
+        <td>Varies each run</td>
+        <td><span class="check">✓</span> Guaranteed by template</td>
+        <td class="highlight-col"><span class="check">✓</span> Guaranteed by shared CSS tokens</td>
+      </tr>
+      <tr>
+        <td class="row-label">Layout flexibility</td>
+        <td>Each generation can differ</td>
+        <td>Fixed — same layout every time</td>
+        <td class="highlight-col"><span class="check">✓</span> AI assembles the right structure for the data</td>
+      </tr>
+      <tr>
+        <td class="row-label">Cross-report family</td>
+        <td><span class="cross">✗</span> Not applicable</td>
+        <td>Only within one template</td>
+        <td class="highlight-col"><span class="check">✓</span> All reports in the family share one design system</td>
+      </tr>
+      <tr>
+        <td class="row-label">Incremental update</td>
+        <td>Full regeneration</td>
+        <td><span class="check">✓</span> Swap JSON, re-render</td>
+        <td class="highlight-col"><span class="check">✓</span> Swap JSON, re-render</td>
+      </tr>
+      <tr>
+        <td class="row-label">Example in this demo</td>
+        <td>Hiring pipeline report</td>
+        <td>Roadmap, Scorecard, Dossier</td>
+        <td class="highlight-col">Exec report (revenue + people)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ── SECTION 3: GETTING STARTED ────────────────── -->
+<section>
+  <div class="eyebrow">Getting started</div>
+  <div class="section-title">Run your first demo in under 5 minutes</div>
+  <div class="getting-started">
+
+    <div class="gs-card">
+      <h3>Setup steps</h3>
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Install the skill</strong>
+            <span>Upload the skill folder to <em>AgentAssets → Skills</em> in your SharePoint site. The agent discovers it automatically.</span>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Prepare your data</strong>
+            <span>Either import the demo CSV into a SharePoint list, or attach the CSV file directly in the chat before sending the prompt.</span>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Send the prompt</strong>
+            <span>Copy a prompt from the five below. The skill interviews you if anything is missing, then builds the JSON and renders the HTML.</span>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>Open the file</strong>
+            <span>The skill delivers a self-contained HTML file. Open it in any browser — no server, no CDN, no dependencies.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="gs-card">
+      <h3>The five demo prompts</h3>
+      <div class="demo-list">
+        <div class="demo-item">
+          <div class="demo-item-num">1</div>
+          <div>
+            <div class="demo-item-name">Q2 Revenue Report</div>
+            <div class="demo-item-sub">exec-report · attach q2-deals.csv + q2-projects.csv</div>
+          </div>
+          <div class="demo-item-palette">warm paper</div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item-num">2</div>
+          <div>
+            <div class="demo-item-name">People &amp; Culture Report</div>
+            <div class="demo-item-sub">exec-report · attach open-roles.csv + headcount-targets.csv</div>
+          </div>
+          <div class="demo-item-palette">warm paper</div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item-num">3</div>
+          <div>
+            <div class="demo-item-name">H2 Product Roadmap</div>
+            <div class="demo-item-sub">roadmap-timeline · reads from Roadmap Items list</div>
+          </div>
+          <div class="demo-item-palette">slate</div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item-num">4</div>
+          <div>
+            <div class="demo-item-name">CRM Evaluation Scorecard</div>
+            <div class="demo-item-sub">scorecard-matrix · attach crm-evaluation.csv</div>
+          </div>
+          <div class="demo-item-palette">clean white</div>
+        </div>
+        <div class="demo-item">
+          <div class="demo-item-num">5</div>
+          <div>
+            <div class="demo-item-name">Competitor Brief</div>
+            <div class="demo-item-sub">dossier · reads from Competitors list</div>
+          </div>
+          <div class="demo-item-palette">deep ink</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:var(--gap);background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--radius);padding:20px 24px;display:flex;gap:16px;align-items:flex-start">
+    <div style="font-size:20px;flex-shrink:0">→</div>
+    <p style="margin:0;font-size:var(--fs-body);line-height:1.55">
+      <strong>Start with prompt 1</strong> — the Q2 Revenue Report. It demonstrates all three architectural points in one demo: the JSON consistency layer is visible, the component assembly is clear (hero → trend → bars → compare), and the warm-paper palette makes an immediate visual impression. From there, prompt 2 (People) shows the same skill producing a structurally different report. That's the moment the architecture clicks for most audiences.
+    </p>
+  </div>
+</section>
+
+
+<div class="rpt-footer">
+  <div>Zava Industries · AI Skills Demo Suite · May 2026</div>
+  <div>exec-report · roadmap-timeline · scorecard-matrix · dossier</div>
+</div>
+
+</main>
+</body>
+</html>

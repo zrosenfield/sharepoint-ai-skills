@@ -7,20 +7,41 @@
 
 [section: setup]
 
-This demo requires Demo 7 (Auto-Tag Everything) to have been run first so that
-metadata columns are populated. Verify the "Project Documents" library has
-Department, Document Type, Confidentiality, and Summary filled in for all 6
-files. If any view called "Confidential Review" exists from a previous run,
-delete it.
-
-[navigate: ${LIBRARY}]
+[navigate: ${SITE}]
 
 [open-chat]
 
 [new-chat]
 
-Confirm all 6 files have populated metadata columns and no "Confidential
-Review" view exists in the view switcher.
+[prompt: Create a document library called "Project Documents" if it doesn't already exist. Add these columns if they don't exist: Department (Choice: Marketing, Finance, HR, Legal, Engineering), Document Type (Choice: Policy, Contract, Report, Presentation, Proposal), Confidentiality (Choice: Public, Internal, Confidential, Restricted), Summary (Multiple lines of text).]
+
+[wait]
+
+[sleep: 5s]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+[upload-library: tools/scripts/08-smart-views-metadata/assets/HR-Policy.docx]
+[upload-library: tools/scripts/08-smart-views-metadata/assets/Marketing-Proposal.docx]
+[upload-library: tools/scripts/08-smart-views-metadata/assets/Legal-Contract.docx]
+[upload-library: tools/scripts/08-smart-views-metadata/assets/Finance-Report.docx]
+[upload-library: tools/scripts/08-smart-views-metadata/assets/NDA-Agreement.docx]
+[upload-library: tools/scripts/08-smart-views-metadata/assets/Salary-Bands.docx]
+
+[new-chat]
+
+[prompt: Read each file in this library. For every file, fill in the Department, Document Type, Confidentiality, and Summary columns based on the file's content.]
+
+[wait]
+
+[new-chat]
+
+Confirm "Project Documents" library exists with Department, Document Type,
+Confidentiality, and Summary columns. Confirm 6 files have populated
+metadata columns and no "Confidential Review" view exists in the view
+switcher.
 
 [pause]
 

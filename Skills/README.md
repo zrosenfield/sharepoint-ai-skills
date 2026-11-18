@@ -1,69 +1,71 @@
-# Skills
+# Experimental SharePoint Skills
 
-AI skills are instruction files that give a Copilot agent a focused capability. Each skill lives in its own folder and is installed by uploading that folder to the **Skills** library in SharePoint.
+The skills in this directory are prototypes and incubation candidates. Maintained community skills live in the official [PnP SharePoint Skills repository](https://github.com/pnp/sharepoint-skills).
 
-## Available Skills
+Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, following the [Agent Skills specification](https://agentskills.io/specification).
 
-| Folder | Skill | Description |
-|---|---|---|
-| [authoring-sharepoint-markdown/](./authoring-sharepoint-markdown/) | Authoring SharePoint Markdown | Converts documents and gathered content into SharePoint-compatible markdown files. Covers formatting rules, templates, and a six-step workflow for publishing to SharePoint pages and web parts. |
-| [brainstorming-design-docs/](./brainstorming-design-docs/) | Brainstorming to Design Doc | Guides a raw idea through structured brainstorming into a complete design document. Asks clarifying questions one at a time, proposes alternatives with trade-offs, builds the design incrementally with user approval, then delivers SharePoint-ready Markdown. |
-| [copy-editing/](./copy-editing/) | Copy Editing | Edits documents using seven sequential sweeps: Clarity, Voice & Tone, So What, Prove It, Specificity, Scannability, and Action. Run all sweeps for a full edit, or target a specific one. |
-| [decision-log/](./decision-log/) | Decision Log | Extracts Decision Records from video or audio transcripts. Captures the problem, options considered, who decided, rationale, dissent, conditions, and follow-on actions. |
-| [executive-summary/](./executive-summary/) | Executive Summary | Distills long documents, reports, or transcripts into tight one-page summaries for leadership audiences. Surfaces the core situation, key findings, recommendation, and what the reader needs to do. |
-| [faq-building/](./faq-building/) | FAQ Building | Builds structured FAQ pages from source documents, policies, process guides, or topic briefs. Anticipates reader questions, groups them into themes, writes clear Q&A pairs, and delivers SharePoint-ready Markdown. |
-| [forest-style/](./forest-style/) | Forest-Style Brand | Applies the forest-style brand system to any visual output, document, web content, presentation, or interface element. Covers the full color palette, typography, spacing, component styles, and voice rules. |
-| [gap-analysis/](./gap-analysis/) | Gap Analysis | Compares two documents and surfaces what is missing, conflicting, changed, or new between them. Categorizes findings by severity and summarizes implications and recommended actions. |
-| [linkedin-post/](./linkedin-post/) | LinkedIn Post Writing | Crafts high-performing LinkedIn posts from any topic, story, announcement, or idea. Covers hook formulas, format rules, five content types, and an optimization checklist. |
-| [list-formatting/](./list-formatting/) | SharePoint List Formatting | Creates SharePoint list and library JSON formatters. Covers column formatting, view formatting, group headers/footers, and form layout. On first use, reads a companion reference file (`formatting-knowledge.md`) bundled in the skill folder for complete technical context on element types, expressions, tokens, CSS classes, Fluent UI icons, actions, and proven patterns. |
-| [meeting-notes/](./meeting-notes/) | Meeting Notes | Transforms raw video or audio transcripts into polished, structured meeting summaries. Handles messy auto-generated transcripts, extracts decisions, action items, discussion threads, and key quotes. |
-| [project-brief/](./project-brief/) | Project Brief | Turns a rough idea or stakeholder request into a structured project brief. Asks clarifying questions to establish problem, goals, success criteria, scope, stakeholders, and risks, then delivers a decision-ready document. |
-| [ralph-loop/](./ralph-loop/) | RALPH Loop | A self-evaluating iterative execution pattern (Reason → Act → Look → Probe → Harden). Keeps the agent looping until all success criteria hit a configurable score threshold. |
-| [scrollytelling-story/](./scrollytelling-story/) | Scrollytelling Story | Creates interactive HTML scrolling explainers with a pinned D3 graphic that rearranges the same data marks across a coherent narrative. Includes playback controls, an auditable data table, and SharePoint source handling. |
-| [style-guidelines/](./style-guidelines/) | Brand Style Guide Template | A fill-in-the-blank template for turning any organization's brand guide into an AI skill. Covers color palette, typography, spacing tokens, and component styles. |
-| [uppababy-brand-review/](./uppababy-brand-review/) | UPPAbaby Brand Compliance Review | Reviews any content file against UPPAbaby brand guidelines. Produces a weighted scorecard across five categories plus a prioritized remediation list. |
-| [youtube-description/](./youtube-description/) | YouTube Description Generator | Turns a video transcript into an engaging YouTube description with a hook, summary, timestamps, key takeaways, and hashtags. |
+## Experimental Skills
 
-## Installing a Skill
+| Skill | Purpose |
+|---|---|
+| [`authoring-sharepoint-markdown`](./authoring-sharepoint-markdown/) | Produces SharePoint-compatible Markdown |
+| [`autoresearch`](./autoresearch/) | Performs iterative multi-step research |
+| [`brainstorming-design-docs`](./brainstorming-design-docs/) | Turns ideas into structured design documents |
+| [`copy-editing`](./copy-editing/) | Runs a structured copy-editing workflow |
+| [`decision-log`](./decision-log/) | Extracts structured decision records |
+| [`deck-assembly`](./deck-assembly/) | Assembles presentations from existing slide content |
+| [`design-direction`](./design-direction/) | Produces distinctive, professionally justified visual direction |
+| [`executive-summary`](./executive-summary/) | Produces concise leadership summaries |
+| [`faq-building`](./faq-building/) | Builds structured FAQ content |
+| [`find-expert`](./find-expert/) | Matches knowledge gaps to subject-matter experts |
+| [`forest-style`](./forest-style/) | Applies the experimental forest visual system |
+| [`gap-analysis`](./gap-analysis/) | Compares documents for gaps and conflicts |
+| [`hiring-pipeline-report`](./hiring-pipeline-report/) | Summarizes recruiting pipeline data |
+| [`improve-skills`](./improve-skills/) | Iteratively evaluates and improves skills |
+| [`ingest-knowledge`](./ingest-knowledge/) | Converts source material into structured knowledge |
+| [`kb-admin-report`](./kb-admin-report/) | Reports on knowledge-base health |
+| [`linkedin-post-writing`](./linkedin-post-writing/) | Drafts LinkedIn posts |
+| [`list-formatting`](./list-formatting/) | Creates SharePoint list-formatting JSON |
+| [`log-knowledge-gap`](./log-knowledge-gap/) | Records unanswered questions and routes them |
+| [`meeting-notes`](./meeting-notes/) | Converts transcripts into meeting notes |
+| [`project-brief`](./project-brief/) | Develops decision-ready project briefs |
+| [`quarterly-expense-report`](./quarterly-expense-report/) | Creates quarterly expense reports |
+| [`ralph-loop`](./ralph-loop/) | Applies an iterative self-evaluation loop |
+| [`scrollytelling-story`](./scrollytelling-story/) | Creates interactive scrolling explainers with a continuous D3 graphic and user-defined story lengths |
+| [`site-analyzer`](./site-analyzer/) | Analyzes SharePoint project sites |
+| [`style-guidelines`](./style-guidelines/) | Provides a brand-style skill template |
+| [`uppababy-brand-review`](./uppababy-brand-review/) | Experimental brand-compliance demo |
+| [`youtube-description`](./youtube-description/) | Generates descriptions from video transcripts |
 
-Skills follow the [agentskills.io specification](https://agentskills.io/specification). The `Skills/` library in SharePoint is created automatically — install by uploading the skill folder into it.
+## Graduated to PnP
 
-1. Download the skill folder (e.g., `copy-editing/`)
-2. In your SharePoint site, open the **Agent Assets** library
-3. Navigate into the **Skills** folder (auto-created)
-4. Upload the folder — the agent discovers it by the `name` field in `SKILL.md`
+These skills are maintained in `pnp/sharepoint-skills`. Their old local copies have been removed to prevent stale or conflicting installations.
 
-![The Skills folder in SharePoint showing uploaded skill folders](./images/skills-folder.png)
+| Skill | Maintained version |
+|---|---|
+| `dossier` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/dossier/dossier) |
+| `exec-report` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/exec-report/exec-report) |
+| `list-styling` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/list-styling/list-styling) |
+| `review-council` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/review-council/review-council) |
+| `roadmap-timeline` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/roadmap-timeline/roadmap-timeline) |
+| `scorecard-matrix` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/scorecard-matrix/scorecard-matrix) |
+| `style-bento` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-bento/style-bento) |
+| `style-blueprint` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-blueprint/style-blueprint) |
+| `style-figma-clean` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-figma-clean/style-figma-clean) |
+| `style-glassmorphism` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-glassmorphism/style-glassmorphism) |
+| `style-high-contrast` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-high-contrast/style-high-contrast) |
+| `style-monochrome` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-monochrome/style-monochrome) |
+| `style-neobrutalism` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-neobrutalism/style-neobrutalism) |
+| `style-pastel` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-pastel/style-pastel) |
+| `style-retro` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-retro/style-retro) |
+| `style-terminal` | [PnP source](https://github.com/pnp/sharepoint-skills/tree/main/Skills/style-terminal/style-terminal) |
 
-## Creating a Skill
+## Installing an Experimental Skill
 
-A skill is a folder containing a single `SKILL.md` file. The folder name must match the `name` field in the frontmatter exactly.
+Upload the individual skill folder, not the whole `Skills` directory:
 
-**Where it goes in SharePoint:** `Skills/<skill-name>/SKILL.md`
+1. Open the SharePoint site's **Agent Assets** library.
+2. Open the **Skills** folder.
+3. Upload `Skills/<skill-name>/`.
 
-**Minimal example — `Skills/summarize-page/SKILL.md`:**
-
-```markdown
----
-name: summarize-page
-description: Summarizes a SharePoint page in 3 bullet points.
-  Use when the user asks for a quick summary of a page.
----
-
-# Summarize Page
-
-## Instructions
-
-1. Read the full content of the specified page.
-2. Identify the 3 most important points.
-3. Return a bulleted summary, each bullet no longer than one sentence.
-```
-
-That's a complete, valid skill. The frontmatter tells the agent when to activate it; the body tells it what to do.
-
-## Contributing a Skill
-
-Skills work best when they are:
-- **Focused** — one capability per file
-- **Self-contained** — no external dependencies required to use it
-- **Documented** — frontmatter with `name` and `description` so agents can self-select the skill
+Experimental skills are not guaranteed to remain compatible or stable. Prefer the PnP version whenever one exists.

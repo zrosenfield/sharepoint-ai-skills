@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentation</title>
+<style>
+
+/* ═══════════════════════════════════════════════════
+   DESIGN SYSTEM — CSS CUSTOM PROPERTIES
+   Change these variables to retheme the entire deck.
+═══════════════════════════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --bg:            #0b1120;
+  --surface:       #131c2e;
+  --surface-2:     #1a2540;
+  --surface-3:     #1e2b45;
+  --border:        rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(99, 102, 241, 0.25);
+
+  /* Text */
+  --text-1: #ffffff;
+  --text-2: #94a3b8;
+  --text-3: #64748b;
+
+  /* Brand gradient: purple → blue */
+  --g-brand: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  /* Stat numbers: sky → lavender */
+  --g-num:   linear-gradient(135deg, #93c5fd 0%, #c4b5fd 100%);
+
+  /* Raw stops (for orbs, borders, etc.) */
+  --violet: #7c3aed;
+  --blue:   #3b82f6;
+
+  /* Typography */
+  --font: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* Layout */
+  --r:      16px;   /* card border-radius */
+  --r-lg:   24px;
+  --r-pill: 100px;
+  --gap:    24px;
+  --pad-h:  72px;
+  --pad-v:  56px;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  gap: 0;
+  padding: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   STAGE — the 16:9 viewport for all slides
+═══════════════════════════════════════════════════ */
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE BASE
+═══════════════════════════════════════════════════ */
+.slide {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  padding: var(--pad-v) var(--pad-h);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  /* Fade transition */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ═══════════════════════════════════════════════════
+   DECORATIVE ORBS
+   Add <div class="orb orb-tl"></div> etc. inside any slide.
+═══════════════════════════════════════════════════ */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.13;
+  z-index: 0;
+}
+.orb-tl { width: 520px; height: 520px; background: var(--violet); top: -180px; left: -160px; }
+.orb-tr { width: 480px; height: 480px; background: var(--violet); top: -160px; right: -160px; }
+.orb-bl { width: 400px; height: 400px; background: var(--blue);   bottom: -140px; left: -100px; }
+.orb-br { width: 440px; height: 440px; background: var(--blue);   bottom: -150px; right: -120px; }
+.orb-c  { width: 600px; height: 600px; background: var(--violet); top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.07; }
+
+/* Ensure slide content sits above orbs */
+.slide > *:not(.orb) { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════════
+   BADGE / PILL
+   Usage: <span class="badge">Label</span>
+═══════════════════════════════════════════════════ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--g-brand);
+  border-radius: var(--r-pill);
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  align-self: center;
+  margin-bottom: 20px;
+}
+
+/* ═══════════════════════════════════════════════════
+   GRADIENT TEXT UTILITY
+   Apply to any element to get the number gradient.
+═══════════════════════════════════════════════════ */
+.grad-text {
+  background: var(--g-num);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.brand-text {
+  background: var(--g-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ═══════════════════════════════════════════════════
+   SOURCE / ATTRIBUTION LINE
+   Usage: <p class="source">Source: Author, Publication</p>
+═══════════════════════════════════════════════════ */
+.source {
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: auto;
+  padding-top: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 1: slide-title
+   Use for: deck opener, major intro slide
+   Pattern: [orbs] [badge] [H1 large] [H2 subtitle]
+═══════════════════════════════════════════════════ */
+.slide-title {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+.slide-title h1 {
+  font-size: 82px;
+  font-weight: 800;
+  color: var(--text-1);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+.slide-title h2 {
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text-2);
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 2: slide-stat
+   Use for: benchmark results, key metrics, comparisons
+   Pattern: [badge] [title] [stats-grid cols-N]
+═══════════════════════════════════════════════════ */
+.slide-stat .stat-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.slide-stat .stat-head h2 {
+  font-size: 46px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.stats-grid {
+  display: grid;
+  gap: var(--gap);
+  flex: 1;
+  align-content: center;
+}
+.stats-grid.cols-1 { grid-template-columns: 1fr;           max-width: 420px; margin: 0 auto; width: 100%; }
+.stats-grid.cols-2 { grid-template-columns: 1fr 1fr;       }
+.stats-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr;   }
+.stats-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 44px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+/* Highlighted card variant — slightly darker, accent border */
+.stat-card.hi {
+  background: var(--surface-2);
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.1) inset;
+}
+
+.stat-num {
+  font-size: 88px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+/* Use .grad-text for gradient numbers, leave plain for white */
+
+.stat-label {
+  font-size: 18px;
+  color: var(--text-2);
+  font-weight: 400;
+  line-height: 1.45;
+  max-width: 200px;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 3: slide-statement
+   Use for: single striking statistic — the number IS the slide
+   Pattern: [orb] [giant number] [description]
+   No card wrapper — pure whitespace emphasis.
+═══════════════════════════════════════════════════ */
+.slide-statement {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+.statement-num {
+  font-size: 168px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  margin-bottom: 24px;
+}
+.statement-desc {
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text-2);
+  line-height: 1.5;
+  max-width: 660px;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 4: slide-section
+   Use for: section breaks, chapter intros
+   Pattern: [orb] [small uppercase label] [large H2]
+   Left-aligned, lots of breathing room.
+═══════════════════════════════════════════════════ */
+.slide-section {
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+}
+.section-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 24px;
+}
+.slide-section h2 {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--text-1);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 820px;
+}
+/* Optional accent bar */
+.section-bar {
+  width: 48px;
+  height: 3px;
+  background: var(--g-brand);
+  border-radius: 2px;
+  margin-bottom: 32px;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 5: slide-content
+   Use for: key points, takeaways, agenda, feature lists
+   Pattern: [title] [bullets with gradient dot markers]
+═══════════════════════════════════════════════════ */
+.slide-content .content-head {
+  margin-bottom: 36px;
+}
+.slide-content .content-head h2 {
+  font-size: 50px;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+.slide-content .content-head h3 {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-2);
+  margin-top: 10px;
+}
+
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  flex: 1;
+  justify-content: center;
+}
+.bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  font-size: 24px;
+  color: var(--text-2);
+  line-height: 1.45;
+}
+.bullet-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--g-brand);
+  margin-top: 10px;
+}
+.bullet strong { color: var(--text-1); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 6: slide-quote
+   Use for: customer voice, expert opinion, powerful statement
+   Pattern: [giant " mark] [quote text] [attribution]
+═══════════════════════════════════════════════════ */
+.slide-quote {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+.quote-mark {
+  font-size: 128px;
+  font-weight: 900;
+  line-height: 0.6;
+  margin-bottom: 28px;
+  display: block;
+  font-family: Georgia, serif;
+}
+.quote-text {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text-1);
+  line-height: 1.45;
+  max-width: 920px;
+  letter-spacing: -0.01em;
+}
+.quote-attr {
+  margin-top: 32px;
+  font-size: 17px;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+}
+.quote-attr strong {
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 7: slide-profile
+   Use for: speaker intro, customer spotlight
+   Pattern: [circular photo] [name] [title] [company badge]
+═══════════════════════════════════════════════════ */
+.slide-profile {
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+.profile-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+.profile-photo {
+  width: 176px;
+  height: 176px;
+  border-radius: 50%;
+  object-fit: cover;
+  /* Gradient ring via outline technique */
+  padding: 3px;
+  background: var(--g-brand);
+}
+.profile-photo-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  color: var(--text-3);
+  overflow: hidden;
+}
+.profile-photo-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.profile-name {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.02em;
+}
+.profile-role {
+  font-size: 22px;
+  color: var(--text-2);
+  font-weight: 400;
+}
+.profile-company {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE 8: slide-two-col
+   Use for: compare two ideas, feature breakdown,
+            mixed content (text + stat)
+   Pattern: [title] [two-column body]
+═══════════════════════════════════════════════════ */
+.slide-two-col .col-head {
+  margin-bottom: 28px;
+}
+.slide-two-col .col-head h2 {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  flex: 1;
+  align-items: center;
+}
+.col-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 20px;
+}
+.col-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 36px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.col-card.hi {
+  background: var(--surface-2);
+  border-color: var(--border-accent);
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════ */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 0 12px;
+  user-select: none;
+  width: 100%;
+  max-width: 1280px;
+  justify-content: center;
+}
+.nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.nav-btn:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+  border-color: rgba(255,255,255,0.15);
+}
+.nav-btn:active { transform: scale(0.95); }
+
+.nav-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s, width 0.2s;
+}
+.nav-dot.active {
+  background: var(--blue);
+  width: 18px;
+  border-radius: 3px;
+  transform: none;
+}
+
+.nav-counter {
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text-3);
+  min-width: 52px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE: slide-logo
+   USE FOR: brand-only slides, section marks, logo reveals,
+            the "M" or company mark slides from the deck.
+   Pattern: giant text/SVG mark centered, optional caption.
+   The .logo-mark can be a letter, an SVG, or an emoji.
+═══════════════════════════════════════════════════ */
+.slide-logo {
+  justify-content: center;
+  align-items: center;
+  background: #06080f; /* extra-dark variant for brand moments */
+}
+.logo-mark {
+  font-size: 260px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  /* Default: gradient. Override inline for brand colors. */
+}
+.logo-mark svg { width: 220px; height: 220px; }
+.logo-caption {
+  font-size: 15px;
+  color: var(--text-3);
+  margin-top: 24px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDE TYPE: slide-image
+   USE FOR: photo slides, team shots, "human moment" slides.
+   Pattern: full-bleed image with darkening overlay,
+            text anchored to the bottom.
+   Set background-image inline on .img-bg.
+═══════════════════════════════════════════════════ */
+.slide-image {
+  padding: 0;
+  justify-content: flex-end;
+}
+.img-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.45);
+  z-index: 0;
+}
+/* When no real image is available, use a gradient placeholder */
+.img-bg.placeholder {
+  background: linear-gradient(160deg, #1a2540 0%, #0b1120 100%);
+  filter: none;
+}
+.img-content {
+  position: relative;
+  z-index: 1;
+  padding: var(--pad-v) var(--pad-h);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.img-content h2 {
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.img-content p {
+  font-size: 22px;
+  color: var(--text-2);
+  max-width: 640px;
+}
+
+/* ═══════════════════════════════════════════════════
+   COMPONENT: Bar metric
+   USE FOR: showing a percentage visually inside a stat card
+            or a two-col slide. Shows the number AND a bar.
+   Pattern: label + bar track + fill + value label
+═══════════════════════════════════════════════════ */
+.bar-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.bar-metric + .bar-metric { margin-top: 20px; }
+.bar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.bar-label { font-size: 17px; color: var(--text-2); }
+.bar-value { font-size: 22px; font-weight: 700; color: var(--text-1); }
+.bar-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--g-brand);
+  /* Width set inline: style="width: 75%" */
+}
+.bar-fill.alt { background: var(--g-num); }
+
+/* ═══════════════════════════════════════════════════
+   COMPONENT: Callout number (inline, not in a card)
+   USE FOR: when you want a large number inside a content
+            or two-col slide without a full card wrapper.
+   Example: "Revenue grew <span class="callout-num">3×</span>"
+═══════════════════════════════════════════════════ */
+.callout-num {
+  display: block;
+  font-size: 120px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════════════════════
+   COMPONENT: Tag / chip
+   USE FOR: category labels, status indicators, metadata
+            inside cards or content slides.
+═══════════════════════════════════════════════════ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+}
+.tag.accent {
+  background: rgba(99,102,241,0.12);
+  border-color: rgba(99,102,241,0.3);
+  color: #a5b4fc;
+}
+
+/* ═══════════════════════════════════════════════════
+   COMPONENT: Divider
+   USE FOR: visual separator between sections inside a slide
+═══════════════════════════════════════════════════ */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   UTILITY: Text size helpers
+   USE FOR: overriding stat-num size for different contexts
+═══════════════════════════════════════════════════ */
+.text-xl  { font-size: 120px !important; }
+.text-lg  { font-size:  80px !important; }
+.text-md  { font-size:  56px !important; }
+.text-sm  { font-size:  36px !important; }
+
+/* ═══════════════════════════════════════════════════
+   COMPONENT: Feature grid + Feature card
+   USE FOR: 4–6 named capabilities, pillars, roadmap items,
+            or strategy points. ALWAYS prefer this over
+            slide-content bullets when content has names +
+            descriptions (even without numbers).
+   Pattern:
+     <div class="feature-grid cols-2">   (or cols-3, cols-5)
+       <div class="feature-card [hi]">
+         [<div class="date-chip">Q1 2026</div>]   — roadmap only
+         <div class="feature-icon">🧠</div>
+         <div class="feature-name">Capability Name</div>
+         <div class="feature-desc">Short explanation.</div>
+       </div>
+       …
+     </div>
+   USAGE: wrap the entire slide as a plain <div class="slide">
+   with inline flex + column layout; no named slide-* class needed.
+═══════════════════════════════════════════════════ */
+.feature-grid {
+  display: grid;
+  gap: 18px;
+  flex: 1;
+  align-content: center;
+}
+.feature-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.feature-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.feature-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.feature-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.feature-card.hi {
+  background: var(--surface-2);
+  border-color: var(--border-accent);
+}
+
+.feature-icon { font-size: 28px; line-height: 1; }
+.feature-name { font-size: 18px; font-weight: 700; color: var(--text-1); line-height: 1.2; }
+.feature-desc { font-size: 14px; color: var(--text-2); line-height: 1.55; }
+
+/* Date chip — use above .feature-icon for roadmap/timeline slides */
+.date-chip {
+  display: inline-flex;
+  align-self: flex-start;
+  background: rgba(99,102,241,0.12);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--r-pill);
+  padding: 3px 11px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a5b4fc;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* ═══════════════════════════════════════════════════
+   COMPONENT: Gradient border card
+   USE FOR: a single highlighted card whose border is the
+            brand gradient instead of a flat color.
+   Pattern: <div class="grad-border-card">…</div>
+═══════════════════════════════════════════════════ */
+.grad-border-card {
+  position: relative;
+  background: var(--surface-2);
+  border-radius: var(--r);
+  padding: 32px 28px;
+}
+.grad-border-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r);
+  padding: 1px;
+  background: var(--g-brand);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════
+   ANIMATION: Slide entry
+   Direct children of .slide.active fade up on entry.
+   JS triggers reflow so animation replays on each visit.
+═══════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide.active > *:not(.orb) {
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.slide.active > *:not(.orb):nth-child(1) { animation-delay: 0.00s; }
+.slide.active > *:not(.orb):nth-child(2) { animation-delay: 0.07s; }
+.slide.active > *:not(.orb):nth-child(3) { animation-delay: 0.13s; }
+.slide.active > *:not(.orb):nth-child(4) { animation-delay: 0.19s; }
+.slide.active > *:not(.orb):nth-child(5) { animation-delay: 0.25s; }
+.slide.active > *:not(.orb):nth-child(6) { animation-delay: 0.31s; }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-title
+       USE FOR: deck opener, major intro
+       CONTENT SLOTS: badge label, H1 (2 lines), H2 subtitle
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-title active">
+    <div class="orb orb-tr"></div>
+    <div class="orb orb-bl"></div>
+    <span class="badge">Microsoft AI Briefing</span>
+    <h1>Intelligence<br><span class="grad-text">on Tap</span></h1>
+    <h2>The State of AI at Work · April 2026</h2>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-stat  (cols-2 variant)
+       USE FOR: benchmark results, before/after comparisons
+       CONTENT SLOTS: badge, h2 title, stat cards (num + label)
+       VARIANTS: cols-1 · cols-2 · cols-3 · cols-4
+       CARD VARIANTS: default · hi (highlighted)
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-stat">
+    <div class="orb orb-tr"></div>
+    <div class="stat-head">
+      <span class="badge">Recent Benchmarks</span>
+      <h2>Frontier Math</h2>
+    </div>
+    <div class="stats-grid cols-2">
+      <div class="stat-card">
+        <div class="stat-num" style="color:#fff;">2%</div>
+        <div class="stat-label">highest score ever achieved by AI</div>
+      </div>
+      <div class="stat-card hi">
+        <div class="stat-num grad-text">25%</div>
+        <div class="stat-label">score achieved by o3</div>
+      </div>
+    </div>
+    <p class="source">Source: Ethan Mollick, One Useful Thing</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-stat  (cols-3 variant)
+       USE FOR: multi-metric comparison
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-stat">
+    <div class="orb orb-tl"></div>
+    <div class="stat-head">
+      <span class="badge">Expert Knowledge Test</span>
+      <h2>Google-Proof Q&amp;A</h2>
+    </div>
+    <div class="stats-grid cols-3">
+      <div class="stat-card">
+        <div class="stat-num grad-text">34%</div>
+        <div class="stat-label">answered by the best human experts</div>
+      </div>
+      <div class="stat-card hi">
+        <div class="stat-num" style="color:#fff;">81%</div>
+        <div class="stat-label">answered with AI assistance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num grad-text">87%</div>
+        <div class="stat-label">achieved by frontier AI alone</div>
+      </div>
+    </div>
+    <p class="source">Source: Karpathy · Stanford HAI 2025</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-statement
+       USE FOR: one striking statistic — number fills the slide
+       CONTENT SLOTS: giant number, 1–2 line description
+       NOTE: no card wrapper — pure typographic emphasis
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-statement">
+    <div class="orb orb-c"></div>
+    <div class="statement-num grad-text">45%</div>
+    <p class="statement-desc">of leaders say expanding team capacity with digital labor is a top priority in the next 12–18 months</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-section
+       USE FOR: section break, chapter intro
+       CONTENT SLOTS: eyebrow label, H2 title
+       NOTE: left-aligned, generous whitespace, optional accent bar
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-section">
+    <div class="orb orb-br"></div>
+    <div class="section-eyebrow">Section 04</div>
+    <div class="section-bar"></div>
+    <h2>The<br><span class="grad-text">Frontier</span><br>Firm</h2>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-content
+       USE FOR: key points where content is genuinely a
+                parallel list — NOT for named capabilities,
+                roadmap items, or strategy pillars (use
+                feature-grid for those instead).
+       CONTENT SLOTS: title, optional subtitle, 3–5 bullets
+       NOTE: use <strong> inside .bullet for emphasis.
+             If any bullet has its own name + explanation,
+             it should be a feature-card, not a bullet.
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-content">
+    <div class="orb orb-tr"></div>
+    <div class="content-head">
+      <h2>Models Become<br>Cheaper to Use</h2>
+      <h3>The economics of AI are shifting fast</h3>
+    </div>
+    <div class="bullets">
+      <div class="bullet">
+        <div class="bullet-dot"></div>
+        <span>Input token costs have fallen <strong>over 98%</strong> since GPT-4 launched in 2023</span>
+      </div>
+      <div class="bullet">
+        <div class="bullet-dot"></div>
+        <span>Smaller models now <strong>match or exceed</strong> older frontier performance at a fraction of the cost</span>
+      </div>
+      <div class="bullet">
+        <div class="bullet-dot"></div>
+        <span>Running agents at scale is becoming <strong>economically viable</strong> for enterprise workflows</span>
+      </div>
+      <div class="bullet">
+        <div class="bullet-dot"></div>
+        <span>The next wave of AI ROI comes from <strong>volume × automation</strong>, not just capability improvements</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-quote
+       USE FOR: customer voice, expert opinion, bold statement
+       CONTENT SLOTS: quote text, attribution (name · role)
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-quote">
+    <div class="orb orb-tl"></div>
+    <div class="orb orb-br"></div>
+    <span class="quote-mark brand-text">"</span>
+    <p class="quote-text">We are at an inflection point where AI moves from assistant to autonomous agent — working alongside every employee, every single day.</p>
+    <p class="quote-attr"><strong>Satya Nadella</strong> · CEO, Microsoft</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-profile
+       USE FOR: speaker intro, customer spotlight, team member
+       CONTENT SLOTS: photo (or initials placeholder), name, role, company
+       NOTE: photo uses gradient ring; use .profile-photo-inner for img or initials
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-profile">
+    <div class="orb orb-c"></div>
+    <div class="profile-inner">
+      <div class="profile-photo">
+        <div class="profile-photo-inner">
+          <!-- Replace content with <img src="photo.jpg" alt="Name"> or leave initials -->
+          JS
+        </div>
+      </div>
+      <div class="profile-name">Jared Spataro</div>
+      <div class="profile-role">CMO, AI at Work</div>
+      <div class="profile-company">Microsoft</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-two-col
+       USE FOR: compare two ideas, split content, text + stat
+       CONTENT SLOTS: title, left column, right column
+       NOTE: right column often holds a stat card or image
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-two-col">
+    <div class="orb orb-tr"></div>
+    <div class="col-head">
+      <h2>AI-Native Companies</h2>
+    </div>
+    <div class="two-col">
+      <!-- Left: bullets -->
+      <div class="col-card">
+        <div class="col-label">What they do differently</div>
+        <div class="bullets" style="gap:18px;">
+          <div class="bullet" style="font-size:21px;">
+            <div class="bullet-dot"></div>
+            <span>Capture <strong>low-hanging fruit</strong> first — admin, summarisation, drafting</span>
+          </div>
+          <div class="bullet" style="font-size:21px;">
+            <div class="bullet-dot"></div>
+            <span><strong>Automate and create value</strong> across the full workflow, not just tasks</span>
+          </div>
+          <div class="bullet" style="font-size:21px;">
+            <div class="bullet-dot"></div>
+            <span>Leverage <strong>proprietary data</strong> as the core competitive moat</span>
+          </div>
+        </div>
+      </div>
+      <!-- Right: stat card -->
+      <div class="col-card hi" style="gap:28px;">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <div class="stat-num grad-text" style="font-size:72px;">6/7</div>
+          <div class="stat-label">of the Magnificent 7 are AI-native companies</div>
+        </div>
+        <div style="width:100%;height:1px;background:var(--border);"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <div class="stat-num" style="color:#fff;font-size:72px;">$1–100M</div>
+          <div class="stat-label">Revenue in 11 months — fastest ramp in history</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: feature-grid slide  (no named slide-* class)
+       USE FOR: 4–6 named capabilities, roadmap items, strategy
+                pillars, or features — anything that has a name
+                + description but isn't a number/stat.
+                Use cols-2 for 4 items, cols-3 for 6, cols-5
+                for roadmap strips. Add .date-chip for timelines.
+       CONTENT SLOTS: h2 title, optional subtitle, feature cards
+       NOTE: this slide uses no named slide class — set flex
+             layout inline on the outer div.
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide" style="padding:56px 72px;display:flex;flex-direction:column;gap:28px;">
+    <div class="orb orb-tr"></div>
+    <div>
+      <h2 style="font-size:36px;font-weight:700;color:var(--text-1);margin:0 0 6px;">M365 Copilot Roadmap</h2>
+      <p style="font-size:18px;color:var(--text-2);margin:0;">Key capabilities shipping in 2026</p>
+    </div>
+    <div class="feature-grid cols-5" style="flex:1;">
+      <div class="feature-card hi">
+        <div class="date-chip">Q1 2026</div>
+        <div class="feature-icon">📄</div>
+        <div class="feature-name">Copilot Pages</div>
+        <div class="feature-desc">Collaborative AI canvas for teams to build on generated content together</div>
+      </div>
+      <div class="feature-card">
+        <div class="date-chip">Q2 2026</div>
+        <div class="feature-icon">⚙️</div>
+        <div class="feature-name">Copilot Actions</div>
+        <div class="feature-desc">Automate recurring prompts and multi-step workflows without code</div>
+      </div>
+      <div class="feature-card hi">
+        <div class="date-chip">Q2 2026</div>
+        <div class="feature-icon">🏪</div>
+        <div class="feature-name">Agent Marketplace</div>
+        <div class="feature-desc">Discover and deploy pre-built agents from Microsoft and partners</div>
+      </div>
+      <div class="feature-card">
+        <div class="date-chip">Apr 2026</div>
+        <div class="feature-icon">📂</div>
+        <div class="feature-name">SharePoint+</div>
+        <div class="feature-desc">Metadata-aware grounding, better indexing, multi-document reasoning</div>
+      </div>
+      <div class="feature-card">
+        <div class="date-chip">H2 2026</div>
+        <div class="feature-icon">🔍</div>
+        <div class="feature-name">Richer Answers</div>
+        <div class="feature-desc">Agents loop back through documents for richer cross-source connections</div>
+      </div>
+    </div>
+    <p class="source">Source: Microsoft 365 Copilot NDA Roadmap · April 2026</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-logo
+       USE FOR: brand reveal, section mark, company spotlight,
+                "M" logo slides, minimal brand moments
+       CONTENT SLOTS: .logo-mark text/SVG, optional caption
+       NOTE: background is extra-dark #06080f by default
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-logo">
+    <div class="orb orb-c"></div>
+    <!-- Replace letter with <img> or inline SVG for actual logos -->
+    <div class="logo-mark grad-text">M</div>
+    <div class="logo-caption">Mercer</div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-image
+       USE FOR: team photos, customer moments, "human" slides,
+                any slide where a real photograph is the story
+       CONTENT SLOTS: .img-bg (set background-image inline),
+                      .img-content h2 + p
+       NOTE: without a real image use class="img-bg placeholder"
+             for a gradient stand-in — note this in delivery
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-image">
+    <!-- Real image: style="background-image:url('photo.jpg')" -->
+    <div class="img-bg placeholder"></div>
+    <div class="img-content">
+      <div class="tag accent">Customer Story</div>
+      <h2>The team that built<br>the future of finance</h2>
+      <p>How Contoso's AI task force reduced manual reconciliation by 80% in six months</p>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-stat with bar-metric components
+       USE FOR: percentage breakdowns where bars show scale,
+                talent/survey data, benchmark results
+       CONTENT SLOTS: title, .bar-metric rows (label + value + bar width)
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-two-col">
+    <div class="orb orb-tr"></div>
+    <div class="col-head">
+      <h2>Talent Assessment</h2>
+    </div>
+    <div class="two-col">
+      <div class="col-card">
+        <div class="col-label">AI Readiness by group</div>
+        <div class="bar-metric">
+          <div class="bar-row">
+            <span class="bar-label">Partner experts</span>
+            <span class="bar-value">75%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+        </div>
+        <div class="bar-metric">
+          <div class="bar-row">
+            <span class="bar-label">B-models</span>
+            <span class="bar-value">82%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill alt" style="width:82%"></div></div>
+        </div>
+        <div class="bar-metric">
+          <div class="bar-row">
+            <span class="bar-label">Frontline staff</span>
+            <span class="bar-value">61%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:61%"></div></div>
+        </div>
+      </div>
+      <div class="col-card hi" style="align-items:center;text-align:center;justify-content:center;">
+        <div class="stat-num grad-text">6/7</div>
+        <div class="stat-label">of respondents say AI upskilling is their top workforce priority</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       TYPE: slide-stat (cols-1) with callout-num
+       USE FOR: single overwhelming metric that needs
+                more context than slide-statement provides
+       CONTENT SLOTS: .callout-num, supporting text,
+                      optional .tag for category
+  ═══════════════════════════════════════════════════ -->
+  <div class="slide slide-stat">
+    <div class="orb orb-tl"></div>
+    <div class="stat-head">
+      <span class="badge">Productivity Impact</span>
+      <h2>Smaller Models Get Better</h2>
+    </div>
+    <div class="stats-grid cols-2">
+      <div class="stat-card hi" style="justify-content:center;">
+        <div class="tag accent" style="margin-bottom:8px;">Before AI</div>
+        <div class="stat-num" style="color:#fff;font-size:72px;">4.2 hrs</div>
+        <div class="stat-label">average time per analysis</div>
+      </div>
+      <div class="stat-card" style="justify-content:center;">
+        <div class="tag accent" style="margin-bottom:8px;">With Copilot</div>
+        <div class="stat-num grad-text" style="font-size:72px;">38 min</div>
+        <div class="stat-label">average time per analysis</div>
+        <div class="divider"></div>
+        <div style="font-size:14px;color:#a5b4fc;font-weight:600;">6.6× faster</div>
+      </div>
+    </div>
+    <p class="source">Source: Contoso internal pilot · Q1 2026</p>
+  </div>
+
+</div><!-- /stage -->
+
+
+<!-- ═══════════════════════════════════════════════
+     NAVIGATION BAR
+═══════════════════════════════════════════════════ -->
+<nav class="nav" aria-label="Slide navigation">
+  <button class="nav-btn" id="btn-prev" aria-label="Previous slide">&#8592;</button>
+  <div class="nav-dots" id="nav-dots" role="tablist"></div>
+  <span class="nav-counter" id="nav-counter" aria-live="polite"></span>
+  <button class="nav-btn" id="btn-next" aria-label="Next slide">&#8594;</button>
+</nav>
+
+
+<script>
+(function () {
+  const slides   = Array.from(document.querySelectorAll('.slide'));
+  const dots     = document.getElementById('nav-dots');
+  const counter  = document.getElementById('nav-counter');
+  const btnPrev  = document.getElementById('btn-prev');
+  const btnNext  = document.getElementById('btn-next');
+  const total    = slides.length;
+  let   cur      = 0;
+
+  /* Build dot indicators */
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className   = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    d.setAttribute('role', 'tab');
+    d.addEventListener('click', () => go(i));
+    dots.appendChild(d);
+  });
+
+  function go(n) {
+    slides[cur].classList.remove('active');
+    dots.children[cur].classList.remove('active');
+    cur = ((n % total) + total) % total;
+    slides[cur].classList.add('active');
+    void slides[cur].offsetWidth; // force reflow so fadeUp replays
+    dots.children[cur].classList.add('active');
+    counter.textContent = `${cur + 1} / ${total}`;
+  }
+
+  /* Initial counter */
+  counter.textContent = `1 / ${total}`;
+
+  btnPrev.addEventListener('click', (e) => { e.stopPropagation(); go(cur - 1); });
+  btnNext.addEventListener('click', (e) => { e.stopPropagation(); go(cur + 1); });
+
+  /* Click anywhere on slide to advance */
+  document.getElementById('stage').addEventListener('click', () => go(cur + 1));
+
+  /* Keyboard */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault(); go(cur + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); go(cur - 1);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zava Industries · CEO Monday Briefing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  background:#F0F4F8;color:#1E293B;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER ──────────────────────────────────── */
+.header{
+  background:#1E3A5F;color:#fff;
+  padding:24px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.header-brand h1{
+  font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+}
+.header-brand p{font-size:13px;font-weight:300;opacity:0.7;margin-top:3px}
+.header-date{font-size:12px;opacity:0.6;text-align:right}
+
+/* ── MAIN ────────────────────────────────────── */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 48px}
+
+/* ── SECTION TITLE ───────────────────────────── */
+.section-title{
+  font-size:13px;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.5px;color:#1E3A5F;margin-bottom:14px;
+}
+
+/* ── METRIC CARDS ────────────────────────────── */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.metric-card{
+  background:#fff;border-radius:8px;padding:20px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  border-left:4px solid #2563EB;
+}
+.metric-card:nth-child(2){border-left-color:#059669}
+.metric-card:nth-child(3){border-left-color:#D97706}
+.metric-card:nth-child(4){border-left-color:#DC2626}
+.metric-number{font-size:32px;font-weight:700;color:#1E3A5F;line-height:1.1}
+.metric-label{font-size:11px;text-transform:uppercase;letter-spacing:0.5px;
+  color:#64748B;margin-top:4px}
+.metric-delta{font-size:12px;font-weight:600;margin-top:8px}
+.delta-up{color:#059669}.delta-down{color:#DC2626}.delta-flat{color:#94A3B8}
+
+/* ── STATUS TABLE ────────────────────────────── */
+.status-card{
+  background:#fff;border-radius:8px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  margin-bottom:24px;overflow:hidden;
+}
+.status-card table{width:100%;border-collapse:collapse}
+.status-card thead{background:#1E3A5F}
+.status-card th{
+  padding:10px 16px;text-align:left;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.5px;color:#fff;
+}
+.status-card td{
+  padding:11px 16px;font-size:13px;
+  border-bottom:1px solid #F1F5F9;vertical-align:middle;
+}
+.status-card tr:last-child td{border-bottom:none}
+.status-card tr:hover td{background:#F8FAFC}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge--green{background:#D1FAE5;color:#065F46}
+.badge--green .badge-dot{background:#059669}
+.badge--amber{background:#FEF3C7;color:#92400E}
+.badge--amber .badge-dot{background:#D97706}
+.badge--red{background:#FEE2E2;color:#991B1B}
+.badge--red .badge-dot{background:#DC2626}
+.badge--blue{background:#DBEAFE;color:#1E40AF}
+.badge--blue .badge-dot{background:#2563EB}
+
+/* ── HIGHLIGHT CARDS ─────────────────────────── */
+.highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.highlight-card{
+  background:#fff;border-radius:8px;padding:18px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  border-top:3px solid #2563EB;
+}
+.highlight-card:nth-child(2){border-top-color:#D97706}
+.highlight-card:nth-child(3){border-top-color:#059669}
+.highlight-type{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.8px;color:#64748B;margin-bottom:8px;
+}
+.highlight-text{font-size:13px;color:#1E293B;line-height:1.5}
+
+/* ── FOOTER ──────────────────────────────────── */
+.footer{
+  font-size:11px;color:#94A3B8;text-align:center;
+  padding:16px;border-top:1px solid #E2E8F0;
+}
+
+@media(max-width:700px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .highlights{grid-template-columns:1fr}
+  .main{padding:20px 16px 40px}
+}
+@media print{
+  body{background:#fff}
+  .header{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .metric-card,.status-card,.highlight-card{box-shadow:none;border:1px solid #E2E8F0}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <h1>Zava Industries</h1>
+    <p>CEO Monday Briefing</p>
+  </div>
+  <div class="header-date">Week of May 26, 2026</div>
+</div>
+
+<main class="main">
+
+  <!-- METRICS -->
+  <div class="section-title">This week at a glance</div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-number">$480K</div>
+      <div class="metric-label">New pipeline</div>
+      <div class="metric-delta delta-up">↑ $120K vs last week</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-number">4</div>
+      <div class="metric-label">Deals to proposal</div>
+      <div class="metric-delta delta-up">↑ 2 vs last week</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-number">12</div>
+      <div class="metric-label">Active projects</div>
+      <div class="metric-delta delta-flat">no change</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-number">2</div>
+      <div class="metric-label">Open blockers</div>
+      <div class="metric-delta delta-up">↓ 3 resolved this week</div>
+    </div>
+  </div>
+
+  <!-- STATUS TABLE -->
+  <div class="section-title">Workstream status</div>
+  <div class="status-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Workstream</th>
+          <th>Status</th>
+          <th>Note</th>
+          <th>Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Atlas Data Migration</td>
+          <td><span class="badge badge--green"><span class="badge-dot"></span>On Track</span></td>
+          <td>70% complete · Jul 15 target</td>
+          <td>Sam Lee</td>
+        </tr>
+        <tr>
+          <td>Enterprise Tier Launch</td>
+          <td><span class="badge badge--green"><span class="badge-dot"></span>On Track</span></td>
+          <td>Oct 1 target · pre-sales active</td>
+          <td>Maya Chen</td>
+        </tr>
+        <tr>
+          <td>APAC Recruiting</td>
+          <td><span class="badge badge--amber"><span class="badge-dot"></span>At Risk</span></td>
+          <td>Agency approval pending · due Jun 20</td>
+          <td>Dani Cruz</td>
+        </tr>
+        <tr>
+          <td>ERP Vendor Selection</td>
+          <td><span class="badge badge--green"><span class="badge-dot"></span>Unblocked</span></td>
+          <td>HubSpot signed · kickoff Jun 10</td>
+          <td>Jordan Kim</td>
+        </tr>
+        <tr>
+          <td>FY27 Headcount Planning</td>
+          <td><span class="badge badge--blue"><span class="badge-dot"></span>In Review</span></td>
+          <td>Submissions due Jul 18</td>
+          <td>Dani Cruz</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HIGHLIGHTS -->
+  <div class="section-title">What to know</div>
+  <div class="highlights">
+    <div class="highlight-card">
+      <div class="highlight-type">Win</div>
+      <div class="highlight-text">Enterprise pipeline hit $6.1M — 1.5× coverage for Q3. Nova Logistics and Helix Financial both moved to final round this week.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-type">Watch</div>
+      <div class="highlight-text">APAC recruiting still needs agency sign-off by June 20. Without it the CS Manager hire slips to Q4 — creating a gap when the enterprise tier launches.</div>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-type">Decision made</div>
+      <div class="highlight-text">ERP signed with HubSpot at $47K/year for 50 seats. Implementation kickoff June 10. Jordan leading the migration alongside sales handoff.</div>
+    </div>
+  </div>
+
+</main>
+
+<div class="footer">
+  Generated by Zava AI · CEO Monday Briefing · Week of May 26, 2026 · Internal only
+</div>
+
+</body>
+</html>

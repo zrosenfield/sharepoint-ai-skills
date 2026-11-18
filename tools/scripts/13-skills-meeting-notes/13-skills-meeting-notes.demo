@@ -1,0 +1,108 @@
+# Skills Lifecycle: Meeting Notes Summarizer
+# Create a skill, use it, improve it. Total time under 2 minutes. Anyone can do this.
+
+[var: SITE = https://contoso.sharepoint.com/sites/demo/]
+[var: LIBRARY = ${SITE}Team%20Meetings/]
+[category: Skills]
+
+[section: setup]
+
+[navigate: ${SITE}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Create a document library called "Team Meetings" if it doesn't already exist.]
+
+[wait]
+
+[assert: ${LIBRARY}]
+
+[navigate: ${LIBRARY}]
+
+Upload the meeting transcript to the Team Meetings library.
+
+[upload-library: tools/scripts/13-skills-meeting-notes/assets/Q1 Planning Kickoff - 2025-01-14.txt]
+
+[new-chat]
+
+Confirm the transcript file is visible in the library and the chat shows a fresh session.
+
+[pause]
+
+[section: demo]
+
+[navigate: ${LIBRARY}]
+
+Here's the setup. A document library called Team Meetings. Inside is a single
+file — a transcript from last week's Q1 planning kickoff. It's messy. Real
+meeting, real timestamps, real tangents. Nobody wants to read 600 words to
+find out what was decided.
+
+[pause]
+
+[open-chat]
+
+I'm going to create a skill to handle this. Not configure an app. Not file an
+IT ticket. Just tell Copilot what I want in plain English.
+
+[prompt: Create a skill called "Summarize Meeting" that takes a meeting transcript and produces structured notes with: a one-paragraph summary, a list of topics discussed with their timestamps, key decisions made, and action items with the person responsible.]
+
+[wait]
+
+That's the entire setup. You just described what you wanted and the skill
+exists. Let's use it.
+
+[pause]
+
+[prompt: Summarize this meeting using my Summarize Meeting skill]
+
+[wait]
+
+Look at what it produced. A summary paragraph. Topics with the timestamps
+pulled directly from the transcript. Decisions stated clearly — not buried in
+a paragraph. Action items with owners. All from one file and one sentence of
+instruction.
+
+[pause]
+
+Now I want to make the skill better. I realized the notes are missing two
+things: open questions, and a draft follow-up email. Let me just add those.
+
+[prompt: Update my Summarize Meeting skill to also include a section called "Open Questions" that captures anything raised but not resolved, and add a "Follow-up Email Draft" section at the end that I could send to attendees.]
+
+[wait]
+
+Skill updated. Now let's run it again on the same transcript.
+
+[pause]
+
+[prompt: Run Summarize Meeting on this transcript again]
+
+[wait]
+
+Same transcript. Same skill. But now the output has two new sections — open
+questions pulled from the conversation, and a draft email ready to send. I
+didn't rebuild anything. I just told it what to add.
+
+That's the loop: create, use, improve. Total time from nothing to a working
+skill: about 90 seconds.
+
+[pause]
+
+[screenshot: tools/screenshots/13-skills-meeting-notes-final.png]
+
+[section: reset]
+
+[navigate: ${LIBRARY}]
+
+[open-chat]
+
+[new-chat]
+
+[prompt: Delete the skill called "Summarize Meeting" if it exists.]
+
+[wait]
+
+[new-chat]
