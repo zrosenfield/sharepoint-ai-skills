@@ -151,7 +151,23 @@ Clicking a client on the left now filters its projects and timeline. If **Client
 
 Some tenants download the HTML file instead of rendering it. Use Option 1 if HTML rendering or the experimental live-data integration is unavailable.
 
-## 7. Copilot in SharePoint skills (optional)
+## 7. Visual timeline view (optional)
+
+A view on Client Activity that puts every client's calls, decisions, changes and issues on one timeline. Open follow-ups show as flags on their due date (red when overdue), and each client's renewal date is pinned on its row. You can filter by type, switch between 3, 6 and 12 months, and click a client to focus on it.
+
+It's an HTML list view, so it needs HTML list view support in your tenant. People who open it don't need a Copilot licence. If creation fails, the script attempts to remove the view and reports a manual step; the core lists remain usable.
+
+**Option 1: let the script add it.** The deploy script adds it when `timelineView` is `true`, which is the default. It fills in your site's list addresses so the view can receive live rows from Client Activity and Clients. As with Client 360, check the live/snapshot status before treating the displayed data as current.
+
+**Option 2: ask Copilot to build one.** The person building it needs a Microsoft 365 Copilot licence. In Client Activity, choose **Add view > Dashboard**, where available, name it "Visual timeline", then ask Copilot in SharePoint something like:
+
+> "Make this a timeline with one row per Client. Plot each entry on its Date, coloured by Type. Show open follow-ups as flags on their Due date, red when overdue. Add filters for Type and a 3, 6 or 12-month range."
+
+Copilot builds its own version, so it won't look exactly like the script's, but it reads the same list.
+
+[deploy/timeline.template.html](deploy/timeline.template.html) is the page the script uses, if you want to read or change it. The script fills in its three placeholders (`__MANIFEST__`, `__SNAPSHOT__` and `__CONFIG__`). Client 360 links to the view when the script successfully creates it.
+
+## 8. Copilot in SharePoint skills (optional)
 
 Needs a Microsoft 365 Copilot licence and Copilot in SharePoint availability. Follow the [skill installation instructions](../../Skills/README.md#installing-an-experimental-skill): upload each individual folder linked below into **Agent Assets > Skills**. Where **Settings > Site skills** is available, that is another entry point.
 

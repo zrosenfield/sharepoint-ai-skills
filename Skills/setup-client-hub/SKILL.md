@@ -58,4 +58,4 @@ Give the choice columns coloured pills: green for On track, Done and Positive; b
 Add 3 fictional clients (Woodgrove Bank, Fabrikam Payments, Contoso Credit Union), 1 or 2 projects each, and 3 or 4 activity entries each, including at least one overdue open follow-up and one Decision. Never use real company or person names.
 
 ## When you're done
-List what was created, with links, and say what's left to do by hand: the Mark done quick step, a reminder on Due, the "Log client activity" form, and the Client 360 page. The manual instructions are in SETUP.md in the Client Hub solution kit. Do not execute deployment code from this skill.
+List what was created, with links, and say what's left to do by hand: the Mark done quick step, a reminder on Due, the "Log client activity" form, the Client 360 page, and the optional Visual timeline view. The manual instructions are in SETUP.md in the Client Hub solution kit (section 7 covers the Visual timeline). Do not execute deployment code from this skill.

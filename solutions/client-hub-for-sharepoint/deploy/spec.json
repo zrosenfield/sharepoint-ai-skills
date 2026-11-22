@@ -461,8 +461,31 @@
    "activity/Timeline"
   ],
   [
+   "Visual timeline",
+   "activity/Visual timeline"
+  ],
+  [
    "Decision log",
    "activity/Decision log"
   ]
- ]
+ ],
+ "timeline": {
+  "list": "activity",
+  "name": "Visual timeline",
+  "viewType2": "CUSTOMHTML",
+  "rowLimit": 500,
+  "viewFields": [
+   "LinkTitle",
+   "Client",
+   "ActivityType",
+   "ActivityDate",
+   "Owner",
+   "FollowUp",
+   "NextStep",
+   "NextStepDue",
+   "Sentiment",
+   "Notes",
+   "TicketLink"
+  ]
+ }
 }

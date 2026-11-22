@@ -15,6 +15,7 @@ A simple client tracker for teams that run their clients out of a spreadsheet. I
 | **Client Activity** list | The timeline: meetings, calls, emails, decisions, changes and issues. Each entry can carry a follow-up with a due date and a ticket link |
 | Views | Portfolio cards, Renewals, Due in 30 days, Migrations, Open follow-ups, My follow-ups, Decision log |
 | Formatting | Coloured pills for health, status, follow-up and sentiment, a red cue on overdue dates, and a **Mark done** button on open follow-ups |
+| Visual timeline (optional) | A view on Client Activity that puts every client's calls, decisions and issues on one timeline, with open follow-ups and renewals marked |
 | Client 360 (optional) | One page that shows a client's profile, projects, timeline and open follow-ups together |
 | Copilot skills (optional) | Five skills for Copilot in SharePoint: set up the hub, brief me on a client, log this activity, run the weekly review, change the hub safely |
 | Sample data | 8 fictional clients, 17 projects and 66 activity entries, so you can try it before you load your own |
@@ -26,6 +27,7 @@ Projects and Client Activity each link to a client through a lookup, so one clie
 - A SharePoint site where you can create lists. A site owner can; so can a member with the default Edit permission.
 - A modern browser.
 - That's it for the core. The Copilot skills also need a Microsoft 365 Copilot licence, and Copilot in SharePoint has to be available in your tenant.
+- The optional Visual timeline needs HTML list view support in your tenant. Everything else works without it.
 
 You **don't** need a tenant or SharePoint admin, an app registration, PowerShell, PnP, site scripts, custom script, Power Automate or Power Apps.
 
@@ -47,6 +49,7 @@ The script runs in your browser as you, against the site you have open. It uses 
 2. Open [deploy/deploy-clienthub.js](deploy/deploy-clienthub.js) and read it. If you like, change the options at the top:
    - `sampleData` loads the fictional clients.
    - `shiftDatesToToday` makes "overdue" and "renews in 55 days" true on the day you run it.
+   - `timelineView` adds the Visual timeline view to Client Activity. It's on by default.
    - `dashboardPage` uploads the Client 360 page.
    - `setDashboardAsHome` makes that page the site home page. It's off by default.
 3. Open the site's home page and press **F12**, or **Ctrl+Shift+I** (**Cmd+Option+I** on a Mac). Go to the **Console** tab.
@@ -114,6 +117,8 @@ If Client 360 is the homepage, removal attempts to set the homepage to `SitePage
 
 **The Client 360 page downloads instead of opening.** Your tenant doesn't show .html files from Site Pages as pages. Use the List web part page in SETUP.md step 6 instead. Everything else works without it.
 
+**The Visual timeline is missing or shows a plain list.** Your tenant may not support HTML list views yet. If creation fails, the script attempts to remove the view and reports a manual step; a first load can also take a few seconds. Nothing else depends on it. [SETUP.md section 7](SETUP.md#7-visual-timeline-view-optional) has another way to build one.
+
 **Does opening the HTML page guarantee live data?** No. The experimental template expects its hosting viewer to supply live list results. Without that integration it shows the embedded deployment-time sample snapshot, or empty data if sample data was disabled. Check the live/snapshot badges; use the lists or the normal List web part page for current data.
 
 **Some features look different or missing.** Quick steps, list forms with branching, and Copilot site skills are rolling out at different times in different tenants. The core (lists, lookups, views, column and view formatting, the board view, reminders and rules) is standard SharePoint.
@@ -123,7 +128,8 @@ If Client 360 is the homepage, removal attempts to set the homepage to `SitePage
 ## What's in this folder
 
 ```
-deploy/            deploy-clienthub.js, remove-clienthub.js, spec.json (the list design), client360.template.html
+deploy/            deploy-clienthub.js, remove-clienthub.js, spec.json (the list design),
+                   client360.template.html, timeline.template.html
 formats/           the column and view formatting JSON, for path C
 sample-data/       clients.csv, projects.csv, client-activity.csv (fictional)
 SETUP.md           manual, click-by-click setup
@@ -133,7 +139,7 @@ The five skill folders are linked under [Copilot skills](#copilot-skills). Downl
 
 ## Maintaining the sample
 
-The paste-in deploy script is intentionally self-contained: it embeds the list specification, sample rows, formatting JSON, and dashboard template. Changes to `deploy/spec.json`, `formats/`, `sample-data/`, or `deploy/client360.template.html` must also update the corresponding embedded content in `deploy/deploy-clienthub.js`; editing an asset alone does not change script deployment.
+The paste-in deploy script is intentionally self-contained: it embeds the list specification, sample rows, formatting JSON, and dashboard and timeline templates. Changes to `deploy/spec.json`, `formats/`, `sample-data/`, `deploy/client360.template.html`, or `deploy/timeline.template.html` must also update the corresponding embedded content in `deploy/deploy-clienthub.js`; editing an asset alone does not change script deployment.
 
 Keep deployment code outside `Skills/`. SharePoint skills are prose instructions, not a way to execute these browser scripts.
 
