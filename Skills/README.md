@@ -34,6 +34,7 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | [`project-brief`](./project-brief/) | Develops decision-ready project briefs |
 | [`quarterly-expense-report`](./quarterly-expense-report/) | Creates quarterly expense reports |
 | [`ralph-loop`](./ralph-loop/) | Applies an iterative self-evaluation loop |
+| [`scrollytelling-story`](./scrollytelling-story/) | Creates interactive scrolling explainers with a continuous D3 graphic and user-defined story lengths |
 | [`setup-client-hub`](./setup-client-hub/) | Builds the experimental Client Hub lists, columns, and views |
 | [`site-analyzer`](./site-analyzer/) | Analyzes SharePoint project sites |
 | [`style-guidelines`](./style-guidelines/) | Provides a brand-style skill template |
