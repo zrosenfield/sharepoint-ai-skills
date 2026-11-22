@@ -1,0 +1,186 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/tile-formatting.schema.json",
+  "height": 216,
+  "width": 268,
+  "hideSelection": false,
+  "fillHorizontally": true,
+  "formatter": {
+    "elmType": "div",
+    "customRowAction": {
+      "action": "defaultClick"
+    },
+    "style": {
+      "background-color": "rgba(255,255,255,1)",
+      "display": "flex",
+      "flex-direction": "column",
+      "box-sizing": "border-box",
+      "height": "204px",
+      "width": "256px",
+      "margin": "6px",
+      "padding": "12px 14px",
+      "border-radius": "12px",
+      "border": "1px solid rgba(0,0,0,0.12)",
+      "border-top": "=if([$Health] == 'At risk', '4px solid rgba(196,49,75,1)', if([$Health] == 'Needs attention', '4px solid rgba(214,150,0,1)', '4px solid rgba(16,124,16,1)'))",
+      "overflow": "hidden",
+      "cursor": "pointer"
+    },
+    "children": [
+      {
+        "elmType": "div",
+        "style": {
+          "display": "flex",
+          "justify-content": "space-between",
+          "align-items": "center"
+        },
+        "children": [
+          {
+            "elmType": "div",
+            "txtContent": "[$Title]",
+            "style": {
+              "font-size": "15px",
+              "font-weight": "600",
+              "white-space": "nowrap",
+              "overflow": "hidden",
+              "text-overflow": "ellipsis",
+              "max-width": "140px"
+            }
+          },
+          {
+            "elmType": "span",
+            "txtContent": "[$Health]",
+            "style": {
+              "display": "inline-flex",
+              "align-items": "center",
+              "padding": "1px 8px",
+              "border-radius": "12px",
+              "font-size": "11px",
+              "font-weight": "600",
+              "white-space": "nowrap",
+              "line-height": "18px",
+              "background-color": "=if([$Health] == 'At risk', 'rgba(253,231,233,1)', if([$Health] == 'Needs attention', 'rgba(255,244,206,1)', 'rgba(231,245,230,1)'))",
+              "color": "=if([$Health] == 'At risk', 'rgba(177,14,28,1)', if([$Health] == 'Needs attention', 'rgba(138,83,0,1)', 'rgba(16,124,16,1)'))"
+            }
+          }
+        ]
+      },
+      {
+        "elmType": "div",
+        "txtContent": "[$ClientType]",
+        "style": {
+          "font-size": "12px",
+          "margin-top": "2px",
+          "color": "rgba(91,100,112,1)"
+        }
+      },
+      {
+        "elmType": "div",
+        "style": {
+          "display": "flex",
+          "margin-top": "10px"
+        },
+        "children": [
+          {
+            "elmType": "div",
+            "style": {
+              "width": "50%"
+            },
+            "children": [
+              {
+                "elmType": "div",
+                "txtContent": "Annual value",
+                "style": {
+                  "font-size": "11px",
+                  "text-transform": "uppercase",
+                  "letter-spacing": "0.4px",
+                  "color": "rgba(91,100,112,1)"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "[$AnnualValue.displayValue]",
+                "style": {
+                  "font-size": "16px",
+                  "font-weight": "700",
+                  "margin-top": "1px"
+                }
+              }
+            ]
+          },
+          {
+            "elmType": "div",
+            "style": {
+              "width": "50%"
+            },
+            "children": [
+              {
+                "elmType": "div",
+                "txtContent": "Renews",
+                "style": {
+                  "font-size": "11px",
+                  "text-transform": "uppercase",
+                  "letter-spacing": "0.4px",
+                  "color": "rgba(91,100,112,1)"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "=toLocaleDateString([$RenewalDate])",
+                "style": {
+                  "font-size": "14px",
+                  "font-weight": "600",
+                  "margin-top": "3px"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "elmType": "div",
+        "txtContent": "=join([$Products], ' · ')",
+        "style": {
+          "margin-top": "10px",
+          "font-size": "12px",
+          "font-weight": "600",
+          "color": "rgba(17,94,163,1)",
+          "white-space": "nowrap",
+          "overflow": "hidden",
+          "text-overflow": "ellipsis"
+        }
+      },
+      {
+        "elmType": "div",
+        "style": {
+          "display": "flex",
+          "align-items": "center",
+          "margin-top": "auto"
+        },
+        "children": [
+          {
+            "elmType": "img",
+            "attributes": {
+              "src": "=getUserImage([$RelationshipManager.email], 's')",
+              "title": "[$RelationshipManager.title]"
+            },
+            "style": {
+              "width": "22px",
+              "height": "22px",
+              "border-radius": "50%",
+              "margin-right": "6px"
+            }
+          },
+          {
+            "elmType": "span",
+            "txtContent": "[$RelationshipManager.title]",
+            "style": {
+              "font-size": "12px",
+              "white-space": "nowrap",
+              "overflow": "hidden",
+              "text-overflow": "ellipsis"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "flex",
+    "align-items": "center",
+    "height": "100%"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "@currentField",
+      "style": {
+        "display": "=if(@currentField == '', 'none', 'inline-flex')",
+        "align-items": "center",
+        "padding": "2px 10px",
+        "border-radius": "12px",
+        "font-size": "12px",
+        "font-weight": "600",
+        "white-space": "nowrap",
+        "line-height": "18px",
+        "background-color": "=if(@currentField == 'Positive', 'rgba(231,245,230,1)', if(@currentField == 'Neutral', 'rgba(241,242,244,1)', if(@currentField == 'Concerned', 'rgba(253,231,233,1)', 'rgba(241,242,244,1)')))",
+        "color": "=if(@currentField == 'Positive', 'rgba(16,124,16,1)', if(@currentField == 'Neutral', 'rgba(59,67,80,1)', if(@currentField == 'Concerned', 'rgba(177,14,28,1)', 'rgba(59,67,80,1)')))"
+      }
+    }
+  ]
+}

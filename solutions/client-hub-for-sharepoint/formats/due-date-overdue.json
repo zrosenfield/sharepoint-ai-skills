@@ -1,0 +1,28 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "flex",
+    "align-items": "center",
+    "height": "100%"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "=if(@currentField == '', '', if([$FollowUp] != 'Done' && [$FollowUp] != 'None' && Number(@currentField) + 86400000 <= Number(@now), toLocaleDateString(@currentField) + ' · overdue', toLocaleDateString(@currentField)))",
+      "attributes": {
+        "class": "=if(@currentField == '', '', if([$FollowUp] != 'Done' && [$FollowUp] != 'None' && Number(@currentField) + 86400000 <= Number(@now), 'sp-field-severity--blocked', if([$FollowUp] != 'Done' && [$FollowUp] != 'None' && Number(@currentField) - Number(@now) <= 604800000, 'sp-field-severity--warning', '')))"
+      },
+      "style": {
+        "display": "=if(@currentField == '', 'none', 'inline-flex')",
+        "align-items": "center",
+        "padding": "=if([$FollowUp] != 'Done' && [$FollowUp] != 'None' && (Number(@currentField) + 86400000 <= Number(@now) || Number(@currentField) - Number(@now) <= 604800000), '2px 10px', '0')",
+        "border-radius": "12px",
+        "font-size": "12px",
+        "font-weight": "=if([$FollowUp] != 'Done' && [$FollowUp] != 'None' && Number(@currentField) + 86400000 <= Number(@now), '600', '400')",
+        "white-space": "nowrap",
+        "line-height": "18px"
+      }
+    }
+  ]
+}

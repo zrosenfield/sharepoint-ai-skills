@@ -1,0 +1,18 @@
+Project,Client,Type,Status,Team,Start date,Target date,Next milestone
+SSO migration to Entra ID,Woodgrove Bank,Migration,Blocked,Security,2026-07-01,2026-12-05,West region cutover rehearsal
+MFA rollout for branch staff,Woodgrove Bank,Migration,In progress,Security,2026-02-02,2026-12-15,Remaining 28% of branch staff enrolled
+Payments Hub v5 upgrade,Woodgrove Bank,Upgrade,Not started,Engineering,2027-01-11,2027-03-15,Statement of work signed
+Fraud Shield rules tuning,Woodgrove Bank,Enhancement,Done,Engineering,2026-08-03,2026-09-30,Complete
+Digital Banking 25.1 upgrade,Woodgrove Bank,Upgrade,Done,Engineering,2026-01-12,2026-03-03,Complete
+Card Issuing implementation,Contoso Credit Union,Implementation,In progress,Implementation,2026-01-14,2026-12-12,Go-live
+MFA rollout,Contoso Credit Union,Migration,Done,Security,2026-03-02,2026-06-02,Complete
+Platform migration to Payments Hub v5,Fabrikam Payments,Migration,Blocked,Engineering,2026-03-02,2026-12-01,Weekend cutover (Nov 29) after rate-limit fix
+Open Banking API v2,Fabrikam Payments,Enhancement,In progress,Engineering,2026-05-12,2027-01-20,Production enablement
+SSO migration,Northwind Capital,Migration,Done,Security,2026-04-21,2026-10-10,Complete
+Fraud Shield model refresh,Northwind Capital,Enhancement,In progress,Engineering,2026-10-30,2026-12-18,Model validation results
+Digital Banking implementation,Tailspin Lending,Implementation,In progress,Implementation,2026-08-04,2027-01-29,UAT sign-off
+3DS2 upgrade,Relecloud Card Services,Upgrade,In progress,Engineering,2026-03-17,2026-12-08,Production enablement before scheme deadline
+DR environment build,Relecloud Card Services,Implementation,Not started,Infrastructure,2027-01-11,2027-02-26,Design approved
+Payments Hub implementation,Humongous Insurance,Implementation,Done,Implementation,2025-11-03,2026-04-30,Complete
+SSO migration,Humongous Insurance,Migration,Not started,Security,2027-01-18,2027-03-31,Scope agreed
+Open Banking API onboarding,Proseware Wealth,Implementation,Done,Implementation,2026-04-06,2026-07-15,Complete

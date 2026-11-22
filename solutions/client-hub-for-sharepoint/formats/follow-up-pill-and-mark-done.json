@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "display": "flex",
+    "align-items": "center",
+    "height": "100%"
+  },
+  "children": [
+    {
+      "elmType": "span",
+      "txtContent": "@currentField",
+      "style": {
+        "display": "=if(@currentField == '' || @currentField == 'None', 'none', 'inline-flex')",
+        "align-items": "center",
+        "padding": "2px 10px",
+        "border-radius": "12px",
+        "font-size": "12px",
+        "font-weight": "600",
+        "white-space": "nowrap",
+        "line-height": "18px",
+        "background-color": "=if(@currentField == 'Open', 'rgba(255,244,206,1)', if(@currentField == 'Done', 'rgba(231,245,230,1)', 'rgba(241,242,244,1)'))",
+        "color": "=if(@currentField == 'Open', 'rgba(138,83,0,1)', if(@currentField == 'Done', 'rgba(16,124,16,1)', 'rgba(59,67,80,1)'))"
+      }
+    },
+    {
+      "elmType": "button",
+      "txtContent": "Mark done",
+      "customRowAction": {
+        "action": "setValue",
+        "actionInput": {
+          "FollowUp": "Done"
+        }
+      },
+      "attributes": {
+        "title": "Set Follow-up to Done"
+      },
+      "style": {
+        "display": "=if(@currentField == 'Open', 'inline-flex', 'none')",
+        "align-items": "center",
+        "margin-left": "8px",
+        "padding": "1px 10px",
+        "border-radius": "12px",
+        "border": "1px solid rgba(16,124,16,1)",
+        "background-color": "rgba(255,255,255,1)",
+        "color": "rgba(16,124,16,1)",
+        "cursor": "pointer",
+        "font-size": "12px",
+        "font-weight": "600",
+        "line-height": "18px"
+      }
+    }
+  ]
+}

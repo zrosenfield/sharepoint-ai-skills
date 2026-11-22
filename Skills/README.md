@@ -11,7 +11,9 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | [`authoring-sharepoint-markdown`](./authoring-sharepoint-markdown/) | Produces SharePoint-compatible Markdown |
 | [`autoresearch`](./autoresearch/) | Performs iterative multi-step research |
 | [`brainstorming-design-docs`](./brainstorming-design-docs/) | Turns ideas into structured design documents |
+| [`client-briefing`](./client-briefing/) | Briefs users on a Client Hub client's projects, activity, and follow-ups |
 | [`copy-editing`](./copy-editing/) | Runs a structured copy-editing workflow |
+| [`crm-change-request`](./crm-change-request/) | Plans and confirms changes to the experimental Client Hub |
 | [`decision-log`](./decision-log/) | Extracts structured decision records |
 | [`deck-assembly`](./deck-assembly/) | Assembles presentations from existing slide content |
 | [`design-direction`](./design-direction/) | Produces distinctive, professionally justified visual direction |
@@ -26,15 +28,20 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | [`kb-admin-report`](./kb-admin-report/) | Reports on knowledge-base health |
 | [`linkedin-post-writing`](./linkedin-post-writing/) | Drafts LinkedIn posts |
 | [`list-formatting`](./list-formatting/) | Creates SharePoint list-formatting JSON |
+| [`log-client-activity`](./log-client-activity/) | Previews and records Client Hub activity after confirmation |
 | [`log-knowledge-gap`](./log-knowledge-gap/) | Records unanswered questions and routes them |
 | [`meeting-notes`](./meeting-notes/) | Converts transcripts into meeting notes |
 | [`project-brief`](./project-brief/) | Develops decision-ready project briefs |
 | [`quarterly-expense-report`](./quarterly-expense-report/) | Creates quarterly expense reports |
 | [`ralph-loop`](./ralph-loop/) | Applies an iterative self-evaluation loop |
+| [`setup-client-hub`](./setup-client-hub/) | Builds the experimental Client Hub lists, columns, and views |
 | [`site-analyzer`](./site-analyzer/) | Analyzes SharePoint project sites |
 | [`style-guidelines`](./style-guidelines/) | Provides a brand-style skill template |
 | [`uppababy-brand-review`](./uppababy-brand-review/) | Experimental brand-compliance demo |
+| [`weekly-client-review`](./weekly-client-review/) | Reviews Client Hub portfolio health and upcoming work |
 | [`youtube-description`](./youtube-description/) | Generates descriptions from video transcripts |
+
+The five Client Hub skills use the list design in [Client Hub for SharePoint](../solutions/client-hub-for-sharepoint/). Install `setup-client-hub` to try building the lists with Copilot, or set up the lists using the kit before using the four day-to-day skills.
 
 ## Graduated to PnP
 

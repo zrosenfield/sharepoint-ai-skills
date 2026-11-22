@@ -1,0 +1,67 @@
+Summary,Client,Type,Date,Notes,Follow-up,Next step,Due,Ticket link,Sentiment
+Kickoff: 2026 roadmap with Woodgrove digital team,Woodgrove Bank,Meeting,2025-06-12,Avery's team wants SSO to Entra ID and MFA for all branch staff before their February 2027 audit. Agreed to quarterly business reviews. Good energy in the room.,Done,Send roadmap draft to Avery,2025-06-20,,Positive
+Raised daily wire limit to $250K in Production,Woodgrove Bank,Change,2025-07-08,Requested by Woodgrove treasury operations. Applied in UAT on July 2 and in Production on July 8 after their sign-off. No issues.,None,,,https://servicedesk.example.com/tickets/CR-1042,Neutral
+"Bill pay outage, 47 minutes (P1)",Woodgrove Bank,Issue,2025-08-19,Payments Hub queue backlog after a certificate rotation. Service restored at 10:52. Avery escalated to their CIO and asked for a root cause analysis within five business days.,Done,Deliver RCA to Avery,2025-08-26,https://servicedesk.example.com/tickets/INC-20931,Concerned
+RCA delivered for the August bill pay outage,Woodgrove Bank,Email,2025-08-27,Root cause: expired intermediate certificate on the queue broker. Fix: automated certificate monitoring. Avery accepted the RCA and wants monitoring evidence at the next QBR.,None,,,,Neutral
+Q3 2025 business review,Woodgrove Bank,Meeting,2025-09-30,Uptime 99.94% against a 99.95% SLA because of the August outage. Woodgrove is very happy with Fraud Shield: card fraud losses down 18%. SSO migration confirmed for 2026.,Done,Share SSO migration plan,2025-10-15,,Positive
+"SSO will use Entra ID with SAML, not OIDC",Woodgrove Bank,Decision,2025-10-14,"Woodgrove security requires SAML for their core banking single sign-on; OIDC can follow later. Agreed by Avery and their CISO, Dana Ortiz.",None,,,,Neutral
+Enabled Fraud Shield velocity rules v3 in Production,Woodgrove Bank,Change,2025-11-18,Rolled out after two weeks in UAT. False positives down 6% in the first week.,None,,,https://servicedesk.example.com/tickets/CR-1107,Neutral
+Q4 2025 business review,Woodgrove Bank,Meeting,2025-12-16,"Avery signaled renewal intent and wants Payments Hub v5 in 2027. MFA rollout scoped for 1,900 branch staff.",Done,Send Payments Hub v5 overview,2026-01-09,,Positive
+"MFA: Authenticator push, SMS fallback only for branch kiosks",Woodgrove Bank,Decision,2026-01-22,"Agreed with Dana Ortiz. Kiosks cannot run the Authenticator app, so SMS stays as the fallback there only.",None,,,,Neutral
+Upgraded Digital Banking to 25.1 in UAT,Woodgrove Bank,Change,2026-02-10,UAT upgrade completed; Woodgrove testers have two weeks for regression.,None,,,https://servicedesk.example.com/tickets/CR-1163,Neutral
+Upgraded Digital Banking to 25.1 in Production,Woodgrove Bank,Change,2026-03-03,Completed inside the two-hour window with zero customer impact. Avery thanked the team.,None,,,https://servicedesk.example.com/tickets/CR-1171,Positive
+Q1 2026 business review,Woodgrove Bank,Meeting,2026-03-24,Uptime 99.98%. Monitoring evidence accepted. Discussed SSO timeline; Woodgrove resourcing is tight in Q2.,None,,,,Positive
+Mobile login latency spikes after 25.1,Woodgrove Bank,Issue,2026-04-15,Login times up to 9 seconds at peak for about 5% of mobile users. Avery is getting complaints from branches.,Done,Ship 25.1.2 hotfix,2026-04-30,https://servicedesk.example.com/tickets/INC-21877,Concerned
+Hotfix 25.1.2 deployed; login latency back to normal,Woodgrove Bank,Email,2026-05-06,Peak login time back under 2 seconds. Avery confirmed branch complaints have stopped.,None,,,,Positive
+DR failover test passed,Woodgrove Bank,Change,2026-06-20,Recovery time 38 minutes against a 60-minute target. Evidence filed for the audit.,None,,,https://servicedesk.example.com/tickets/CR-1240,Positive
+Q2 2026 business review,Woodgrove Bank,Meeting,2026-06-30,Avery asked about the SSO timeline. Their identity team is short-staffed until August.,None,,,,Neutral
+"SSO cutover phased by region: West first, then Central and East",Woodgrove Bank,Decision,2026-07-21,Lower risk than a big-bang cutover. Each region gets a rehearsal before cutover.,Done,Publish the phased cutover plan,2026-08-01,,Neutral
+SSO configured in UAT for the West region pilot (120 users),Woodgrove Bank,Change,2026-08-18,Pilot users from three West branches.,None,,,https://servicedesk.example.com/tickets/CR-1288,Neutral
+SSO pilot: 14% of users stuck in an MFA loop on shared branch PCs,Woodgrove Bank,Issue,2026-09-15,Shared PCs keep the previous user's session. Pilot paused for affected branches.,Done,Fix shared-PC session handling,2026-10-10,https://servicedesk.example.com/tickets/INC-22410,Concerned
+Q3 2026 business review,Woodgrove Bank,Meeting,2026-09-29,Avery is worried the SSO slip puts the February audit at risk and asked for a weekly status email.,Done,Start weekly SSO status email to Avery,2026-10-06,,Concerned
+Woodgrove CISO asks for the SSO audit evidence pack,Woodgrove Bank,Email,2026-10-20,"Dana Ortiz needs configuration evidence, test results and the rollback plan for the audit file.",Open,Send SSO audit evidence pack to Dana Ortiz,2026-11-14,,Neutral
+Hold the West region SSO cutover until the shared-PC fix is verified,Woodgrove Bank,Decision,2026-10-28,Agreed with Avery. New cutover rehearsal date: December 5.,None,,,,Concerned
+Shared-PC session fix deployed to UAT,Woodgrove Bank,Change,2026-11-04,Verification with pilot branches scheduled for the week of November 23.,None,,,https://servicedesk.example.com/tickets/CR-1319,Neutral
+Weekly SSO status call,Woodgrove Bank,Call,2026-11-12,Avery is frustrated by the second slip and wants an executive sponsor on our side.,Open,Set up an executive sponsor call with Avery,2026-11-20,,Concerned
+MFA rollout reaches 72% of branch staff,Woodgrove Bank,Email,2026-11-18,"1,370 of 1,900 staff enrolled. Remaining branches scheduled through mid-December.",Open,Confirm the kiosk SMS fallback list with branch operations,2026-11-26,,Positive
+Payments Hub v5 discovery workshop,Woodgrove Bank,Meeting,2026-11-19,Treasury team is excited about v5 and wants real-time payments in Q2 2027.,Open,Send the v5 statement of work draft,2026-12-04,,Positive
+Annual planning with Fabrikam's CTO,Fabrikam Payments,Meeting,2025-11-05,Marcus wants the platform migration to Payments Hub v5 done by Q4 2026. Relationship is strong.,None,,,,Positive
+Migration approach: 30-day parallel run before cutover,Fabrikam Payments,Decision,2026-02-18,Fabrikam finance insisted on a parallel run to reconcile settlement files.,None,,,,Neutral
+Open Banking API v2 enabled in Sandbox,Fabrikam Payments,Change,2026-05-12,Fabrikam developers have sandbox access for the v2 endpoints.,None,,,https://servicedesk.example.com/tickets/CR-1215,Neutral
+Settlement file mismatches during the parallel run,Fabrikam Payments,Issue,2026-07-09,0.4% of settlement lines do not match the legacy platform. Fabrikam finance is uneasy.,Done,Reconcile the settlement mapping,2026-07-31,https://servicedesk.example.com/tickets/INC-21990,Concerned
+Parallel run blocked by Fabrikam ledger API rate limits,Fabrikam Payments,Issue,2026-09-03,Their ledger API throttles our reconciliation jobs. Needs an exception from Fabrikam IT.,Open,Get the rate-limit exception approved by Fabrikam IT,2026-11-10,https://servicedesk.example.com/tickets/INC-22377,Concerned
+Escalation call with Marcus Webb,Fabrikam Payments,Meeting,2026-10-02,Marcus said the renewal depends on finishing the migration before January and asked for a recovery plan.,Done,Send the recovery plan,2026-10-09,,Concerned
+Recovery plan sent to Fabrikam,Fabrikam Payments,Email,2026-10-09,"Plan: fix rate limits, compress the parallel run to 14 days, weekend cutover.",None,,,,Neutral
+Renewal check-in with Fabrikam procurement,Fabrikam Payments,Call,2026-11-06,Procurement is evaluating alternatives and asked for 3-year pricing.,Open,Send 3-year renewal pricing,2026-11-25,,Concerned
+Weekend cutover on November 29 if the rate-limit fix holds,Fabrikam Payments,Decision,2026-11-17,Approved by Marcus; go/no-go call on November 27.,None,,,,Neutral
+Fabrikam IT raised the ledger API rate limit in test,Fabrikam Payments,Email,2026-11-20,Reconciliation jobs ran clean overnight in test. First good news in weeks.,None,,,,Positive
+Card Issuing implementation kickoff,Contoso Credit Union,Meeting,2026-01-14,Priya's team is well prepared. Go-live targeted for December.,Done,Send the implementation plan,2026-01-23,,Positive
+Card designs: two debit and one credit; instant issuance in phase 2,Contoso Credit Union,Decision,2026-03-11,Instant issuance in branches moves to a 2027 phase.,None,,,,Neutral
+MFA enabled for all Contoso staff,Contoso Credit Union,Change,2026-06-02,Completed on schedule with no help desk spike.,None,,,https://servicedesk.example.com/tickets/CR-1232,Positive
+Card Issuing UAT planning,Contoso Credit Union,Meeting,2026-08-25,Test cases agreed. Priya praised the team's preparation.,None,,,,Positive
+UAT: PIN mailer template misaligned,Contoso Credit Union,Issue,2026-10-15,Template fixed the same day.,Done,Retest the PIN mailer,2026-10-20,https://servicedesk.example.com/tickets/INC-22561,Neutral
+Weekly implementation sync,Contoso Credit Union,Call,2026-11-13,On track for the December 12 go-live.,Open,Confirm the go-live freeze window with Priya,2026-12-01,,Positive
+Priya confirmed card stock delivery,Contoso Credit Union,Email,2026-11-19,"Card stock arrives December 2, ahead of go-live.",None,,,,Positive
+Annual review with Elena Petrova,Northwind Capital,Meeting,2025-12-09,Elena is pleased with Fraud Shield and wants SSO in 2026.,None,,,,Positive
+SSO via Entra ID with OIDC,Northwind Capital,Decision,2026-04-21,Northwind's identity team prefers OIDC; no SAML dependencies.,None,,,,Neutral
+SSO cutover completed,Northwind Capital,Change,2026-10-10,All 640 users moved in one weekend with no help desk spike.,None,,,https://servicedesk.example.com/tickets/CR-1301,Positive
+Fraud Shield model refresh kickoff,Northwind Capital,Meeting,2026-10-30,Northwind risk team engaged and supplied labeled data.,Open,Share model validation results,2026-12-10,,Positive
+Elena asked for a Q1 roadmap preview,Northwind Capital,Email,2026-11-10,Wants to plan budget for 2027 enhancements.,Open,Send the Q1 roadmap preview to Elena,2026-11-28,,Neutral
+Digital Banking implementation kickoff,Tailspin Lending,Meeting,2026-08-04,New client; Jordan's team is enthusiastic.,None,,,,Positive
+"Go-live: web on January 29, 2027, mobile in March",Tailspin Lending,Decision,2026-09-08,Phasing lowers launch risk for a small team.,None,,,,Neutral
+Sandbox environment provisioned,Tailspin Lending,Change,2026-10-14,Tailspin developers onboarded.,None,,,https://servicedesk.example.com/tickets/CR-1305,Neutral
+Design review,Tailspin Lending,Meeting,2026-11-04,Jordan approved the design direction.,Open,Send the branding assets checklist,2026-11-18,,Positive
+Core banking connector times out for loan accounts,Tailspin Lending,Issue,2026-11-16,Fix in progress; not yet blocking UAT.,None,,,https://servicedesk.example.com/tickets/INC-22702,Neutral
+Annual review with Sofia Martins,Relecloud Card Services,Meeting,2025-10-22,Stable year. 3DS2 upgrade needed before the EU card scheme deadline.,None,,,,Neutral
+"3DS2 upgrade must be live before December 15, 2026",Relecloud Card Services,Decision,2026-03-17,Card scheme deadline; penalties apply after that date.,None,,,,Neutral
+Card authorization latency during the DR test,Relecloud Card Services,Issue,2026-06-11,Authorizations slowed to 1.8 seconds in DR. Sofia is concerned about failover readiness.,Done,Tune DR authorization routing,2026-07-15,https://servicedesk.example.com/tickets/INC-21944,Concerned
+3DS2 enabled in UAT,Relecloud Card Services,Change,2026-09-24,Scheme certification testing started.,None,,,https://servicedesk.example.com/tickets/CR-1295,Neutral
+Q3 business review,Relecloud Card Services,Meeting,2026-10-27,Sofia is frustrated by 3DS2 test defects with the scheme deadline seven weeks away.,Open,Send a daily 3DS2 defect burn-down,2026-11-21,,Concerned
+3DS2 defect review,Relecloud Card Services,Call,2026-11-14,Open defects down from 23 to 9.,None,,,,Neutral
+DR environment build moved to Q1 2027,Relecloud Card Services,Decision,2026-11-18,Keeps the team focused on 3DS2 before the deadline.,None,,,,Neutral
+Payments Hub live for claims payouts,Humongous Insurance,Change,2026-04-30,Go-live completed; first payouts settled the same day.,None,,,https://servicedesk.example.com/tickets/CR-1201,Positive
+Post go-live review,Humongous Insurance,Meeting,2026-07-22,Daniel reports claims payouts are 2 days faster.,None,,,,Positive
+Daniel asked about SSO in 2027,Humongous Insurance,Email,2026-10-06,Wants a scope and timeline for SSO.,Open,Scope the SSO migration,2026-12-15,,Neutral
+Open Banking API live,Proseware Wealth,Change,2026-07-15,Launch went smoothly.,None,,,https://servicedesk.example.com/tickets/CR-1259,Positive
+Post-launch review,Proseware Wealth,Meeting,2026-08-12,Grace is happy with API performance.,None,,,,Positive
+Grace asked about Digital Banking add-on pricing,Proseware Wealth,Email,2026-09-02,Possible expansion; asked for pricing by mid-September.,Open,Send Digital Banking add-on pricing,2026-09-16,,Neutral

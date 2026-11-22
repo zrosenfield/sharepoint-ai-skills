@@ -1,0 +1,468 @@
+{
+ "lists": [
+  {
+   "key": "clients",
+   "urlName": "Clients",
+   "title": "Clients",
+   "titleDisplay": "Client",
+   "description": "One row per client: profile, owners, main contact, value and renewal.",
+   "columns": [
+    {
+     "internalName": "ClientType",
+     "displayName": "Client type",
+     "type": "Choice",
+     "choices": [
+      "Managed services",
+      "Software"
+     ]
+    },
+    {
+     "internalName": "Products",
+     "displayName": "Products",
+     "type": "MultiChoice",
+     "choices": [
+      "Digital Banking",
+      "Payments Hub",
+      "Card Issuing",
+      "Fraud Shield",
+      "Open Banking API"
+     ]
+    },
+    {
+     "internalName": "Environments",
+     "displayName": "Environments",
+     "type": "MultiChoice",
+     "choices": [
+      "Production",
+      "UAT",
+      "Sandbox",
+      "DR"
+     ]
+    },
+    {
+     "internalName": "Health",
+     "displayName": "Health",
+     "type": "Choice",
+     "choices": [
+      "On track",
+      "Needs attention",
+      "At risk"
+     ],
+     "default": "On track"
+    },
+    {
+     "internalName": "RelationshipManager",
+     "displayName": "Relationship manager",
+     "type": "User"
+    },
+    {
+     "internalName": "ImplementationManager",
+     "displayName": "Implementation manager",
+     "type": "User"
+    },
+    {
+     "internalName": "MainContact",
+     "displayName": "Main contact",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContactEmail",
+     "displayName": "Contact email",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContactPhone",
+     "displayName": "Contact phone",
+     "type": "Text"
+    },
+    {
+     "internalName": "AnnualValue",
+     "displayName": "Annual value",
+     "type": "Currency"
+    },
+    {
+     "internalName": "RenewalDate",
+     "displayName": "Renewal date",
+     "type": "DateTime"
+    },
+    {
+     "internalName": "ServiceDesk",
+     "displayName": "Service desk link",
+     "type": "URL"
+    },
+    {
+     "internalName": "About",
+     "displayName": "About",
+     "type": "Note"
+    }
+   ],
+   "views": [
+    {
+     "name": "All clients",
+     "isNewView": true,
+     "isDefaultView": true,
+     "viewFields": [
+      "LinkTitle",
+      "Health",
+      "ClientType",
+      "RelationshipManager",
+      "AnnualValue",
+      "RenewalDate",
+      "Products",
+      "MainContact",
+      "ContactEmail",
+      "ContactPhone",
+      "ImplementationManager",
+      "Environments",
+      "ServiceDesk",
+      "About"
+     ],
+     "query": "<OrderBy><FieldRef Name=\"Title\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Portfolio",
+     "isNewView": true,
+     "viewType2": "TILES",
+     "viewFields": [
+      "LinkTitle",
+      "Health",
+      "ClientType",
+      "AnnualValue",
+      "RenewalDate",
+      "RelationshipManager",
+      "Products"
+     ],
+     "query": "<OrderBy><FieldRef Name=\"Health\" Ascending=\"TRUE\" /><FieldRef Name=\"AnnualValue\" Ascending=\"FALSE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Renewals",
+     "isNewView": true,
+     "viewFields": [
+      "LinkTitle",
+      "RenewalDate",
+      "AnnualValue",
+      "Health",
+      "RelationshipManager",
+      "MainContact"
+     ],
+     "query": "<OrderBy><FieldRef Name=\"RenewalDate\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    }
+   ]
+  },
+  {
+   "key": "projects",
+   "urlName": "Projects",
+   "title": "Projects",
+   "titleDisplay": "Project",
+   "description": "Implementations, migrations (MFA, SSO, platform), upgrades and enhancements, linked to a client.",
+   "columns": [
+    {
+     "internalName": "Client",
+     "displayName": "Client",
+     "type": "Lookup",
+     "required": true,
+     "lookupList": "clients"
+    },
+    {
+     "internalName": "ProjectType",
+     "displayName": "Type",
+     "type": "Choice",
+     "choices": [
+      "Implementation",
+      "Migration",
+      "Upgrade",
+      "Enhancement"
+     ]
+    },
+    {
+     "internalName": "Status",
+     "displayName": "Status",
+     "type": "Choice",
+     "choices": [
+      "Not started",
+      "In progress",
+      "Blocked",
+      "Done"
+     ],
+     "default": "Not started"
+    },
+    {
+     "internalName": "Owner",
+     "displayName": "Owner",
+     "type": "User"
+    },
+    {
+     "internalName": "Team",
+     "displayName": "Team",
+     "type": "Choice",
+     "choices": [
+      "Implementation",
+      "Engineering",
+      "Security",
+      "Infrastructure"
+     ]
+    },
+    {
+     "internalName": "StartDate",
+     "displayName": "Start date",
+     "type": "DateTime"
+    },
+    {
+     "internalName": "DueDate",
+     "displayName": "Target date",
+     "type": "DateTime"
+    },
+    {
+     "internalName": "NextMilestone",
+     "displayName": "Next milestone",
+     "type": "Text"
+    }
+   ],
+   "views": [
+    {
+     "name": "All projects",
+     "isNewView": true,
+     "isDefaultView": true,
+     "viewFields": [
+      "LinkTitle",
+      "Client",
+      "Status",
+      "ProjectType",
+      "Owner",
+      "Team",
+      "DueDate",
+      "NextMilestone",
+      "StartDate"
+     ],
+     "query": "<OrderBy><FieldRef Name=\"DueDate\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Board",
+     "isNewView": true,
+     "viewType2": "KANBAN",
+     "viewFields": [
+      "LinkTitle",
+      "Client",
+      "Owner",
+      "DueDate",
+      "NextMilestone",
+      "Status"
+     ],
+     "query": "<GroupBy Collapse=\"FALSE\"><FieldRef Name=\"Status\" /></GroupBy><OrderBy><FieldRef Name=\"DueDate\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Due in 30 days",
+     "isNewView": true,
+     "viewFields": [
+      "LinkTitle",
+      "Client",
+      "Status",
+      "DueDate",
+      "Owner",
+      "NextMilestone"
+     ],
+     "query": "<Where><And><Neq><FieldRef Name=\"Status\" /><Value Type=\"Choice\">Done</Value></Neq><Leq><FieldRef Name=\"DueDate\" /><Value Type=\"DateTime\"><Today OffsetDays=\"30\" /></Value></Leq></And></Where><OrderBy><FieldRef Name=\"DueDate\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Migrations",
+     "isNewView": true,
+     "viewFields": [
+      "LinkTitle",
+      "Client",
+      "Status",
+      "DueDate",
+      "Owner",
+      "NextMilestone"
+     ],
+     "query": "<Where><Eq><FieldRef Name=\"ProjectType\" /><Value Type=\"Choice\">Migration</Value></Eq></Where><OrderBy><FieldRef Name=\"DueDate\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    }
+   ]
+  },
+  {
+   "key": "activity",
+   "urlName": "ClientActivity",
+   "title": "Client Activity",
+   "titleDisplay": "Summary",
+   "description": "The client timeline: meetings, calls, emails, decisions, changes and issues, each with an optional follow-up.",
+   "columns": [
+    {
+     "internalName": "Client",
+     "displayName": "Client",
+     "type": "Lookup",
+     "required": true,
+     "lookupList": "clients"
+    },
+    {
+     "internalName": "ActivityType",
+     "displayName": "Type",
+     "type": "Choice",
+     "choices": [
+      "Meeting",
+      "Call",
+      "Email",
+      "Decision",
+      "Change",
+      "Issue"
+     ]
+    },
+    {
+     "internalName": "ActivityDate",
+     "displayName": "Date",
+     "type": "DateTime",
+     "default": "[today]"
+    },
+    {
+     "internalName": "Notes",
+     "displayName": "Notes",
+     "type": "Note"
+    },
+    {
+     "internalName": "Owner",
+     "displayName": "Owner",
+     "type": "User"
+    },
+    {
+     "internalName": "FollowUp",
+     "displayName": "Follow-up",
+     "type": "Choice",
+     "choices": [
+      "None",
+      "Open",
+      "Done"
+     ],
+     "default": "None"
+    },
+    {
+     "internalName": "NextStep",
+     "displayName": "Next step",
+     "type": "Text"
+    },
+    {
+     "internalName": "NextStepDue",
+     "displayName": "Due",
+     "type": "DateTime"
+    },
+    {
+     "internalName": "TicketLink",
+     "displayName": "Ticket link",
+     "type": "URL"
+    },
+    {
+     "internalName": "Sentiment",
+     "displayName": "Sentiment",
+     "type": "Choice",
+     "choices": [
+      "Positive",
+      "Neutral",
+      "Concerned"
+     ]
+    }
+   ],
+   "views": [
+    {
+     "name": "Timeline",
+     "isNewView": true,
+     "isDefaultView": true,
+     "viewFields": [
+      "LinkTitle",
+      "Client",
+      "ActivityType",
+      "ActivityDate",
+      "Owner",
+      "FollowUp",
+      "NextStep",
+      "NextStepDue",
+      "Sentiment",
+      "Notes",
+      "TicketLink"
+     ],
+     "query": "<OrderBy><FieldRef Name=\"ActivityDate\" Ascending=\"FALSE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Open follow-ups",
+     "isNewView": true,
+     "viewFields": [
+      "NextStep",
+      "NextStepDue",
+      "FollowUp",
+      "Client",
+      "Owner",
+      "LinkTitle",
+      "ActivityDate"
+     ],
+     "query": "<Where><Eq><FieldRef Name=\"FollowUp\" /><Value Type=\"Choice\">Open</Value></Eq></Where><OrderBy><FieldRef Name=\"NextStepDue\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "My follow-ups",
+     "isNewView": true,
+     "viewFields": [
+      "NextStep",
+      "NextStepDue",
+      "FollowUp",
+      "Client",
+      "LinkTitle",
+      "ActivityDate"
+     ],
+     "query": "<Where><And><Eq><FieldRef Name=\"FollowUp\" /><Value Type=\"Choice\">Open</Value></Eq><Eq><FieldRef Name=\"Owner\" /><Value Type=\"Integer\"><UserID Type=\"Integer\" /></Value></Eq></And></Where><OrderBy><FieldRef Name=\"NextStepDue\" Ascending=\"TRUE\" /></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "name": "Decision log",
+     "isNewView": true,
+     "viewFields": [
+      "LinkTitle",
+      "Client",
+      "ActivityDate",
+      "Owner",
+      "Notes"
+     ],
+     "query": "<Where><Eq><FieldRef Name=\"ActivityType\" /><Value Type=\"Choice\">Decision</Value></Eq></Where><OrderBy><FieldRef Name=\"ActivityDate\" Ascending=\"FALSE\" /></OrderBy>",
+     "rowLimit": 100
+    }
+   ]
+  }
+ ],
+ "nav": [
+  [
+   "Clients",
+   "clients/All clients"
+  ],
+  [
+   "Portfolio",
+   "clients/Portfolio"
+  ],
+  [
+   "Projects board",
+   "projects/Board"
+  ],
+  [
+   "Due in 30 days",
+   "projects/Due in 30 days"
+  ],
+  [
+   "Open follow-ups",
+   "activity/Open follow-ups"
+  ],
+  [
+   "My follow-ups",
+   "activity/My follow-ups"
+  ],
+  [
+   "Timeline",
+   "activity/Timeline"
+  ],
+  [
+   "Decision log",
+   "activity/Decision log"
+  ]
+ ]
+}

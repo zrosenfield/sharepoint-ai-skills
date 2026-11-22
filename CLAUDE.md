@@ -7,6 +7,7 @@
 | `Skills/` | All AI skills live here. See `Skills/README.md` for the full index. |
 | `Skills/<skill-name>/` | Each skill lives in its own folder. The folder name must exactly match the `name` field in the skill's frontmatter. Contains `SKILL.md` and optionally `references/`, `scripts/`, and `assets/` subdirectories per the agentskills.io spec. |
 | `Skills/<skill-name>/SKILL.md` | The skill definition file. Required YAML frontmatter (`name`, `description`) followed by skill instructions in Markdown. |
+| `solutions/` | Complete experimental solution kits intended for reuse on test sites. Each solution has a README describing its status, prerequisites, setup, limitations, and removal. Deployment code, formatting, and fictional sample data stay with the solution; installable skills remain in top-level `Skills/` and are linked, not duplicated. |
 | `demos/` | End-to-end demo setups. Each demo lives in its own subfolder and may include video recordings, scripts, and supporting assets. Not intended for direct reuse — reference and walkthrough material. |
 | `branding.md` | Quick-reference brand cheat sheet for the forest-style brand system. Human-readable; not a skill. For the AI-instructional version see `Skills/forest-style/SKILL.md`. |
 

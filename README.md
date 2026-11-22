@@ -9,6 +9,7 @@ Experimental AI skills, prototypes, automated demo scripts, sample data, and pre
 | Path | Purpose |
 |---|---|
 | [`Skills/`](./Skills/) | Experimental skills that have not graduated to the PnP repository |
+| [`solutions/`](./solutions/) | Complete experimental solution kits with setup, deployment assets, sample data, and linked skills |
 | [`demos/`](./demos/) | Demo documentation, sample data, golden outputs, and presentation assets |
 | [`tools/scripts/`](./tools/scripts/) | Automated browser demo scripts |
 | [`tools/`](./tools/) | The Playwright-based demo runner and local configuration examples |
@@ -22,6 +23,12 @@ Skills in this repository are prototypes. They may change quickly and should be 
 3. After graduation, the local copy is removed and [`Skills/README.md`](./Skills/README.md) links to the maintained PnP version.
 
 Do not submit updates for graduated skills here. Open issues and pull requests against the official repository instead.
+
+## Experimental Solutions
+
+Solutions are complete samples to try on a test site, not production-ready or supported products. Their installable skills remain in `Skills/`; each kit links to those canonical sources.
+
+Start with [Client Hub for SharePoint](./solutions/client-hub-for-sharepoint/): three related lists for clients, projects, and activity, with deployment/removal scripts, formatting, fictional sample data, an optional dashboard, and five Copilot skills. Its [manual setup guide](./solutions/client-hub-for-sharepoint/SETUP.md) is an alternative to running the browser script.
 
 ## Running Demos
 
@@ -42,7 +49,7 @@ Most scripts support `--setup`, the default demo section, and `--reset`.
 
 ## Contributing
 
-Contributions are welcome for experimental skills, demo scenarios, runner improvements, and sample assets. Stable reusable skills should be proposed to [PnP SharePoint Skills](https://github.com/pnp/sharepoint-skills).
+Contributions are welcome for experimental skills, solution kits, demo scenarios, runner improvements, and sample assets. Stable reusable skills should be proposed to [PnP SharePoint Skills](https://github.com/pnp/sharepoint-skills).
 
 ## License
 
