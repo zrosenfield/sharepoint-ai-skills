@@ -20,6 +20,7 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | [`decision-log`](./decision-log/) | Extracts structured decision records |
 | [`deck-assembly`](./deck-assembly/) | Assembles presentations from existing slide content |
 | [`design-direction`](./design-direction/) | Produces distinctive, professionally justified visual direction |
+| [`design-inspiration`](./design-inspiration/) | Applies reusable design languages to produce one distinctive direction or several genuinely distinct design options |
 | [`exclude-obligation`](./exclude-obligation/) | Excludes a clause or pattern from future Obligation Hub capture |
 | [`executive-summary`](./executive-summary/) | Produces concise leadership summaries |
 | [`faq-building`](./faq-building/) | Builds structured FAQ content |
