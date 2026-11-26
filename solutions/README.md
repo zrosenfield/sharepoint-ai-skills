@@ -5,6 +5,7 @@ Complete, reusable sample kits for trying SharePoint scenarios on a test site. "
 | Solution | What it explores | Status |
 |---|---|---|
 | [Client Hub for SharePoint](./client-hub-for-sharepoint/) | A lightweight client tracker built from related lists, formatting, and optional Copilot skills and a dashboard | Experimental; tenant validation required |
+| [Obligation Hub for SharePoint](./obligation-hub-for-sharepoint/) | Turns signed contracts into a tracked register of obligations, owners, due dates, evidence, digests, and recurring work | Experimental; tenant validation required |
 
 ## Where things belong
 

@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="application/json" class="ka-livedata-manifest">[{"kind":"list","spItemUrl":"list:{{SITE_URL}}/{{LISTID_RUNLOG}}","webUrl":"{{SITE_URL}}","listId":"{{LISTID_RUNLOG}}","listServerRelativeUrl":"{{LISTURL_RUNLOG}}"},{"kind":"list","spItemUrl":"list:{{SITE_URL}}/{{LISTID_OWNERS}}","webUrl":"{{SITE_URL}}","listId":"{{LISTID_OWNERS}}","listServerRelativeUrl":"{{LISTURL_OWNERS}}"}]</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings &middot; Obligation Hub</title>
+<style>
+/* Obligation Hub - shared styles. Design language: 01 Atmospheric Precision.
+   Depth and light organise the page. SharePoint's site navigation is the one primary nav, so the pages
+   carry no nav bar of their own: just a quiet Obligation Hub mark above each page title.
+   Every colour pair used for text is checked by tests/contrast.py. */
+:root {
+  /* palette */
+  --graphite: #111827;
+  --ice: #9AC7F5;
+  --cloud: #EAF3FC;
+  --white: #FFFFFF;
+  --violet: #8B83DB;
+
+  /* text */
+  --ink: #111827;
+  --ink-2: #374151;
+  --ink-3: #4B5563;
+
+  /* surfaces */
+  --canvas: #F5F9FD;
+  --surface: #FFFFFF;
+  --surface-2: #F7FAFD;
+  --track: #EAF3FC;
+  --line: #E4EAF1;
+  --line-2: #D3DDE9;
+  --edge: #6B7A90;          /* control boundaries: >= 3:1 on white, cloud and track */
+
+  /* data accents (fills, never small text) */
+  --bar: #5A87C2;
+  --bar-2: #7A71CF;
+  --bar-track: #E8EFF7;
+
+  /* functional tints: background / text / edge */
+  --rose-bg: #FBEAEF;   --rose-ink: #8A1C3F;   --rose-edge: #C25A7C;
+  --amber-bg: #FCF1D9;  --amber-ink: #6F4500;  --amber-edge: #B98424;
+  --sage-bg: #E4F2EB;   --sage-ink: #1D5A42;   --sage-dot: #2F7A5C;
+  --ice-bg: #E3EEFB;    --ice-ink: #1D3D66;
+  --neutral-bg: #EEF2F6; --neutral-ink: #374151;
+  --violet-bg: #ECEAFA; --violet-ink: #3F3891;
+
+  /* type */
+  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-base: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fs-hero: clamp(32px, 3.6vw, 48px);
+
+  /* 8-point spacing */
+  --s-half: 4px;
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 40px;
+  --s6: 48px;
+  --s8: 64px;
+  --s12: 96px;
+
+  --r-s: 8px;
+  --r-m: 12px;
+  --r-l: 16px;
+  --r-xl: 24px;
+
+  /* soft directional light from the upper left */
+  --shadow-1: 0 1px 2px rgba(17, 24, 39, .04), 0 4px 12px -6px rgba(30, 41, 82, .10);
+  --shadow-2: 0 1px 2px rgba(17, 24, 39, .05), 2px 14px 32px -18px rgba(30, 41, 82, .26);
+  --shadow-3: 0 2px 4px rgba(17, 24, 39, .06), 4px 22px 44px -20px rgba(30, 41, 82, .34);
+
+  --ease-spring: cubic-bezier(.2, 1.1, .3, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --container: 1280px;
+  --gutter: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--canvas);
+  font-feature-settings: "kern", "tnum" 0;
+  -webkit-font-smoothing: antialiased;
+}
+/* Abstract light behind the top of every page. Purely decorative. */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 760px;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 80% at 10% -4%, rgba(154, 199, 245, .42), rgba(154, 199, 245, 0) 70%),
+    radial-gradient(46% 64% at 90% 4%, rgba(139, 131, 219, .20), rgba(139, 131, 219, 0) 72%),
+    linear-gradient(180deg, #EEF5FD 0%, rgba(245, 249, 253, 0) 100%);
+}
+
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+h1 { font-size: var(--fs-2xl); line-height: 1.25; letter-spacing: -.02em; }
+h2 { font-size: var(--fs-xl); line-height: 1.4; }
+h3 { font-size: var(--fs-lg); line-height: 1.4; }
+h4 { font-size: var(--fs-base); line-height: 1.5; }
+p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--violet); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ink); }
+strong { font-weight: 600; }
+code, pre { font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace; }
+img, svg { max-width: 100%; }
+.tl-svg, .mini svg { max-width: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--graphite); outline-offset: 2px; }
+
+.sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- layout ---------- */
+.wrap { width: min(var(--container), calc(100% - 2 * var(--gutter))); margin-inline: auto; }
+/* Top space under SharePoint's header: 40 / 32 / 24 px on the 8-pt rhythm (desktop / tablet / phone). */
+main { display: block; padding-block: var(--s5) var(--s8); }
+.stack > * + * { margin-top: var(--s3); }
+.section { margin-top: var(--s6); }
+.grid-main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s3); align-items: start; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); }
+.side { display: grid; gap: var(--s3); }
+
+/* ---------- page header ---------- */
+.page-head { display: grid; gap: var(--s2); max-width: 820px; }
+.eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.lede { font-size: var(--fs-lg); line-height: 1.6; color: var(--ink-2); max-width: 64ch; }
+.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); color: var(--ink-3); font-size: var(--fs-md); }
+/* the only identity on the page: plain text, no links (SharePoint's nav does the navigating) */
+.hub-mark { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+.hub-mark svg { width: 16px; height: 16px; flex: none; }
+.hub-mark::after { content: ""; width: 1px; height: 12px; margin-left: 8px; background: var(--line-2); }
+
+/* data-source badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 28px; padding: 2px 12px 2px 10px;
+  border-radius: 999px; border: 1px solid var(--line-2); background: var(--white);
+  color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600; white-space: nowrap;
+}
+.badge__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); flex: none; }
+.badge--live .badge__dot { background: var(--sage-dot); box-shadow: 0 0 0 3px rgba(47, 122, 92, .16); }
+.badge--sample .badge__dot { background: transparent; border: 2px solid var(--violet); }
+.badge--loading .badge__dot { animation: pulse 1.2s ease-in-out infinite; }
+.data-note { font-size: var(--fs-md); color: var(--ink-2); }
+
+/* ---------- cards ---------- */
+.card {
+  position: relative;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l);
+  box-shadow: var(--shadow-1); padding: var(--s3);
+}
+.card--flush { padding: 0; overflow: hidden; }
+.card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s2); }
+.card__head p { color: var(--ink-3); font-size: var(--fs-md); margin-top: 2px; }
+.card__foot { margin-top: var(--s2); padding-top: var(--s2); border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); align-items: center; }
+.card--tint { background: linear-gradient(160deg, rgba(234, 243, 252, .9), rgba(255, 255, 255, .96) 60%); }
+a.card, .card--link { display: block; color: inherit; text-decoration: none; transition: transform .45s var(--ease-spring), box-shadow .45s var(--ease-spring), border-color .2s ease; }
+a.card:hover, .card--link:hover { transform: translateY(-2px); box-shadow: var(--shadow-3); border-color: var(--line-2); }
+a.card:active { transform: translateY(0); box-shadow: var(--shadow-1); }
+.pad { padding: var(--s3) var(--s3) 0; }
+.card__head.pad { padding-bottom: 0; }
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s2); flex-wrap: wrap; }
+.section-head p { color: var(--ink-3); font-size: var(--fs-md); }
+
+/* ---------- pills ---------- */
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 24px; padding: 2px 10px;
+  border-radius: 999px; border: 1px solid transparent;
+  background: var(--neutral-bg); color: var(--neutral-ink);
+  font-size: var(--fs-xs); font-weight: 600; line-height: 1.3; white-space: nowrap; vertical-align: middle;
+}
+.pill svg { width: 10px; height: 10px; flex: none; fill: currentColor; }
+.pill--overdue { background: var(--rose-bg); color: var(--rose-ink); }
+.pill--soon { background: var(--amber-bg); color: var(--amber-ink); }
+.pill--upcoming { background: var(--ice-bg); color: var(--ice-ink); }
+.pill--nodate { background: var(--neutral-bg); color: var(--neutral-ink); }
+.pill--closed, .pill--ok { background: var(--sage-bg); color: var(--sage-ink); }
+.pill--review { background: var(--violet-bg); color: var(--violet-ink); }
+.pill--quiet { background: var(--white); color: var(--ink-2); border-color: var(--line-2); }
+.pill--empty { background: var(--white); color: var(--ink-2); border: 1px dashed var(--edge); }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* ---------- buttons & links ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: 0 18px; border-radius: 999px;
+  border: 1px solid var(--edge); background: var(--white); color: var(--ink);
+  font-size: var(--fs-md); font-weight: 600; text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: transform .4s var(--ease-spring), box-shadow .4s var(--ease-spring), background-color .2s ease;
+}
+.btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.btn:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+.btn--primary { background: var(--graphite); color: var(--white); border-color: var(--graphite); }
+.btn--primary:hover { background: #1F2937; }
+.btn--quiet { border-color: transparent; background: transparent; padding: 0 10px; }
+.btn--quiet:hover { background: var(--track); box-shadow: none; }
+.btn--sm { min-height: 32px; padding: 0 12px; font-size: var(--fs-sm); }
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--s1); align-items: center; }
+.link-arrow { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 600; font-size: var(--fs-md); color: var(--ink); text-decoration: underline; text-decoration-color: var(--violet); }
+.link-arrow svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; transition: transform .4s var(--ease-spring); }
+.link-arrow:hover svg { transform: translateX(3px); }
+
+/* tooltip-style hints that also work for keyboard users */
+.hint { position: relative; display: inline-flex; }
+.hint__text {
+  position: absolute; left: 50%; bottom: calc(100% + 10px); z-index: 30; width: max-content; max-width: 260px;
+  padding: 10px 12px; border-radius: var(--r-m); background: var(--graphite); color: var(--white);
+  font-size: var(--fs-sm); font-weight: 400; line-height: 1.5; text-align: left; box-shadow: var(--shadow-3);
+  opacity: 0; transform: translate(-50%, 4px); pointer-events: none;
+  transition: opacity .2s ease, transform .35s var(--ease-spring);
+}
+.hint__text::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }
+.hint:hover .hint__text, .hint:focus-within .hint__text { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.hint.is-dismissed .hint__text { opacity: 0; pointer-events: none; }
+
+/* ---------- form controls ---------- */
+.field { display: grid; gap: 6px; }
+.field label, .label { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); }
+.control {
+  min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--edge);
+  background: var(--white); color: var(--ink); min-width: 0;
+}
+select.control { padding-right: 32px; }
+.control::placeholder { color: var(--ink-3); opacity: 1; }
+.toolbar { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: flex-end; }
+
+/* quiet segmented control */
+.seg { display: inline-flex; gap: 2px; padding: 4px; border-radius: 14px; background: var(--track); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.seg__opt {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid transparent; color: var(--ink-2); text-decoration: none; font-size: var(--fs-md); white-space: nowrap;
+  transition: background-color .35s var(--ease-spring), box-shadow .35s var(--ease-spring);
+}
+.seg__opt:hover { background: rgba(255, 255, 255, .8); color: var(--ink); }
+.seg__opt[aria-current="true"] { background: var(--white); color: var(--ink); font-weight: 600; border-color: var(--edge); box-shadow: var(--shadow-1); }
+.seg__n { font-variant-numeric: tabular-nums; color: var(--ink-3); font-weight: 600; }
+
+/* ---------- tables: never glass; fine dividers ---------- */
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
+.table caption { text-align: left; }
+.table th {
+  text-align: left; font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-3); padding: 12px; border-bottom: 1px solid var(--line-2); white-space: nowrap; background: var(--surface);
+}
+.table td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table tr:last-child td { border-bottom: 0; }
+.table th:first-child, .table td:first-child { padding-left: var(--s3); }
+.table th:last-child, .table td:last-child { padding-right: var(--s3); }
+.nowrap { white-space: nowrap; }
+.table tbody tr { transition: background-color .2s ease; }
+.table tbody tr:hover { background: var(--surface-2); }
+.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.cell-title { font-weight: 600; color: var(--ink); }
+a.cell-title { text-decoration-thickness: 1px; text-decoration-color: rgba(91, 84, 173, .55); }
+a.cell-title:hover { text-decoration-color: var(--ink); text-decoration-thickness: 1.5px; }
+.cell-sub { display: block; font-size: var(--fs-sm); color: var(--ink-3); margin-top: 2px; }
+.muted { color: var(--ink-3); }
+.timing-note { max-width: 18ch; }
+
+/* ---------- lists ---------- */
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows > li { padding: 14px 0; border-top: 1px solid var(--line); }
+.rows > li:first-child { border-top: 0; padding-top: 0; }
+.rows > li:last-child { padding-bottom: 0; }
+
+/* ---------- states ---------- */
+.state { display: grid; justify-items: center; text-align: center; gap: var(--s1); padding: var(--s6) var(--s3); color: var(--ink-2); }
+.state h2, .state h3 { font-size: var(--fs-lg); }
+.state p { max-width: 46ch; color: var(--ink-2); }
+.state svg { width: 120px; height: 96px; margin-bottom: var(--s1); }
+.state--inline { justify-items: start; text-align: left; padding: var(--s2) 0; }
+.state--error { border: 1px solid var(--rose-edge); background: var(--rose-bg); color: var(--rose-ink); border-radius: var(--r-l); justify-items: start; text-align: left; padding: var(--s3); }
+.state--error h2, .state--error p { color: var(--rose-ink); }
+.notice {
+  display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; border-radius: var(--r-m);
+  background: var(--amber-bg); color: var(--amber-ink); font-size: var(--fs-md); border: 1px solid rgba(185, 132, 36, .35);
+}
+.notice svg { width: 18px; height: 18px; flex: none; margin-top: 2px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.notice--rose { background: var(--rose-bg); color: var(--rose-ink); border-color: rgba(194, 90, 124, .35); }
+.notice--info { background: var(--ice-bg); color: var(--ice-ink); border-color: rgba(90, 135, 194, .3); }
+.notice a { color: inherit; }
+
+.skel { display: block; height: 14px; border-radius: 8px; background: linear-gradient(90deg, #EAF0F7 0%, #F6F9FC 40%, #EAF0F7 80%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+.skel + .skel { margin-top: 12px; }
+.skel--title { height: 28px; width: 60%; }
+.skel--block { height: 120px; border-radius: var(--r-l); }
+.skel--w80 { width: 80%; } .skel--w60 { width: 60%; } .skel--w40 { width: 40%; }
+
+/* ---------- details / disclosure ---------- */
+details > summary { cursor: pointer; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+.disclose > summary {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; border-radius: var(--r-s);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2);
+}
+.disclose > summary svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform .35s var(--ease-spring); }
+.disclose[open] > summary svg { transform: rotate(90deg); }
+.quote {
+  margin: var(--s1) 0 0; padding: 12px 16px; border-left: 2px solid var(--violet);
+  background: var(--surface-2); border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--ink-2); font-size: var(--fs-md);
+}
+
+/* copy chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 8px 16px; border-radius: 999px;
+  border: 1px solid var(--edge); background: var(--white); color: var(--ink); text-align: left; cursor: pointer;
+  font-size: var(--fs-md); line-height: 1.4;
+  transition: transform .4s var(--ease-spring), box-shadow .4s var(--ease-spring);
+}
+.chip svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.chip:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
+.chip__state { font-size: var(--fs-xs); font-weight: 600; color: var(--ink-3); }
+.copy-manual { flex-basis: 100%; display: grid; gap: 6px; max-width: 560px; }
+.copy-manual .control { width: 100%; }
+
+/* footer */
+.foot { padding: var(--s4) 0 var(--s6); color: var(--ink-3); font-size: var(--fs-sm); border-top: 1px solid var(--line); }
+.foot .wrap { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); justify-content: space-between; }
+
+/* ---------- motion: soft reveal that communicates order ---------- */
+/* Static sections fade up once on load. Content drawn later by script only settles into place (no opacity),
+   so it can never be left invisible if an animation is throttled. */
+.reveal { animation: rise .7s var(--ease-out) both; animation-delay: calc(var(--d, 0) * 70ms); }
+.settle { animation: settle .6s var(--ease-spring) backwards; animation-delay: calc(var(--d, 0) * 60ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes settle { from { transform: translateY(8px); } to { transform: none; } }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  a.card:hover, .btn:hover, .chip:hover { transform: none; }
+}
+@media (forced-colors: active) {
+  .pill, .badge, .seg__opt[aria-current="true"] { border: 1px solid CanvasText; }
+  .seg__opt[aria-current="true"] { outline: 2px solid Highlight; }
+}
+@media print {
+  body::before { display: none; }
+  .card { box-shadow: none; break-inside: avoid; }
+}
+@media (pointer: coarse) {
+  .btn, .chip, .control, .seg__opt { min-height: 44px; }
+}
+
+/* ---------- responsive: tablet ---------- */
+@media (max-width: 1080px) {
+  :root { --gutter: 24px; }
+  main { padding-top: var(--s4); }
+  .grid-main { grid-template-columns: minmax(0, 1fr); }
+  .side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* dense tables become stacked cards below tablet-landscape */
+@media (max-width: 860px) {
+  .table--stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .table--stack, .table--stack tbody, .table--stack td { display: block; width: 100%; }
+  .table--stack colgroup { display: none; }
+  .table--stack tr { display: flex; flex-direction: column; gap: 4px; padding: 16px var(--s3); border-bottom: 1px solid var(--line); }
+  .table--stack tr:last-child { border-bottom: 0; }
+  .table--stack td, .table--stack td:first-child, .table--stack td:last-child { padding: 0; border: 0; }
+  .table--stack td.cell-lead { order: -1; padding-bottom: 4px; font-size: var(--fs-base); }
+  .table--stack td[data-label] { display: grid; grid-template-columns: 128px minmax(0, 1fr); align-items: baseline; gap: 12px; }
+  .table--stack td[data-label]::before { content: attr(data-label); font-size: var(--fs-xs); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+  .table--stack td[data-label] > * { justify-self: start; }
+  .table--stack .due-date strong, .table--stack .due-date .cell-sub { display: inline; margin: 0; }
+  .table--stack .due-date .cell-sub::before { content: " \00b7 "; }
+}
+/* ---------- responsive: phone ---------- */
+@media (max-width: 640px) {
+  :root { --gutter: 16px; --fs-2xl: 24px; }
+  body { font-size: var(--fs-base); }
+  main { padding-block: var(--s3) var(--s6); }
+  .card { padding: var(--s2); border-radius: var(--r-m); }
+  .pad { padding: var(--s2) var(--s2) 0; }
+  .side, .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .section { margin-top: var(--s5); }
+  .lede { font-size: var(--fs-base); }
+  .table--stack tr { padding: 16px; }
+  .table--stack td[data-label] { grid-template-columns: 118px minmax(0, 1fr); gap: 8px; }
+  .card__head { flex-wrap: wrap; }
+}
+
+.admin { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); }
+.admin > li { display: flex; }
+.admin__card { display: flex !important; flex-direction: column; gap: var(--s1); width: 100%; }
+.admin__icon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--track); color: var(--ink); margin-bottom: var(--s1); }
+.admin__icon svg { width: 20px; height: 20px; }
+.admin__name { font-weight: 600; font-size: var(--fs-base); }
+.admin__desc { font-size: var(--fs-md); color: var(--ink-2); }
+.admin__meta { margin-top: auto; padding-top: var(--s1); font-size: var(--fs-sm); font-weight: 600; color: var(--ink-3); }
+
+.config { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--s1) var(--s3); align-items: start; }
+.config .admin__icon { margin-bottom: 0; }
+.config h2 { font-size: var(--fs-lg); }
+.config__text { display: grid; gap: 6px; }
+.config__text p { font-size: var(--fs-md); color: var(--ink-2); max-width: 72ch; }
+.config__text code { font-size: var(--fs-sm); padding: 1px 6px; border-radius: 6px; background: var(--track); color: var(--ink); }
+.config__text .config__fine { font-size: var(--fs-sm); color: var(--ink-3); }
+.config__links { display: grid; gap: var(--s1); justify-items: start; }
+.wf-who { margin-bottom: var(--s3); }
+.wf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.wf-card { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, .9fr); gap: var(--s2) var(--s3); align-items: start; }
+.wf-card h3 { font-size: var(--fs-lg); }
+.wf-card__what { font-size: var(--fs-md); color: var(--ink-2); margin-top: 4px; }
+.wf-facts { margin: 0; display: grid; gap: 10px; }
+.wf-facts dt { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.wf-facts dd { margin: 2px 0 0; font-size: var(--fs-md); }
+.wf-facts code { font-size: var(--fs-sm); padding: 1px 6px; border-radius: 6px; background: var(--track); color: var(--ink); }
+.wf-last { display: grid; gap: 6px; justify-items: start; font-size: var(--fs-sm); color: var(--ink-3); }
+.wf-prompt { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 12px; }
+.wf-prompt__box { margin-top: var(--s1); border: 1px solid var(--line-2); border-radius: var(--r-m); background: var(--surface-2); }
+.wf-prompt__bar { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); padding: 8px 8px 8px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-sm); color: var(--ink-3); }
+.wf-prompt pre { margin: 0; padding: var(--s2); max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; font-size: var(--fs-sm); line-height: 1.6; color: var(--ink); }
+.wf-prompt__todo { padding: 0 var(--s2) var(--s2); font-size: var(--fs-sm); color: var(--ink-2); }
+
+@media (max-width: 1080px) {
+  .admin { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wf-card { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .wf-card > div:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 860px) {
+  .config { grid-template-columns: auto minmax(0, 1fr); }
+  .config__links { grid-column: 2; grid-auto-flow: column; align-items: center; justify-content: start; }
+}
+@media (max-width: 640px) {
+  .config { grid-template-columns: minmax(0, 1fr); }
+  .config__links { grid-column: 1; grid-auto-flow: row; }
+  .admin { grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+  .wf-card { grid-template-columns: minmax(0, 1fr); }
+}
+
+</style>
+</head>
+<body class="page-settings">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-overdue" viewBox="0 0 10 10"><path fill="currentColor" d="M5 .8 9.4 8.9H.6z"/></symbol>
+  <symbol id="i-soon" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.9" fill="none" stroke="currentColor" stroke-width="1.4"/><path fill="currentColor" d="M5 1.1a3.9 3.9 0 0 1 0 7.8z"/></symbol>
+  <symbol id="i-upcoming" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.9" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-nodate" viewBox="0 0 10 10"><rect x="1.2" y="4.2" width="7.6" height="1.6" rx=".8" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 10 10"><path d="M1.6 5.3 4 7.6 8.6 2.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-review" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.9" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.5" fill="currentColor"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 10 10"><path d="M2 9.4V.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path fill="currentColor" d="M2.6 1.2h6l-1.5 2.2 1.5 2.2h-6z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5.5 6.5 6.5L9 18.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-open" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 4.5h6v6M19.5 4.5l-8 8"/><path d="M17.5 13.5v4.5a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 18V8A1.5 1.5 0 0 1 6 6.5h4.5"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5H7.5A1.5 1.5 0 0 0 6 5v14a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 18 19V7.5z"/><path d="M14 3.5v4h4M9 12h6M9 15.5h4"/></g></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4.5M7.5 9 12 4.5 16.5 9"/><path d="M4.5 14.5v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"/></g></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></g></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5h4l10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="m14 8 2 2"/></g></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="m8.5 12.2 2.4 2.3 4.6-5"/></g></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="m19 11.5-6.8 6.8a4.2 4.2 0 0 1-6-6l7.2-7.2a2.8 2.8 0 0 1 4 4L10.3 16a1.4 1.4 0 0 1-2-2l6.3-6.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.6v.1"/></g></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5c.6 4.3 2.2 6 6.5 6.5-4.3.6-5.9 2.2-6.5 6.5-.6-4.3-2.2-5.9-6.5-6.5 4.3-.5 5.9-2.2 6.5-6.5zM18 15.5c.3 1.6.9 2.2 2.5 2.5-1.6.3-2.2.9-2.5 2.5-.3-1.6-.9-2.2-2.5-2.5 1.6-.3 2.2-.9 2.5-2.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M6 18l1.4-1.4M16.6 7.4 18 6"/></g></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.2a3 3 0 0 1 0 5.6M17 14.2a5 5 0 0 1 3.5 4.8"/></g></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="m12 4 8.5 4.5L12 13 3.5 8.5z"/><path d="m3.5 12.5 8.5 4.5 8.5-4.5M3.5 16.5 12 21l8.5-4.5"/></g></symbol>
+  <symbol id="i-block" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="m6.5 6.5 11 11"/></g></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3.5 12h4l2-5 4 10 2-5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h4l2 2h8A1.5 1.5 0 0 1 20.5 9v8.5A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 5.5A1.5 1.5 0 0 1 6 4h5.5v15.5H6A1.5 1.5 0 0 1 4.5 18zM19.5 5.5A1.5 1.5 0 0 0 18 4h-5.5v15.5H18a1.5 1.5 0 0 0 1.5-1.5z"/></g></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="6" height="5" rx="1.5"/><rect x="14.5" y="15" width="6" height="5" rx="1.5"/><path d="M6.5 9v3.5a2 2 0 0 0 2 2h6"/><path d="m12.5 12.5 2 2-2 2"/></g></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></g></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5.5h14A1.5 1.5 0 0 1 20.5 7v8a1.5 1.5 0 0 1-1.5 1.5h-7L7.5 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 7h8M17 7h2M5 17h2M11 17h8"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></g></symbol>
+  <symbol id="i-diamond" viewBox="0 0 10 10"><path fill="currentColor" d="M5 .6 9.4 5 5 9.4.6 5z"/></symbol>
+  <symbol id="i-ring" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.7" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="5" cy="5" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-dashed" viewBox="0 0 10 10"><path d="M5 .9 9.1 5 5 9.1.9 5z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-dasharray="1.6 1.2"/></symbol>
+</svg>
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        <span class="hub-mark"><svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><rect width="28" height="28" rx="8" fill="#111827"/><path d="M6.5 18a7.5 7.5 0 0 1 15 0" fill="none" stroke="#9AC7F5" stroke-width="2" stroke-linecap="round"/><circle cx="18.9" cy="12.2" r="2.3" fill="#8B83DB"/></svg>Obligation Hub</span>
+        <span class="eyebrow">Settings</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1>Settings</h1>
+      <p class="lede">Everything that drives the hub: who owns what, what gets tracked, the AI workflows and their run history. For site owners and contract managers.</p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section" aria-labelledby="lists-title">
+      <div class="section-head"><div><h2 id="lists-title">Lists and libraries</h2><p>Open a list to change it. Changes take effect on the next workflow run.</p></div></div>
+      <ul class="admin">
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_OWNERS}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-people"></use></svg></span>
+          <span class="admin__name">Obligation Owners</span>
+          <span class="admin__desc">Routing rules: category, business unit and counterparty &rarr; owner, escalation owner and how they&rsquo;re notified. The most specific rule wins.</span>
+          <span class="admin__meta" id="meta-owners">Routing rules</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_TYPES}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-layers"></use></svg></span>
+          <span class="admin__name">Obligation Types</span>
+          <span class="admin__desc">What counts as an obligation: track, exclude or hold for review, with default risk and recurrence for each type.</span>
+          <span class="admin__meta">Capture uses this to classify</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_EXCLUSIONS}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-block"></use></svg></span>
+          <span class="admin__name">Exclusions</span>
+          <span class="admin__desc">Clauses and patterns people removed, so capture doesn&rsquo;t add them back &mdash; for one contract or all of them.</span>
+          <span class="admin__meta">Filled by the Remove obligation quick step</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_RUNLOG}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-pulse"></use></svg></span>
+          <span class="admin__name">Run Log</span>
+          <span class="admin__desc">One row per automated run: what ran, the outcome, what it created, updated or held, and the details.</span>
+          <span class="admin__meta" id="meta-runlog">Run history</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_EVIDENCE}}/Forms/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-clip"></use></svg></span>
+          <span class="admin__name">Evidence</span>
+          <span class="admin__desc">Proof that obligations were fulfilled &mdash; sent notices, reports, certificates. Linked from each obligation&rsquo;s Evidence field.</span>
+          <span class="admin__meta">Document library</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-spark"></use></svg></span>
+          <span class="admin__name">AgentAssets (skills)</span>
+          <span class="admin__desc">The site&rsquo;s skills, in Skills/&lt;skill-name&gt;/SKILL.md. Copilot in SharePoint and the AI workflows load them.</span>
+          <span class="admin__meta">5 skills, used by 6 workflows</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL}}/_layouts/15/listedit.aspx?List=%7B{{LISTID_CONTRACTS}}%7D" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-gear"></use></svg></span>
+          <span class="admin__name">Contracts library settings</span>
+          <span class="admin__desc">Columns that fill in automatically from each contract, versioning and permissions for the Contracts library.</span>
+          <span class="admin__meta">Library settings</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_OBLIGATIONS}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-doc"></use></svg></span>
+          <span class="admin__name">Obligations</span>
+          <span class="admin__desc">Every tracked obligation with its owner, status, timing, review state and evidence. Views for my items, needs owner and needs review.</span>
+          <span class="admin__meta">The tracking list</span></a></li>
+      </ul>
+    </section>
+
+    <section class="section card config" aria-labelledby="cfg-title">
+      <span class="admin__icon"><svg aria-hidden="true"><use href="#i-sliders"></use></svg></span>
+      <div class="config__text">
+        <h2 id="cfg-title">Configuration</h2>
+        <p><code>hub-settings.json</code> in AgentAssets/Config holds the company name, the due-soon window, the reminder cooldown and the leadership digest recipients. The workflows use these settings.</p>
+        <p class="config__fine">These pages can&rsquo;t read the file, so they always show <em>Due soon</em> as within 14 days.</p>
+      </div>
+      <div class="config__links">
+        <a class="btn btn--sm" href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Config/hub-settings.json" target="_top"><svg aria-hidden="true"><use href="#i-doc"></use></svg>Open hub-settings.json</a>
+        <a class="link-arrow" href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Config" target="_top">Config folder<svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+      </div>
+    </section>
+
+    <section class="section card card--flush" aria-labelledby="rules-title">
+      <div class="card__head pad">
+        <div><h2 id="rules-title">Routing rules</h2><p>How Assign owners picks an owner for each new obligation.</p></div>
+        <a class="link-arrow" href="{{SITE_URL_ORIGIN}}{{LISTURL_OWNERS}}/NewForm.aspx" target="_top">Add a rule<svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+      </div>
+      <div class="table-wrap" id="rules"><div class="pad" style="padding-bottom:24px"><span class="skel"></span><span class="skel skel--w60"></span></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="wf-title">
+      <div class="section-head">
+        <div><h2 id="wf-title">Workflows</h2><p>Six AI workflows keep the hub current, each with one trigger. Create each one by pasting its setup prompt into Copilot in SharePoint on this site. Each loads its skill from AgentAssets and logs every run; the two capture workflows share one skill.</p></div>
+      </div>
+      <p class="notice notice--info wf-who"><svg aria-hidden="true"><use href="#i-mail"></use></svg><span>Reminders and digests are sent as the person who set up the workflows. Set them up with a shared obligations account so messages don&rsquo;t depend on one person&rsquo;s mailbox.</span></p>
+      <ul class="wf">
+<li><article class="card wf-card" aria-labelledby="wf-CAPTURE_NEW">
+  <div><h3 id="wf-CAPTURE_NEW">Capture new contracts</h3><p class="wf-card__what">Reads each newly added contract, classifies its clauses using Obligation Types and Exclusions, and creates its obligations. Anything it isn&rsquo;t sure about is held for review.</p></div>
+  <dl class="wf-facts"><div><dt>Trigger</dt><dd>When a file is added to the Contracts library</dd></div><div><dt>Skill</dt><dd><a href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Skills/capture-obligations" target="_top"><code>capture-obligations</code></a></dd></div><div><dt>Run Log entry</dt><dd>Capture</dd></div></dl>
+  <div class="wf-last" id="wf-last-CAPTURE_NEW"><span class="skel skel--w60"></span></div>
+  <details class="wf-prompt disclose"><summary><svg aria-hidden="true"><use href="#i-chev"></use></svg>Setup prompt</summary>
+    <div class="wf-prompt__box">
+      <div class="wf-prompt__bar"><span>A complete instruction. Open <strong>Copilot in SharePoint on this site</strong>, paste it, and Copilot creates the workflow.</span>
+        <button type="button" class="chip btn--sm" data-copy="" data-copy-from="prompt-CAPTURE_NEW"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__state" data-idle="Copy prompt">Copy prompt</span><span class="sr-only"> for Capture new contracts</span></button></div>
+      <pre id="prompt-CAPTURE_NEW" tabindex="0" aria-label="Setup prompt for Capture new contracts">{{WORKFLOW_PROMPT_CAPTURE_NEW}}</pre>
+      <p class="wf-prompt__todo" id="prompt-todo-CAPTURE_NEW" hidden>The prompt text is added when the kit is installed. Until then, this box shows its placeholder.</p>
+    </div>
+  </details>
+</article></li>
+<li><article class="card wf-card" aria-labelledby="wf-CAPTURE_CHANGED">
+  <div><h3 id="wf-CAPTURE_CHANGED">Capture changed contracts</h3><p class="wf-card__what">Runs the same skill when a contract file changes &mdash; a new version, or edited key terms &mdash; and updates that contract&rsquo;s obligations instead of adding duplicates.</p></div>
+  <dl class="wf-facts"><div><dt>Trigger</dt><dd>When a file is changed in the Contracts library</dd></div><div><dt>Skill</dt><dd><a href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Skills/capture-obligations" target="_top"><code>capture-obligations</code></a></dd></div><div><dt>Run Log entry</dt><dd>Capture</dd></div></dl>
+  <div class="wf-last" id="wf-last-CAPTURE_CHANGED"><span class="skel skel--w60"></span></div>
+  <details class="wf-prompt disclose"><summary><svg aria-hidden="true"><use href="#i-chev"></use></svg>Setup prompt</summary>
+    <div class="wf-prompt__box">
+      <div class="wf-prompt__bar"><span>A complete instruction. Open <strong>Copilot in SharePoint on this site</strong>, paste it, and Copilot creates the workflow.</span>
+        <button type="button" class="chip btn--sm" data-copy="" data-copy-from="prompt-CAPTURE_CHANGED"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__state" data-idle="Copy prompt">Copy prompt</span><span class="sr-only"> for Capture changed contracts</span></button></div>
+      <pre id="prompt-CAPTURE_CHANGED" tabindex="0" aria-label="Setup prompt for Capture changed contracts">{{WORKFLOW_PROMPT_CAPTURE_CHANGED}}</pre>
+      <p class="wf-prompt__todo" id="prompt-todo-CAPTURE_CHANGED" hidden>The prompt text is added when the kit is installed. Until then, this box shows its placeholder.</p>
+    </div>
+  </details>
+</article></li>
+<li><article class="card wf-card" aria-labelledby="wf-ASSIGN_OWNERS">
+  <div><h3 id="wf-ASSIGN_OWNERS">Assign owners</h3><p class="wf-card__what">Matches each obligation without an owner to the most specific routing rule and sets its owner and escalation owner.</p></div>
+  <dl class="wf-facts"><div><dt>Trigger</dt><dd>Daily at 7:00 AM and after capture</dd></div><div><dt>Skill</dt><dd><a href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Skills/assign-obligation-owners" target="_top"><code>assign-obligation-owners</code></a></dd></div><div><dt>Run Log entry</dt><dd>Assign owners</dd></div></dl>
+  <div class="wf-last" id="wf-last-ASSIGN_OWNERS"><span class="skel skel--w60"></span></div>
+  <details class="wf-prompt disclose"><summary><svg aria-hidden="true"><use href="#i-chev"></use></svg>Setup prompt</summary>
+    <div class="wf-prompt__box">
+      <div class="wf-prompt__bar"><span>A complete instruction. Open <strong>Copilot in SharePoint on this site</strong>, paste it, and Copilot creates the workflow.</span>
+        <button type="button" class="chip btn--sm" data-copy="" data-copy-from="prompt-ASSIGN_OWNERS"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__state" data-idle="Copy prompt">Copy prompt</span><span class="sr-only"> for Assign owners</span></button></div>
+      <pre id="prompt-ASSIGN_OWNERS" tabindex="0" aria-label="Setup prompt for Assign owners">{{WORKFLOW_PROMPT_ASSIGN_OWNERS}}</pre>
+      <p class="wf-prompt__todo" id="prompt-todo-ASSIGN_OWNERS" hidden>The prompt text is added when the kit is installed. Until then, this box shows its placeholder.</p>
+    </div>
+  </details>
+</article></li>
+<li><article class="card wf-card" aria-labelledby="wf-DAILY_SWEEP">
+  <div><h3 id="wf-DAILY_SWEEP">Daily sweep</h3><p class="wf-card__what">Recalculates timing on every open obligation, reminds owners about items coming due and escalates overdue ones.</p></div>
+  <dl class="wf-facts"><div><dt>Trigger</dt><dd>Daily at 6:00 AM</dd></div><div><dt>Skill</dt><dd><a href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Skills/sweep-obligations" target="_top"><code>sweep-obligations</code></a></dd></div><div><dt>Run Log entry</dt><dd>Daily sweep</dd></div></dl>
+  <div class="wf-last" id="wf-last-DAILY_SWEEP"><span class="skel skel--w60"></span></div>
+  <details class="wf-prompt disclose"><summary><svg aria-hidden="true"><use href="#i-chev"></use></svg>Setup prompt</summary>
+    <div class="wf-prompt__box">
+      <div class="wf-prompt__bar"><span>A complete instruction. Open <strong>Copilot in SharePoint on this site</strong>, paste it, and Copilot creates the workflow.</span>
+        <button type="button" class="chip btn--sm" data-copy="" data-copy-from="prompt-DAILY_SWEEP"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__state" data-idle="Copy prompt">Copy prompt</span><span class="sr-only"> for Daily sweep</span></button></div>
+      <pre id="prompt-DAILY_SWEEP" tabindex="0" aria-label="Setup prompt for Daily sweep">{{WORKFLOW_PROMPT_DAILY_SWEEP}}</pre>
+      <p class="wf-prompt__todo" id="prompt-todo-DAILY_SWEEP" hidden>The prompt text is added when the kit is installed. Until then, this box shows its placeholder.</p>
+    </div>
+  </details>
+</article></li>
+<li><article class="card wf-card" aria-labelledby="wf-OWNER_DIGEST">
+  <div><h3 id="wf-OWNER_DIGEST">Owner digest</h3><p class="wf-card__what">Sends each owner a summary of their open obligations for the weeks ahead.</p></div>
+  <dl class="wf-facts"><div><dt>Trigger</dt><dd>Mondays at 8:00 AM</dd></div><div><dt>Skill</dt><dd><a href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Skills/obligation-owner-digest" target="_top"><code>obligation-owner-digest</code></a></dd></div><div><dt>Run Log entry</dt><dd>Owner digest</dd></div></dl>
+  <div class="wf-last" id="wf-last-OWNER_DIGEST"><span class="skel skel--w60"></span></div>
+  <details class="wf-prompt disclose"><summary><svg aria-hidden="true"><use href="#i-chev"></use></svg>Setup prompt</summary>
+    <div class="wf-prompt__box">
+      <div class="wf-prompt__bar"><span>A complete instruction. Open <strong>Copilot in SharePoint on this site</strong>, paste it, and Copilot creates the workflow.</span>
+        <button type="button" class="chip btn--sm" data-copy="" data-copy-from="prompt-OWNER_DIGEST"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__state" data-idle="Copy prompt">Copy prompt</span><span class="sr-only"> for Owner digest</span></button></div>
+      <pre id="prompt-OWNER_DIGEST" tabindex="0" aria-label="Setup prompt for Owner digest">{{WORKFLOW_PROMPT_OWNER_DIGEST}}</pre>
+      <p class="wf-prompt__todo" id="prompt-todo-OWNER_DIGEST" hidden>The prompt text is added when the kit is installed. Until then, this box shows its placeholder.</p>
+    </div>
+  </details>
+</article></li>
+<li><article class="card wf-card" aria-labelledby="wf-LEADERSHIP_DIGEST">
+  <div><h3 id="wf-LEADERSHIP_DIGEST">Leadership digest</h3><p class="wf-card__what">Sends leaders the week&rsquo;s picture: overdue and high-risk items, notice windows coming up and what changed.</p></div>
+  <dl class="wf-facts"><div><dt>Trigger</dt><dd>Fridays at 3:00 PM</dd></div><div><dt>Skill</dt><dd><a href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Skills/obligation-leadership-digest" target="_top"><code>obligation-leadership-digest</code></a></dd></div><div><dt>Run Log entry</dt><dd>Leadership digest</dd></div></dl>
+  <div class="wf-last" id="wf-last-LEADERSHIP_DIGEST"><span class="skel skel--w60"></span></div>
+  <details class="wf-prompt disclose"><summary><svg aria-hidden="true"><use href="#i-chev"></use></svg>Setup prompt</summary>
+    <div class="wf-prompt__box">
+      <div class="wf-prompt__bar"><span>A complete instruction. Open <strong>Copilot in SharePoint on this site</strong>, paste it, and Copilot creates the workflow.</span>
+        <button type="button" class="chip btn--sm" data-copy="" data-copy-from="prompt-LEADERSHIP_DIGEST"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__state" data-idle="Copy prompt">Copy prompt</span><span class="sr-only"> for Leadership digest</span></button></div>
+      <pre id="prompt-LEADERSHIP_DIGEST" tabindex="0" aria-label="Setup prompt for Leadership digest">{{WORKFLOW_PROMPT_LEADERSHIP_DIGEST}}</pre>
+      <p class="wf-prompt__todo" id="prompt-todo-LEADERSHIP_DIGEST" hidden>The prompt text is added when the kit is installed. Until then, this box shows its placeholder.</p>
+    </div>
+  </details>
+</article></li>
+</ul>
+    </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Obligation Hub &middot; post-signature duties captured from your contracts. Timing is calculated in your browser from today&rsquo;s date.</p>
+    <p><a href="{{PAGES_URL}}/HowItWorks.html" target="_top" data-page="HowItWorks.html">How it works</a> &middot; <a href="{{SITE_URL}}/_layouts/15/viewlsts.aspx" target="_top">Site contents</a></p>
+  </div>
+</footer>
+<div id="live-region" class="sr-only" aria-live="polite" role="status"></div>
+<noscript><div class="wrap"><p class="notice">This page needs JavaScript to show obligations. Open the <a href="{{SITE_URL_ORIGIN}}{{LISTURL_OBLIGATIONS}}/AllItems.aspx" target="_top">Obligations list</a> instead.</p></div></noscript>
+<script type="application/json" id="hub-config">{"siteUrl":"{{SITE_URL}}","origin":"{{SITE_URL_ORIGIN}}","pagesUrl":"{{PAGES_URL}}","currency":"USD","lists":{"OBLIGATIONS":{"id":"{{LISTID_OBLIGATIONS}}","url":"{{LISTURL_OBLIGATIONS}}"},"CONTRACTS":{"id":"{{LISTID_CONTRACTS}}","url":"{{LISTURL_CONTRACTS}}","library":true},"RUNLOG":{"id":"{{LISTID_RUNLOG}}","url":"{{LISTURL_RUNLOG}}"},"OWNERS":{"id":"{{LISTID_OWNERS}}","url":"{{LISTURL_OWNERS}}"},"TYPES":{"url":"{{LISTURL_TYPES}}"},"EXCLUSIONS":{"url":"{{LISTURL_EXCLUSIONS}}"},"EVIDENCE":{"url":"{{LISTURL_EVIDENCE}}","library":true},"AGENTASSETS":{"url":"{{LISTURL_AGENTASSETS}}","library":true}}}</script>
+<script type="application/json" id="snapshot-runlog" data-sample="true">{"sample":true,"note":"SAMPLE DATA - fictional companies, people and contracts from the Obligation Hub demo kit, as loaded on the demo site. Dates are relative to 2026-11-24. Shown only when live list data is unavailable.","headers":["ID","Title","Workflow","Outcome","ContractName","ContractVersion","ItemsCreated","ItemsUpdated","ItemsHeld","Details","RunAt"],"rows":[["1","Capture - 01-Contoso-MSA.docx","Capture","Succeeded","01-Contoso-MSA.docx","9419|Date: March 28, 2024|-","8","0","0","Retained 8 (Us 5, Counterparty 1, Both 2); held 0; excluded 17: 2.1 service description, 2.2 personnel (general standard), 2.3 change requests (routine), 3.1 fee amount (merged into 3.2), 3.2 our own monthly invoicing, 3.3 taxes, 5.2 CI exclusions (definition), 5.3 duration (merged into 5.1), 6.2 audit costs/conduct (merged), 7.2 insurance no-limitation, 8.1-8.2 liability caps, 9.1 term statement, 9.3 termination for cause, 9.4 survival, 10.1 governing law, 10.2 notices, 10.3-10.5 boilerplate; missing referenced docs: SOWs incl. SOW No. 1 (fees taken from Section 3.1); errors: none","2026-11-24T23:00:00Z"],["2","Capture - 02-Contoso-MSA-Amendment-1.docx","Capture","Succeeded","02-Contoso-MSA-Amendment-1.docx","5917|contracts@contoso.example|01-Contoso-MSA.docx","4","2","0","Retained 4 (Us 3, Counterparty 0, Both 1); held 0; excluded 10: 1 definitions, 2 renewal statement (term), 3 report content/format (method), Exhibit A illustrative fee table (confirms 3.4 date only), 5 plan confidentiality (context), 6 effect of amendment, 7 authority (representation), 8 governing law/counterparts, 9 entire agreement, Exhibit B notice contacts; superseded: 01-Contoso-MSA.docx \u00a79.2, 01-Contoso-MSA.docx \u00a74.3; errors: none","2026-11-24T23:03:00Z"],["3","Capture - 03-Fabrikam-Cloud-Hosting-Agreement.docx","Capture","Succeeded","03-Fabrikam-Cloud-Hosting-Agreement.docx","7623|24x7 infrastructure monitoring and alert|-","6","0","0","Retained 6 (Us 3, Counterparty 2, Both 1); held 0; excluded 16: 2.1 service description, 2.2 support hours, 3.1 fee amount (merged into 3.2), 3.4 late interest (merged into 3.2), 4.2 credit amounts (merged into 4.3), 4.4 credit application (merged), 5.1 data ownership (fact), 5.2 ISO 27001 certification (status, no shall), 6.1 term statement, 6.4 termination for cause/uptime, 7 liability cap, 8.1 governing law, 8.2 force majeure, 8.3 notices, 8.4 entire agreement, Exhibit A service description; errors: none","2026-11-24T23:06:00Z"],["4","Capture - 04-Tailspin-Distribution-Agreement.docx","Capture","Succeeded","04-Tailspin-Distribution-Agreement.docx","7324|Not applicable|-","6","0","0","Retained 6 (Us 5, Counterparty 0, Both 1); held 0; excluded 15: 2.1 appointment (grant), 2.3 Supplier reserved rights, 3.2 shortfall remedy (merged into 3.1), 3.3 ordering/pricing (routine) and payment terms (points to missing doc), 4.3 Supplier fund use (context), 5.1 trademark license grant (permission, no deadline), 5.2 goodwill, 6.1 term statement, 6.2 termination for cause, 6.3 Supplier inventory repurchase on termination, 7.1 assignment consent (boilerplate), 7.2 Supplier termination right (merged), 8 liability (cites indemnification obligations; none in text), 9.1-9.4 boilerplate/notices, Exhibit A products and pricing; missing referenced docs: dealer credit application (payment terms, 3.3); Supplier brand guidelines (5.1); cooperative marketing guidelines (4.3); errors: none","2026-11-24T23:09:00Z"],["5","Capture - 05-Litware-Software-License-Support.docx","Capture","Succeeded","05-Litware-Software-License-Support.docx","6661|Date: November 5, 2025|-","5","0","0","Retained 5 (Us 5, Counterparty 0, Both 0); held 0; excluded 16: 2.1 license grant (250-user cap merged into 2.2), 2.3 additional users (permission; rate merged into 3.2), 3.1 license fee paid at signing, 3.3 taxes, 4.1 support description/hours, 4.4 reinstatement (merged into 4.2), 5.2 audit results/costs (merged into 5.1), 6.1 limited warranty (representation), 6.2 disclaimer, 7 liability cap, 8.1 term statement, 8.2 termination for breach, 9.1 governing law, 9.2 own costs, 9.3 notices, 9.4 entire agreement; errors: none","2026-11-24T23:12:00Z"],["6","Capture - 06-Proseware-Data-Processing-Agreement.docx","Capture","Succeeded","06-Proseware-Data-Processing-Agreement.docx","6659|United States|-","6","0","1","Retained 6 (Us 1, Counterparty 5, Both 0); held 1: \u00a77 Proseware Inc: return or delete personal data at termination; excluded 14: 1.1-1.4 definitions, 2.1 roles (fact), 2.2 processing details/Annex 1 (description), 2.3 order of precedence, 3.1 security measures/Annex 2 (security-measure table), 3.2 Processor may update measures (permission, no deadline), 4.2 notice content (merged into 4.1), 4.3 our discretion on regulator notices, 5.1 authorized sub-processors (fact), 5.4 good-faith discussion and termination right, 6.3 our own audit right (discretionary), 8.1 term statement, 8.2-8.4 boilerplate, Annex 3 sub-processor list; missing referenced docs: Customer Analytics Services Agreement dated March 15, 2025 (master; incl. Section 11.4) - DPA is a supplement, not an amendment; errors: none","2026-11-24T23:15:00Z"],["7","Capture - 07-Alpine-Ski-House-Office-Lease.docx","Capture","Succeeded","07-Alpine-Ski-House-Office-Lease.docx","6106|Date: September 20, 2023|-","5","0","0","Retained 5 (Us 5, Counterparty 0, Both 0); held 0; excluded 18: Basic Lease Information table (context), 1.1 premises/parking (permitted use), 1.2 term statement, 2.2 gross lease (fact), 2.3 late charge (merged into 2.1), 3.1 deposit paid at execution, 4.1 permitted use, 4.2 building maintenance (fact), 5.2 waiver of subrogation, 6.1 option terms (merged into 6.2), 6.3 market-rent procedure (merged), 7 holding over (remedy), 8.1 quiet enjoyment, 8.2 governing law, 8.3 notices, 8.4 brokers (representation), 8.5 entire agreement, fixed-expiry item skipped: renewal option window item exists; errors: none","2026-11-24T23:18:00Z"],["8","Capture - 08-Wide-World-Importers-Supply-Agreement.docx","Capture","Succeeded","08-Wide-World-Importers-Supply-Agreement.docx","6267|12 months|-","5","0","0","Retained 5 (Us 3, Counterparty 1, Both 1); held 0; excluded 14: 2.1 purchase and sale, no minimum (fact), 2.3 order acceptance (routine), 2.4 delivery terms, 3.1 fixed prices (fact), 3.4 currency and duties, 4.2 remedies (merged into 4.1), 5.1 term statement, 5.2 termination for cause, 6 liability, 7.1 governing law, 7.2 force majeure, 7.3 notices, 7.4-7.6 boilerplate, Exhibit A price/spec table; errors: none","2026-11-24T23:21:00Z"],["9","Capture - 09-Adventure-Works-Reseller-Agreement.docx","Capture","Succeeded","09-Adventure-Works-Reseller-Agreement.docx","6053|$6,450|-","4","0","0","Retained 4 (Us 3, Counterparty 0, Both 1); held 0; excluded 14: 2.1 orders (routine), 2.2 prices (Exhibit A) and payment terms (points to missing doc), 2.3 manufacturer warranties (fact), 2.4 delivery and title, 2.5 returns (routine), 3.1 rebate rate (merged into 3.2), 3.3 rebate survival (merged), 3.4 and Exhibit B illustration, 4.3 MFN exclusions (merged into 4.1), 5.2 effect of expiration (routine orders), 5.3 termination for cause, 6 liability cap, 7.1-7.5 boilerplate/notices, Exhibit A price list; missing referenced docs: Reseller's standard credit terms (payment terms, 2.2); errors: none","2026-11-24T23:24:00Z"],["10","Capture - 10-Fourth-Coffee-Facilities-Services-Agreement.docx","Capture","Succeeded","10-Fourth-Coffee-Facilities-Services-Agreement.docx","5986|Existing building fixture|-","2","0","0","Retained 2 (Us 0, Counterparty 1, Both 1); held 0; excluded 16: 1.1 scope (service description), 1.2 commercial model, no fees (fact), 1.3 hours, 1.4 uniforms and badges, 1.5 signage, 2.1 points of contact, 2.2 catering orders and invoice address, 2.3 good-faith cooperation, 2.4 feedback (discretionary), 2.5 building access, 3.1 food permit (status, no shall), 4.1 term statement, 4.3 termination for cause, 4.4 equipment removal on termination, 5.1-5.8 boilerplate, Exhibits A-B descriptions; errors: none","2026-11-24T23:27:00Z"],["11","Capture - 11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Capture","Succeeded","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","5963|Date: September 15, 2026|-","7","0","0","Retained 7 (Us 7, Counterparty 0, Both 0); held 0; excluded 14: letterhead/background, 1.1 commitment (Bank undertaking), 1.2 and 1.5 definitions, 1.3 purpose (permitted use), 1.4 advance requests (routine, permission), 2.1 interest rate (merged into 2.2), 2.4 closing fees (met at signing), 2.5 prepayment (discretionary), 6.1 events of default (used for risk), 6.2 remedies, 7.1 governing law, 7.2 counterparts, 7.3 entire agreement, 7.4 jury waiver; errors: none","2026-11-24T23:30:00Z"],["12","Assign owners - demo seed","Assign owners","Succeeded","","","0","55","3","Demo seed run following assign-obligation-owners. Assigned 55 confirmed items to Avery Chen using the routing rules. The 3 items held in Needs review get an owner once someone confirms them.","2026-11-24T23:40:00Z"],["13","Daily sweep - demo seed","Daily sweep","Succeeded","","","0","60","0","Demo seed run following sweep-obligations. Open: 28 no date, 20 upcoming, 6 due soon, 4 overdue. No reminders sent (seed run).","2026-11-24T23:45:00Z"]]}</script>
+<script type="application/json" id="snapshot-owners" data-sample="true">{"sample":true,"note":"SAMPLE DATA - fictional companies, people and contracts from the Obligation Hub demo kit, as loaded on the demo site. Dates are relative to 2026-11-24. Shown only when live list data is unavailable.","headers":["ID","Title","Category","BusinessUnit","Counterparty","Owner","EscalationOwner","Notify"],"rows":[["1","Default - all obligations","Any","Any","","Avery Chen","Avery Chen","Both"],["2","Finance - payments","Payment","Any","","Avery Chen","Avery Chen","Both"],["3","Legal - notices and renewals","Notice \u0026 renewal","Any","","Avery Chen","Avery Chen","Both"]]}</script>
+<script>
+/* Obligation Hub - shared data layer and UI helpers (plain JS, no network). */
+(function (window, document) {
+  'use strict';
+  var Hub = window.Hub = {};
+  var DAY = 86400000;
+  var LIVE_WAIT_MS = 800;     // how long to wait for the host to inject live results
+  var LATE_WATCH_MS = 8000;   // keep watching for a late injection, then stop
+
+  /* ---------------- small utilities ---------------- */
+  var ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return ESC[c]; }); }
+  function clean(v) {
+    if (v == null) return '';
+    if (typeof v === 'object') {
+      if (Array.isArray(v)) return v.map(clean).filter(Boolean).join(', ');
+      return clean(v.title || v.Title || v.displayName || v.DisplayName || v.name || v.Name ||
+        v.LookupValue || v.lookupValue || v.Label || v.label || v.text || v.value || v.Value || '');
+    }
+    var s = String(v).replace(/\s+/g, ' ').trim();
+    return /^(null|undefined|none;#)$/i.test(s) ? '' : s;
+  }
+  function lower(v) { return clean(v).toLowerCase(); }
+  function readJSONScript(id) {
+    var el = document.getElementById(id);
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch (e) { return null; }
+  }
+  function byId(id) { return document.getElementById(id); }
+  function setHTML(id, html) { var el = typeof id === 'string' ? byId(id) : id; if (el) el.innerHTML = html; return el; }
+  function closest(el, sel) {
+    while (el && el.nodeType === 1) {
+      if (el.matches ? el.matches(sel) : false) return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+  function uniq(list) { var seen = {}, out = []; list.forEach(function (x) { var k = String(x).toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } }); return out; }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+  function truncate(s, n) { s = clean(s); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '\u2026' : s; }
+  Hub.esc = esc; Hub.clean = clean; Hub.byId = byId; Hub.setHTML = setHTML; Hub.closest = closest;
+  Hub.uniq = uniq; Hub.plural = plural; Hub.truncate = truncate; Hub.readJSONScript = readJSONScript;
+
+  /* ---------------- configuration & URLs ---------------- */
+  var cfg = readJSONScript('hub-config') || {};
+  cfg.lists = cfg.lists || {};
+  function unreplaced(v) { return typeof v !== 'string' || v.indexOf('{{') !== -1; }
+  Hub.cfg = cfg;
+  Hub.preview = unreplaced(cfg.siteUrl);
+  function listInfo(key) { return cfg.lists[key] || {}; }
+  function listRoot(key) { return (cfg.origin || '') + (listInfo(key).url || ''); }
+  function viewBase(key) { return listRoot(key) + (listInfo(key).library ? '/Forms/AllItems.aspx' : '/AllItems.aspx'); }
+  Hub.url = {
+    root: listRoot,
+    view: function (key, filters) {
+      var q = [];
+      (filters || []).forEach(function (f, i) {
+        var n = i + 1;
+        if (Array.isArray(f[1])) q.push('FilterFields' + n + '=' + encodeURIComponent(f[0]) + '&FilterValues' + n + '=' + encodeURIComponent(f[1].join(';#')));
+        else q.push('FilterField' + n + '=' + encodeURIComponent(f[0]) + '&FilterValue' + n + '=' + encodeURIComponent(f[1]));
+      });
+      return viewBase(key) + (q.length ? '?' + q.join('&') : '');
+    },
+    disp: function (key, id) { return id ? listRoot(key) + (listInfo(key).library ? '/Forms/DispForm.aspx' : '/DispForm.aspx') + '?ID=' + encodeURIComponent(id) : viewBase(key); },
+    edit: function (key, id, back) {
+      if (!id) return viewBase(key);
+      var u = listRoot(key) + (listInfo(key).library ? '/Forms/EditForm.aspx' : '/EditForm.aspx') + '?ID=' + encodeURIComponent(id);
+      if (back && !Hub.preview) u += '&Source=' + encodeURIComponent(Hub.url.page(back));
+      return u;
+    },
+    file: function (key, name) { return listRoot(key) + '/' + encodeURIComponent(name).replace(/%2F/g, '/') + '?web=1'; },
+    page: function (file, hash) {
+      var base = Hub.preview || unreplaced(cfg.pagesUrl) ? file : cfg.pagesUrl + '/' + file;
+      return base + (hash ? '#' + hash : '');
+    }
+  };
+
+  /* ---------------- dates ---------------- */
+  function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function validYMD(y, m, d) { return y > 1900 && y < 2200 && m >= 1 && m <= 12 && d >= 1 && d <= 31; }
+  function parseDate(v, keepTime) {
+    if (v == null || v === '') return null;
+    if (v instanceof Date) return isNaN(v.getTime()) ? null : (keepTime ? v : startOfDay(v));
+    if (typeof v === 'number') { var dn = new Date(v); return isNaN(dn.getTime()) ? null : (keepTime ? dn : startOfDay(dn)); }
+    var s = clean(v), m, d;
+    if (!s) return null;
+    if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) {
+      return validYMD(+m[1], +m[2], +m[3]) ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+    }
+    if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?\s*(Z|[+-]\d{2}:?\d{2})?$/i))) {
+      if (!validYMD(+m[1], +m[2], +m[3])) return null;
+      if (m[7]) d = new Date(s.replace(' ', 'T').replace(/([+-]\d{2})(\d{2})$/, '$1:$2'));
+      else d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+      if (isNaN(d.getTime())) return null;
+      return keepTime ? d : startOfDay(d);
+    }
+    if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})(?:[ ,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AaPp]\.?[Mm]\.?)?)?$/))) {
+      var a = +m[1], b = +m[2], y = +m[3], mo = a, da = b, h = m[4] ? +m[4] : 0;
+      if (y < 100) y += 2000;
+      if (a > 12 && b <= 12) { mo = b; da = a; }
+      if (!validYMD(y, mo, da)) return null;
+      if (m[7]) { var pm = /p/i.test(m[7]); if (pm && h < 12) h += 12; if (!pm && h === 12) h = 0; }
+      d = new Date(y, mo - 1, da, h, m[5] ? +m[5] : 0, m[6] ? +m[6] : 0);
+      return keepTime ? d : startOfDay(d);
+    }
+    if ((m = s.match(/\/Date\((-?\d+)/))) { d = new Date(+m[1]); return keepTime ? d : startOfDay(d); }
+    var t = Date.parse(s);
+    if (!isNaN(t)) { d = new Date(t); return keepTime ? d : startOfDay(d); }
+    return null;
+  }
+  /* "Today" is the viewer's date. window.__HUB_TODAY__ ('YYYY-MM-DD') is a test hook only; nothing in the pages sets it. */
+  function today() {
+    var o = window.__HUB_TODAY__ ? parseDate(window.__HUB_TODAY__) : null;
+    return o || startOfDay(new Date());
+  }
+  function now() {
+    var t = window.__HUB_TODAY__ ? parseDate(window.__HUB_TODAY__) : null;
+    return t ? new Date(t.getTime() + 12 * 3600000) : new Date();
+  }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function daysBetween(a, b) { return Math.round((startOfDay(b) - startOfDay(a)) / DAY); }
+  function iso(d) { if (!d) return ''; var m = d.getMonth() + 1, x = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (x < 10 ? '0' : '') + x; }
+  Hub.date = { parse: parseDate, today: today, now: now, addDays: addDays, diff: daysBetween, iso: iso, startOfDay: startOfDay };
+
+  var fmtCache = {};
+  function fmt(d, opts) {
+    if (!d) return '';
+    var k = JSON.stringify(opts);
+    if (!fmtCache[k]) { try { fmtCache[k] = new Intl.DateTimeFormat(undefined, opts); } catch (e) { fmtCache[k] = { format: function (x) { return x.toDateString(); } }; } }
+    return fmtCache[k].format(d);
+  }
+  Hub.fmt = {
+    date: function (d) { return fmt(d, { day: 'numeric', month: 'short', year: 'numeric' }); },
+    short: function (d) { return d && d.getFullYear() === today().getFullYear() ? fmt(d, { day: 'numeric', month: 'short' }) : fmt(d, { day: 'numeric', month: 'short', year: 'numeric' }); },
+    long: function (d) { return fmt(d, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+    month: function (d, withYear) { return fmt(d, withYear ? { month: 'short', year: 'numeric' } : { month: 'short' }); },
+    dateTime: function (d) { return fmt(d, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }); },
+    rel: function (d) {
+      if (!d) return '';
+      var n = daysBetween(today(), d);
+      if (n === 0) return 'today';
+      if (n === 1) return 'tomorrow';
+      if (n === -1) return 'yesterday';
+      return n > 0 ? 'in ' + n + ' days' : Math.abs(n) + ' days ago';
+    },
+    due: function (d) {
+      if (!d) return '';
+      var n = daysBetween(today(), d);
+      if (n === 0) return 'due today';
+      if (n === 1) return 'due tomorrow';
+      if (n < 0) return plural(-n, 'day') + ' overdue';
+      return 'in ' + n + ' days';
+    },
+    ago: function (dt) {
+      if (!dt) return 'never';
+      var ms = now() - dt, min = Math.round(ms / 60000);
+      if (ms < 0) return 'just now';
+      if (min < 2) return 'just now';
+      if (min < 60) return min + ' minutes ago';
+      var h = Math.round(min / 60);
+      if (h < 24) return plural(h, 'hour') + ' ago';
+      var dd = daysBetween(dt, now());
+      if (dd <= 1) return 'yesterday';
+      return dd + ' days ago';
+    },
+    money: function (n, raw) {
+      if (n == null) return raw ? clean(raw) : '';
+      if (raw && /[^\d.,\s-]/.test(clean(raw))) return clean(raw);
+      try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cfg.currency || 'USD', maximumFractionDigits: 0 }).format(n); }
+      catch (e) { return String(n); }
+    },
+    iso: iso
+  };
+
+  /* ---------------- value parsers ---------------- */
+  function people(v) {
+    if (v == null) return [];
+    if (Array.isArray(v)) { var all = []; v.forEach(function (x) { all = all.concat(people(x)); }); return uniq(all); }
+    if (typeof v === 'object') {
+      var n = v.title || v.Title || v.displayName || v.DisplayName || v.name || v.Name || v.LookupValue || v.lookupValue || v.text || v.email || v.Email || v.EMail || v.mail || v.userPrincipalName || '';
+      return n ? [String(n).trim()] : [];
+    }
+    var s = String(v).trim();
+    if (!s || /^(null|undefined|\[\]|\{\})$/i.test(s)) return [];
+    if (/^[\[{]/.test(s)) { try { return people(JSON.parse(s)); } catch (e) { /* fall through */ } }
+    if (s.indexOf(';#') !== -1) {
+      return uniq(s.split(';#').map(function (p) { return p.trim(); }).filter(function (p) { return p && !/^\d+$/.test(p); }).map(function (p) { return people(p)[0] || p; }));
+    }
+    if (s.indexOf('|') !== -1 && /@/.test(s)) s = s.split('|').pop();
+    var m = s.match(/^(.*?)\s*<([^>]+)>$/);
+    if (m) return [clean(m[1]) || clean(m[2])];
+    if (s.indexOf(';') !== -1) return uniq(s.split(';').map(clean).filter(Boolean));
+    return [clean(s)];
+  }
+  function num(v) {
+    if (v == null || v === '') return null;
+    if (typeof v === 'number') return isFinite(v) ? v : null;
+    var s = clean(v).replace(/[^\d.,\-]/g, '');
+    if (!s) return null;
+    if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s) || /^-?\d+(\.\d+)?$/.test(s)) s = s.replace(/,/g, '');
+    else if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+    else s = s.replace(/,/g, '');
+    var n = parseFloat(s);
+    return isFinite(n) ? n : null;
+  }
+  function yes(v) { return /^(yes|true|1|y|on)$/i.test(clean(v)); }
+  Hub.people = people; Hub.num = num; Hub.yes = yes;
+
+  /* ---------------- list schema (internal names + accepted aliases) ---------------- */
+  var LISTS = {
+    OBLIGATIONS: { label: 'Obligations', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], Title: ['Obligation'], ContractName: ['Contract'], ContractLink: ['Contract link'],
+      Counterparty: [], ObligationText: ['What must happen'], ClauseRef: ['Clause'], SourceClause: ['Source clause'],
+      Party: ['Who owes it'], Category: [], TriggerType: ['Trigger'], Recurrence: [], DueDate: ['Due date', 'Due'],
+      TriggerEvent: ['Trigger event'], Owner: [], EscalationOwner: ['Escalation owner'], BusinessUnit: ['Business unit'],
+      Status: [], Timing: [], ReviewState: ['Review', 'Review state'], Confidence: [], Risk: [], FulfilledOn: ['Fulfilled on'],
+      Evidence: [], LastReminded: ['Last reminded'], CaptureKey: ['Capture key'], Notes: [], IsSample: ['Sample data'] } },
+    CONTRACTS: { label: 'Contracts', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], FileLeafRef: ['Name', 'File name', 'FileName', 'LinkFilename', 'LinkFilenameNoMenu', 'File'],
+      Title: ['Contract title'], Counterparty: [], ContractType: ['Contract type'], EffectiveDate: ['Effective date'],
+      ExpirationDate: ['Expiration date'], AutoRenews: ['Auto-renews', 'Auto renews'], NoticePeriodDays: ['Notice period (days)', 'Notice period'],
+      GoverningLaw: ['Governing law'], ContractValue: ['Contract value', 'Value'], ContractSummary: ['Summary'],
+      ContractOwner: ['Contract owner'], BusinessUnit: ['Business unit'], Amends: [], IsSample: ['Sample data'] } },
+    RUNLOG: { label: 'Run Log', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], Title: ['Run'], Workflow: [], Outcome: [], ContractName: ['Contract'],
+      ContractVersion: ['Contract version'], ItemsCreated: ['Created'], ItemsUpdated: ['Updated'], ItemsHeld: ['Held for review', 'Held'],
+      Details: [], RunAt: ['Run at'] } },
+    OWNERS: { label: 'Obligation Owners', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], Title: ['Rule'], Category: [], BusinessUnit: ['Business unit'], Counterparty: ['Counterparty (optional)'],
+      Owner: [], EscalationOwner: ['Escalation owner'], Notify: ['Notify by'] } }
+  };
+  Hub.LISTS = LISTS;
+  function normKey(s) { return String(s == null ? '' : s).toLowerCase().replace(/_x0020_/g, '').replace(/^odata_+/, '').replace(/[^a-z0-9]/g, ''); }
+
+  function headerMap(key, headers) {
+    var fields = (LISTS[key] || {}).fields || {}, map = new Array(headers.length), taken = {};
+    var normHeaders = headers.map(normKey);
+    Object.keys(fields).forEach(function (f) {
+      var i = normHeaders.indexOf(normKey(f));
+      if (i !== -1 && map[i] === undefined) { map[i] = f; taken[f] = 1; }
+    });
+    Object.keys(fields).forEach(function (f) {
+      if (taken[f]) return;
+      fields[f].some(function (alias) {
+        var i = normHeaders.indexOf(normKey(alias));
+        if (i !== -1 && map[i] === undefined) { map[i] = f; taken[f] = 1; return true; }
+        return false;
+      });
+    });
+    return headers.map(function (h, i) { return map[i] || String(h); });
+  }
+
+  function rowsFrom(key, content) {
+    if (typeof content === 'string') content = JSON.parse(content);
+    if (Array.isArray(content)) content = { rows: content };
+    if (!content || typeof content !== 'object') throw new Error('Result has no rows');
+    var rows = content.rows || content.value || content.items;
+    if (!Array.isArray(rows)) throw new Error('Result rows are not a list');
+    var headers = content.headers || content.columns || content.fields || [];
+    headers = headers.map(function (h) { return typeof h === 'object' && h ? (h.name || h.internalName || h.title || h.displayName || '') : h; });
+    var mapped = headerMap(key, headers);
+    return rows.map(function (r) {
+      var o = {};
+      if (Array.isArray(r)) { r.forEach(function (v, i) { if (i < mapped.length) o[mapped[i]] = v; }); }
+      else if (r && typeof r === 'object') {
+        var ks = Object.keys(r), km = headerMap(key, ks);
+        ks.forEach(function (k, i) { o[km[i]] = r[k]; });
+      }
+      return o;
+    });
+  }
+
+  function normLiveKey(k) {
+    var s = String(k || '');
+    try { s = decodeURIComponent(s); } catch (e) { /* keep raw */ }
+    return s.toLowerCase().replace(/[{}]/g, '').replace(/\s+/g, '').replace(/\/+$/, '');
+  }
+  function findLive(key) {
+    var R = window.__LD_RESULTS__;
+    if (!R || typeof R !== 'object') return undefined;
+    var info = listInfo(key);
+    var want = normLiveKey('list:' + (cfg.siteUrl || '') + '/' + (info.id || ''));
+    var ks = Object.keys(R), i;
+    for (i = 0; i < ks.length; i++) if (normLiveKey(ks[i]) === want) return R[ks[i]];
+    var id = normLiveKey(info.id || '');
+    if (id && id.length > 8) for (i = 0; i < ks.length; i++) { var nk = normLiveKey(ks[i]); if (nk.slice(-id.length) === id) return R[ks[i]]; }
+    return undefined;
+  }
+  function parseLive(key, raw) {
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    if (!raw || typeof raw !== 'object') throw new Error('Empty result');
+    var format = String(raw.format || '').toLowerCase();
+    if (format !== 'rows') throw new Error(raw.error ? String(raw.error) : 'Unsupported result format "' + (raw.format || 'none') + '"');
+    return rowsFrom(key, raw.content);
+  }
+  function loadList(key) {
+    var res = { key: key, label: (LISTS[key] || {}).label || key, live: false, source: 'snapshot', rows: [], error: null };
+    var raw = findLive(key);
+    if (raw !== undefined && raw !== null) {
+      try { res.rows = parseLive(key, raw); res.live = true; res.source = 'live'; return res; }
+      catch (e) { res.error = (e && e.message) || 'Unreadable result'; }
+    }
+    var snap = readJSONScript('snapshot-' + key.toLowerCase());
+    if (snap) { try { res.rows = rowsFrom(key, snap); } catch (e2) { res.rows = []; res.error = res.error || 'Sample snapshot unreadable'; } }
+    else { res.source = 'none'; }
+    return res;
+  }
+  Hub.loadList = loadList; Hub.rowsFrom = rowsFrom;
+
+  /* ---------------- models ---------------- */
+  var CLOSED = /^(fulfilled|waived|not applicable|n\/a)$/i;
+  function timingFor(closed, due) {
+    if (closed) return 'Closed';
+    if (!due) return 'No date';
+    var n = daysBetween(today(), due);
+    if (n < 0) return 'Overdue';
+    if (n <= 14) return 'Due soon';
+    return 'Upcoming';
+  }
+  function normParty(v) {
+    var s = lower(v);
+    if (!s) return 'Us';
+    if (/^(us|we|our|ours|northwind)$/.test(s)) return 'Us';
+    if (/both|mutual|either/.test(s)) return 'Both';
+    if (/counter|them|supplier|customer|other/.test(s)) return 'Counterparty';
+    return clean(v);
+  }
+  function contractKey(name) {
+    var s = clean(name);
+    if (!s) return '';
+    try { s = decodeURIComponent(s); } catch (e) { /* keep */ }
+    s = s.split(/[\\\/]/).pop();
+    return s.toLowerCase().replace(/\.(docx?|pdf|rtf|txt|odt)$/i, '').replace(/[\s_]+/g, ' ').trim();
+  }
+  Hub.contractKey = contractKey;
+  Hub.model = {
+    obligation: function (r) {
+      var status = clean(r.Status) || 'Not started';
+      var closed = CLOSED.test(status);
+      var due = parseDate(r.DueDate);
+      var owners = people(r.Owner);
+      return {
+        id: clean(r.ID).replace(/\.0+$/, ''), title: clean(r.Title) || 'Untitled obligation', contract: clean(r.ContractName),
+        counterparty: clean(r.Counterparty), text: clean(r.ObligationText), clause: clean(r.ClauseRef), source: clean(r.SourceClause),
+        party: normParty(r.Party), category: clean(r.Category) || 'Other', triggerType: clean(r.TriggerType),
+        recurrence: clean(r.Recurrence), due: due, triggerEvent: clean(r.TriggerEvent), owners: owners, owner: owners.join(', '),
+        escalation: people(r.EscalationOwner).join(', '), bu: clean(r.BusinessUnit), status: status, closed: closed,
+        timing: timingFor(closed, due), storedTiming: clean(r.Timing), review: clean(r.ReviewState), confidence: clean(r.Confidence),
+        risk: clean(r.Risk) || 'Medium', notes: clean(r.Notes), fulfilledOn: parseDate(r.FulfilledOn), sample: yes(r.IsSample)
+      };
+    },
+    contract: function (r) {
+      var file = clean(r.FileLeafRef) || clean(r.Title);
+      return {
+        id: clean(r.ID).replace(/\.0+$/, ''), file: file, title: clean(r.Title) || file.replace(/\.[a-z0-9]+$/i, ''),
+        counterparty: clean(r.Counterparty), type: clean(r.ContractType), effective: parseDate(r.EffectiveDate),
+        expiration: parseDate(r.ExpirationDate), autoRenews: clean(r.AutoRenews), notice: num(r.NoticePeriodDays),
+        law: clean(r.GoverningLaw), value: num(r.ContractValue), valueRaw: clean(r.ContractValue), summary: clean(r.ContractSummary),
+        owner: people(r.ContractOwner).join(', '), bu: clean(r.BusinessUnit), amends: clean(r.Amends),
+        isAmendment: !!clean(r.Amends) || /amendment/i.test(clean(r.ContractType)), sample: yes(r.IsSample), key: contractKey(file)
+      };
+    },
+    run: function (r) {
+      return {
+        id: clean(r.ID), title: clean(r.Title), workflow: clean(r.Workflow), outcome: clean(r.Outcome), contract: clean(r.ContractName),
+        version: clean(r.ContractVersion), created: num(r.ItemsCreated), updated: num(r.ItemsUpdated), held: num(r.ItemsHeld),
+        details: clean(r.Details), at: parseDate(r.RunAt, true)
+      };
+    },
+    rule: function (r) {
+      return { id: clean(r.ID), title: clean(r.Title), category: clean(r.Category) || 'Any', bu: clean(r.BusinessUnit) || 'Any',
+        counterparty: clean(r.Counterparty), owner: people(r.Owner).join(', '), escalation: people(r.EscalationOwner).join(', '), notify: clean(r.Notify) };
+    }
+  };
+  Hub.timingFor = timingFor;
+  Hub.TIMING_ORDER = ['Overdue', 'Due soon', 'Upcoming', 'No date', 'Closed'];
+  Hub.byDue = function (a, b) {
+    if (a.due && b.due) return a.due - b.due || a.title.localeCompare(b.title);
+    if (a.due) return -1;
+    if (b.due) return 1;
+    return a.title.localeCompare(b.title);
+  };
+  Hub.matchesContract = function (o, c) {
+    var k = contractKey(o.contract || o);
+    return !!k && (k === c.key || k === contractKey(c.title));
+  };
+  Hub.shortParty = function (s) {
+    return clean(s).replace(/,?\s+(ltd|limited|inc|incorporated|llc|plc|corp|corporation|co|gmbh|sa|ag|bv|pty)\.?$/i, '');
+  };
+
+  /* ---------------- icons & pills ---------------- */
+  function icon(name, cls) { return '<svg class="' + (cls || 'i') + '" aria-hidden="true" focusable="false"><use href="#i-' + name + '"></use></svg>'; }
+  Hub.icon = icon;
+  var TIMING_KIND = { 'Overdue': ['overdue', 'overdue'], 'Due soon': ['soon', 'soon'], 'Upcoming': ['upcoming', 'upcoming'], 'No date': ['nodate', 'nodate'], 'Closed': ['closed', 'check'] };
+  Hub.pill = function (kind, label, ic) { return '<span class="pill pill--' + kind + '">' + (ic ? icon(ic) : '') + esc(label) + '</span>'; };
+  Hub.timingPill = function (t) { var k = TIMING_KIND[t] || ['nodate', 'nodate']; return Hub.pill(k[0], t, k[1]); };
+  Hub.outcomePill = function (o) {
+    var s = clean(o);
+    if (!s) return Hub.pill('nodate', 'Not run yet', 'nodate');
+    if (/succe/i.test(s)) return Hub.pill('ok', s, 'check');
+    if (/partial/i.test(s)) return Hub.pill('soon', s, 'soon');
+    if (/fail/i.test(s)) return Hub.pill('overdue', s, 'overdue');
+    return Hub.pill('nodate', s, 'nodate');
+  };
+  /* Timing shown is always recalculated for today; say so when the list's stored value (refreshed by the daily sweep) disagrees. */
+  Hub.timingNote = function (o) {
+    if (!o.storedTiming || o.storedTiming.toLowerCase() === o.timing.toLowerCase()) return '';
+    return '<span class="cell-sub timing-note">List says \u201c' + esc(o.storedTiming) + '\u201d until the next daily sweep</span>';
+  };
+  Hub.riskPill = function (r) { return /high/i.test(r) ? Hub.pill('overdue', 'High risk', 'flag') : ''; };
+  /* One definition of the Risk levels. How it works carries the same sentences as static text (a test keeps them identical). */
+  Hub.RISK_LEVELS = [
+    { level: 'High', text: 'Missing it automatically loses a right or money or starts a legal clock (notice, renewal and option deadlines we must act on; change-of-control and breach notices; financing covenants, compliance certificates and default notices).' },
+    { level: 'Medium', text: 'Other dated or money obligations (payments, reports, certificates, audits).' },
+    { level: 'Low', text: 'Ongoing conduct, and counterparty duties we only monitor.' }
+  ];
+  Hub.categoryPill = function (c) { return Hub.pill('quiet', c || 'Other'); };
+  Hub.ownerText = function (o) { return o.owner ? esc(o.owner) : Hub.pill('empty', 'No owner'); };
+
+  /* ---------------- hash state (location.hash only; history entries are never written directly) ---------------- */
+  Hub.hash = {
+    get: function () {
+      var h = String(window.location.hash || '').replace(/^#/, ''), out = {};
+      h.split('&').forEach(function (part) {
+        var i = part.indexOf('=');
+        if (i < 1) return;
+        var k = part.slice(0, i), v = part.slice(i + 1);
+        try { k = decodeURIComponent(k); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch (e) { /* keep raw */ }
+        out[k] = v;
+      });
+      return out;
+    },
+    href: function (obj) {
+      var parts = [];
+      Object.keys(obj).forEach(function (k) { if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])); });
+      return '#' + parts.join('&');
+    },
+    set: function (obj) { window.location.hash = Hub.hash.href(obj); }
+  };
+
+  /* ---------------- badge, notes, errors ---------------- */
+  Hub.badge = function (data, primaryKey, count, one, many) {
+    var el = byId('data-badge');
+    var p = data[primaryKey] || { live: false };
+    var keys = Object.keys(data);
+    var sampleOthers = keys.filter(function (k) { return k !== primaryKey && !data[k].live; });
+    var anyLive = keys.some(function (k) { return data[k].live; });
+    var text = (p.live ? 'Live' : 'Sample snapshot') + ' \u00b7 ' + plural(count, one, many);
+    if (p.live && sampleOthers.length) text += ' \u00b7 partly sample';
+    var detail = keys.map(function (k) { return data[k].label + ': ' + (data[k].live ? 'live list data' : 'sample snapshot'); }).join('; ');
+    if (el) {
+      el.className = 'badge ' + (p.live ? 'badge--live' : 'badge--sample');
+      el.setAttribute('title', detail);
+      el.innerHTML = '<span class="badge__dot" aria-hidden="true"></span><span>' + esc(text) + '</span><span class="sr-only">. ' + esc(detail) + '.</span>';
+    }
+    var notes = [];
+    keys.forEach(function (k) {
+      if (data[k].error) notes.push('Live data for ' + data[k].label + ' couldn\u2019t be read (' + data[k].error + '), so this page shows the sample snapshot for it.');
+    });
+    if (!anyLive && !notes.length) notes.push('Showing the sample snapshot \u2014 fictional data bundled with the page. Live list data appears automatically when the site provides it.');
+    var n = byId('data-note');
+    if (n) {
+      n.hidden = !notes.length;
+      n.innerHTML = notes.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('');
+    }
+    return text;
+  };
+  Hub.fail = function (err, where) {
+    var target = byId(where || 'main');
+    var msg = (err && (err.message || String(err))) || 'Unknown error';
+    var html = '<div class="state state--error" role="alert"><h2>This view couldn\u2019t be drawn</h2>' +
+      '<p>Refresh the page. If it keeps happening, open the lists directly from Site contents or ask the site owner to check the Run Log.</p>' +
+      '<details class="disclose"><summary>' + icon('chev') + 'Technical details</summary><p><code>' + esc(msg) + '</code></p></details></div>';
+    if (target) {
+      if (target.id === 'main') target.innerHTML = '<div class="wrap">' + html + '</div>';
+      else target.innerHTML = html;
+    }
+    if (window.console && console.error) console.error('[Obligation Hub]', err);
+  };
+  Hub.announce = function (text) { var r = byId('live-region'); if (r) { r.textContent = ''; setTimeout(function () { r.textContent = text; }, 30); } };
+
+  /* ---------------- copy to clipboard ---------------- */
+  function selectNode(node) {
+    try {
+      var sel = window.getSelection && window.getSelection();
+      if (!sel || !document.createRange) return false;
+      var range = document.createRange(); range.selectNodeContents(node); sel.removeAllRanges(); sel.addRange(range);
+      return true;
+    } catch (e) { return false; }
+  }
+  function legacyCopy(text) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; ta.style.top = '0';
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand && document.execCommand('copy');
+      document.body.removeChild(ta);
+      return !!ok;
+    } catch (e) { return false; }
+  }
+  /* Last resort when the sandbox blocks the clipboard: show the text in a read-only field, focused and selected. */
+  function manualCopy(text, btn) {
+    var host = btn && btn.parentNode;
+    if (!host || !document.createElement) return;
+    var box = host.querySelector ? host.querySelector('.copy-manual') : null;
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'copy-manual';
+      box.innerHTML = '<label class="label">Press Ctrl+C (or \u2318C) to copy</label><input class="control" readonly>';
+      host.appendChild(box);
+    }
+    var input = box.querySelector('input');
+    input.value = text;
+    try { input.focus(); input.select(); } catch (e) { /* ignore */ }
+  }
+  Hub.copy = function (text, btn, selectTarget) {
+    var state = btn && btn.querySelector ? btn.querySelector('.chip__state') : null;
+    function done(ok) {
+      var msg = ok ? 'Copied' : 'Press Ctrl+C to copy';
+      if (!ok) {
+        if (selectTarget && !closest(selectTarget, 'button') && selectNode(selectTarget)) { try { selectTarget.focus(); } catch (e) { /* ignore */ } }
+        else manualCopy(text, btn);
+      }
+      if (state) { state.textContent = ok ? 'Copied' : 'Press Ctrl+C'; setTimeout(function () { state.textContent = state.getAttribute('data-idle') || 'Copy'; }, 2400); }
+      Hub.announce(msg);
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(legacyCopy(text)); });
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    done(legacyCopy(text));
+  };
+  document.addEventListener('click', function (e) {
+    var b = closest(e.target, '[data-copy]');
+    if (!b) return;
+    e.preventDefault();
+    var src = b.getAttribute('data-copy-from');
+    var srcEl = src ? byId(src) : null;
+    var text = srcEl ? srcEl.textContent : b.getAttribute('data-copy');
+    Hub.copy(text, b, srcEl || b.querySelector('.chip__text'));
+  });
+
+  /* tooltips: Escape dismisses (WCAG 1.4.13); leaving re-arms */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    var h = closest(document.activeElement, '.hint');
+    if (h && h.classList) h.classList.add('is-dismissed');
+  });
+  function rearm(e) { var h = closest(e.target, '.hint'); if (h && h.classList) h.classList.remove('is-dismissed'); }
+  document.addEventListener('focusout', rearm);
+  document.addEventListener('mouseout', rearm);
+
+  /* ---------------- links between pages ----------------
+     There is no in-page nav bar: SharePoint's site navigation is the primary nav. Static links to other pages
+     carry data-page; before install (tokens not replaced) they point at the sibling file instead. */
+  function initLinks() {
+    var links = document.querySelectorAll ? document.querySelectorAll('[data-page]') : [];
+    Array.prototype.forEach.call(links, function (a) {
+      if (Hub.preview || unreplaced(cfg.pagesUrl)) a.setAttribute('href', a.getAttribute('data-page'));
+    });
+  }
+
+  /* ---------------- AI workflows, grouped by Run Log "Workflow" value ----------------
+     Capture is two workflows (one trigger each) running the same skill; both log as "Capture",
+     so they share one health row here and both Settings cards show its last run. */
+  Hub.WORKFLOWS = [
+    { name: 'Capture', label: 'Capture obligations', skill: 'capture-obligations', tokens: ['CAPTURE_NEW', 'CAPTURE_CHANGED'], trigger: 'When a contract is added or changed', staleDays: null },
+    { name: 'Assign owners', label: 'Assign owners', skill: 'assign-obligation-owners', tokens: ['ASSIGN_OWNERS'], trigger: 'Daily at 7:00 AM', staleDays: 2 },
+    { name: 'Daily sweep', label: 'Daily sweep', skill: 'sweep-obligations', tokens: ['DAILY_SWEEP'], trigger: 'Daily at 6:00 AM', staleDays: 2 },
+    { name: 'Owner digest', label: 'Owner digest', skill: 'obligation-owner-digest', tokens: ['OWNER_DIGEST'], trigger: 'Mondays at 8:00 AM', staleDays: 8 },
+    { name: 'Leadership digest', label: 'Leadership digest', skill: 'obligation-leadership-digest', tokens: ['LEADERSHIP_DIGEST'], trigger: 'Fridays at 3:00 PM', staleDays: 8 }
+  ];
+  Hub.lastRuns = function (runs) {
+    var any = runs.length > 0;   // on a brand-new site the setup checklist covers "never ran"
+    return Hub.WORKFLOWS.map(function (w) {
+      var k = normKey(w.name), kl = normKey(w.label);
+      var mine = runs.filter(function (r) { var rk = normKey(r.workflow); return rk === k || rk === kl || (rk && rk.indexOf(k) === 0); });
+      mine.sort(function (a, b) { return (b.at ? b.at.getTime() : 0) - (a.at ? a.at.getTime() : 0); });
+      var last = mine[0] || null, issue = null;
+      var age = last && last.at ? (now() - last.at) / DAY : null;
+      if (last && /fail/i.test(last.outcome)) issue = { level: 'rose', text: w.label + ' failed ' + Hub.fmt.ago(last.at) + '.' };
+      else if (w.staleDays && last && age !== null && age > w.staleDays) issue = { level: 'amber', text: w.label + ' hasn\u2019t run for ' + Math.floor(age) + ' days.' };
+      else if (w.staleDays && !last && any) issue = { level: 'amber', text: w.label + ' hasn\u2019t run yet.' };
+      return { wf: w, last: last, count: mine.length, issue: issue };
+    });
+  };
+
+  /* ---------------- focus preservation across re-renders ---------------- */
+  Hub.keepFocus = function (fn) {
+    var a = document.activeElement, key = a && a.getAttribute ? a.getAttribute('data-focus') : null;
+    fn();
+    if (key && document.querySelector) { var n = document.querySelector('[data-focus="' + key.replace(/"/g, '') + '"]'); if (n && n.focus) n.focus(); }
+  };
+
+  /* ---------------- page bootstrap ---------------- */
+  Hub.start = function (opts) {
+    var data = null;
+    function build() {
+      data = {};
+      opts.lists.forEach(function (k) { data[k] = loadList(k); });
+      Hub.data = data;
+      draw();
+    }
+    function draw() {
+      try { opts.render(data, Hub.hash.get()); }
+      catch (e) { Hub.fail(e); }
+    }
+    function hasLive() { return window.__LD_RESULTS__ && typeof window.__LD_RESULTS__ === 'object'; }
+    function watchLate() {
+      var waited = 0, t = setInterval(function () {
+        waited += 250;
+        if (hasLive()) { clearInterval(t); build(); }
+        else if (waited >= LATE_WATCH_MS) clearInterval(t);
+      }, 250);
+    }
+    try { initLinks(); } catch (e) { /* links work without it once installed */ }
+    if (opts.lists.length === 0 || hasLive()) build();
+    else {
+      var waited = 0, t = setInterval(function () {
+        waited += 100;
+        if (hasLive() || waited >= LIVE_WAIT_MS) { clearInterval(t); build(); if (!hasLive()) watchLate(); }
+      }, 100);
+    }
+    window.addEventListener('hashchange', function () { if (data) Hub.keepFocus(draw); });
+    var rt = null;
+    window.addEventListener('resize', function () {
+      if (!data || !opts.onResize) return;
+      clearTimeout(rt); rt = setTimeout(function () { try { opts.onResize(data); } catch (e) { /* ignore */ } }, 160);
+    });
+  };
+})(window, document);
+
+</script>
+<script>
+/* Settings - admin hub */
+(function (Hub) {
+  'use strict';
+  var esc = Hub.esc, fmt = Hub.fmt, plural = Hub.plural;
+
+  function render(data) {
+    var runs = data.RUNLOG.rows.map(Hub.model.run);
+    var rules = data.OWNERS.rows.map(Hub.model.rule);
+    Hub.badge(data, 'RUNLOG', runs.length, 'run logged', 'runs logged');
+
+    Hub.setHTML('meta-owners', esc(rules.length ? plural(rules.length, 'routing rule') : 'No rules yet \u2014 add one'));
+    var latest = runs.filter(function (r) { return r.at; }).sort(function (a, b) { return b.at - a.at; })[0];
+    Hub.setHTML('meta-runlog', esc(runs.length ? plural(runs.length, 'run') + (latest ? ' \u00b7 last ' + fmt.ago(latest.at) : '') : 'No runs logged yet'));
+
+    if (!rules.length) {
+      Hub.setHTML('rules', '<div class="pad" style="padding-bottom:24px"><p class="notice"><svg aria-hidden="true"><use href="#i-warn"></use></svg><span>No routing rules yet. Until you add one, Assign owners leaves every new obligation without an owner and nobody is reminded.</span></p></div>');
+    } else {
+      Hub.setHTML('rules', '<table class="table table--stack"><caption class="sr-only">Routing rules in Obligation Owners</caption><thead><tr>' +
+        '<th scope="col">Rule</th><th scope="col">Category</th><th scope="col">Business unit</th><th scope="col">Counterparty</th><th scope="col">Owner</th><th scope="col">Escalation</th><th scope="col">Notify by</th></tr></thead><tbody>' +
+        rules.map(function (r) {
+          return '<tr><td class="cell-lead"><a class="cell-title" href="' + esc(Hub.url.disp('OWNERS', r.id)) + '" target="_top">' + esc(r.title || 'Untitled rule') + '</a></td>' +
+            '<td data-label="Category">' + esc(r.category) + '</td><td data-label="Business unit">' + esc(r.bu) + '</td>' +
+            '<td data-label="Counterparty">' + esc(r.counterparty || 'Any') + '</td><td data-label="Owner">' + (r.owner ? esc(r.owner) : Hub.pill('empty', 'No owner')) + '</td>' +
+            '<td data-label="Escalation">' + esc(r.escalation || '\u2014') + '</td><td data-label="Notify by">' + esc(r.notify || 'Both') + '</td></tr>';
+        }).join('') + '</tbody></table>');
+    }
+
+    Hub.lastRuns(runs).forEach(function (l) {
+      l.wf.tokens.forEach(function (token) { lastRun(l, token); });
+    });
+  }
+
+  function lastRun(l, token) {
+    var el = Hub.byId('wf-last-' + token);
+    if (!el) return;
+    var r = l.last;
+    var html = '<span class="label">Last run</span>' + Hub.outcomePill(r ? r.outcome : '') +
+      '<span>' + (r && r.at ? '<time datetime="' + esc(r.at.toISOString()) + '">' + esc(fmt.dateTime(r.at)) + '</time> \u00b7 ' + esc(fmt.ago(r.at)) : 'No runs logged yet') + '</span>';
+    if (l.count > 1) html += '<span>' + plural(l.count, 'run') + ' logged</span>';
+    if (l.wf.tokens.length > 1) html += '<span>Shared with the other capture workflow \u2014 both log as \u201c' + esc(l.wf.name) + '\u201d.</span>';
+    if (l.issue) html += '<span class="notice' + (l.issue.level === 'rose' ? ' notice--rose' : '') + '" style="padding:8px 12px"><span>' + esc(l.issue.text) + '</span></span>';
+    html += '<a class="link-arrow" href="' + esc(Hub.url.view('RUNLOG', [['Workflow', l.wf.name]])) + '" target="_top">See runs' + Hub.icon('arrow') + '</a>';
+    el.innerHTML = html;
+    var pre = Hub.byId('prompt-' + token), todo = Hub.byId('prompt-todo-' + token);
+    if (pre && todo) todo.hidden = String(pre.textContent || '').indexOf('{{' + 'WORKFLOW_PROMPT_') === -1;
+  }
+
+  Hub.start({ lists: ['RUNLOG', 'OWNERS'], render: render });
+})(window.Hub);
+
+</script>
+</body>
+</html>

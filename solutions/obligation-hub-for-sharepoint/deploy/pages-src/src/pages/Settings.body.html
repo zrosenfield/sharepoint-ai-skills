@@ -1,0 +1,89 @@
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        @@HUB_MARK@@
+        <span class="eyebrow">Settings</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1>Settings</h1>
+      <p class="lede">Everything that drives the hub: who owns what, what gets tracked, the AI workflows and their run history. For site owners and contract managers.</p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section" aria-labelledby="lists-title">
+      <div class="section-head"><div><h2 id="lists-title">Lists and libraries</h2><p>Open a list to change it. Changes take effect on the next workflow run.</p></div></div>
+      <ul class="admin">
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_OWNERS}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-people"></use></svg></span>
+          <span class="admin__name">Obligation Owners</span>
+          <span class="admin__desc">Routing rules: category, business unit and counterparty &rarr; owner, escalation owner and how they&rsquo;re notified. The most specific rule wins.</span>
+          <span class="admin__meta" id="meta-owners">Routing rules</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_TYPES}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-layers"></use></svg></span>
+          <span class="admin__name">Obligation Types</span>
+          <span class="admin__desc">What counts as an obligation: track, exclude or hold for review, with default risk and recurrence for each type.</span>
+          <span class="admin__meta">Capture uses this to classify</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_EXCLUSIONS}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-block"></use></svg></span>
+          <span class="admin__name">Exclusions</span>
+          <span class="admin__desc">Clauses and patterns people removed, so capture doesn&rsquo;t add them back &mdash; for one contract or all of them.</span>
+          <span class="admin__meta">Filled by the Remove obligation quick step</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_RUNLOG}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-pulse"></use></svg></span>
+          <span class="admin__name">Run Log</span>
+          <span class="admin__desc">One row per automated run: what ran, the outcome, what it created, updated or held, and the details.</span>
+          <span class="admin__meta" id="meta-runlog">Run history</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_EVIDENCE}}/Forms/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-clip"></use></svg></span>
+          <span class="admin__name">Evidence</span>
+          <span class="admin__desc">Proof that obligations were fulfilled &mdash; sent notices, reports, certificates. Linked from each obligation&rsquo;s Evidence field.</span>
+          <span class="admin__meta">Document library</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-spark"></use></svg></span>
+          <span class="admin__name">AgentAssets (skills)</span>
+          <span class="admin__desc">The site&rsquo;s skills, in Skills/&lt;skill-name&gt;/SKILL.md. Copilot in SharePoint and the AI workflows load them.</span>
+          <span class="admin__meta">5 skills, used by 6 workflows</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL}}/_layouts/15/listedit.aspx?List=%7B{{LISTID_CONTRACTS}}%7D" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-gear"></use></svg></span>
+          <span class="admin__name">Contracts library settings</span>
+          <span class="admin__desc">Columns that fill in automatically from each contract, versioning and permissions for the Contracts library.</span>
+          <span class="admin__meta">Library settings</span></a></li>
+        <li><a class="card admin__card" href="{{SITE_URL_ORIGIN}}{{LISTURL_OBLIGATIONS}}/AllItems.aspx" target="_top">
+          <span class="admin__icon"><svg aria-hidden="true"><use href="#i-doc"></use></svg></span>
+          <span class="admin__name">Obligations</span>
+          <span class="admin__desc">Every tracked obligation with its owner, status, timing, review state and evidence. Views for my items, needs owner and needs review.</span>
+          <span class="admin__meta">The tracking list</span></a></li>
+      </ul>
+    </section>
+
+    <section class="section card config" aria-labelledby="cfg-title">
+      <span class="admin__icon"><svg aria-hidden="true"><use href="#i-sliders"></use></svg></span>
+      <div class="config__text">
+        <h2 id="cfg-title">Configuration</h2>
+        <p><code>hub-settings.json</code> in AgentAssets/Config holds the company name, the due-soon window, the reminder cooldown and the leadership digest recipients. The workflows use these settings.</p>
+        <p class="config__fine">These pages can&rsquo;t read the file, so they always show <em>Due soon</em> as within 14 days.</p>
+      </div>
+      <div class="config__links">
+        <a class="btn btn--sm" href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Config/hub-settings.json" target="_top"><svg aria-hidden="true"><use href="#i-doc"></use></svg>Open hub-settings.json</a>
+        <a class="link-arrow" href="{{SITE_URL_ORIGIN}}{{LISTURL_AGENTASSETS}}/Forms/AllItems.aspx?id={{LISTURL_AGENTASSETS}}/Config" target="_top">Config folder<svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+      </div>
+    </section>
+
+    <section class="section card card--flush" aria-labelledby="rules-title">
+      <div class="card__head pad">
+        <div><h2 id="rules-title">Routing rules</h2><p>How Assign owners picks an owner for each new obligation.</p></div>
+        <a class="link-arrow" href="{{SITE_URL_ORIGIN}}{{LISTURL_OWNERS}}/NewForm.aspx" target="_top">Add a rule<svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+      </div>
+      <div class="table-wrap" id="rules"><div class="pad" style="padding-bottom:24px"><span class="skel"></span><span class="skel skel--w60"></span></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="wf-title">
+      <div class="section-head">
+        <div><h2 id="wf-title">Workflows</h2><p>Six AI workflows keep the hub current, each with one trigger. Create each one by pasting its setup prompt into Copilot in SharePoint on this site. Each loads its skill from AgentAssets and logs every run; the two capture workflows share one skill.</p></div>
+      </div>
+      <p class="notice notice--info wf-who"><svg aria-hidden="true"><use href="#i-mail"></use></svg><span>Reminders and digests are sent as the person who set up the workflows. Set them up with a shared obligations account so messages don&rsquo;t depend on one person&rsquo;s mailbox.</span></p>
+      @@WORKFLOWS@@
+    </section>
+  </div>
+</main>

@@ -1,0 +1,62 @@
+.picker { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--s1) var(--s3); align-items: end; padding: var(--s2) var(--s3); margin-top: var(--s4); }
+.picker__count { grid-column: 1 / -1; font-size: var(--fs-sm); min-height: 1em; }
+.picker__count:empty { display: none; }
+.search { position: relative; }
+.search svg { position: absolute; left: 12px; top: 50%; width: 16px; height: 16px; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
+.search .control { width: 100%; padding-left: 36px; }
+.picker__select .control { width: 100%; }
+
+.c-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s2) var(--s3); align-items: start; }
+.c-hero h2 { font-size: var(--fs-2xl); letter-spacing: -.02em; line-height: 1.25; }
+.c-hero__file { font-size: var(--fs-md); color: var(--ink-3); margin-top: 4px; word-break: break-word; }
+.c-hero .pills { margin-top: var(--s2); }
+.c-summary { margin-top: var(--s2); color: var(--ink-2); max-width: 72ch; }
+.c-amend { display: flex; gap: 10px; align-items: flex-start; max-width: 72ch; margin-top: var(--s2); padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--surface-2); color: var(--ink-2); font-size: var(--fs-md); }
+.c-amend svg { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--violet-ink); }
+.c-amend a { font-weight: 600; color: var(--ink); text-decoration-color: var(--violet); }
+
+.terms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: var(--s3) 0 0; border-top: 1px solid var(--line); }
+.terms > div { padding: var(--s2) var(--s2) var(--s2) 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.terms dt { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.terms dd { margin: 4px 0 0; font-size: var(--fs-base); font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.terms dd small { display: block; font-size: var(--fs-sm); font-weight: 400; color: var(--ink-3); }
+
+.mini { margin-top: var(--s3); }
+.mini svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mini text { font-family: var(--font); }
+.mini .m-lab { font-size: 12px; font-weight: 600; fill: #111827; }
+.mini .m-sub { font-size: 12px; fill: #4B5563; }
+.mini-list { list-style: none; margin: var(--s2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); font-size: var(--fs-md); color: var(--ink-2); }
+.mini-list li { display: inline-flex; gap: 8px; align-items: center; }
+.mini-list svg { width: 12px; height: 12px; flex: none; }
+
+.party { margin-top: var(--s3); }
+.party:first-child { margin-top: 0; }
+.party__head { display: flex; align-items: baseline; gap: 12px; margin-bottom: var(--s1); }
+.party__head h3 { font-size: var(--fs-base); }
+.party__head p { font-size: var(--fs-sm); color: var(--ink-3); }
+.obl { list-style: none; margin: 0; padding: 0; }
+.obl > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px var(--s2); padding: var(--s2) 0; border-top: 1px solid var(--line); }
+.obl > li:first-child { border-top: 0; }
+.obl__title { font-weight: 600; }
+.obl__meta { display: block; font-size: var(--fs-sm); color: var(--ink-3); margin-top: 2px; }
+.obl .pills { margin-top: 8px; }
+.obl__right { display: grid; justify-items: end; gap: 6px; text-align: right; font-size: var(--fs-sm); color: var(--ink-3); }
+.obl details { grid-column: 1 / -1; }
+.amend { list-style: none; margin: 0; padding: 0; }
+.amend li { padding: 12px 0; border-top: 1px solid var(--line); }
+.amend li:first-child { border-top: 0; padding-top: 0; }
+.amend__title { font-weight: 600; }
+.amend__sub { display: block; font-size: var(--fs-sm); color: var(--ink-3); }
+
+@media (max-width: 1080px) {
+  .terms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .picker { grid-template-columns: minmax(0, 1fr); padding: var(--s2); }
+  .c-hero { grid-template-columns: minmax(0, 1fr); }
+  .c-hero h2 { font-size: var(--fs-xl); }
+  .terms { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .obl > li { grid-template-columns: minmax(0, 1fr); }
+  .obl__right { justify-items: start; text-align: left; }
+}

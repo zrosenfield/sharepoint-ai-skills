@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="application/json" class="ka-livedata-manifest">[{"kind":"list","spItemUrl":"list:{{SITE_URL}}/{{LISTID_OBLIGATIONS}}","webUrl":"{{SITE_URL}}","listId":"{{LISTID_OBLIGATIONS}}","listServerRelativeUrl":"{{LISTURL_OBLIGATIONS}}"}]</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My obligations &middot; Obligation Hub</title>
+<style>
+/* Obligation Hub - shared styles. Design language: 01 Atmospheric Precision.
+   Depth and light organise the page. SharePoint's site navigation is the one primary nav, so the pages
+   carry no nav bar of their own: just a quiet Obligation Hub mark above each page title.
+   Every colour pair used for text is checked by tests/contrast.py. */
+:root {
+  /* palette */
+  --graphite: #111827;
+  --ice: #9AC7F5;
+  --cloud: #EAF3FC;
+  --white: #FFFFFF;
+  --violet: #8B83DB;
+
+  /* text */
+  --ink: #111827;
+  --ink-2: #374151;
+  --ink-3: #4B5563;
+
+  /* surfaces */
+  --canvas: #F5F9FD;
+  --surface: #FFFFFF;
+  --surface-2: #F7FAFD;
+  --track: #EAF3FC;
+  --line: #E4EAF1;
+  --line-2: #D3DDE9;
+  --edge: #6B7A90;          /* control boundaries: >= 3:1 on white, cloud and track */
+
+  /* data accents (fills, never small text) */
+  --bar: #5A87C2;
+  --bar-2: #7A71CF;
+  --bar-track: #E8EFF7;
+
+  /* functional tints: background / text / edge */
+  --rose-bg: #FBEAEF;   --rose-ink: #8A1C3F;   --rose-edge: #C25A7C;
+  --amber-bg: #FCF1D9;  --amber-ink: #6F4500;  --amber-edge: #B98424;
+  --sage-bg: #E4F2EB;   --sage-ink: #1D5A42;   --sage-dot: #2F7A5C;
+  --ice-bg: #E3EEFB;    --ice-ink: #1D3D66;
+  --neutral-bg: #EEF2F6; --neutral-ink: #374151;
+  --violet-bg: #ECEAFA; --violet-ink: #3F3891;
+
+  /* type */
+  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-base: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fs-hero: clamp(32px, 3.6vw, 48px);
+
+  /* 8-point spacing */
+  --s-half: 4px;
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 40px;
+  --s6: 48px;
+  --s8: 64px;
+  --s12: 96px;
+
+  --r-s: 8px;
+  --r-m: 12px;
+  --r-l: 16px;
+  --r-xl: 24px;
+
+  /* soft directional light from the upper left */
+  --shadow-1: 0 1px 2px rgba(17, 24, 39, .04), 0 4px 12px -6px rgba(30, 41, 82, .10);
+  --shadow-2: 0 1px 2px rgba(17, 24, 39, .05), 2px 14px 32px -18px rgba(30, 41, 82, .26);
+  --shadow-3: 0 2px 4px rgba(17, 24, 39, .06), 4px 22px 44px -20px rgba(30, 41, 82, .34);
+
+  --ease-spring: cubic-bezier(.2, 1.1, .3, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --container: 1280px;
+  --gutter: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--canvas);
+  font-feature-settings: "kern", "tnum" 0;
+  -webkit-font-smoothing: antialiased;
+}
+/* Abstract light behind the top of every page. Purely decorative. */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 760px;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 80% at 10% -4%, rgba(154, 199, 245, .42), rgba(154, 199, 245, 0) 70%),
+    radial-gradient(46% 64% at 90% 4%, rgba(139, 131, 219, .20), rgba(139, 131, 219, 0) 72%),
+    linear-gradient(180deg, #EEF5FD 0%, rgba(245, 249, 253, 0) 100%);
+}
+
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+h1 { font-size: var(--fs-2xl); line-height: 1.25; letter-spacing: -.02em; }
+h2 { font-size: var(--fs-xl); line-height: 1.4; }
+h3 { font-size: var(--fs-lg); line-height: 1.4; }
+h4 { font-size: var(--fs-base); line-height: 1.5; }
+p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--violet); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ink); }
+strong { font-weight: 600; }
+code, pre { font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace; }
+img, svg { max-width: 100%; }
+.tl-svg, .mini svg { max-width: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--graphite); outline-offset: 2px; }
+
+.sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- layout ---------- */
+.wrap { width: min(var(--container), calc(100% - 2 * var(--gutter))); margin-inline: auto; }
+/* Top space under SharePoint's header: 40 / 32 / 24 px on the 8-pt rhythm (desktop / tablet / phone). */
+main { display: block; padding-block: var(--s5) var(--s8); }
+.stack > * + * { margin-top: var(--s3); }
+.section { margin-top: var(--s6); }
+.grid-main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s3); align-items: start; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); }
+.side { display: grid; gap: var(--s3); }
+
+/* ---------- page header ---------- */
+.page-head { display: grid; gap: var(--s2); max-width: 820px; }
+.eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.lede { font-size: var(--fs-lg); line-height: 1.6; color: var(--ink-2); max-width: 64ch; }
+.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); color: var(--ink-3); font-size: var(--fs-md); }
+/* the only identity on the page: plain text, no links (SharePoint's nav does the navigating) */
+.hub-mark { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+.hub-mark svg { width: 16px; height: 16px; flex: none; }
+.hub-mark::after { content: ""; width: 1px; height: 12px; margin-left: 8px; background: var(--line-2); }
+
+/* data-source badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 28px; padding: 2px 12px 2px 10px;
+  border-radius: 999px; border: 1px solid var(--line-2); background: var(--white);
+  color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600; white-space: nowrap;
+}
+.badge__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); flex: none; }
+.badge--live .badge__dot { background: var(--sage-dot); box-shadow: 0 0 0 3px rgba(47, 122, 92, .16); }
+.badge--sample .badge__dot { background: transparent; border: 2px solid var(--violet); }
+.badge--loading .badge__dot { animation: pulse 1.2s ease-in-out infinite; }
+.data-note { font-size: var(--fs-md); color: var(--ink-2); }
+
+/* ---------- cards ---------- */
+.card {
+  position: relative;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l);
+  box-shadow: var(--shadow-1); padding: var(--s3);
+}
+.card--flush { padding: 0; overflow: hidden; }
+.card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s2); }
+.card__head p { color: var(--ink-3); font-size: var(--fs-md); margin-top: 2px; }
+.card__foot { margin-top: var(--s2); padding-top: var(--s2); border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); align-items: center; }
+.card--tint { background: linear-gradient(160deg, rgba(234, 243, 252, .9), rgba(255, 255, 255, .96) 60%); }
+a.card, .card--link { display: block; color: inherit; text-decoration: none; transition: transform .45s var(--ease-spring), box-shadow .45s var(--ease-spring), border-color .2s ease; }
+a.card:hover, .card--link:hover { transform: translateY(-2px); box-shadow: var(--shadow-3); border-color: var(--line-2); }
+a.card:active { transform: translateY(0); box-shadow: var(--shadow-1); }
+.pad { padding: var(--s3) var(--s3) 0; }
+.card__head.pad { padding-bottom: 0; }
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s2); flex-wrap: wrap; }
+.section-head p { color: var(--ink-3); font-size: var(--fs-md); }
+
+/* ---------- pills ---------- */
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 24px; padding: 2px 10px;
+  border-radius: 999px; border: 1px solid transparent;
+  background: var(--neutral-bg); color: var(--neutral-ink);
+  font-size: var(--fs-xs); font-weight: 600; line-height: 1.3; white-space: nowrap; vertical-align: middle;
+}
+.pill svg { width: 10px; height: 10px; flex: none; fill: currentColor; }
+.pill--overdue { background: var(--rose-bg); color: var(--rose-ink); }
+.pill--soon { background: var(--amber-bg); color: var(--amber-ink); }
+.pill--upcoming { background: var(--ice-bg); color: var(--ice-ink); }
+.pill--nodate { background: var(--neutral-bg); color: var(--neutral-ink); }
+.pill--closed, .pill--ok { background: var(--sage-bg); color: var(--sage-ink); }
+.pill--review { background: var(--violet-bg); color: var(--violet-ink); }
+.pill--quiet { background: var(--white); color: var(--ink-2); border-color: var(--line-2); }
+.pill--empty { background: var(--white); color: var(--ink-2); border: 1px dashed var(--edge); }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* ---------- buttons & links ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: 0 18px; border-radius: 999px;
+  border: 1px solid var(--edge); background: var(--white); color: var(--ink);
+  font-size: var(--fs-md); font-weight: 600; text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: transform .4s var(--ease-spring), box-shadow .4s var(--ease-spring), background-color .2s ease;
+}
+.btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.btn:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+.btn--primary { background: var(--graphite); color: var(--white); border-color: var(--graphite); }
+.btn--primary:hover { background: #1F2937; }
+.btn--quiet { border-color: transparent; background: transparent; padding: 0 10px; }
+.btn--quiet:hover { background: var(--track); box-shadow: none; }
+.btn--sm { min-height: 32px; padding: 0 12px; font-size: var(--fs-sm); }
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--s1); align-items: center; }
+.link-arrow { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 600; font-size: var(--fs-md); color: var(--ink); text-decoration: underline; text-decoration-color: var(--violet); }
+.link-arrow svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; transition: transform .4s var(--ease-spring); }
+.link-arrow:hover svg { transform: translateX(3px); }
+
+/* tooltip-style hints that also work for keyboard users */
+.hint { position: relative; display: inline-flex; }
+.hint__text {
+  position: absolute; left: 50%; bottom: calc(100% + 10px); z-index: 30; width: max-content; max-width: 260px;
+  padding: 10px 12px; border-radius: var(--r-m); background: var(--graphite); color: var(--white);
+  font-size: var(--fs-sm); font-weight: 400; line-height: 1.5; text-align: left; box-shadow: var(--shadow-3);
+  opacity: 0; transform: translate(-50%, 4px); pointer-events: none;
+  transition: opacity .2s ease, transform .35s var(--ease-spring);
+}
+.hint__text::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }
+.hint:hover .hint__text, .hint:focus-within .hint__text { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.hint.is-dismissed .hint__text { opacity: 0; pointer-events: none; }
+
+/* ---------- form controls ---------- */
+.field { display: grid; gap: 6px; }
+.field label, .label { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); }
+.control {
+  min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--edge);
+  background: var(--white); color: var(--ink); min-width: 0;
+}
+select.control { padding-right: 32px; }
+.control::placeholder { color: var(--ink-3); opacity: 1; }
+.toolbar { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: flex-end; }
+
+/* quiet segmented control */
+.seg { display: inline-flex; gap: 2px; padding: 4px; border-radius: 14px; background: var(--track); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.seg__opt {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid transparent; color: var(--ink-2); text-decoration: none; font-size: var(--fs-md); white-space: nowrap;
+  transition: background-color .35s var(--ease-spring), box-shadow .35s var(--ease-spring);
+}
+.seg__opt:hover { background: rgba(255, 255, 255, .8); color: var(--ink); }
+.seg__opt[aria-current="true"] { background: var(--white); color: var(--ink); font-weight: 600; border-color: var(--edge); box-shadow: var(--shadow-1); }
+.seg__n { font-variant-numeric: tabular-nums; color: var(--ink-3); font-weight: 600; }
+
+/* ---------- tables: never glass; fine dividers ---------- */
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
+.table caption { text-align: left; }
+.table th {
+  text-align: left; font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-3); padding: 12px; border-bottom: 1px solid var(--line-2); white-space: nowrap; background: var(--surface);
+}
+.table td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table tr:last-child td { border-bottom: 0; }
+.table th:first-child, .table td:first-child { padding-left: var(--s3); }
+.table th:last-child, .table td:last-child { padding-right: var(--s3); }
+.nowrap { white-space: nowrap; }
+.table tbody tr { transition: background-color .2s ease; }
+.table tbody tr:hover { background: var(--surface-2); }
+.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.cell-title { font-weight: 600; color: var(--ink); }
+a.cell-title { text-decoration-thickness: 1px; text-decoration-color: rgba(91, 84, 173, .55); }
+a.cell-title:hover { text-decoration-color: var(--ink); text-decoration-thickness: 1.5px; }
+.cell-sub { display: block; font-size: var(--fs-sm); color: var(--ink-3); margin-top: 2px; }
+.muted { color: var(--ink-3); }
+.timing-note { max-width: 18ch; }
+
+/* ---------- lists ---------- */
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows > li { padding: 14px 0; border-top: 1px solid var(--line); }
+.rows > li:first-child { border-top: 0; padding-top: 0; }
+.rows > li:last-child { padding-bottom: 0; }
+
+/* ---------- states ---------- */
+.state { display: grid; justify-items: center; text-align: center; gap: var(--s1); padding: var(--s6) var(--s3); color: var(--ink-2); }
+.state h2, .state h3 { font-size: var(--fs-lg); }
+.state p { max-width: 46ch; color: var(--ink-2); }
+.state svg { width: 120px; height: 96px; margin-bottom: var(--s1); }
+.state--inline { justify-items: start; text-align: left; padding: var(--s2) 0; }
+.state--error { border: 1px solid var(--rose-edge); background: var(--rose-bg); color: var(--rose-ink); border-radius: var(--r-l); justify-items: start; text-align: left; padding: var(--s3); }
+.state--error h2, .state--error p { color: var(--rose-ink); }
+.notice {
+  display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; border-radius: var(--r-m);
+  background: var(--amber-bg); color: var(--amber-ink); font-size: var(--fs-md); border: 1px solid rgba(185, 132, 36, .35);
+}
+.notice svg { width: 18px; height: 18px; flex: none; margin-top: 2px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.notice--rose { background: var(--rose-bg); color: var(--rose-ink); border-color: rgba(194, 90, 124, .35); }
+.notice--info { background: var(--ice-bg); color: var(--ice-ink); border-color: rgba(90, 135, 194, .3); }
+.notice a { color: inherit; }
+
+.skel { display: block; height: 14px; border-radius: 8px; background: linear-gradient(90deg, #EAF0F7 0%, #F6F9FC 40%, #EAF0F7 80%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+.skel + .skel { margin-top: 12px; }
+.skel--title { height: 28px; width: 60%; }
+.skel--block { height: 120px; border-radius: var(--r-l); }
+.skel--w80 { width: 80%; } .skel--w60 { width: 60%; } .skel--w40 { width: 40%; }
+
+/* ---------- details / disclosure ---------- */
+details > summary { cursor: pointer; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+.disclose > summary {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; border-radius: var(--r-s);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2);
+}
+.disclose > summary svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform .35s var(--ease-spring); }
+.disclose[open] > summary svg { transform: rotate(90deg); }
+.quote {
+  margin: var(--s1) 0 0; padding: 12px 16px; border-left: 2px solid var(--violet);
+  background: var(--surface-2); border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--ink-2); font-size: var(--fs-md);
+}
+
+/* copy chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 8px 16px; border-radius: 999px;
+  border: 1px solid var(--edge); background: var(--white); color: var(--ink); text-align: left; cursor: pointer;
+  font-size: var(--fs-md); line-height: 1.4;
+  transition: transform .4s var(--ease-spring), box-shadow .4s var(--ease-spring);
+}
+.chip svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.chip:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
+.chip__state { font-size: var(--fs-xs); font-weight: 600; color: var(--ink-3); }
+.copy-manual { flex-basis: 100%; display: grid; gap: 6px; max-width: 560px; }
+.copy-manual .control { width: 100%; }
+
+/* footer */
+.foot { padding: var(--s4) 0 var(--s6); color: var(--ink-3); font-size: var(--fs-sm); border-top: 1px solid var(--line); }
+.foot .wrap { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); justify-content: space-between; }
+
+/* ---------- motion: soft reveal that communicates order ---------- */
+/* Static sections fade up once on load. Content drawn later by script only settles into place (no opacity),
+   so it can never be left invisible if an animation is throttled. */
+.reveal { animation: rise .7s var(--ease-out) both; animation-delay: calc(var(--d, 0) * 70ms); }
+.settle { animation: settle .6s var(--ease-spring) backwards; animation-delay: calc(var(--d, 0) * 60ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes settle { from { transform: translateY(8px); } to { transform: none; } }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  a.card:hover, .btn:hover, .chip:hover { transform: none; }
+}
+@media (forced-colors: active) {
+  .pill, .badge, .seg__opt[aria-current="true"] { border: 1px solid CanvasText; }
+  .seg__opt[aria-current="true"] { outline: 2px solid Highlight; }
+}
+@media print {
+  body::before { display: none; }
+  .card { box-shadow: none; break-inside: avoid; }
+}
+@media (pointer: coarse) {
+  .btn, .chip, .control, .seg__opt { min-height: 44px; }
+}
+
+/* ---------- responsive: tablet ---------- */
+@media (max-width: 1080px) {
+  :root { --gutter: 24px; }
+  main { padding-top: var(--s4); }
+  .grid-main { grid-template-columns: minmax(0, 1fr); }
+  .side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* dense tables become stacked cards below tablet-landscape */
+@media (max-width: 860px) {
+  .table--stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .table--stack, .table--stack tbody, .table--stack td { display: block; width: 100%; }
+  .table--stack colgroup { display: none; }
+  .table--stack tr { display: flex; flex-direction: column; gap: 4px; padding: 16px var(--s3); border-bottom: 1px solid var(--line); }
+  .table--stack tr:last-child { border-bottom: 0; }
+  .table--stack td, .table--stack td:first-child, .table--stack td:last-child { padding: 0; border: 0; }
+  .table--stack td.cell-lead { order: -1; padding-bottom: 4px; font-size: var(--fs-base); }
+  .table--stack td[data-label] { display: grid; grid-template-columns: 128px minmax(0, 1fr); align-items: baseline; gap: 12px; }
+  .table--stack td[data-label]::before { content: attr(data-label); font-size: var(--fs-xs); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+  .table--stack td[data-label] > * { justify-self: start; }
+  .table--stack .due-date strong, .table--stack .due-date .cell-sub { display: inline; margin: 0; }
+  .table--stack .due-date .cell-sub::before { content: " \00b7 "; }
+}
+/* ---------- responsive: phone ---------- */
+@media (max-width: 640px) {
+  :root { --gutter: 16px; --fs-2xl: 24px; }
+  body { font-size: var(--fs-base); }
+  main { padding-block: var(--s3) var(--s6); }
+  .card { padding: var(--s2); border-radius: var(--r-m); }
+  .pad { padding: var(--s2) var(--s2) 0; }
+  .side, .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .section { margin-top: var(--s5); }
+  .lede { font-size: var(--fs-base); }
+  .table--stack tr { padding: 16px; }
+  .table--stack td[data-label] { grid-template-columns: 118px minmax(0, 1fr); gap: 8px; }
+  .card__head { flex-wrap: wrap; }
+}
+
+.filters { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--s2) var(--s3); padding: var(--s2) var(--s3); }
+.person { min-width: 260px; }
+.person .control { min-width: 260px; }
+.filters__hint { margin-top: var(--s1); font-size: var(--fs-sm); }
+.group { margin-top: var(--s5); }
+.group:first-child { margin-top: 0; }
+.group__head { display: flex; align-items: center; gap: 12px; margin-bottom: var(--s2); }
+.group__head h2 { font-size: var(--fs-lg); }
+.group__count { font-size: var(--fs-md); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.group__rule { flex: 1; height: 1px; background: var(--line); }
+.ob-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); list-style: none; margin: 0; padding: 0; }
+.ob { display: grid; gap: 12px; align-content: start; height: 100%; transition: box-shadow .45s var(--ease-spring), transform .45s var(--ease-spring); }
+.ob:hover { box-shadow: var(--shadow-2); }
+.ob__top { display: flex; justify-content: space-between; gap: var(--s2); align-items: flex-start; }
+.ob__title { font-size: var(--fs-base); font-weight: 600; line-height: 1.45; }
+.ob__who { display: block; font-size: var(--fs-sm); color: var(--ink-3); margin-top: 2px; }
+.ob__facts { display: grid; grid-template-columns: repeat(3, minmax(0, auto)); justify-content: start; gap: 4px var(--s3); margin: 0; }
+.ob__facts div { min-width: 0; }
+.ob__facts dt { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.ob__facts dd { margin: 0; font-size: var(--fs-md); color: var(--ink); }
+.ob__text { font-size: var(--fs-md); color: var(--ink-2); }
+.ob__actions { display: flex; flex-wrap: wrap; gap: var(--s1); padding-top: 12px; border-top: 1px solid var(--line); margin-top: auto; }
+.closed-note { margin-top: var(--s4); font-size: var(--fs-md); color: var(--ink-3); }
+@media (max-width: 1080px) { .ob-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .filters { padding: var(--s2); }
+  .seg { width: 100%; }
+  .seg__opt { flex: 1 0 auto; justify-content: center; gap: 6px; padding: 0 8px; font-size: var(--fs-sm); }
+  .person, .person .control { min-width: 0; width: 100%; }
+  .ob__facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ob__actions .btn { flex: 1 1 auto; }
+  .hint__text { left: 0; transform: translate(0, 4px); }
+  .hint:hover .hint__text, .hint:focus-within .hint__text { transform: translate(0, 0); }
+}
+
+</style>
+</head>
+<body class="page-myobligations">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-overdue" viewBox="0 0 10 10"><path fill="currentColor" d="M5 .8 9.4 8.9H.6z"/></symbol>
+  <symbol id="i-soon" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.9" fill="none" stroke="currentColor" stroke-width="1.4"/><path fill="currentColor" d="M5 1.1a3.9 3.9 0 0 1 0 7.8z"/></symbol>
+  <symbol id="i-upcoming" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.9" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-nodate" viewBox="0 0 10 10"><rect x="1.2" y="4.2" width="7.6" height="1.6" rx=".8" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 10 10"><path d="M1.6 5.3 4 7.6 8.6 2.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-review" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.9" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="5" cy="5" r="1.5" fill="currentColor"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 10 10"><path d="M2 9.4V.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path fill="currentColor" d="M2.6 1.2h6l-1.5 2.2 1.5 2.2h-6z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5.5 6.5 6.5L9 18.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-open" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 4.5h6v6M19.5 4.5l-8 8"/><path d="M17.5 13.5v4.5a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 18V8A1.5 1.5 0 0 1 6 6.5h4.5"/></g></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5H7.5A1.5 1.5 0 0 0 6 5v14a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 18 19V7.5z"/><path d="M14 3.5v4h4M9 12h6M9 15.5h4"/></g></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4.5M7.5 9 12 4.5 16.5 9"/><path d="M4.5 14.5v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"/></g></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></g></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5h4l10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="m14 8 2 2"/></g></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="m8.5 12.2 2.4 2.3 4.6-5"/></g></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="m19 11.5-6.8 6.8a4.2 4.2 0 0 1-6-6l7.2-7.2a2.8 2.8 0 0 1 4 4L10.3 16a1.4 1.4 0 0 1-2-2l6.3-6.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 20.5 19h-17z"/><path d="M12 10v4M12 16.6v.1"/></g></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5c.6 4.3 2.2 6 6.5 6.5-4.3.6-5.9 2.2-6.5 6.5-.6-4.3-2.2-5.9-6.5-6.5 4.3-.5 5.9-2.2 6.5-6.5zM18 15.5c.3 1.6.9 2.2 2.5 2.5-1.6.3-2.2.9-2.5 2.5-.3-1.6-.9-2.2-2.5-2.5 1.6-.3 2.2-.9 2.5-2.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M6 6l1.4 1.4M16.6 16.6 18 18M6 18l1.4-1.4M16.6 7.4 18 6"/></g></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.2a3 3 0 0 1 0 5.6M17 14.2a5 5 0 0 1 3.5 4.8"/></g></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="m12 4 8.5 4.5L12 13 3.5 8.5z"/><path d="m3.5 12.5 8.5 4.5 8.5-4.5M3.5 16.5 12 21l8.5-4.5"/></g></symbol>
+  <symbol id="i-block" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="m6.5 6.5 11 11"/></g></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3.5 12h4l2-5 4 10 2-5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h4l2 2h8A1.5 1.5 0 0 1 20.5 9v8.5A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 5.5A1.5 1.5 0 0 1 6 4h5.5v15.5H6A1.5 1.5 0 0 1 4.5 18zM19.5 5.5A1.5 1.5 0 0 0 18 4h-5.5v15.5H18a1.5 1.5 0 0 0 1.5-1.5z"/></g></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="6" height="5" rx="1.5"/><rect x="14.5" y="15" width="6" height="5" rx="1.5"/><path d="M6.5 9v3.5a2 2 0 0 0 2 2h6"/><path d="m12.5 12.5 2 2-2 2"/></g></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></g></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5.5h14A1.5 1.5 0 0 1 20.5 7v8a1.5 1.5 0 0 1-1.5 1.5h-7L7.5 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V7A1.5 1.5 0 0 1 5 5.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 7h8M17 7h2M5 17h2M11 17h8"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></g></symbol>
+  <symbol id="i-diamond" viewBox="0 0 10 10"><path fill="currentColor" d="M5 .6 9.4 5 5 9.4.6 5z"/></symbol>
+  <symbol id="i-ring" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.7" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="5" cy="5" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-dashed" viewBox="0 0 10 10"><path d="M5 .9 9.1 5 5 9.1.9 5z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-dasharray="1.6 1.2"/></symbol>
+</svg>
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        <span class="hub-mark"><svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><rect width="28" height="28" rx="8" fill="#111827"/><path d="M6.5 18a7.5 7.5 0 0 1 15 0" fill="none" stroke="#9AC7F5" stroke-width="2" stroke-linecap="round"/><circle cx="18.9" cy="12.2" r="2.3" fill="#8B83DB"/></svg>Obligation Hub</span>
+        <span class="eyebrow">My obligations</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1 id="page-title">Your open obligations</h1>
+      <p class="lede" id="page-sub">Everything you own, grouped by when it&rsquo;s due. Open an item to update it, mark it fulfilled or attach proof.</p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section" aria-labelledby="filters-title">
+      <h2 class="sr-only" id="filters-title">Choose whose obligations to show</h2>
+      <div class="filters card">
+        <div class="seg" id="seg" role="group" aria-label="Whose obligations"><span class="seg__opt" aria-hidden="true"><span class="skel" style="width:220px"></span></span></div>
+        <div class="field person" id="person-field">
+          <label for="person">Showing obligations for</label>
+          <select class="control" id="person" data-focus="person" disabled><option>Loading&hellip;</option></select>
+        </div>
+      </div>
+      <p class="filters__hint muted" id="person-hint">This page can&rsquo;t see who is signed in, so choose your name once &mdash; the choice is kept in the page address, so you can bookmark it.</p>
+    </section>
+
+    <div class="section" id="groups" aria-live="polite" aria-busy="true">
+      <div class="card"><span class="skel skel--w40"></span><span class="skel"></span><span class="skel skel--w80"></span></div>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Obligation Hub &middot; post-signature duties captured from your contracts. Timing is calculated in your browser from today&rsquo;s date.</p>
+    <p><a href="{{PAGES_URL}}/HowItWorks.html" target="_top" data-page="HowItWorks.html">How it works</a> &middot; <a href="{{SITE_URL}}/_layouts/15/viewlsts.aspx" target="_top">Site contents</a></p>
+  </div>
+</footer>
+<div id="live-region" class="sr-only" aria-live="polite" role="status"></div>
+<noscript><div class="wrap"><p class="notice">This page needs JavaScript to show obligations. Open the <a href="{{SITE_URL_ORIGIN}}{{LISTURL_OBLIGATIONS}}/AllItems.aspx" target="_top">Obligations list</a> instead.</p></div></noscript>
+<script type="application/json" id="hub-config">{"siteUrl":"{{SITE_URL}}","origin":"{{SITE_URL_ORIGIN}}","pagesUrl":"{{PAGES_URL}}","currency":"USD","lists":{"OBLIGATIONS":{"id":"{{LISTID_OBLIGATIONS}}","url":"{{LISTURL_OBLIGATIONS}}"},"CONTRACTS":{"id":"{{LISTID_CONTRACTS}}","url":"{{LISTURL_CONTRACTS}}","library":true},"RUNLOG":{"id":"{{LISTID_RUNLOG}}","url":"{{LISTURL_RUNLOG}}"},"OWNERS":{"id":"{{LISTID_OWNERS}}","url":"{{LISTURL_OWNERS}}"},"TYPES":{"url":"{{LISTURL_TYPES}}"},"EXCLUSIONS":{"url":"{{LISTURL_EXCLUSIONS}}"},"EVIDENCE":{"url":"{{LISTURL_EVIDENCE}}","library":true},"AGENTASSETS":{"url":"{{LISTURL_AGENTASSETS}}","library":true}}}</script>
+<script type="application/json" id="snapshot-obligations" data-sample="true">{"sample":true,"note":"SAMPLE DATA - fictional companies, people and contracts from the Obligation Hub demo kit, as loaded on the demo site. Dates are relative to 2026-11-24. Shown only when live list data is unavailable.","headers":["ID","Title","ContractName","Counterparty","ObligationText","ClauseRef","SourceClause","Party","Category","TriggerType","Recurrence","DueDate","TriggerEvent","Owner","EscalationOwner","BusinessUnit","Status","Timing","ReviewState","Confidence","Risk","CaptureKey","Notes","IsSample"],"rows":[["1","Contoso Ltd: pay each invoice within 45 days of receipt","01-Contoso-MSA.docx","Contoso Ltd","Contoso Ltd must pay each undisputed monthly invoice within 45 days after receipt; fees under SOW No. 1 are $45,000 per month ($540,000 per year), invoiced monthly in arrears.","Section 3.2","Customer shall pay each undisputed invoice within forty-five (45) days after receipt.","Counterparty","Payment","Event-driven","None","","Contoso Ltd receives each monthly invoice","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Medium","01-Contoso-MSA.docx|Section 3.2|pay-invoices","","Yes"],["2","Maintain 99.5% monthly portal availability for Contoso Ltd","01-Contoso-MSA.docx","Contoso Ltd","Northwind must ensure the Service Portal achieves at least 99.5% Availability in each calendar month, excluding Scheduled Maintenance; a miss requires a service credit under Section 4.2.","Section 4.1","Service Provider shall ensure that the Service Portal achieves Availability of at least 99.5% in each calendar month.","Us","Service levels","Ongoing","None","","","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Low","01-Contoso-MSA.docx|Section 4.1|maintain-availability","","Yes"],["3","Issue Contoso Ltd service credit after an availability miss","01-Contoso-MSA.docx","Contoso Ltd","If monthly Availability falls below 99.5%, Northwind must credit Contoso Ltd 5% of the monthly Fees for each full or partial percentage point below 99.5% (capped at 25% of monthly Fees), applied against the next invoice.","Section 4.2","If Availability in any calendar month falls below 99.5%, Service Provider shall issue Customer a service credit equal to five percent (5%) of the monthly Fees for each full percentage point (or portion of a percentage point) by which Availability falls below 99.5%, up to a maximum of twenty-five percent (25%) of the monthly Fees, applied against the next invoice.","Us","Service levels","Event-driven","None","","Monthly Availability below 99.5%","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Medium","01-Contoso-MSA.docx|Section 4.2|issue-service-credit","","Yes"],["4","Deliver quarterly service-level report to Contoso Ltd (15 days)","01-Contoso-MSA.docx","Contoso Ltd","Northwind must deliver Contoso Ltd a written service-level report showing Availability, incident counts and service credits issued within 15 days after the end of each calendar quarter.","Section 4.3","Service Provider shall deliver to Customer a written service-level report for each calendar quarter, showing Availability, incident counts and service credits issued, within fifteen (15) days after the end of such calendar quarter.","Us","Reporting","Recurring","Quarterly","2027-01-15","","","","Sales","Not applicable","Closed","Confirmed","Medium","Medium","01-Contoso-MSA.docx|Section 4.3|deliver-sl-report","Superseded by 02-Contoso-MSA-Amendment-1.docx Section 3","Yes"],["5","Protect Contoso Ltd confidential information (term + 3 years)","01-Contoso-MSA.docx","Contoso Ltd","Each party must hold the other's Confidential Information in confidence, use it only to perform or receive the Services, and disclose it only to need-to-know staff and contractors bound by equally protective written terms, during the Term and for 3 years after it ends.","Section 5.1","Each Party shall hold the other Party's Confidential Information in confidence, use it only to perform or receive the Services, and disclose it only to its employees and contractors who need to know it and are bound by written confidentiality obligations at least as protective as this Article 5.","Both","Data \u0026 confidentiality","Ongoing","None","","","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","Medium","Low","01-Contoso-MSA.docx|Section 5.1|protect-confidential-info","","Yes"],["6","Cooperate with Contoso Ltd audit (30 days' notice)","01-Contoso-MSA.docx","Contoso Ltd","On at least 30 days' written notice, Contoso Ltd or its independent auditor may audit Northwind's records on the Services and Fees at most once per 12 months, and Northwind must cooperate and give reasonable access to records, systems and personnel during business hours. Contoso Ltd bears the audit cost.","Section 6.1","Upon not less than thirty (30) days' prior written notice, Customer or its independent auditor may audit Service Provider's records relating to the Services and the Fees, no more than once in any twelve (12) month period. Service Provider shall cooperate with any such audit and provide reasonable access to relevant records, systems and personnel during normal business hours.","Us","Compliance \u0026 audit","Event-driven","None","","Contoso Ltd gives written audit notice","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Medium","01-Contoso-MSA.docx|Section 6.1|cooperate-audit","","Yes"],["7","Deliver certificate of insurance to Contoso Ltd by December 15","01-Contoso-MSA.docx","Contoso Ltd","Northwind must maintain commercial general liability insurance of at least $2,000,000 per occurrence and technology E\u0026O insurance of at least $5,000,000 per claim during the Term, and deliver Contoso Ltd a certificate of insurance on or before December 15 each year.","Section 7.1","During the Term, Service Provider shall maintain commercial general liability insurance with limits of not less than $2,000,000 per occurrence and technology errors and omissions insurance with limits of not less than $5,000,000 per claim. Service Provider shall deliver to Customer a certificate of insurance evidencing the coverage required by this Section 7.1 on or before December 15 of each calendar year during the Term.","Us","Insurance","Recurring","Annual","2026-12-15","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","High","Medium","01-Contoso-MSA.docx|Section 7.1|deliver-coi","","Yes"],["8","Send non-renewal notice to Contoso Ltd (90 days)","01-Contoso-MSA.docx","Contoso Ltd","Either party may stop the MSA from auto-renewing for another 1-year term by written notice of non-renewal at least 90 days before the end of the current term, which ends March 31, 2027.","Section 9.2","Either Party may elect not to renew this Agreement by giving the other Party written notice of non-renewal at least ninety (90) days before the end of the then-current Term.","Both","Notice \u0026 renewal","Recurring","Annual","2026-12-31","","","","Sales","Not applicable","Closed","Confirmed","Medium","High","01-Contoso-MSA.docx|Section 9.2|send-non-renewal-notice","Superseded by 02-Contoso-MSA-Amendment-1.docx Section 2","Yes"],["9","Send non-renewal notice to Contoso Ltd (120 days)","02-Contoso-MSA-Amendment-1.docx","Contoso Ltd","Either party may stop the MSA from auto-renewing for another 1-year term by written notice of non-renewal at least 120 days before the end of the current term; for the term ending March 31, 2027, notice is due on or before December 1, 2026.","Section 2 (amends MSA Section 9.2)","Either Party may elect not to renew this Agreement by giving the other Party written notice of non-renewal at least one hundred twenty (120) days before the end of the then-current Term.\" For clarity, for the Renewal Term ending March 31, 2027, notice of non-renewal must be given on or before December 1, 2026.","Both","Notice \u0026 renewal","Recurring","Annual","2026-12-01","","Avery Chen","Avery Chen","Sales","Not started","Due soon","Confirmed","High","High","02-Contoso-MSA-Amendment-1.docx|Section 2 (amends MSA Section 9.2)|send-non-renewal-notice","","Yes"],["10","Deliver quarterly service-level report to Contoso Ltd (10 days)","02-Contoso-MSA-Amendment-1.docx","Contoso Ltd","Northwind must deliver Contoso Ltd a written service-level report showing Availability, incident counts and service credits issued within 10 days after the end of each calendar quarter, starting with the quarter ended September 30, 2026.","Section 3 (amends MSA Section 4.3)","Service Provider shall deliver to Customer a written service-level report for each calendar quarter, showing Availability, incident counts and service credits issued, within ten (10) days after the end of such calendar quarter.","Us","Reporting","Recurring","Quarterly","2027-01-10","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","Medium","Medium","02-Contoso-MSA-Amendment-1.docx|Section 3 (amends MSA Section 4.3)|deliver-sl-report","","Yes"],["11","Send Contoso Ltd fee-increase notice by January 31 (60 days)","02-Contoso-MSA-Amendment-1.docx","Contoso Ltd","Northwind may raise the Fees for each Renewal Term starting on or after April 1, 2027 by up to 4% over the prior term only if it gives Contoso Ltd written notice at least 60 days before that Renewal Term starts (by January 31, 2027 for the term starting April 1, 2027).","Section 4 (adds MSA Section 3.4)","For each Renewal Term beginning on or after April 1, 2027, Service Provider may increase the Fees by up to four percent (4%) over the Fees in effect for the preceding Term, provided that Service Provider gives Customer written notice of the increase at least sixty (60) days before the start of that Renewal Term.","Us","Notice \u0026 renewal","Recurring","Annual","2027-01-31","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","High","High","02-Contoso-MSA-Amendment-1.docx|Section 4 (adds MSA Section 3.4)|send-fee-increase-notice","Due date matches Exhibit A (illustrative): latest notice date January 31, 2027.","Yes"],["12","Deliver updated BCP/DR plan to Contoso Ltd (60 days)","02-Contoso-MSA-Amendment-1.docx","Contoso Ltd","Northwind must deliver Contoso Ltd an updated business continuity and disaster recovery plan for the Services, including recovery time and recovery point objectives for the Service Portal, within 60 days after the September 1, 2026 Amendment Effective Date (by October 31, 2026).","Section 5","Within sixty (60) days after the Amendment Effective Date, Service Provider shall deliver to Customer an updated business continuity and disaster recovery plan for the Services, including recovery time and recovery point objectives for the Service Portal.","Us","Compliance \u0026 audit","Fixed date","None","2026-10-31","","Avery Chen","Avery Chen","Sales","Not started","Overdue","Confirmed","Medium","Medium","02-Contoso-MSA-Amendment-1.docx|Section 5|deliver-bcp-plan","","Yes"],["13","Pay Fabrikam Inc monthly hosting fee (30 days after invoice)","03-Fabrikam-Cloud-Hosting-Agreement.docx","Fabrikam Inc","Northwind must pay the $38,500 Monthly Fee, invoiced in advance on the 1st of each month, within 30 days after the invoice date; undisputed amounts unpaid 15 days after the due date bear interest at the lesser of 1% per month and the legal maximum. Through March 31, 2027.","Section 3.2","Provider shall invoice the Monthly Fees in advance on the first day of each calendar month. Customer shall pay each invoice within thirty (30) days after the invoice date.","Us","Payment","Recurring","Monthly","2026-12-01","","Avery Chen","Avery Chen","IT","Not started","Due soon","Confirmed","Medium","Medium","03-Fabrikam-Cloud-Hosting-Agreement.docx|Section 3.2|pay-monthly-fees","","Yes"],["14","Fabrikam Inc: give 60 days' notice of any fee increase (max 5%)","03-Fabrikam-Cloud-Hosting-Agreement.docx","Fabrikam Inc","Fabrikam Inc may raise the Monthly Fees at most once in any 12 months and by no more than 5%, and only on at least 60 days' prior written notice; an increase made without that notice is void. Through March 31, 2027.","Section 3.3","Provider may increase the Monthly Fees no more than once in any twelve (12) month period, and no single increase may exceed five percent (5%) of the Monthly Fees then in effect. Provider shall give Customer at least sixty (60) days' prior written notice of any increase, and any increase made without such notice is void.","Counterparty","Payment","Event-driven","None","","Fabrikam Inc proposes a Monthly Fee increase","Avery Chen","Avery Chen","IT","Not started","No date","Confirmed","High","Medium","03-Fabrikam-Cloud-Hosting-Agreement.docx|Section 3.3|give-price-increase-notice","","Yes"],["15","Fabrikam Inc: maintain 99.9% monthly uptime","03-Fabrikam-Cloud-Hosting-Agreement.docx","Fabrikam Inc","Fabrikam Inc must keep the Hosting Services at a Monthly Uptime Percentage of at least 99.9% each calendar month; misses earn service credits if claimed (Section 4.3), and uptime below 99.0% in any 3 months of a rolling 6 lets Northwind terminate. Through March 31, 2027.","Section 4.1","Provider shall make the Hosting Services available with a Monthly Uptime Percentage of at least 99.9% in each calendar month.","Counterparty","Service levels","Ongoing","None","","","Avery Chen","Avery Chen","IT","Not started","No date","Confirmed","High","Low","03-Fabrikam-Cloud-Hosting-Agreement.docx|Section 4.1|maintain-uptime","","Yes"],["16","Claim Fabrikam Inc service credit within 30 days after month end","03-Fabrikam-Cloud-Hosting-Agreement.docx","Fabrikam Inc","After any month with Monthly Uptime below 99.9%, Northwind must submit a written claim to Fabrikam Inc within 30 days after that month ends or lose the credit (10% of that month's Monthly Fees, or 25% if uptime is below 99.0%). Approved credits apply to the next invoice. Through March 31, 2027.","Section 4.3","To receive a Service Credit, Customer must submit a written claim to Provider within thirty (30) days after the end of the calendar month in which the Downtime occurred. Customer's failure to submit a claim within that period waives Customer's right to a Service Credit for that month.","Us","Service levels","Event-driven","None","","A calendar month with Monthly Uptime Percentage below 99.9%","Avery Chen","Avery Chen","IT","Not started","No date","Confirmed","High","Medium","03-Fabrikam-Cloud-Hosting-Agreement.docx|Section 4.3|claim-service-credit","","Yes"],["17","Request Fabrikam Inc transition assistance by January 30, 2027","03-Fabrikam-Cloud-Hosting-Agreement.docx","Fabrikam Inc","To get up to 90 days of transition assistance at Fabrikam Inc's then-current professional services rates, Northwind must request it by written notice at least 60 days before the March 31, 2027 Expiration Date (by January 30, 2027). Through March 31, 2027.","Section 6.3","If Customer requests transition assistance by written notice delivered at least sixty (60) days before the Expiration Date, Provider shall provide up to ninety (90) days of transition assistance at its then-current professional services rates to support the migration of Customer Data and workloads to Customer or its designated successor provider.","Us","Notice \u0026 renewal","Fixed date","None","2027-01-30","","Avery Chen","Avery Chen","IT","Not started","Upcoming","Confirmed","Medium","High","03-Fabrikam-Cloud-Hosting-Agreement.docx|Section 6.3|request-transition-assistance","","Yes"],["18","Decide on Fabrikam Inc renewal before March 31, 2027 expiry","03-Fabrikam-Cloud-Hosting-Agreement.docx","Fabrikam Inc","The agreement expires on March 31, 2027 and does not renew automatically; any renewal or extension must be agreed in writing and signed by both parties before then. Through March 31, 2027.","Section 6.2","This Agreement does not renew automatically. This Agreement may be renewed or extended only by a written agreement signed by both Parties before the Expiration Date.","Both","Notice \u0026 renewal","Fixed date","None","2027-03-31","","Avery Chen","Avery Chen","IT","Not started","Upcoming","Confirmed","High","High","03-Fabrikam-Cloud-Hosting-Agreement.docx|Section 6.2|decide-renewal","","Yes"],["19","Observe Tailspin Toys exclusivity and non-compete in Territory","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","During the Term, Tailspin Toys must not appoint any other distributor of the Products in Washington, Oregon, Idaho or Montana, and Northwind must not market or sell Competing Products (other makers' RC aircraft, drones or hobby flight kits) there. Through June 30, 2029.","Section 2.2","During the Term, Supplier shall not appoint any other distributor of the Products in the Territory, and Distributor shall not market or sell any Competing Products in the Territory.","Both","Compliance \u0026 audit","Ongoing","None","","","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Low","04-Tailspin-Distribution-Agreement.docx|Section 2.2|observe-exclusivity","","Yes"],["20","Purchase $750,000 minimum from Tailspin Toys by June 30","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","Northwind must buy Products with an aggregate net purchase price of at least $750,000 in each Contract Year (July 1 to June 30); after a shortfall, Tailspin Toys may make the appointment non-exclusive by notice within 60 days after that Contract Year ends. Through June 30, 2029.","Section 3.1","Distributor shall purchase Products having an aggregate net purchase price of not less than $750,000 during each Contract Year (the \"Minimum Commitment\").","Us","Purchasing \u0026 volume","Recurring","Annual","2027-06-30","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","Medium","Medium","04-Tailspin-Distribution-Agreement.docx|Section 3.1|meet-minimum-purchase","","Yes"],["21","Send Tailspin Toys quarterly sales and inventory report (20 days)","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","Within 20 days after the end of each calendar quarter, Northwind must deliver Tailspin Toys a written report of Net Sales by Product and by state for the quarter and Products on hand at quarter end. Through June 30, 2029.","Section 4.1","Within twenty (20) days after the end of each calendar quarter, Distributor shall deliver to Supplier a written report showing Net Sales by Product and by state for that quarter and Distributor's inventory of Products on hand at the end of that quarter.","Us","Reporting","Recurring","Quarterly","2027-01-20","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","Medium","Medium","04-Tailspin-Distribution-Agreement.docx|Section 4.1|send-sales-report","","Yes"],["22","Submit initial marketing plan to Tailspin Toys (90 days)","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","Within 90 days after the July 1, 2026 Effective Date (by September 29, 2026), Northwind must submit to Tailspin Toys for approval an initial marketing plan for the Products in the Territory covering the first 18 months of the Term. Through June 30, 2029.","Section 4.2","Within ninety (90) days after the Effective Date, Distributor shall submit to Supplier for approval an initial marketing plan for the Products in the Territory covering the first eighteen (18) months of the Term.","Us","Other","Fixed date","None","2026-09-29","","Avery Chen","Avery Chen","Sales","Not started","Overdue","Confirmed","Medium","Medium","04-Tailspin-Distribution-Agreement.docx|Section 4.2|submit-marketing-plan","","Yes"],["23","Pay Tailspin Toys 2% marketing fund contribution by January 31","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","Northwind must contribute 2% of its Net Sales of Products for each calendar year to Tailspin Toys' cooperative marketing development fund, payable on or before January 31 of the following year. Through June 30, 2029.","Section 4.3","Distributor shall contribute to Supplier's cooperative marketing development fund an amount equal to two percent (2%) of Distributor's Net Sales of Products during each calendar year, payable on or before January 31 of the following year.","Us","Payment","Recurring","Annual","2027-01-31","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","High","Medium","04-Tailspin-Distribution-Agreement.docx|Section 4.3|pay-mdf-contribution","","Yes"],["24","Notify Tailspin Toys of change of control within 30 days","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","Northwind must notify Tailspin Toys in writing within 30 days after any Change of Control of Northwind; Tailspin Toys may then terminate by notice within 60 days after receiving it. Through June 30, 2029.","Section 7.2","Distributor shall notify Supplier in writing within thirty (30) days after any Change of Control of Distributor.","Us","Notice \u0026 renewal","Event-driven","None","","Change of Control of Northwind","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","High","04-Tailspin-Distribution-Agreement.docx|Section 7.2|notify-change-of-control","","Yes"],["25","Restrict Litware Inc software use to Northwind (no third parties)","05-Litware-Software-License-Support.docx","Litware Inc","Northwind must not let any Affiliate or third party access or use the Software (licensed for up to 250 Named Users), or sublicense, rent, lease, use it to serve third parties or reverse engineer it except as law permits. An uncured material breach (30 days) lets Litware Inc terminate the license.","Section 2.2","Licensee shall not permit any Affiliate or other third party to access or use the Software. Licensee shall not sublicense, rent or lease the Software, use it to provide services to third parties, or reverse engineer it except to the extent permitted by applicable law.","Us","Compliance \u0026 audit","Ongoing","None","","","Avery Chen","Avery Chen","IT","Not started","No date","Confirmed","High","Low","05-Litware-Software-License-Support.docx|Section 2.2|restrict-software-use","","Yes"],["26","Certify peak Named Users to Litware Inc (30 days after Nov 6)","05-Litware-Software-License-Support.docx","Litware Inc","Within 30 days after each November 6 anniversary, Northwind must deliver Litware Inc a true-up report certifying the maximum number of Named Users with access during the preceding Support Year; users above the licensed 250 are invoiced at $1,500 each plus pro-rated Support Fee.","Section 3.2","Within thirty (30) days after each anniversary of the Effective Date, Licensee shall deliver to Licensor a true-up report certifying the maximum number of Named Users who had access to the Software at any time during the preceding Support Year.","Us","Compliance \u0026 audit","Recurring","Annual","2026-12-06","","Avery Chen","Avery Chen","IT","Not started","Due soon","Confirmed","Medium","Medium","05-Litware-Software-License-Support.docx|Section 3.2|certify-named-users","","Yes"],["27","Pay Litware Inc $84,000 annual support fee by November 6","05-Litware-Software-License-Support.docx","Litware Inc","Northwind must pay the $84,000 annual Support Fee on or before the first day of each Support Year (November 6), after Litware Inc invoices at least 45 days ahead. If support lapses, reinstatement costs the lapsed fees plus a 10% reinstatement fee.","Section 4.2","Licensor shall issue its invoice for each Support Year at least forty-five (45) days before the start of that Support Year, and Licensee shall pay the Support Fee on or before the first day of that Support Year.","Us","Payment","Recurring","Annual","2027-11-06","","Avery Chen","Avery Chen","IT","Not started","Upcoming","Confirmed","Medium","Medium","05-Litware-Software-License-Support.docx|Section 4.2|pay-support-fee","","Yes"],["28","Send Litware Inc support non-renewal notice (60 days)","05-Litware-Software-License-Support.docx","Litware Inc","Support renews automatically each Support Year unless Northwind gives Litware Inc written notice of non-renewal at least 60 days before the next Support Year starts (by September 7, 2027 for the year starting November 6, 2027).","Section 4.3","Support Services renew automatically for successive Support Years unless Licensee gives Licensor written notice of non-renewal at least sixty (60) days before the start of the next Support Year.","Us","Notice \u0026 renewal","Recurring","Annual","2027-09-07","","Avery Chen","Avery Chen","IT","Not started","Upcoming","Confirmed","Medium","High","05-Litware-Software-License-Support.docx|Section 4.3|send-non-renewal-notice","","Yes"],["29","Cooperate with Litware Inc license audit (15 business days' notice)","05-Litware-Software-License-Support.docx","Litware Inc","On at least 15 business days' written notice, at most once per 12 months, Litware Inc may audit Northwind's use of the Software, and Northwind must cooperate and give reasonable access to records and systems. Under-licensing is invoiced per Section 3.2, and Northwind bears the audit cost if it exceeds 10%.","Section 5.1","Licensor may, no more than once in any twelve (12) month period and upon at least fifteen (15) business days' prior written notice, audit Licensee's use of the Software to verify compliance with this Agreement. Licensee shall cooperate with any such audit and provide reasonable access to relevant records and systems.","Us","Compliance \u0026 audit","Event-driven","None","","Litware Inc gives written audit notice","Avery Chen","Avery Chen","IT","Not started","No date","Confirmed","High","Medium","05-Litware-Software-License-Support.docx|Section 5.1|cooperate-audit","","Yes"],["30","Proseware Inc: notify personal data breach within 48 hours","06-Proseware-Data-Processing-Agreement.docx","Proseware Inc","Proseware Inc must notify Northwind of any Personal Data Breach without undue delay and within 48 hours after becoming aware of it, describing its nature, the data subjects and records concerned, likely consequences and the measures taken or proposed.","Section 4.1","Processor shall notify Controller of any Personal Data Breach without undue delay and in any event within forty-eight (48) hours after becoming aware of it.","Counterparty","Data \u0026 confidentiality","Event-driven","None","","Proseware Inc becomes aware of a Personal Data Breach","Avery Chen","Avery Chen","Legal","Not started","No date","Confirmed","High","High","06-Proseware-Data-Processing-Agreement.docx|Section 4.1|notify-data-breach","","Yes"],["31","Proseware Inc: give 30 days' notice before a new sub-processor","06-Proseware-Data-Processing-Agreement.docx","Proseware Inc","Proseware Inc must give Northwind at least 30 days' prior written notice before engaging any new Sub-processor, identifying it, its location and the processing it will perform.","Section 5.2","Processor shall give Controller at least thirty (30) days' prior written notice before engaging any new Sub-processor, identifying the Sub-processor, its location and the processing it will perform.","Counterparty","Data \u0026 confidentiality","Event-driven","None","","Proseware Inc plans to engage a new Sub-processor","Avery Chen","Avery Chen","Legal","Not started","No date","Confirmed","High","Medium","06-Proseware-Data-Processing-Agreement.docx|Section 5.2|give-subprocessor-notice","","Yes"],["32","Object to a new Proseware Inc sub-processor within 15 days","06-Proseware-Data-Processing-Agreement.docx","Proseware Inc","To object to a new Sub-processor on reasonable data protection grounds, Northwind must notify Proseware Inc in writing within 15 days after receiving Proseware Inc's notice; otherwise the Sub-processor is deemed approved.","Section 5.3","If Controller objects to a new Sub-processor on reasonable data protection grounds, Controller shall notify Processor of its objection in writing within fifteen (15) days after receiving Processor's notice. If Controller does not object within that period, the new Sub-processor is deemed approved.","Us","Data \u0026 confidentiality","Event-driven","None","","Northwind receives a new Sub-processor notice","Avery Chen","Avery Chen","Legal","Not started","No date","Confirmed","High","Medium","06-Proseware-Data-Processing-Agreement.docx|Section 5.3|object-to-subprocessor","","Yes"],["33","Proseware Inc: deliver initial SOC 2 Type II report (30 days)","06-Proseware-Data-Processing-Agreement.docx","Proseware Inc","Proseware Inc must deliver Northwind a copy of its most recent SOC 2 Type II report no later than 30 days after the September 1, 2026 DPA Effective Date (by October 1, 2026).","Section 6.1","Processor shall deliver to Controller a copy of its most recent SOC 2 Type II report no later than thirty (30) days after the DPA Effective Date.","Counterparty","Compliance \u0026 audit","Fixed date","None","2026-10-01","","Avery Chen","Avery Chen","Legal","Not started","Overdue","Confirmed","Medium","Low","06-Proseware-Data-Processing-Agreement.docx|Section 6.1|deliver-initial-soc2","","Yes"],["34","Proseware Inc: deliver annual SOC 2 Type II report by October 1","06-Proseware-Data-Processing-Agreement.docx","Proseware Inc","After the initial report, Proseware Inc must deliver Northwind an updated SOC 2 Type II report on or before October 1 of each year while the DPA is in effect.","Section 6.2","Thereafter, Processor shall deliver to Controller an updated SOC 2 Type II report on or before October 1 of each year during the term of this DPA.","Counterparty","Compliance \u0026 audit","Recurring","Annual","2027-10-01","","Avery Chen","Avery Chen","Legal","Not started","Upcoming","Confirmed","High","Low","06-Proseware-Data-Processing-Agreement.docx|Section 6.2|deliver-annual-soc2","","Yes"],["35","Proseware Inc: return or delete personal data at termination","06-Proseware-Data-Processing-Agreement.docx","Proseware Inc","On termination of the Customer Analytics Services Agreement, personal data must be returned and deleted as set out in Section 11.4 of that agreement; this DPA does not state who acts, how or by when.","Section 7","Return and deletion of Personal Data upon termination of the Services Agreement is governed by Section 11.4 of the Services Agreement.","Counterparty","Data \u0026 confidentiality","Event-driven","None","","Termination of the Customer Analytics Services Agreement","","","Legal","Not started","No date","Needs review","Low","Medium","06-Proseware-Data-Processing-Agreement.docx|Section 7|return-delete-data","Held for review: type \"Record retention and end-of-term data return\" is Hold for review; terms are in Services Agreement Section 11.4, which is not in the Contracts library, so the actor (assumed Proseware Inc) and deadline are not stated.","Yes"],["36","Pay Alpine Ski House monthly base rent by the 1st","07-Alpine-Ski-House-Office-Lease.docx","Alpine Ski House","Northwind must pay Monthly Base Rent of $42,750 in advance, without demand, deduction or offset, on or before the 1st of each month; rent not received within 5 days after its due date incurs a 5% late charge. Through September 30, 2027.","Section 2.1","Tenant shall pay Monthly Base Rent in advance, without demand, deduction or offset, on or before the first (1st) day of each calendar month during the Term.","Us","Payment","Recurring","Monthly","2026-12-01","","Avery Chen","Avery Chen","Facilities","Not started","Due soon","Confirmed","High","Medium","07-Alpine-Ski-House-Office-Lease.docx|Section 2.1|pay-base-rent","","Yes"],["37","Restore Alpine Ski House security deposit within 10 days of demand","07-Alpine-Ski-House-Office-Lease.docx","Alpine Ski House","If Alpine Ski House applies any part of the $85,500 Security Deposit to cure a Northwind default, Northwind must restore the deposit to its full amount within 10 days after Alpine Ski House's written demand. Through September 30, 2027.","Section 3.2","If Landlord applies any part of the Security Deposit to cure a default by Tenant, Tenant shall restore the Security Deposit to its full amount within ten (10) days after Landlord's written demand.","Us","Payment","Event-driven","None","","Alpine Ski House's written demand after applying the deposit","Avery Chen","Avery Chen","Facilities","Not started","No date","Confirmed","High","Medium","07-Alpine-Ski-House-Office-Lease.docx|Section 3.2|restore-security-deposit","","Yes"],["38","Notify Alpine Ski House of needed repairs within 10 days","07-Alpine-Ski-House-Office-Lease.docx","Alpine Ski House","Northwind must notify Alpine Ski House in writing of any condition in the Premises requiring repair by the Landlord within 10 days after discovering it. Through September 30, 2027.","Section 4.3","Tenant shall notify Landlord in writing of any condition in the Premises requiring repair by Landlord within ten (10) days after Tenant discovers the condition.","Us","Other","Event-driven","None","","Northwind discovers a condition needing Landlord repair","Avery Chen","Avery Chen","Facilities","Not started","No date","Confirmed","High","Medium","07-Alpine-Ski-House-Office-Lease.docx|Section 4.3|notify-repairs","","Yes"],["39","Deliver certificate of insurance to Alpine Ski House by January 15","07-Alpine-Ski-House-Office-Lease.docx","Alpine Ski House","Northwind must maintain commercial general liability insurance of at least $2,000,000 per occurrence and full-replacement property insurance throughout the Term, and deliver Alpine Ski House a certificate naming it as additional insured on or before January 15 each year. Through September 30, 2027.","Section 5.1","Tenant shall maintain, throughout the Term, commercial general liability insurance with limits of not less than $2,000,000 per occurrence and property insurance covering Tenant's personal property at full replacement cost. Tenant shall deliver to Landlord a certificate of insurance evidencing the coverage required by this Section 5.1, naming Landlord as an additional insured, on or before January 15 of each calendar year during the Term.","Us","Insurance","Recurring","Annual","2027-01-15","","Avery Chen","Avery Chen","Facilities","Not started","Upcoming","Confirmed","High","Medium","07-Alpine-Ski-House-Office-Lease.docx|Section 5.1|deliver-coi","","Yes"],["40","Exercise Alpine Ski House lease renewal option by December 30, 2026","07-Alpine-Ski-House-Office-Lease.docx","Alpine Ski House","If not in default, Northwind may extend the lease once for 5 years at 95% of prevailing Bellevue market rent by written notice delivered between September 30 and December 30, 2026 (12 to 9 months before the September 30, 2027 Expiration Date); otherwise the option lapses. Through September 30, 2027.","Section 6.2","Tenant may exercise the renewal option only by delivering written notice to Landlord no earlier than twelve (12) months and no later than nine (9) months before the Expiration Date. If Tenant does not deliver notice within that period, the renewal option lapses and is of no further force or effect.","Us","Notice \u0026 renewal","Fixed date","None","2026-12-30","","Avery Chen","Avery Chen","Facilities","Not started","Upcoming","Confirmed","Medium","High","07-Alpine-Ski-House-Office-Lease.docx|Section 6.2|exercise-renewal-option","Window opens 2026-09-30; notice before then is invalid.","Yes"],["41","Send Wide World Importers 6-month forecast by the 5th","08-Wide-World-Importers-Supply-Agreement.docx","Wide World Importers","On or before the 5th of each month, Northwind must give Wide World Importers a rolling 6-month non-binding forecast of its anticipated requirements for each Product. Through May 31, 2028.","Section 2.2","On or before the fifth (5th) day of each calendar month, Buyer shall provide Supplier with a rolling six (6) month non-binding forecast of its anticipated requirements for each Product.","Us","Purchasing \u0026 volume","Recurring","Monthly","2026-12-05","","Avery Chen","Avery Chen","Procurement","Not started","Due soon","Confirmed","High","Medium","08-Wide-World-Importers-Supply-Agreement.docx|Section 2.2|send-forecast","","Yes"],["42","Wide World Importers: give 90 days' notice before discontinuing","08-Wide-World-Importers-Supply-Agreement.docx","Wide World Importers","Wide World Importers must give Northwind at least 90 days' prior written notice before discontinuing any Product and accept last-time-buy purchase orders for it submitted during that notice period. Through May 31, 2028.","Section 2.5","Supplier shall give Buyer at least ninety (90) days' prior written notice before discontinuing any Product, and shall accept last-time-buy Purchase Orders for the discontinued Product submitted during that notice period.","Counterparty","Purchasing \u0026 volume","Event-driven","None","","Wide World Importers plans to discontinue a Product","Avery Chen","Avery Chen","Procurement","Not started","No date","Confirmed","High","Low","08-Wide-World-Importers-Supply-Agreement.docx|Section 2.5|give-discontinuation-notice","","Yes"],["43","Hold annual price review with Wide World Importers by October 31","08-Wide-World-Importers-Supply-Agreement.docx","Wide World Importers","Each year the parties must meet no later than October 31 to review Product pricing for the next calendar year; agreed changes take effect January 1 once documented in an updated Exhibit A signed by both. Through May 31, 2028.","Section 3.2","Each year during the Term, the Parties shall meet no later than October 31 to review Product pricing for the following calendar year. Agreed price changes take effect on January 1 of the following year once documented in an updated Exhibit A signed by both Parties.","Both","Purchasing \u0026 volume","Recurring","Annual","2027-10-31","","Avery Chen","Avery Chen","Procurement","Not started","Upcoming","Confirmed","High","Medium","08-Wide-World-Importers-Supply-Agreement.docx|Section 3.2|hold-price-review","","Yes"],["44","Pay Wide World Importers invoices within 45 days of receipt","08-Wide-World-Importers-Supply-Agreement.docx","Wide World Importers","Northwind must pay each undisputed shipment invoice, issued on delivery, within 45 days after receiving it. Through May 31, 2028.","Section 3.3","Supplier will invoice each shipment upon delivery. Buyer shall pay each undisputed invoice within forty-five (45) days after receipt of the invoice.","Us","Payment","Event-driven","None","","Receipt of each shipment invoice","Avery Chen","Avery Chen","Procurement","Not started","No date","Confirmed","High","Medium","08-Wide-World-Importers-Supply-Agreement.docx|Section 3.3|pay-invoices","","Yes"],["45","Notify Wide World Importers of defects within 14 days of delivery","08-Wide-World-Importers-Supply-Agreement.docx","Wide World Importers","Northwind must notify Wide World Importers in writing of any Defect within 14 days after delivery of the affected Products, or they are deemed accepted (except latent Defects); the remedy is replacement or credit at Northwind's option. Through May 31, 2028.","Section 4.1","Buyer shall notify Supplier in writing of any Defect within fourteen (14) days after delivery of the affected Products. Products for which Buyer gives no notice of Defect within that period are deemed accepted, except for latent Defects that could not reasonably have been discovered on inspection.","Us","Other","Event-driven","None","","Each delivery of Products","Avery Chen","Avery Chen","Procurement","Not started","No date","Confirmed","High","Medium","08-Wide-World-Importers-Supply-Agreement.docx|Section 4.1|notify-defects","","Yes"],["46","Pay Adventure Works Cycles quarterly rebate within 45 days","09-Adventure-Works-Reseller-Agreement.docx","Adventure Works Cycles","For each calendar quarter in which Net Purchases exceed $150,000, Northwind must pay Adventure Works Cycles a 3% rebate with a calculation statement within 45 days after quarter end; rebates for quarters ending by expiry stay payable after it. Through December 31, 2026.","Section 3.2","Reseller shall pay each rebate earned under Section 3.1, together with a statement showing its calculation, within forty-five (45) days after the end of the applicable calendar quarter.","Us","Payment","Recurring","Quarterly","2027-02-14","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","Medium","Medium","09-Adventure-Works-Reseller-Agreement.docx|Section 3.2|pay-rebate","","Yes"],["47","Give Adventure Works Cycles most-favored customer pricing","09-Adventure-Works-Reseller-Agreement.docx","Adventure Works Cycles","During the Term, Northwind must offer Adventure Works Cycles Product prices no less favorable than those it offers any Similarly Situated Customer, excluding one-time clearance pricing on discontinued Products and public-sector contract prices. Through December 31, 2026.","Section 4.1","During the Term, Reseller shall offer Customer prices for the Products that are no less favorable than the prices Reseller offers to any Similarly Situated Customer.","Us","Compliance \u0026 audit","Ongoing","None","","","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Low","09-Adventure-Works-Reseller-Agreement.docx|Section 4.1|give-mfn-pricing","","Yes"],["48","Notify Adventure Works Cycles of better pricing within 30 days","09-Adventure-Works-Reseller-Agreement.docx","Adventure Works Cycles","If Northwind offers a Similarly Situated Customer more favorable prices for a Product, it must notify Adventure Works Cycles in writing within 30 days and extend those prices from the date they were first offered. Through December 31, 2026.","Section 4.2","If Reseller offers more favorable prices for a Product to a Similarly Situated Customer, Reseller shall notify Customer in writing within thirty (30) days and extend the more favorable prices to Customer from the date they were first offered to the other customer.","Us","Compliance \u0026 audit","Event-driven","None","","Northwind offers better prices to a Similarly Situated Customer","Avery Chen","Avery Chen","Sales","Not started","No date","Confirmed","High","Medium","09-Adventure-Works-Reseller-Agreement.docx|Section 4.2|notify-better-pricing","","Yes"],["49","Decide on Adventure Works Cycles renewal before December 31, 2026 expiry","09-Adventure-Works-Reseller-Agreement.docx","Adventure Works Cycles","The agreement expires on December 31, 2026 and does not renew automatically; any renewal or extension requires a written agreement signed by both parties. Through December 31, 2026.","Section 5.1","This Agreement begins on January 1, 2024 and expires on December 31, 2026. This Agreement does not renew automatically, and any renewal or extension requires a written agreement signed by both Parties.","Both","Notice \u0026 renewal","Fixed date","None","2026-12-31","","Avery Chen","Avery Chen","Sales","Not started","Upcoming","Confirmed","High","High","09-Adventure-Works-Reseller-Agreement.docx|Section 5.1|decide-renewal","","Yes"],["50","Fourth Coffee: deliver food-safety inspection certificate by March 1","10-Fourth-Coffee-Facilities-Services-Agreement.docx","Fourth Coffee","Fourth Coffee must deliver Northwind a copy of its annual food-safety inspection certificate, issued by an accredited third-party inspector, by March 1 each year.","Section 3.2","Supplier shall deliver to Customer a copy of its annual food-safety inspection certificate, issued by an accredited third-party inspector, by March 1 of each year.","Counterparty","Compliance \u0026 audit","Recurring","Annual","2027-03-01","","Avery Chen","Avery Chen","Facilities","Not started","Upcoming","Confirmed","High","Low","10-Fourth-Coffee-Facilities-Services-Agreement.docx|Section 3.2|deliver-inspection-certificate","","Yes"],["51","Give Fourth Coffee 60 days' notice to terminate for convenience","10-Fourth-Coffee-Facilities-Services-Agreement.docx","Fourth Coffee","Either party may end the agreement for convenience by giving the other at least 60 days' prior written notice.","Section 4.2","Either Party may terminate this Agreement for convenience by giving the other Party at least sixty (60) days' prior written notice.","Both","Notice \u0026 renewal","Event-driven","None","","Either party decides to terminate for convenience","Avery Chen","Avery Chen","Facilities","Not started","No date","Confirmed","High","Medium","10-Fourth-Coffee-Facilities-Services-Agreement.docx|Section 4.2|give-termination-notice","","Yes"],["52","Pay Woodgrove Bank monthly interest on the 1st","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Northwind must pay accrued interest on outstanding Advances (one-month Term SOFR plus 2.25%, actual/360) monthly in arrears on the 1st of each month; non-payment within 3 Business Days after the due date is an Event of Default. Through September 15, 2029.","Section 2.2","The Borrower shall pay accrued interest on all outstanding Advances monthly in arrears on the first (1st) day of each calendar month.","Us","Payment","Recurring","Monthly","2026-12-01","","Avery Chen","Avery Chen","Finance","Not started","Due soon","Confirmed","High","Medium","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 2.2|pay-interest","","Yes"],["53","Repay Woodgrove Bank advances at September 15, 2029 maturity","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Northwind must repay all outstanding Advances, with accrued and unpaid interest, on the Maturity Date of September 15, 2029. Through September 15, 2029.","Section 2.3","The Borrower shall repay all outstanding Advances, together with accrued and unpaid interest, on the Maturity Date.","Us","Payment","Fixed date","None","2029-09-15","","Avery Chen","Avery Chen","Finance","Not started","Upcoming","Confirmed","High","Medium","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 2.3|repay-advances","","Yes"],["54","Deliver Woodgrove Bank quarterly compliance certificate (45 days)","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Within 45 days after each fiscal quarter end, starting with the quarter ending December 31, 2026, Northwind must deliver Woodgrove Bank a CFO-signed compliance certificate with unaudited consolidated quarterly financial statements showing compliance with the minimum Liquidity covenant. Through September 15, 2029.","Section 3.1","Within forty-five (45) days after the end of each fiscal quarter of the Borrower, commencing with the fiscal quarter ending December 31, 2026, the Borrower shall deliver to the Bank a compliance certificate signed by its chief financial officer, together with unaudited consolidated financial statements for that quarter, demonstrating compliance with Section 4.1.","Us","Reporting","Recurring","Quarterly","2027-02-14","","Avery Chen","Avery Chen","Finance","Not started","Upcoming","Confirmed","Medium","High","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 3.1|deliver-compliance-certificate","","Yes"],["55","Deliver audited financial statements to Woodgrove Bank (120 days)","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Within 120 days after each June 30 fiscal year end, starting with fiscal 2027 (due October 28, 2027), Northwind must deliver Woodgrove Bank audited consolidated financial statements with an unqualified opinion from an independent CPA firm. Through September 15, 2029.","Section 3.2","Within one hundred twenty (120) days after the end of each fiscal year of the Borrower, which ends on June 30, commencing with the fiscal year ending June 30, 2027, the Borrower shall deliver to the Bank audited consolidated financial statements reported on without qualification by an independent certified public accounting firm.","Us","Reporting","Recurring","Annual","2027-10-28","","Avery Chen","Avery Chen","Finance","Not started","Upcoming","Confirmed","Medium","High","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 3.2|deliver-audited-financials","","Yes"],["56","Notify Woodgrove Bank of any default within 5 business days","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Northwind must notify Woodgrove Bank in writing within 5 Business Days after any officer becomes aware of any Default or Event of Default, describing it and the action Northwind proposes to take. Through September 15, 2029.","Section 3.3","The Borrower shall notify the Bank in writing within five (5) Business Days after any officer of the Borrower becomes aware of any Default or Event of Default, describing it and the action the Borrower proposes to take.","Us","Compliance \u0026 audit","Event-driven","None","","An officer becomes aware of a Default or Event of Default","Avery Chen","Avery Chen","Finance","Not started","No date","Confirmed","High","High","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 3.3|notify-default","","Yes"],["57","Maintain $5,000,000 minimum liquidity with Woodgrove Bank","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Northwind must keep at least $5,000,000 of unrestricted cash and cash equivalents in deposit accounts with Woodgrove Bank at all times, tested at each fiscal quarter end and reported in each compliance certificate; a breach is an Event of Default. Through September 15, 2029.","Section 4.1","The Borrower shall maintain Liquidity of not less than $5,000,000 at all times. Compliance will be tested on the last day of each fiscal quarter and reported in each compliance certificate.","Us","Compliance \u0026 audit","Ongoing","None","","","Avery Chen","Avery Chen","Finance","Not started","No date","Confirmed","High","High","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 4.1|maintain-minimum-liquidity","","Yes"],["58","Deliver insurance endorsements to Woodgrove Bank (60 days)","11-Woodgrove-Bank-Revolving-Credit-Facility.docx","Woodgrove Bank","Within 60 days after the September 15, 2026 Closing Date (by November 14, 2026), Northwind must deliver Woodgrove Bank lender's loss payable and additional insured endorsements, satisfactory to the Bank, under its property and general liability policies; failure continuing 15 days after Bank notice is an Event of Default. Through September 15, 2029.","Section 5.1","Within sixty (60) days after the Closing Date, the Borrower shall deliver to the Bank lender's loss payable and additional insured endorsements, in form satisfactory to the Bank, under the Borrower's property and general liability insurance policies.","Us","Insurance","Fixed date","None","2026-11-14","","Avery Chen","Avery Chen","Finance","Not started","Overdue","Confirmed","Medium","Medium","11-Woodgrove-Bank-Revolving-Credit-Facility.docx|Section 5.1|deliver-insurance-endorsements","","Yes"],["59","Pay Tailspin per dealer credit application terms","04-Tailspin-Distribution-Agreement.docx","Tailspin Toys","Pay for each purchase order on the payment terms in the dealer credit application approved by Tailspin; that document isn't in the Contracts library.","Section 3.3","Payment terms are those set out in the dealer credit application approved by Supplier for Distributor.","Us","Payment","Event-driven","None","","Northwind places a purchase order with Tailspin (payment terms in the dealer credit application)","","","Sales","Not started","No date","Needs review","Low","Medium","04-Tailspin-Distribution-Agreement.docx|Section 3.3|terms-in-missing-document","Held: the operative terms are in a document that isn't in the Contracts library. Add it or confirm the terms.","Yes"],["60","Adventure Works: pay per standard credit terms","09-Adventure-Works-Reseller-Agreement.docx","Adventure Works Cycles","Adventure Works pays for its purchase orders on Northwind's standard credit terms approved for it; those terms aren't in the Contracts library.","Section 2.2","Payment terms are set out in Reseller's standard credit terms approved for Customer.","Counterparty","Payment","Event-driven","None","","Adventure Works places a purchase order (payment terms in Northwind's standard credit terms)","","","Sales","Not started","No date","Needs review","Low","Medium","09-Adventure-Works-Reseller-Agreement.docx|Section 2.2|terms-in-missing-document","Held: the operative terms are in a document that isn't in the Contracts library. Add it or confirm the terms.","Yes"]]}</script>
+<script>
+/* Obligation Hub - shared data layer and UI helpers (plain JS, no network). */
+(function (window, document) {
+  'use strict';
+  var Hub = window.Hub = {};
+  var DAY = 86400000;
+  var LIVE_WAIT_MS = 800;     // how long to wait for the host to inject live results
+  var LATE_WATCH_MS = 8000;   // keep watching for a late injection, then stop
+
+  /* ---------------- small utilities ---------------- */
+  var ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return ESC[c]; }); }
+  function clean(v) {
+    if (v == null) return '';
+    if (typeof v === 'object') {
+      if (Array.isArray(v)) return v.map(clean).filter(Boolean).join(', ');
+      return clean(v.title || v.Title || v.displayName || v.DisplayName || v.name || v.Name ||
+        v.LookupValue || v.lookupValue || v.Label || v.label || v.text || v.value || v.Value || '');
+    }
+    var s = String(v).replace(/\s+/g, ' ').trim();
+    return /^(null|undefined|none;#)$/i.test(s) ? '' : s;
+  }
+  function lower(v) { return clean(v).toLowerCase(); }
+  function readJSONScript(id) {
+    var el = document.getElementById(id);
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch (e) { return null; }
+  }
+  function byId(id) { return document.getElementById(id); }
+  function setHTML(id, html) { var el = typeof id === 'string' ? byId(id) : id; if (el) el.innerHTML = html; return el; }
+  function closest(el, sel) {
+    while (el && el.nodeType === 1) {
+      if (el.matches ? el.matches(sel) : false) return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+  function uniq(list) { var seen = {}, out = []; list.forEach(function (x) { var k = String(x).toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } }); return out; }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+  function truncate(s, n) { s = clean(s); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '\u2026' : s; }
+  Hub.esc = esc; Hub.clean = clean; Hub.byId = byId; Hub.setHTML = setHTML; Hub.closest = closest;
+  Hub.uniq = uniq; Hub.plural = plural; Hub.truncate = truncate; Hub.readJSONScript = readJSONScript;
+
+  /* ---------------- configuration & URLs ---------------- */
+  var cfg = readJSONScript('hub-config') || {};
+  cfg.lists = cfg.lists || {};
+  function unreplaced(v) { return typeof v !== 'string' || v.indexOf('{{') !== -1; }
+  Hub.cfg = cfg;
+  Hub.preview = unreplaced(cfg.siteUrl);
+  function listInfo(key) { return cfg.lists[key] || {}; }
+  function listRoot(key) { return (cfg.origin || '') + (listInfo(key).url || ''); }
+  function viewBase(key) { return listRoot(key) + (listInfo(key).library ? '/Forms/AllItems.aspx' : '/AllItems.aspx'); }
+  Hub.url = {
+    root: listRoot,
+    view: function (key, filters) {
+      var q = [];
+      (filters || []).forEach(function (f, i) {
+        var n = i + 1;
+        if (Array.isArray(f[1])) q.push('FilterFields' + n + '=' + encodeURIComponent(f[0]) + '&FilterValues' + n + '=' + encodeURIComponent(f[1].join(';#')));
+        else q.push('FilterField' + n + '=' + encodeURIComponent(f[0]) + '&FilterValue' + n + '=' + encodeURIComponent(f[1]));
+      });
+      return viewBase(key) + (q.length ? '?' + q.join('&') : '');
+    },
+    disp: function (key, id) { return id ? listRoot(key) + (listInfo(key).library ? '/Forms/DispForm.aspx' : '/DispForm.aspx') + '?ID=' + encodeURIComponent(id) : viewBase(key); },
+    edit: function (key, id, back) {
+      if (!id) return viewBase(key);
+      var u = listRoot(key) + (listInfo(key).library ? '/Forms/EditForm.aspx' : '/EditForm.aspx') + '?ID=' + encodeURIComponent(id);
+      if (back && !Hub.preview) u += '&Source=' + encodeURIComponent(Hub.url.page(back));
+      return u;
+    },
+    file: function (key, name) { return listRoot(key) + '/' + encodeURIComponent(name).replace(/%2F/g, '/') + '?web=1'; },
+    page: function (file, hash) {
+      var base = Hub.preview || unreplaced(cfg.pagesUrl) ? file : cfg.pagesUrl + '/' + file;
+      return base + (hash ? '#' + hash : '');
+    }
+  };
+
+  /* ---------------- dates ---------------- */
+  function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function validYMD(y, m, d) { return y > 1900 && y < 2200 && m >= 1 && m <= 12 && d >= 1 && d <= 31; }
+  function parseDate(v, keepTime) {
+    if (v == null || v === '') return null;
+    if (v instanceof Date) return isNaN(v.getTime()) ? null : (keepTime ? v : startOfDay(v));
+    if (typeof v === 'number') { var dn = new Date(v); return isNaN(dn.getTime()) ? null : (keepTime ? dn : startOfDay(dn)); }
+    var s = clean(v), m, d;
+    if (!s) return null;
+    if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) {
+      return validYMD(+m[1], +m[2], +m[3]) ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+    }
+    if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?\s*(Z|[+-]\d{2}:?\d{2})?$/i))) {
+      if (!validYMD(+m[1], +m[2], +m[3])) return null;
+      if (m[7]) d = new Date(s.replace(' ', 'T').replace(/([+-]\d{2})(\d{2})$/, '$1:$2'));
+      else d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+      if (isNaN(d.getTime())) return null;
+      return keepTime ? d : startOfDay(d);
+    }
+    if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})(?:[ ,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AaPp]\.?[Mm]\.?)?)?$/))) {
+      var a = +m[1], b = +m[2], y = +m[3], mo = a, da = b, h = m[4] ? +m[4] : 0;
+      if (y < 100) y += 2000;
+      if (a > 12 && b <= 12) { mo = b; da = a; }
+      if (!validYMD(y, mo, da)) return null;
+      if (m[7]) { var pm = /p/i.test(m[7]); if (pm && h < 12) h += 12; if (!pm && h === 12) h = 0; }
+      d = new Date(y, mo - 1, da, h, m[5] ? +m[5] : 0, m[6] ? +m[6] : 0);
+      return keepTime ? d : startOfDay(d);
+    }
+    if ((m = s.match(/\/Date\((-?\d+)/))) { d = new Date(+m[1]); return keepTime ? d : startOfDay(d); }
+    var t = Date.parse(s);
+    if (!isNaN(t)) { d = new Date(t); return keepTime ? d : startOfDay(d); }
+    return null;
+  }
+  /* "Today" is the viewer's date. window.__HUB_TODAY__ ('YYYY-MM-DD') is a test hook only; nothing in the pages sets it. */
+  function today() {
+    var o = window.__HUB_TODAY__ ? parseDate(window.__HUB_TODAY__) : null;
+    return o || startOfDay(new Date());
+  }
+  function now() {
+    var t = window.__HUB_TODAY__ ? parseDate(window.__HUB_TODAY__) : null;
+    return t ? new Date(t.getTime() + 12 * 3600000) : new Date();
+  }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function daysBetween(a, b) { return Math.round((startOfDay(b) - startOfDay(a)) / DAY); }
+  function iso(d) { if (!d) return ''; var m = d.getMonth() + 1, x = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (x < 10 ? '0' : '') + x; }
+  Hub.date = { parse: parseDate, today: today, now: now, addDays: addDays, diff: daysBetween, iso: iso, startOfDay: startOfDay };
+
+  var fmtCache = {};
+  function fmt(d, opts) {
+    if (!d) return '';
+    var k = JSON.stringify(opts);
+    if (!fmtCache[k]) { try { fmtCache[k] = new Intl.DateTimeFormat(undefined, opts); } catch (e) { fmtCache[k] = { format: function (x) { return x.toDateString(); } }; } }
+    return fmtCache[k].format(d);
+  }
+  Hub.fmt = {
+    date: function (d) { return fmt(d, { day: 'numeric', month: 'short', year: 'numeric' }); },
+    short: function (d) { return d && d.getFullYear() === today().getFullYear() ? fmt(d, { day: 'numeric', month: 'short' }) : fmt(d, { day: 'numeric', month: 'short', year: 'numeric' }); },
+    long: function (d) { return fmt(d, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+    month: function (d, withYear) { return fmt(d, withYear ? { month: 'short', year: 'numeric' } : { month: 'short' }); },
+    dateTime: function (d) { return fmt(d, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }); },
+    rel: function (d) {
+      if (!d) return '';
+      var n = daysBetween(today(), d);
+      if (n === 0) return 'today';
+      if (n === 1) return 'tomorrow';
+      if (n === -1) return 'yesterday';
+      return n > 0 ? 'in ' + n + ' days' : Math.abs(n) + ' days ago';
+    },
+    due: function (d) {
+      if (!d) return '';
+      var n = daysBetween(today(), d);
+      if (n === 0) return 'due today';
+      if (n === 1) return 'due tomorrow';
+      if (n < 0) return plural(-n, 'day') + ' overdue';
+      return 'in ' + n + ' days';
+    },
+    ago: function (dt) {
+      if (!dt) return 'never';
+      var ms = now() - dt, min = Math.round(ms / 60000);
+      if (ms < 0) return 'just now';
+      if (min < 2) return 'just now';
+      if (min < 60) return min + ' minutes ago';
+      var h = Math.round(min / 60);
+      if (h < 24) return plural(h, 'hour') + ' ago';
+      var dd = daysBetween(dt, now());
+      if (dd <= 1) return 'yesterday';
+      return dd + ' days ago';
+    },
+    money: function (n, raw) {
+      if (n == null) return raw ? clean(raw) : '';
+      if (raw && /[^\d.,\s-]/.test(clean(raw))) return clean(raw);
+      try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cfg.currency || 'USD', maximumFractionDigits: 0 }).format(n); }
+      catch (e) { return String(n); }
+    },
+    iso: iso
+  };
+
+  /* ---------------- value parsers ---------------- */
+  function people(v) {
+    if (v == null) return [];
+    if (Array.isArray(v)) { var all = []; v.forEach(function (x) { all = all.concat(people(x)); }); return uniq(all); }
+    if (typeof v === 'object') {
+      var n = v.title || v.Title || v.displayName || v.DisplayName || v.name || v.Name || v.LookupValue || v.lookupValue || v.text || v.email || v.Email || v.EMail || v.mail || v.userPrincipalName || '';
+      return n ? [String(n).trim()] : [];
+    }
+    var s = String(v).trim();
+    if (!s || /^(null|undefined|\[\]|\{\})$/i.test(s)) return [];
+    if (/^[\[{]/.test(s)) { try { return people(JSON.parse(s)); } catch (e) { /* fall through */ } }
+    if (s.indexOf(';#') !== -1) {
+      return uniq(s.split(';#').map(function (p) { return p.trim(); }).filter(function (p) { return p && !/^\d+$/.test(p); }).map(function (p) { return people(p)[0] || p; }));
+    }
+    if (s.indexOf('|') !== -1 && /@/.test(s)) s = s.split('|').pop();
+    var m = s.match(/^(.*?)\s*<([^>]+)>$/);
+    if (m) return [clean(m[1]) || clean(m[2])];
+    if (s.indexOf(';') !== -1) return uniq(s.split(';').map(clean).filter(Boolean));
+    return [clean(s)];
+  }
+  function num(v) {
+    if (v == null || v === '') return null;
+    if (typeof v === 'number') return isFinite(v) ? v : null;
+    var s = clean(v).replace(/[^\d.,\-]/g, '');
+    if (!s) return null;
+    if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s) || /^-?\d+(\.\d+)?$/.test(s)) s = s.replace(/,/g, '');
+    else if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+    else s = s.replace(/,/g, '');
+    var n = parseFloat(s);
+    return isFinite(n) ? n : null;
+  }
+  function yes(v) { return /^(yes|true|1|y|on)$/i.test(clean(v)); }
+  Hub.people = people; Hub.num = num; Hub.yes = yes;
+
+  /* ---------------- list schema (internal names + accepted aliases) ---------------- */
+  var LISTS = {
+    OBLIGATIONS: { label: 'Obligations', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], Title: ['Obligation'], ContractName: ['Contract'], ContractLink: ['Contract link'],
+      Counterparty: [], ObligationText: ['What must happen'], ClauseRef: ['Clause'], SourceClause: ['Source clause'],
+      Party: ['Who owes it'], Category: [], TriggerType: ['Trigger'], Recurrence: [], DueDate: ['Due date', 'Due'],
+      TriggerEvent: ['Trigger event'], Owner: [], EscalationOwner: ['Escalation owner'], BusinessUnit: ['Business unit'],
+      Status: [], Timing: [], ReviewState: ['Review', 'Review state'], Confidence: [], Risk: [], FulfilledOn: ['Fulfilled on'],
+      Evidence: [], LastReminded: ['Last reminded'], CaptureKey: ['Capture key'], Notes: [], IsSample: ['Sample data'] } },
+    CONTRACTS: { label: 'Contracts', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], FileLeafRef: ['Name', 'File name', 'FileName', 'LinkFilename', 'LinkFilenameNoMenu', 'File'],
+      Title: ['Contract title'], Counterparty: [], ContractType: ['Contract type'], EffectiveDate: ['Effective date'],
+      ExpirationDate: ['Expiration date'], AutoRenews: ['Auto-renews', 'Auto renews'], NoticePeriodDays: ['Notice period (days)', 'Notice period'],
+      GoverningLaw: ['Governing law'], ContractValue: ['Contract value', 'Value'], ContractSummary: ['Summary'],
+      ContractOwner: ['Contract owner'], BusinessUnit: ['Business unit'], Amends: [], IsSample: ['Sample data'] } },
+    RUNLOG: { label: 'Run Log', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], Title: ['Run'], Workflow: [], Outcome: [], ContractName: ['Contract'],
+      ContractVersion: ['Contract version'], ItemsCreated: ['Created'], ItemsUpdated: ['Updated'], ItemsHeld: ['Held for review', 'Held'],
+      Details: [], RunAt: ['Run at'] } },
+    OWNERS: { label: 'Obligation Owners', fields: {
+      ID: ['Id', 'ItemId', 'Item ID'], Title: ['Rule'], Category: [], BusinessUnit: ['Business unit'], Counterparty: ['Counterparty (optional)'],
+      Owner: [], EscalationOwner: ['Escalation owner'], Notify: ['Notify by'] } }
+  };
+  Hub.LISTS = LISTS;
+  function normKey(s) { return String(s == null ? '' : s).toLowerCase().replace(/_x0020_/g, '').replace(/^odata_+/, '').replace(/[^a-z0-9]/g, ''); }
+
+  function headerMap(key, headers) {
+    var fields = (LISTS[key] || {}).fields || {}, map = new Array(headers.length), taken = {};
+    var normHeaders = headers.map(normKey);
+    Object.keys(fields).forEach(function (f) {
+      var i = normHeaders.indexOf(normKey(f));
+      if (i !== -1 && map[i] === undefined) { map[i] = f; taken[f] = 1; }
+    });
+    Object.keys(fields).forEach(function (f) {
+      if (taken[f]) return;
+      fields[f].some(function (alias) {
+        var i = normHeaders.indexOf(normKey(alias));
+        if (i !== -1 && map[i] === undefined) { map[i] = f; taken[f] = 1; return true; }
+        return false;
+      });
+    });
+    return headers.map(function (h, i) { return map[i] || String(h); });
+  }
+
+  function rowsFrom(key, content) {
+    if (typeof content === 'string') content = JSON.parse(content);
+    if (Array.isArray(content)) content = { rows: content };
+    if (!content || typeof content !== 'object') throw new Error('Result has no rows');
+    var rows = content.rows || content.value || content.items;
+    if (!Array.isArray(rows)) throw new Error('Result rows are not a list');
+    var headers = content.headers || content.columns || content.fields || [];
+    headers = headers.map(function (h) { return typeof h === 'object' && h ? (h.name || h.internalName || h.title || h.displayName || '') : h; });
+    var mapped = headerMap(key, headers);
+    return rows.map(function (r) {
+      var o = {};
+      if (Array.isArray(r)) { r.forEach(function (v, i) { if (i < mapped.length) o[mapped[i]] = v; }); }
+      else if (r && typeof r === 'object') {
+        var ks = Object.keys(r), km = headerMap(key, ks);
+        ks.forEach(function (k, i) { o[km[i]] = r[k]; });
+      }
+      return o;
+    });
+  }
+
+  function normLiveKey(k) {
+    var s = String(k || '');
+    try { s = decodeURIComponent(s); } catch (e) { /* keep raw */ }
+    return s.toLowerCase().replace(/[{}]/g, '').replace(/\s+/g, '').replace(/\/+$/, '');
+  }
+  function findLive(key) {
+    var R = window.__LD_RESULTS__;
+    if (!R || typeof R !== 'object') return undefined;
+    var info = listInfo(key);
+    var want = normLiveKey('list:' + (cfg.siteUrl || '') + '/' + (info.id || ''));
+    var ks = Object.keys(R), i;
+    for (i = 0; i < ks.length; i++) if (normLiveKey(ks[i]) === want) return R[ks[i]];
+    var id = normLiveKey(info.id || '');
+    if (id && id.length > 8) for (i = 0; i < ks.length; i++) { var nk = normLiveKey(ks[i]); if (nk.slice(-id.length) === id) return R[ks[i]]; }
+    return undefined;
+  }
+  function parseLive(key, raw) {
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    if (!raw || typeof raw !== 'object') throw new Error('Empty result');
+    var format = String(raw.format || '').toLowerCase();
+    if (format !== 'rows') throw new Error(raw.error ? String(raw.error) : 'Unsupported result format "' + (raw.format || 'none') + '"');
+    return rowsFrom(key, raw.content);
+  }
+  function loadList(key) {
+    var res = { key: key, label: (LISTS[key] || {}).label || key, live: false, source: 'snapshot', rows: [], error: null };
+    var raw = findLive(key);
+    if (raw !== undefined && raw !== null) {
+      try { res.rows = parseLive(key, raw); res.live = true; res.source = 'live'; return res; }
+      catch (e) { res.error = (e && e.message) || 'Unreadable result'; }
+    }
+    var snap = readJSONScript('snapshot-' + key.toLowerCase());
+    if (snap) { try { res.rows = rowsFrom(key, snap); } catch (e2) { res.rows = []; res.error = res.error || 'Sample snapshot unreadable'; } }
+    else { res.source = 'none'; }
+    return res;
+  }
+  Hub.loadList = loadList; Hub.rowsFrom = rowsFrom;
+
+  /* ---------------- models ---------------- */
+  var CLOSED = /^(fulfilled|waived|not applicable|n\/a)$/i;
+  function timingFor(closed, due) {
+    if (closed) return 'Closed';
+    if (!due) return 'No date';
+    var n = daysBetween(today(), due);
+    if (n < 0) return 'Overdue';
+    if (n <= 14) return 'Due soon';
+    return 'Upcoming';
+  }
+  function normParty(v) {
+    var s = lower(v);
+    if (!s) return 'Us';
+    if (/^(us|we|our|ours|northwind)$/.test(s)) return 'Us';
+    if (/both|mutual|either/.test(s)) return 'Both';
+    if (/counter|them|supplier|customer|other/.test(s)) return 'Counterparty';
+    return clean(v);
+  }
+  function contractKey(name) {
+    var s = clean(name);
+    if (!s) return '';
+    try { s = decodeURIComponent(s); } catch (e) { /* keep */ }
+    s = s.split(/[\\\/]/).pop();
+    return s.toLowerCase().replace(/\.(docx?|pdf|rtf|txt|odt)$/i, '').replace(/[\s_]+/g, ' ').trim();
+  }
+  Hub.contractKey = contractKey;
+  Hub.model = {
+    obligation: function (r) {
+      var status = clean(r.Status) || 'Not started';
+      var closed = CLOSED.test(status);
+      var due = parseDate(r.DueDate);
+      var owners = people(r.Owner);
+      return {
+        id: clean(r.ID).replace(/\.0+$/, ''), title: clean(r.Title) || 'Untitled obligation', contract: clean(r.ContractName),
+        counterparty: clean(r.Counterparty), text: clean(r.ObligationText), clause: clean(r.ClauseRef), source: clean(r.SourceClause),
+        party: normParty(r.Party), category: clean(r.Category) || 'Other', triggerType: clean(r.TriggerType),
+        recurrence: clean(r.Recurrence), due: due, triggerEvent: clean(r.TriggerEvent), owners: owners, owner: owners.join(', '),
+        escalation: people(r.EscalationOwner).join(', '), bu: clean(r.BusinessUnit), status: status, closed: closed,
+        timing: timingFor(closed, due), storedTiming: clean(r.Timing), review: clean(r.ReviewState), confidence: clean(r.Confidence),
+        risk: clean(r.Risk) || 'Medium', notes: clean(r.Notes), fulfilledOn: parseDate(r.FulfilledOn), sample: yes(r.IsSample)
+      };
+    },
+    contract: function (r) {
+      var file = clean(r.FileLeafRef) || clean(r.Title);
+      return {
+        id: clean(r.ID).replace(/\.0+$/, ''), file: file, title: clean(r.Title) || file.replace(/\.[a-z0-9]+$/i, ''),
+        counterparty: clean(r.Counterparty), type: clean(r.ContractType), effective: parseDate(r.EffectiveDate),
+        expiration: parseDate(r.ExpirationDate), autoRenews: clean(r.AutoRenews), notice: num(r.NoticePeriodDays),
+        law: clean(r.GoverningLaw), value: num(r.ContractValue), valueRaw: clean(r.ContractValue), summary: clean(r.ContractSummary),
+        owner: people(r.ContractOwner).join(', '), bu: clean(r.BusinessUnit), amends: clean(r.Amends),
+        isAmendment: !!clean(r.Amends) || /amendment/i.test(clean(r.ContractType)), sample: yes(r.IsSample), key: contractKey(file)
+      };
+    },
+    run: function (r) {
+      return {
+        id: clean(r.ID), title: clean(r.Title), workflow: clean(r.Workflow), outcome: clean(r.Outcome), contract: clean(r.ContractName),
+        version: clean(r.ContractVersion), created: num(r.ItemsCreated), updated: num(r.ItemsUpdated), held: num(r.ItemsHeld),
+        details: clean(r.Details), at: parseDate(r.RunAt, true)
+      };
+    },
+    rule: function (r) {
+      return { id: clean(r.ID), title: clean(r.Title), category: clean(r.Category) || 'Any', bu: clean(r.BusinessUnit) || 'Any',
+        counterparty: clean(r.Counterparty), owner: people(r.Owner).join(', '), escalation: people(r.EscalationOwner).join(', '), notify: clean(r.Notify) };
+    }
+  };
+  Hub.timingFor = timingFor;
+  Hub.TIMING_ORDER = ['Overdue', 'Due soon', 'Upcoming', 'No date', 'Closed'];
+  Hub.byDue = function (a, b) {
+    if (a.due && b.due) return a.due - b.due || a.title.localeCompare(b.title);
+    if (a.due) return -1;
+    if (b.due) return 1;
+    return a.title.localeCompare(b.title);
+  };
+  Hub.matchesContract = function (o, c) {
+    var k = contractKey(o.contract || o);
+    return !!k && (k === c.key || k === contractKey(c.title));
+  };
+  Hub.shortParty = function (s) {
+    return clean(s).replace(/,?\s+(ltd|limited|inc|incorporated|llc|plc|corp|corporation|co|gmbh|sa|ag|bv|pty)\.?$/i, '');
+  };
+
+  /* ---------------- icons & pills ---------------- */
+  function icon(name, cls) { return '<svg class="' + (cls || 'i') + '" aria-hidden="true" focusable="false"><use href="#i-' + name + '"></use></svg>'; }
+  Hub.icon = icon;
+  var TIMING_KIND = { 'Overdue': ['overdue', 'overdue'], 'Due soon': ['soon', 'soon'], 'Upcoming': ['upcoming', 'upcoming'], 'No date': ['nodate', 'nodate'], 'Closed': ['closed', 'check'] };
+  Hub.pill = function (kind, label, ic) { return '<span class="pill pill--' + kind + '">' + (ic ? icon(ic) : '') + esc(label) + '</span>'; };
+  Hub.timingPill = function (t) { var k = TIMING_KIND[t] || ['nodate', 'nodate']; return Hub.pill(k[0], t, k[1]); };
+  Hub.outcomePill = function (o) {
+    var s = clean(o);
+    if (!s) return Hub.pill('nodate', 'Not run yet', 'nodate');
+    if (/succe/i.test(s)) return Hub.pill('ok', s, 'check');
+    if (/partial/i.test(s)) return Hub.pill('soon', s, 'soon');
+    if (/fail/i.test(s)) return Hub.pill('overdue', s, 'overdue');
+    return Hub.pill('nodate', s, 'nodate');
+  };
+  /* Timing shown is always recalculated for today; say so when the list's stored value (refreshed by the daily sweep) disagrees. */
+  Hub.timingNote = function (o) {
+    if (!o.storedTiming || o.storedTiming.toLowerCase() === o.timing.toLowerCase()) return '';
+    return '<span class="cell-sub timing-note">List says \u201c' + esc(o.storedTiming) + '\u201d until the next daily sweep</span>';
+  };
+  Hub.riskPill = function (r) { return /high/i.test(r) ? Hub.pill('overdue', 'High risk', 'flag') : ''; };
+  /* One definition of the Risk levels. How it works carries the same sentences as static text (a test keeps them identical). */
+  Hub.RISK_LEVELS = [
+    { level: 'High', text: 'Missing it automatically loses a right or money or starts a legal clock (notice, renewal and option deadlines we must act on; change-of-control and breach notices; financing covenants, compliance certificates and default notices).' },
+    { level: 'Medium', text: 'Other dated or money obligations (payments, reports, certificates, audits).' },
+    { level: 'Low', text: 'Ongoing conduct, and counterparty duties we only monitor.' }
+  ];
+  Hub.categoryPill = function (c) { return Hub.pill('quiet', c || 'Other'); };
+  Hub.ownerText = function (o) { return o.owner ? esc(o.owner) : Hub.pill('empty', 'No owner'); };
+
+  /* ---------------- hash state (location.hash only; history entries are never written directly) ---------------- */
+  Hub.hash = {
+    get: function () {
+      var h = String(window.location.hash || '').replace(/^#/, ''), out = {};
+      h.split('&').forEach(function (part) {
+        var i = part.indexOf('=');
+        if (i < 1) return;
+        var k = part.slice(0, i), v = part.slice(i + 1);
+        try { k = decodeURIComponent(k); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch (e) { /* keep raw */ }
+        out[k] = v;
+      });
+      return out;
+    },
+    href: function (obj) {
+      var parts = [];
+      Object.keys(obj).forEach(function (k) { if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])); });
+      return '#' + parts.join('&');
+    },
+    set: function (obj) { window.location.hash = Hub.hash.href(obj); }
+  };
+
+  /* ---------------- badge, notes, errors ---------------- */
+  Hub.badge = function (data, primaryKey, count, one, many) {
+    var el = byId('data-badge');
+    var p = data[primaryKey] || { live: false };
+    var keys = Object.keys(data);
+    var sampleOthers = keys.filter(function (k) { return k !== primaryKey && !data[k].live; });
+    var anyLive = keys.some(function (k) { return data[k].live; });
+    var text = (p.live ? 'Live' : 'Sample snapshot') + ' \u00b7 ' + plural(count, one, many);
+    if (p.live && sampleOthers.length) text += ' \u00b7 partly sample';
+    var detail = keys.map(function (k) { return data[k].label + ': ' + (data[k].live ? 'live list data' : 'sample snapshot'); }).join('; ');
+    if (el) {
+      el.className = 'badge ' + (p.live ? 'badge--live' : 'badge--sample');
+      el.setAttribute('title', detail);
+      el.innerHTML = '<span class="badge__dot" aria-hidden="true"></span><span>' + esc(text) + '</span><span class="sr-only">. ' + esc(detail) + '.</span>';
+    }
+    var notes = [];
+    keys.forEach(function (k) {
+      if (data[k].error) notes.push('Live data for ' + data[k].label + ' couldn\u2019t be read (' + data[k].error + '), so this page shows the sample snapshot for it.');
+    });
+    if (!anyLive && !notes.length) notes.push('Showing the sample snapshot \u2014 fictional data bundled with the page. Live list data appears automatically when the site provides it.');
+    var n = byId('data-note');
+    if (n) {
+      n.hidden = !notes.length;
+      n.innerHTML = notes.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('');
+    }
+    return text;
+  };
+  Hub.fail = function (err, where) {
+    var target = byId(where || 'main');
+    var msg = (err && (err.message || String(err))) || 'Unknown error';
+    var html = '<div class="state state--error" role="alert"><h2>This view couldn\u2019t be drawn</h2>' +
+      '<p>Refresh the page. If it keeps happening, open the lists directly from Site contents or ask the site owner to check the Run Log.</p>' +
+      '<details class="disclose"><summary>' + icon('chev') + 'Technical details</summary><p><code>' + esc(msg) + '</code></p></details></div>';
+    if (target) {
+      if (target.id === 'main') target.innerHTML = '<div class="wrap">' + html + '</div>';
+      else target.innerHTML = html;
+    }
+    if (window.console && console.error) console.error('[Obligation Hub]', err);
+  };
+  Hub.announce = function (text) { var r = byId('live-region'); if (r) { r.textContent = ''; setTimeout(function () { r.textContent = text; }, 30); } };
+
+  /* ---------------- copy to clipboard ---------------- */
+  function selectNode(node) {
+    try {
+      var sel = window.getSelection && window.getSelection();
+      if (!sel || !document.createRange) return false;
+      var range = document.createRange(); range.selectNodeContents(node); sel.removeAllRanges(); sel.addRange(range);
+      return true;
+    } catch (e) { return false; }
+  }
+  function legacyCopy(text) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; ta.style.top = '0';
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand && document.execCommand('copy');
+      document.body.removeChild(ta);
+      return !!ok;
+    } catch (e) { return false; }
+  }
+  /* Last resort when the sandbox blocks the clipboard: show the text in a read-only field, focused and selected. */
+  function manualCopy(text, btn) {
+    var host = btn && btn.parentNode;
+    if (!host || !document.createElement) return;
+    var box = host.querySelector ? host.querySelector('.copy-manual') : null;
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'copy-manual';
+      box.innerHTML = '<label class="label">Press Ctrl+C (or \u2318C) to copy</label><input class="control" readonly>';
+      host.appendChild(box);
+    }
+    var input = box.querySelector('input');
+    input.value = text;
+    try { input.focus(); input.select(); } catch (e) { /* ignore */ }
+  }
+  Hub.copy = function (text, btn, selectTarget) {
+    var state = btn && btn.querySelector ? btn.querySelector('.chip__state') : null;
+    function done(ok) {
+      var msg = ok ? 'Copied' : 'Press Ctrl+C to copy';
+      if (!ok) {
+        if (selectTarget && !closest(selectTarget, 'button') && selectNode(selectTarget)) { try { selectTarget.focus(); } catch (e) { /* ignore */ } }
+        else manualCopy(text, btn);
+      }
+      if (state) { state.textContent = ok ? 'Copied' : 'Press Ctrl+C'; setTimeout(function () { state.textContent = state.getAttribute('data-idle') || 'Copy'; }, 2400); }
+      Hub.announce(msg);
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(legacyCopy(text)); });
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    done(legacyCopy(text));
+  };
+  document.addEventListener('click', function (e) {
+    var b = closest(e.target, '[data-copy]');
+    if (!b) return;
+    e.preventDefault();
+    var src = b.getAttribute('data-copy-from');
+    var srcEl = src ? byId(src) : null;
+    var text = srcEl ? srcEl.textContent : b.getAttribute('data-copy');
+    Hub.copy(text, b, srcEl || b.querySelector('.chip__text'));
+  });
+
+  /* tooltips: Escape dismisses (WCAG 1.4.13); leaving re-arms */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    var h = closest(document.activeElement, '.hint');
+    if (h && h.classList) h.classList.add('is-dismissed');
+  });
+  function rearm(e) { var h = closest(e.target, '.hint'); if (h && h.classList) h.classList.remove('is-dismissed'); }
+  document.addEventListener('focusout', rearm);
+  document.addEventListener('mouseout', rearm);
+
+  /* ---------------- links between pages ----------------
+     There is no in-page nav bar: SharePoint's site navigation is the primary nav. Static links to other pages
+     carry data-page; before install (tokens not replaced) they point at the sibling file instead. */
+  function initLinks() {
+    var links = document.querySelectorAll ? document.querySelectorAll('[data-page]') : [];
+    Array.prototype.forEach.call(links, function (a) {
+      if (Hub.preview || unreplaced(cfg.pagesUrl)) a.setAttribute('href', a.getAttribute('data-page'));
+    });
+  }
+
+  /* ---------------- AI workflows, grouped by Run Log "Workflow" value ----------------
+     Capture is two workflows (one trigger each) running the same skill; both log as "Capture",
+     so they share one health row here and both Settings cards show its last run. */
+  Hub.WORKFLOWS = [
+    { name: 'Capture', label: 'Capture obligations', skill: 'capture-obligations', tokens: ['CAPTURE_NEW', 'CAPTURE_CHANGED'], trigger: 'When a contract is added or changed', staleDays: null },
+    { name: 'Assign owners', label: 'Assign owners', skill: 'assign-obligation-owners', tokens: ['ASSIGN_OWNERS'], trigger: 'Daily at 7:00 AM', staleDays: 2 },
+    { name: 'Daily sweep', label: 'Daily sweep', skill: 'sweep-obligations', tokens: ['DAILY_SWEEP'], trigger: 'Daily at 6:00 AM', staleDays: 2 },
+    { name: 'Owner digest', label: 'Owner digest', skill: 'obligation-owner-digest', tokens: ['OWNER_DIGEST'], trigger: 'Mondays at 8:00 AM', staleDays: 8 },
+    { name: 'Leadership digest', label: 'Leadership digest', skill: 'obligation-leadership-digest', tokens: ['LEADERSHIP_DIGEST'], trigger: 'Fridays at 3:00 PM', staleDays: 8 }
+  ];
+  Hub.lastRuns = function (runs) {
+    var any = runs.length > 0;   // on a brand-new site the setup checklist covers "never ran"
+    return Hub.WORKFLOWS.map(function (w) {
+      var k = normKey(w.name), kl = normKey(w.label);
+      var mine = runs.filter(function (r) { var rk = normKey(r.workflow); return rk === k || rk === kl || (rk && rk.indexOf(k) === 0); });
+      mine.sort(function (a, b) { return (b.at ? b.at.getTime() : 0) - (a.at ? a.at.getTime() : 0); });
+      var last = mine[0] || null, issue = null;
+      var age = last && last.at ? (now() - last.at) / DAY : null;
+      if (last && /fail/i.test(last.outcome)) issue = { level: 'rose', text: w.label + ' failed ' + Hub.fmt.ago(last.at) + '.' };
+      else if (w.staleDays && last && age !== null && age > w.staleDays) issue = { level: 'amber', text: w.label + ' hasn\u2019t run for ' + Math.floor(age) + ' days.' };
+      else if (w.staleDays && !last && any) issue = { level: 'amber', text: w.label + ' hasn\u2019t run yet.' };
+      return { wf: w, last: last, count: mine.length, issue: issue };
+    });
+  };
+
+  /* ---------------- focus preservation across re-renders ---------------- */
+  Hub.keepFocus = function (fn) {
+    var a = document.activeElement, key = a && a.getAttribute ? a.getAttribute('data-focus') : null;
+    fn();
+    if (key && document.querySelector) { var n = document.querySelector('[data-focus="' + key.replace(/"/g, '') + '"]'); if (n && n.focus) n.focus(); }
+  };
+
+  /* ---------------- page bootstrap ---------------- */
+  Hub.start = function (opts) {
+    var data = null;
+    function build() {
+      data = {};
+      opts.lists.forEach(function (k) { data[k] = loadList(k); });
+      Hub.data = data;
+      draw();
+    }
+    function draw() {
+      try { opts.render(data, Hub.hash.get()); }
+      catch (e) { Hub.fail(e); }
+    }
+    function hasLive() { return window.__LD_RESULTS__ && typeof window.__LD_RESULTS__ === 'object'; }
+    function watchLate() {
+      var waited = 0, t = setInterval(function () {
+        waited += 250;
+        if (hasLive()) { clearInterval(t); build(); }
+        else if (waited >= LATE_WATCH_MS) clearInterval(t);
+      }, 250);
+    }
+    try { initLinks(); } catch (e) { /* links work without it once installed */ }
+    if (opts.lists.length === 0 || hasLive()) build();
+    else {
+      var waited = 0, t = setInterval(function () {
+        waited += 100;
+        if (hasLive() || waited >= LIVE_WAIT_MS) { clearInterval(t); build(); if (!hasLive()) watchLate(); }
+      }, 100);
+    }
+    window.addEventListener('hashchange', function () { if (data) Hub.keepFocus(draw); });
+    var rt = null;
+    window.addEventListener('resize', function () {
+      if (!data || !opts.onResize) return;
+      clearTimeout(rt); rt = setTimeout(function () { try { opts.onResize(data); } catch (e) { /* ignore */ } }, 160);
+    });
+  };
+})(window, document);
+
+</script>
+<script>
+/* My obligations */
+(function (Hub) {
+  'use strict';
+  var esc = Hub.esc, fmt = Hub.fmt, icon = Hub.icon, plural = Hub.plural;
+  var VIEWS = [
+    { key: 'mine', label: 'Mine' },
+    { key: 'all', label: 'All owners' },
+    { key: 'unassigned', label: 'Unassigned' }
+  ];
+  var GROUPS = ['Overdue', 'Due soon', 'Upcoming', 'No date'];
+  var GROUP_NOTE = {
+    'Overdue': 'Past the due date and still open.',
+    'Due soon': 'Due within 14 days.',
+    'Upcoming': 'Due later than 14 days from today.',
+    'No date': 'Triggered by an event or ongoing \u2014 no fixed date.'
+  };
+
+  function signedInName(owners) {
+    var ctx = window._spPageContextInfo;
+    var name = ctx && (ctx.userDisplayName || ctx.userLoginName);
+    if (!name) return null;
+    var hit = owners.filter(function (o) { return o.toLowerCase() === String(name).toLowerCase(); })[0];
+    return hit || null;
+  }
+
+  function card(o) {
+    var facts = [
+      ['Due', o.due ? '<time datetime="' + fmt.iso(o.due) + '">' + esc(fmt.date(o.due)) + '</time><span class="cell-sub">' + esc(fmt.due(o.due)) + '</span>' : esc(o.triggerType === 'Ongoing' ? 'Ongoing' : 'When triggered')],
+      ['Clause', esc(o.clause || '\u2014')],
+      ['Owner', o.owner ? esc(o.owner) : Hub.pill('empty', 'No owner')]
+    ];
+    var detail = o.timing === 'No date' && o.triggerEvent ? '<p class="ob__text"><strong>Trigger:</strong> ' + esc(o.triggerEvent) + '</p>'
+      : (o.text ? '<p class="ob__text">' + esc(Hub.truncate(o.text, 170)) + '</p>' : '');
+    var id = esc(o.id || Math.random().toString(36).slice(2));
+    return '<li><article class="card ob" aria-labelledby="ob-' + id + '">' +
+      '<div class="ob__top"><div><h3 class="ob__title" id="ob-' + id + '">' + esc(o.title) + '</h3>' +
+      '<span class="ob__who">' + esc([o.counterparty, o.contract].filter(Boolean).join(' \u00b7 ')) + '</span></div>' +
+      '<div class="pills">' + Hub.timingPill(o.timing) + '</div></div>' + Hub.timingNote(o) +
+      '<dl class="ob__facts">' + facts.map(function (f) { return '<div><dt>' + f[0] + '</dt><dd>' + f[1] + '</dd></div>'; }).join('') + '</dl>' +
+      detail +
+      '<div class="pills">' + Hub.categoryPill(o.category) + (o.status === 'In progress' ? Hub.pill('upcoming', 'In progress', 'soon') : '') + Hub.riskPill(o.risk) +
+      (/needs review/i.test(o.review) ? Hub.pill('review', 'Needs review', 'review') : '') + '</div>' +
+      '<div class="ob__actions">' +
+      '<a class="btn btn--sm" href="' + esc(Hub.url.disp('OBLIGATIONS', o.id)) + '" target="_top">' + icon('open') + 'Open<span class="sr-only"> ' + esc(o.title) + '</span></a>' +
+      '<span class="hint"><a class="btn btn--sm" href="' + esc(Hub.url.edit('OBLIGATIONS', o.id, 'MyObligations.html')) + '" target="_top" aria-describedby="tip-f-' + id + '">' + icon('tick') + 'Mark fulfilled<span class="sr-only"> ' + esc(o.title) + '</span></a>' +
+      '<span class="hint__text" role="tooltip" id="tip-f-' + id + '">Opens the item to edit: set Status to Fulfilled and add the Fulfilled on date. Quicker: in the Obligations list, select the item and choose the Mark fulfilled quick step.</span></span>' +
+      '<span class="hint"><a class="btn btn--sm btn--quiet" href="' + esc(Hub.url.view('EVIDENCE')) + '" target="_top" aria-describedby="tip-e-' + id + '">' + icon('clip') + 'Add evidence<span class="sr-only"> for ' + esc(o.title) + '</span></a>' +
+      '<span class="hint__text" role="tooltip" id="tip-e-' + id + '">Upload the proof (sent notice, report, certificate) to the Evidence library, then paste its link into this item\u2019s Evidence field.</span></span>' +
+      '</div></article></li>';
+  }
+
+  function render(data, hash) {
+    var d = data.OBLIGATIONS;
+    var all = d.rows.map(Hub.model.obligation);
+    var open = all.filter(function (o) { return !o.closed; });
+    var owners = Hub.uniq([].concat.apply([], all.map(function (o) { return o.owners; }))).sort(function (a, b) { return a.localeCompare(b); });
+    var view = VIEWS.some(function (v) { return v.key === hash.view; }) ? hash.view : 'mine';
+    var person = hash.owner && owners.filter(function (n) { return n.toLowerCase() === hash.owner.toLowerCase(); })[0];
+    var unknownPerson = hash.owner && !person ? hash.owner : null;
+    if (!person && !unknownPerson) person = signedInName(owners) || owners[0] || '';
+    var who = unknownPerson || person;
+
+    Hub.badge(data, 'OBLIGATIONS', all.length, 'obligation');
+
+    var sets = {
+      mine: open.filter(function (o) { return who && o.owners.some(function (n) { return n.toLowerCase() === who.toLowerCase(); }); }),
+      all: open.filter(function (o) { return o.owners.length; }),
+      unassigned: open.filter(function (o) { return !o.owners.length; })
+    };
+    var keep = { owner: hash.owner || undefined };
+    Hub.setHTML('seg', VIEWS.map(function (v) {
+      var h = Hub.hash.href({ view: v.key === 'mine' ? undefined : v.key, owner: keep.owner });
+      return '<a class="seg__opt" data-focus="seg-' + v.key + '" href="' + esc(h === '#' ? '#view=mine' : h) + '"' + (v.key === view ? ' aria-current="true"' : '') + '>' +
+        esc(v.label) + ' <span class="seg__n">' + sets[v.key].length + '</span></a>';
+    }).join(''));
+
+    var sel = Hub.byId('person'), field = Hub.byId('person-field'), hint = Hub.byId('person-hint');
+    if (sel) {
+      var opts = owners.slice();
+      if (unknownPerson) opts.unshift(unknownPerson);
+      sel.innerHTML = opts.length ? opts.map(function (n) { return '<option' + (n === who ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('') : '<option>No owners yet</option>';
+      sel.disabled = !opts.length;
+      if (!sel.__wired) {
+        sel.__wired = true;
+        sel.addEventListener('change', function () { var h = Hub.hash.get(); Hub.hash.set({ view: h.view, owner: sel.value }); });
+      }
+    }
+    if (field) field.hidden = view !== 'mine';
+    if (hint) hint.hidden = view !== 'mine';
+
+    var title = view === 'mine' ? (who ? 'Open obligations for ' + who : 'Your open obligations') : view === 'all' ? 'Open obligations, all owners' : 'Open obligations with no owner';
+    var sub = view === 'mine' ? 'Everything ' + (who ? who + ' owns' : 'you own') + ', grouped by when it\u2019s due. Open an item to update it, mark it fulfilled or attach proof.'
+      : view === 'all' ? 'Every open obligation that has an owner, grouped by when it\u2019s due.'
+      : 'Nobody is being reminded about these yet. Items held for review get an owner once confirmed; for the rest, open one and set an Owner, or add a rule in Obligation Owners.';
+    Hub.setHTML('page-title', esc(title));
+    var held = view === 'unassigned' ? sets.unassigned.filter(function (o) { return /needs review/i.test(o.review); }).length : 0;
+    Hub.setHTML('page-sub', esc(sub) + (held ? ' <a href="' + esc(Hub.url.page('ReviewQueue.html')) + '" target="_top">' + esc(plural(held, 'item is', 'items are') + ' waiting in Review') + '</a>.' : ''));
+
+    var list = sets[view].slice().sort(Hub.byDue);
+    var host = Hub.byId('groups');
+    if (host) host.setAttribute('aria-busy', 'false');
+    if (!all.length) {
+      Hub.setHTML('groups', emptyState('No obligations yet', 'Obligations appear here after a contract is added to the Contracts library and capture has run.', Hub.url.view('CONTRACTS'), 'Open Contracts library'));
+      return;
+    }
+    if (!list.length) {
+      var msg = view === 'unassigned' ? ['Every open obligation has an owner', 'Nothing is waiting to be assigned.']
+        : view === 'mine' ? ['Nothing open for ' + (who || 'you'), unknownPerson ? 'No obligations are assigned to ' + unknownPerson + '. Choose another name above.' : 'No open obligations are assigned to this person right now.']
+        : ['No assigned open obligations', 'Owners are set by the Assign owners workflow using the routing rules in Obligation Owners.'];
+      Hub.setHTML('groups', emptyState(msg[0], msg[1], view === 'all' ? Hub.url.view('OWNERS') : '', 'Open Obligation Owners'));
+      return;
+    }
+    var html = GROUPS.map(function (g) {
+      var items = list.filter(function (o) { return o.timing === g; });
+      if (!items.length) return '';
+      var gid = 'g-' + g.replace(/\s+/g, '-').toLowerCase();
+      return '<section class="group" aria-labelledby="' + gid + '"><div class="group__head">' + Hub.timingPill(g) +
+        '<h2 id="' + gid + '"><span class="sr-only">' + esc(g) + ': </span><span class="group__count">' + plural(items.length, 'obligation') + ' \u00b7 ' + esc(GROUP_NOTE[g]) + '</span></h2><span class="group__rule" aria-hidden="true"></span></div>' +
+        '<ul class="ob-grid">' + items.map(card).join('') + '</ul></section>';
+    }).join('');
+    var closed = all.filter(function (o) {
+      if (!o.closed) return false;
+      if (view === 'unassigned') return !o.owners.length;
+      if (view === 'all') return o.owners.length;
+      return who && o.owners.some(function (n) { return n.toLowerCase() === who.toLowerCase(); });
+    }).length;
+    if (closed) html += '<p class="closed-note">' + plural(closed, 'fulfilled or closed item is', 'fulfilled or closed items are') + ' not shown. <a href="' + esc(Hub.url.view('OBLIGATIONS', [['Status', 'Fulfilled']])) + '" target="_top">See fulfilled obligations</a></p>';
+    Hub.setHTML('groups', html);
+  }
+
+  function emptyState(title, text, href, link) {
+    return '<div class="card state"><svg viewBox="0 0 120 96" aria-hidden="true"><defs><linearGradient id="es-g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#9AC7F5" stop-opacity=".5"/><stop offset="1" stop-color="#8B83DB" stop-opacity=".3"/></linearGradient></defs>' +
+      '<ellipse cx="60" cy="86" rx="40" ry="5" fill="#111827" opacity=".06"/><rect x="26" y="14" width="68" height="64" rx="12" fill="url(#es-g)"/><path d="M44 46l10 10 22-22" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '<h2>' + esc(title) + '</h2><p>' + esc(text) + '</p>' + (href ? '<p><a class="link-arrow" href="' + esc(href) + '" target="_top">' + esc(link) + icon('arrow') + '</a></p>' : '') + '</div>';
+  }
+
+  Hub.start({ lists: ['OBLIGATIONS'], render: render });
+})(window.Hub);
+
+</script>
+</body>
+</html>

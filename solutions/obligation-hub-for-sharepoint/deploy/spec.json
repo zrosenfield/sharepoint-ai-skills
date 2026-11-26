@@ -1,0 +1,2263 @@
+{
+ "$comment": "Obligation Hub for SharePoint: the single source of truth for deploy-obligation-hub.js (which embeds a copy), remove-obligation-hub.js and cowork/build_jobs.py. Paths are relative to the repository root; list URLs are site-relative; {{TOKENS}} are filled at install time. Change this file first, then run node deploy/sync-embedded-spec.js to refresh the embedded copies.",
+ "solution": {
+  "name": "obligation-hub-for-sharepoint",
+  "title": "Obligation Hub for SharePoint",
+  "short": "obligation-hub",
+  "version": "1.0.0",
+  "status": "experimental",
+  "kitPath": "solutions/obligation-hub-for-sharepoint",
+  "referenceDate": "2026-11-24",
+  "logTag": "Obligation Hub"
+ },
+ "tokens": [
+  {
+   "token": "{{OUR_COMPANY}}",
+   "meaning": "Legal name of the company that owns the hub, as written in its contracts.",
+   "kind": "text",
+   "usedIn": [
+    "Config/hub-settings.json",
+    "autofill prompts"
+   ]
+  },
+  {
+   "token": "{{SITE_URL}}",
+   "meaning": "Absolute site URL, no trailing slash.",
+   "kind": "url",
+   "usedIn": [
+    "Config/hub-settings.json",
+    "pages",
+    "sample obligations ContractLink"
+   ]
+  },
+  {
+   "token": "{{LEADERSHIP_EMAILS}}",
+   "meaning": "Leadership digest recipients (defaults to the installer).",
+   "kind": "text",
+   "usedIn": [
+    "Config/hub-settings.json"
+   ]
+  },
+  {
+   "token": "{{CURRENT_USER}}",
+   "meaning": "The person running the installer (Person fields).",
+   "kind": "text",
+   "usedIn": [
+    "Obligation Owners seed",
+    "sample contracts ContractOwner",
+    "sample obligations Owner"
+   ]
+  }
+ ],
+ "lists": [
+  {
+   "key": "contracts",
+   "title": "Contracts",
+   "url": "Contracts",
+   "template": "DocumentLibrary",
+   "baseTemplate": 101,
+   "description": "Signed contracts and amendments. Key terms fill in automatically; adding or changing a contract starts obligation capture.",
+   "navLink": true,
+   "titleDisplayName": "Contract title",
+   "ifExists": "refuse",
+   "builtInView": "All Documents",
+   "columns": [
+    {
+     "internalName": "Counterparty",
+     "displayName": "Counterparty",
+     "type": "Text",
+     "required": false,
+     "autofillPrompt": "The legal name of the other party to this contract, i.e. the party that is not {{OUR_COMPANY}}. Use the name exactly as written in the parties block."
+    },
+    {
+     "internalName": "ContractType",
+     "displayName": "Contract type",
+     "type": "Choice",
+     "choices": [
+      "Customer agreement",
+      "Supplier agreement",
+      "Partner agreement",
+      "License",
+      "Lease",
+      "Financing",
+      "Data processing",
+      "Amendment",
+      "Other"
+     ],
+     "required": false,
+     "autofillPrompt": "Classify the document from {{OUR_COMPANY}}'s point of view: Customer agreement if {{OUR_COMPANY}} provides goods or services to the other party; Supplier agreement if {{OUR_COMPANY}} buys from them; Partner agreement for distribution, reseller or alliance deals; License, Lease, Financing or Data processing when that is the main subject; Amendment if the document amends an earlier agreement; otherwise Other."
+    },
+    {
+     "internalName": "EffectiveDate",
+     "displayName": "Effective date",
+     "type": "DateTime",
+     "required": false,
+     "format": "DateOnly",
+     "autofillPrompt": "The effective date of this agreement (or of this amendment). Return only the date."
+    },
+    {
+     "internalName": "ExpirationDate",
+     "displayName": "Expiration date",
+     "type": "DateTime",
+     "required": false,
+     "format": "DateOnly",
+     "autofillPrompt": "The date the current term ends. If the contract states a term length instead of an end date, compute the end date from the effective date. Leave empty if the agreement has no fixed end."
+    },
+    {
+     "internalName": "AutoRenews",
+     "displayName": "Auto-renews",
+     "type": "Choice",
+     "choices": [
+      "Yes",
+      "No",
+      "Unclear"
+     ],
+     "required": false,
+     "autofillPrompt": "Yes if the term renews automatically unless a party gives notice; No if it simply expires or renews only by mutual agreement; Unclear otherwise."
+    },
+    {
+     "internalName": "NoticePeriodDays",
+     "displayName": "Notice period (days)",
+     "type": "Number",
+     "required": false,
+     "autofillPrompt": "The number of days of advance written notice required to prevent renewal or to terminate at the end of the term. Convert months to days (1 month = 30 days). Empty if none."
+    },
+    {
+     "internalName": "GoverningLaw",
+     "displayName": "Governing law",
+     "type": "Text",
+     "required": false,
+     "autofillPrompt": "The governing law jurisdiction, e.g. 'Washington, USA'."
+    },
+    {
+     "internalName": "ContractValue",
+     "displayName": "Contract value",
+     "type": "Currency",
+     "required": false,
+     "autofillPrompt": "The total or annual contract value in US dollars if stated; empty if not stated."
+    },
+    {
+     "internalName": "ContractSummary",
+     "displayName": "Summary",
+     "type": "Note",
+     "required": false,
+     "richText": false,
+     "unlimitedLength": true,
+     "autofillPrompt": "Two plain-language sentences, under 250 characters in total: what the contract is for and the most important dates or commitments."
+    },
+    {
+     "internalName": "ContractOwner",
+     "displayName": "Contract owner",
+     "type": "User",
+     "required": false
+    },
+    {
+     "internalName": "BusinessUnit",
+     "displayName": "Business unit",
+     "type": "Choice",
+     "choices": [
+      "Sales",
+      "Procurement",
+      "Finance",
+      "Legal",
+      "IT",
+      "Facilities",
+      "Operations"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Amends",
+     "displayName": "Amends",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "IsSample",
+     "displayName": "Sample data",
+     "type": "Boolean",
+     "default": "0",
+     "required": false
+    }
+   ],
+   "views": [
+    {
+     "name": "All contracts",
+     "default": true,
+     "fields": [
+      "DocIcon",
+      "LinkFilename",
+      "Counterparty",
+      "ContractType",
+      "EffectiveDate",
+      "ExpirationDate",
+      "AutoRenews",
+      "NoticePeriodDays",
+      "ContractOwner",
+      "BusinessUnit"
+     ],
+     "query": "<OrderBy><FieldRef Name='Counterparty'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list",
+     "replacesBuiltInView": true
+    },
+    {
+     "name": "Expiring in 180 days",
+     "default": false,
+     "fields": [
+      "DocIcon",
+      "LinkFilename",
+      "Counterparty",
+      "ExpirationDate",
+      "AutoRenews",
+      "NoticePeriodDays",
+      "ContractOwner"
+     ],
+     "query": "<Where><And><IsNotNull><FieldRef Name='ExpirationDate'/></IsNotNull><Leq><FieldRef Name='ExpirationDate'/><Value Type='DateTime'><Today OffsetDays='180'/></Value></Leq></And></Where><OrderBy><FieldRef Name='ExpirationDate'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list"
+    }
+   ]
+  },
+  {
+   "key": "obligations",
+   "title": "Obligations",
+   "url": "Lists/Obligations",
+   "template": "GenericList",
+   "baseTemplate": 100,
+   "description": "Every tracked contract obligation: who owes what, by when, and what triggers it.",
+   "navLink": true,
+   "titleDisplayName": "Obligation",
+   "ifExists": "refuse",
+   "builtInView": "All Items",
+   "columns": [
+    {
+     "internalName": "ContractName",
+     "displayName": "Contract",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "ContractLink",
+     "displayName": "Contract link",
+     "type": "URL",
+     "required": false,
+     "format": "Hyperlink"
+    },
+    {
+     "internalName": "Counterparty",
+     "displayName": "Counterparty",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "ObligationText",
+     "displayName": "What must happen",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "ClauseRef",
+     "displayName": "Clause",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "SourceClause",
+     "displayName": "Source clause",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "Party",
+     "displayName": "Who owes it",
+     "type": "Choice",
+     "choices": [
+      "Us",
+      "Counterparty",
+      "Both"
+     ],
+     "default": "Us",
+     "required": false
+    },
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "TriggerType",
+     "displayName": "Trigger",
+     "type": "Choice",
+     "choices": [
+      "Fixed date",
+      "Recurring",
+      "Event-driven",
+      "Ongoing"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Recurrence",
+     "displayName": "Recurrence",
+     "type": "Choice",
+     "choices": [
+      "None",
+      "Weekly",
+      "Monthly",
+      "Quarterly",
+      "Semi-annual",
+      "Annual"
+     ],
+     "default": "None",
+     "required": false
+    },
+    {
+     "internalName": "DueDate",
+     "displayName": "Due date",
+     "type": "DateTime",
+     "required": false,
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "TriggerEvent",
+     "displayName": "Trigger event",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "Owner",
+     "displayName": "Owner",
+     "type": "User",
+     "required": false
+    },
+    {
+     "internalName": "EscalationOwner",
+     "displayName": "Escalation owner",
+     "type": "User",
+     "required": false
+    },
+    {
+     "internalName": "BusinessUnit",
+     "displayName": "Business unit",
+     "type": "Choice",
+     "choices": [
+      "Sales",
+      "Procurement",
+      "Finance",
+      "Legal",
+      "IT",
+      "Facilities",
+      "Operations"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Status",
+     "displayName": "Status",
+     "type": "Choice",
+     "choices": [
+      "Not started",
+      "In progress",
+      "Fulfilled",
+      "Waived",
+      "Not applicable"
+     ],
+     "default": "Not started",
+     "required": false,
+     "formatter": "formats/Status.json"
+    },
+    {
+     "internalName": "Timing",
+     "displayName": "Timing",
+     "type": "Choice",
+     "choices": [
+      "Overdue",
+      "Due soon",
+      "Upcoming",
+      "No date",
+      "Closed"
+     ],
+     "required": false,
+     "formatter": "formats/Timing.json"
+    },
+    {
+     "internalName": "ReviewState",
+     "displayName": "Review",
+     "type": "Choice",
+     "choices": [
+      "Confirmed",
+      "Needs review"
+     ],
+     "default": "Needs review",
+     "required": false,
+     "formatter": "formats/ReviewState.json"
+    },
+    {
+     "internalName": "Confidence",
+     "displayName": "Confidence",
+     "type": "Choice",
+     "choices": [
+      "High",
+      "Medium",
+      "Low"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Risk",
+     "displayName": "Risk",
+     "type": "Choice",
+     "choices": [
+      "High",
+      "Medium",
+      "Low"
+     ],
+     "default": "Medium",
+     "required": false,
+     "formatter": "formats/Risk.json"
+    },
+    {
+     "internalName": "FulfilledOn",
+     "displayName": "Fulfilled on",
+     "type": "DateTime",
+     "required": false,
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "Evidence",
+     "displayName": "Evidence",
+     "type": "URL",
+     "required": false,
+     "format": "Hyperlink"
+    },
+    {
+     "internalName": "LastReminded",
+     "displayName": "Last reminded",
+     "type": "DateTime",
+     "required": false,
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "CaptureKey",
+     "displayName": "Capture key",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "Notes",
+     "displayName": "Notes",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "IsSample",
+     "displayName": "Sample data",
+     "type": "Boolean",
+     "default": "0",
+     "required": false
+    }
+   ],
+   "views": [
+    {
+     "name": "Open by due date",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "DueDate",
+      "Timing",
+      "Status",
+      "Owner",
+      "Party",
+      "Risk",
+      "ReviewState"
+     ],
+     "query": "<Where><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Fulfilled</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Waived</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Not applicable</Value></Neq><IsNotNull><FieldRef Name='DueDate'/></IsNotNull></And></And></And></Where><OrderBy><FieldRef Name='DueDate' Ascending='TRUE'/></OrderBy>",
+     "rowLimit": 100,
+     "type": "list"
+    },
+    {
+     "name": "Triggered and ongoing",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "TriggerType",
+      "TriggerEvent",
+      "Owner",
+      "Party",
+      "Risk",
+      "ReviewState"
+     ],
+     "query": "<Where><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Fulfilled</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Waived</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Not applicable</Value></Neq><IsNull><FieldRef Name='DueDate'/></IsNull></And></And></And></Where><OrderBy><FieldRef Name='Counterparty'/></OrderBy>",
+     "rowLimit": 100,
+     "type": "list"
+    },
+    {
+     "name": "My obligations",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "DueDate",
+      "Timing",
+      "Status",
+      "Risk"
+     ],
+     "query": "<Where><Eq><FieldRef Name='Owner'/><Value Type='User'><UserID/></Value></Eq></Where><OrderBy><FieldRef Name='DueDate' Ascending='TRUE'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list"
+    },
+    {
+     "name": "Needs owner",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "BusinessUnit",
+      "DueDate",
+      "Risk"
+     ],
+     "query": "<Where><IsNull><FieldRef Name='Owner'/></IsNull></Where><OrderBy><FieldRef Name='DueDate'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list"
+    },
+    {
+     "name": "Needs review",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "ClauseRef",
+      "Category",
+      "Confidence",
+      "DueDate",
+      "Notes"
+     ],
+     "query": "<Where><Eq><FieldRef Name='ReviewState'/><Value Type='Choice'>Needs review</Value></Eq></Where>",
+     "rowLimit": 30,
+     "type": "list"
+    },
+    {
+     "name": "By contract",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Category",
+      "Party",
+      "DueDate",
+      "Recurrence",
+      "Status",
+      "Owner"
+     ],
+     "query": "<GroupBy Collapse='FALSE'><FieldRef Name='ContractName'/></GroupBy><OrderBy><FieldRef Name='DueDate'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list"
+    },
+    {
+     "name": "Calendar",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "DueDate",
+      "Counterparty",
+      "Status"
+     ],
+     "query": "",
+     "rowLimit": 30,
+     "type": "calendar",
+     "calendar": {
+      "startDateField": "DueDate",
+      "endDateField": "DueDate",
+      "titleField": "Title",
+      "defaultLayout": "month"
+     }
+    },
+    {
+     "name": "All obligations",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "DueDate",
+      "Timing",
+      "Status",
+      "Owner",
+      "Party",
+      "Risk",
+      "ReviewState",
+      "ContractName",
+      "ClauseRef",
+      "TriggerType",
+      "Recurrence",
+      "TriggerEvent",
+      "EscalationOwner",
+      "BusinessUnit",
+      "Confidence",
+      "FulfilledOn",
+      "Evidence"
+     ],
+     "query": "",
+     "rowLimit": 30,
+     "type": "list",
+     "replacesBuiltInView": true
+    }
+   ]
+  },
+  {
+   "key": "owners",
+   "title": "Obligation Owners",
+   "url": "Lists/Obligation Owners",
+   "template": "GenericList",
+   "baseTemplate": 100,
+   "description": "Routing rules used to assign new obligations. The most specific matching rule wins.",
+   "navLink": false,
+   "titleDisplayName": "Rule",
+   "ifExists": "refuse",
+   "builtInView": "All Items",
+   "columns": [
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Any",
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ],
+     "default": "Any",
+     "required": false
+    },
+    {
+     "internalName": "BusinessUnit",
+     "displayName": "Business unit",
+     "type": "Choice",
+     "choices": [
+      "Any",
+      "Sales",
+      "Procurement",
+      "Finance",
+      "Legal",
+      "IT",
+      "Facilities",
+      "Operations"
+     ],
+     "default": "Any",
+     "required": false
+    },
+    {
+     "internalName": "Counterparty",
+     "displayName": "Counterparty (optional)",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "Owner",
+     "displayName": "Owner",
+     "type": "User",
+     "required": false
+    },
+    {
+     "internalName": "EscalationOwner",
+     "displayName": "Escalation owner",
+     "type": "User",
+     "required": false
+    },
+    {
+     "internalName": "Notify",
+     "displayName": "Notify by",
+     "type": "Choice",
+     "choices": [
+      "Email",
+      "Teams",
+      "Both"
+     ],
+     "default": "Both",
+     "required": false
+    }
+   ],
+   "views": [
+    {
+     "name": "All rules",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Category",
+      "BusinessUnit",
+      "Counterparty",
+      "Owner",
+      "EscalationOwner",
+      "Notify"
+     ],
+     "query": "",
+     "rowLimit": 30,
+     "type": "list",
+     "replacesBuiltInView": true
+    }
+   ]
+  },
+  {
+   "key": "types",
+   "title": "Obligation Types",
+   "url": "Lists/Obligation Types",
+   "template": "GenericList",
+   "baseTemplate": 100,
+   "description": "What counts as a trackable obligation. Capture uses this to classify, keep or exclude.",
+   "navLink": false,
+   "titleDisplayName": "Obligation type",
+   "ifExists": "refuse",
+   "builtInView": "All Items",
+   "columns": [
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Handling",
+     "displayName": "Handling",
+     "type": "Choice",
+     "choices": [
+      "Track",
+      "Exclude",
+      "Hold for review"
+     ],
+     "default": "Track",
+     "required": false
+    },
+    {
+     "internalName": "DefaultRisk",
+     "displayName": "Default risk",
+     "type": "Choice",
+     "choices": [
+      "High",
+      "Medium",
+      "Low"
+     ],
+     "default": "Medium",
+     "required": false
+    },
+    {
+     "internalName": "DefaultRecurrence",
+     "displayName": "Default recurrence",
+     "type": "Choice",
+     "choices": [
+      "None",
+      "Weekly",
+      "Monthly",
+      "Quarterly",
+      "Semi-annual",
+      "Annual"
+     ],
+     "default": "None",
+     "required": false
+    },
+    {
+     "internalName": "Description",
+     "displayName": "Description",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "Examples",
+     "displayName": "Example wording",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    }
+   ],
+   "views": [
+    {
+     "name": "All types",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Category",
+      "Handling",
+      "DefaultRisk",
+      "DefaultRecurrence",
+      "Description"
+     ],
+     "query": "<OrderBy><FieldRef Name='Category'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list",
+     "replacesBuiltInView": true
+    }
+   ]
+  },
+  {
+   "key": "exclusions",
+   "title": "Exclusions",
+   "url": "Lists/Exclusions",
+   "template": "GenericList",
+   "baseTemplate": 100,
+   "description": "Clauses or obligation patterns that should not be tracked.",
+   "navLink": false,
+   "titleDisplayName": "Exclusion",
+   "ifExists": "refuse",
+   "builtInView": "All Items",
+   "columns": [
+    {
+     "internalName": "Pattern",
+     "displayName": "Clause or pattern",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "Reason",
+     "displayName": "Reason",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "Scope",
+     "displayName": "Scope",
+     "type": "Choice",
+     "choices": [
+      "All contracts",
+      "This contract"
+     ],
+     "default": "This contract",
+     "required": false
+    },
+    {
+     "internalName": "ContractName",
+     "displayName": "Contract",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Active",
+     "displayName": "Active",
+     "type": "Boolean",
+     "default": "1",
+     "required": false
+    }
+   ],
+   "views": [
+    {
+     "name": "All exclusions",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Scope",
+      "ContractName",
+      "Category",
+      "Reason",
+      "Active"
+     ],
+     "query": "",
+     "rowLimit": 30,
+     "type": "list",
+     "replacesBuiltInView": true
+    }
+   ]
+  },
+  {
+   "key": "runlog",
+   "title": "Run Log",
+   "url": "Lists/Run Log",
+   "template": "GenericList",
+   "baseTemplate": 100,
+   "description": "Every automated run: what it did and whether it worked. Failures show on the home page.",
+   "navLink": false,
+   "titleDisplayName": "Run",
+   "ifExists": "refuse",
+   "builtInView": "All Items",
+   "columns": [
+    {
+     "internalName": "Workflow",
+     "displayName": "Workflow",
+     "type": "Choice",
+     "choices": [
+      "Capture",
+      "Assign owners",
+      "Daily sweep",
+      "Owner digest",
+      "Leadership digest",
+      "Mark fulfilled",
+      "Exclude",
+      "Setup"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "Outcome",
+     "displayName": "Outcome",
+     "type": "Choice",
+     "choices": [
+      "Succeeded",
+      "Partial",
+      "Failed",
+      "Skipped"
+     ],
+     "required": false
+    },
+    {
+     "internalName": "ContractName",
+     "displayName": "Contract",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "ContractVersion",
+     "displayName": "Contract version",
+     "type": "Text",
+     "required": false
+    },
+    {
+     "internalName": "ItemsCreated",
+     "displayName": "Created",
+     "type": "Number",
+     "required": false
+    },
+    {
+     "internalName": "ItemsUpdated",
+     "displayName": "Updated",
+     "type": "Number",
+     "required": false
+    },
+    {
+     "internalName": "ItemsHeld",
+     "displayName": "Held for review",
+     "type": "Number",
+     "required": false
+    },
+    {
+     "internalName": "Details",
+     "displayName": "Details",
+     "type": "Note",
+     "required": false,
+     "richText": false
+    },
+    {
+     "internalName": "RunAt",
+     "displayName": "Run at",
+     "type": "DateTime",
+     "required": false,
+     "format": "DateTime"
+    }
+   ],
+   "views": [
+    {
+     "name": "Recent runs",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Workflow",
+      "Outcome",
+      "ContractName",
+      "ItemsCreated",
+      "ItemsUpdated",
+      "ItemsHeld",
+      "RunAt"
+     ],
+     "query": "<OrderBy><FieldRef Name='Created' Ascending='FALSE'/></OrderBy>",
+     "rowLimit": 30,
+     "type": "list",
+     "replacesBuiltInView": true
+    }
+   ]
+  },
+  {
+   "key": "evidence",
+   "title": "Evidence",
+   "url": "Evidence",
+   "template": "DocumentLibrary",
+   "baseTemplate": 101,
+   "description": "Proof that obligations were fulfilled. Linked from each obligation's Evidence field.",
+   "navLink": false,
+   "titleDisplayName": "Evidence title",
+   "ifExists": "refuse",
+   "builtInView": "All Documents",
+   "columns": [
+    {
+     "internalName": "IsSample",
+     "displayName": "Sample data",
+     "type": "Boolean",
+     "default": "0",
+     "required": false
+    }
+   ],
+   "views": []
+  },
+  {
+   "key": "agentassets",
+   "title": "AgentAssets",
+   "url": "AgentAssets",
+   "template": "DocumentLibrary",
+   "baseTemplate": 101,
+   "description": "Site skills for Copilot in SharePoint and AI workflows (Skills/<skill-name>/SKILL.md).",
+   "navLink": false,
+   "titleDisplayName": "Asset title",
+   "ifExists": "reuse",
+   "builtInView": "All Documents",
+   "columns": [],
+   "views": []
+  }
+ ],
+ "agentAssets": {
+  "list": "agentassets",
+  "folders": [
+   {
+    "path": "Skills",
+    "color": "DARK_BLUE"
+   },
+   {
+    "path": "Config",
+    "color": "DARK_BLUE"
+   }
+  ],
+  "skillFolderColor": "LIGHT_BLUE",
+  "skillsRoot": "Skills",
+  "skills": [
+   {
+    "name": "capture-obligations",
+    "purpose": "Capture obligations from a contract (AI workflows: file added, file changed; quick step Re-capture obligations).",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "assign-obligation-owners",
+    "purpose": "Route unowned obligations with the Obligation Owners rules (AI workflow: daily 7 AM).",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "sweep-obligations",
+    "purpose": "Timing, roll-forward, reminders and escalation (AI workflow: daily 6 AM).",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "obligation-owner-digest",
+    "purpose": "Monday digest per owner (AI workflow: Mondays 8 AM).",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "obligation-leadership-digest",
+    "purpose": "Friday leadership digest (AI workflow: Fridays 3 PM).",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "mark-obligation-fulfilled",
+    "purpose": "Quick step Mark fulfilled: fulfil, evidence, next occurrence.",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "exclude-obligation",
+    "purpose": "Quick step Remove obligation: exclusion row, item set to Not applicable.",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "obligation-hub-guide",
+    "purpose": "Answers questions about the hub in Copilot in SharePoint.",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "clear-obligation-sample-data",
+    "purpose": "Removes items and files flagged IsSample = Yes, after confirmation.",
+    "files": [
+     "SKILL.md"
+    ],
+    "upload": true
+   },
+   {
+    "name": "setup-obligation-hub",
+    "purpose": "Installer for Copilot in SharePoint and Cowork. Not uploaded by the deploy script: the hub is already built.",
+    "files": [
+     "SKILL.md",
+     "references/formatting.md",
+     "references/obligation-types.md",
+     "references/quick-steps.md",
+     "references/schema.md"
+    ],
+    "upload": false
+   }
+  ],
+  "siteContext": {
+   "source": "solutions/obligation-hub-for-sharepoint/assets/SHAREPOINT.md",
+   "target": "SHAREPOINT.md",
+   "marker": "Obligation Hub",
+   "note": "Goes in the AgentAssets root, not in Skills/. Not overwritten if a different SHAREPOINT.md is there."
+  },
+  "settings": {
+   "source": "solutions/obligation-hub-for-sharepoint/assets/hub-settings.template.json",
+   "target": "Config/hub-settings.json",
+   "defaults": {
+    "ourCompany": "{{OUR_COMPANY}}",
+    "siteUrl": "{{SITE_URL}}",
+    "timeZone": "Pacific Standard Time",
+    "dueSoonDays": 14,
+    "escalateAfterDaysOverdue": 0,
+    "reminderCooldownDays": 3,
+    "leadershipRecipients": [
+     "{{LEADERSHIP_EMAILS}}"
+    ],
+    "leadershipTeamsChannel": {
+     "team": "",
+     "channel": ""
+    },
+    "notifyDefault": "Both",
+    "captureHoldBelowConfidence": "Medium",
+    "maxDigestItems": 25
+   },
+   "overwrite": false
+  }
+ },
+ "formats": [
+  {
+   "list": "obligations",
+   "field": "Timing",
+   "file": "solutions/obligation-hub-for-sharepoint/formats/Timing.json"
+  },
+  {
+   "list": "obligations",
+   "field": "Status",
+   "file": "solutions/obligation-hub-for-sharepoint/formats/Status.json"
+  },
+  {
+   "list": "obligations",
+   "field": "Risk",
+   "file": "solutions/obligation-hub-for-sharepoint/formats/Risk.json"
+  },
+  {
+   "list": "obligations",
+   "field": "ReviewState",
+   "file": "solutions/obligation-hub-for-sharepoint/formats/ReviewState.json"
+  }
+ ],
+ "seeds": {
+  "obligationTypes": {
+   "list": "types",
+   "source": "solutions/obligation-hub-for-sharepoint/seed/obligation-types.json",
+   "matchOn": "Title",
+   "rows": [
+    {
+     "Title": "Payments we owe",
+     "Category": "Payment",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Fees, rent, interest, support fees, repayments or milestone payments we must pay, with amount and due date or schedule. Merge late charges into the same item.",
+     "Examples": "Licensee shall pay the annual fee on or before the first day of each contract year. | Borrower shall repay all advances on the maturity date."
+    },
+    {
+     "Title": "Payments owed to us",
+     "Category": "Payment",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "The counterparty's payment terms on our invoices. Party Counterparty, so receivables can be chased.",
+     "Examples": "Customer shall pay each undisputed invoice within thirty (30) days after receipt."
+    },
+    {
+     "Title": "Rebates, fund contributions, true-ups and deposit top-ups",
+     "Category": "Payment",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "Quarterly",
+     "Description": "Calculated payments tied to a period or event: volume rebates, marketing fund contributions, true-up invoices, restoring a security deposit.",
+     "Examples": "Within 45 days after each quarter, pay the rebate earned for that quarter with a calculation statement."
+    },
+    {
+     "Title": "Supplier price-increase limits and notice",
+     "Category": "Payment",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "The other side may raise what we pay only within a cap and after notice. Counterparty, Event-driven.",
+     "Examples": "Provider may increase fees once per year by up to 5% on 60 days' prior written notice."
+    },
+    {
+     "Title": "Periodic operational report",
+     "Category": "Reporting",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "Quarterly",
+     "Description": "Recurring service-level, sales, inventory or usage reports due after each period.",
+     "Examples": "Within 20 days after each calendar quarter, deliver a report of net sales and inventory on hand."
+    },
+    {
+     "Title": "Financial statements and compliance certificates",
+     "Category": "Reporting",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "Quarterly",
+     "Description": "Lender or investor reporting: periodic financial statements and officer-signed compliance certificates.",
+     "Examples": "Within 45 days after each fiscal quarter, deliver a compliance certificate signed by the CFO."
+    },
+    {
+     "Title": "Non-renewal notice before automatic renewal",
+     "Category": "Notice & renewal",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "Annual",
+     "Description": "Last day to stop an auto-renewing contract or service. Due date = term end minus the notice period.",
+     "Examples": "Either party may give notice of non-renewal at least 90 days before the end of the then-current term."
+    },
+    {
+     "Title": "Renewal, extension or transition option window",
+     "Category": "Notice & renewal",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "None",
+     "Description": "A right that lapses unless exercised by a deadline or inside a window (renewal or extension option, transition assistance request). Due date = last day; note when the window opens.",
+     "Examples": "Tenant may exercise the option by notice no earlier than 12 and no later than 9 months before expiration."
+    },
+    {
+     "Title": "Renewal decision before fixed expiry",
+     "Category": "Notice & renewal",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "None",
+     "Description": "A contract that ends on a date without automatic renewal: decide and sign any renewal before expiry. Created when expiry is within 12 months.",
+     "Examples": "This agreement expires on its stated date and may be renewed only by a written agreement signed before then."
+    },
+    {
+     "Title": "Termination for convenience notice",
+     "Category": "Notice & renewal",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Notice either party must give to end the contract without cause. Event-driven.",
+     "Examples": "Either party may terminate this agreement for convenience on 60 days' prior written notice."
+    },
+    {
+     "Title": "Fee-increase notice we must give",
+     "Category": "Notice & renewal",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "Annual",
+     "Description": "Our price increase at renewal is valid only if notice is given by a deadline.",
+     "Examples": "Supplier may increase fees for a renewal term by giving notice at least 60 days before that term starts."
+    },
+    {
+     "Title": "Change-of-control or assignment notice",
+     "Category": "Notice & renewal",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "None",
+     "Description": "Notice due after a change of control, merger or assignment. Event-driven.",
+     "Examples": "Distributor shall notify Supplier in writing within 30 days after any change of control."
+    },
+    {
+     "Title": "Audit cooperation",
+     "Category": "Compliance & audit",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "The other side's audit right creates our duty to cooperate after their notice. Our own discretionary audit rights are not tracked.",
+     "Examples": "On 30 days' notice, Customer may audit Supplier's records once per year; Supplier shall cooperate."
+    },
+    {
+     "Title": "License usage certification or true-up",
+     "Category": "Compliance & audit",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "Annual",
+     "Description": "Periodic certification of users, seats or volumes, and payment for any excess.",
+     "Examples": "Within 30 days after each anniversary, certify the peak number of named users."
+    },
+    {
+     "Title": "Compliance deliverables: certificates, attestations and plans",
+     "Category": "Compliance & audit",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Reports, certificates or plans due on a date or each year: SOC reports, inspection or permit certificates, continuity or security plans. The other side's delivery is Counterparty.",
+     "Examples": "Processor shall deliver an updated SOC 2 Type II report by October 1 each year. | Within 60 days, deliver an updated disaster recovery plan."
+    },
+    {
+     "Title": "Restrictive covenants and pricing commitments",
+     "Category": "Compliance & audit",
+     "Handling": "Track",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Standing restrictions to monitor: exclusivity, non-compete, license-use limits, most-favoured pricing and the duty to extend better pricing.",
+     "Examples": "Licensee shall not permit any affiliate or third party to use the software."
+    },
+    {
+     "Title": "Financial covenants and default notices",
+     "Category": "Compliance & audit",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "None",
+     "Description": "Minimum liquidity or ratio covenants, and notifying a lender or counterparty of a default within a set time.",
+     "Examples": "Borrower shall notify the bank within five business days after becoming aware of any default."
+    },
+    {
+     "Title": "Service-level commitment",
+     "Category": "Service levels",
+     "Handling": "Track",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Measurable service levels (availability %, response or resolution times), ours or the other side's. Ongoing.",
+     "Examples": "Provider shall maintain monthly availability of at least 99.9%."
+    },
+    {
+     "Title": "Service credits: issue or claim within the window",
+     "Category": "Service levels",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Credits we must issue after a miss, or credits we must claim before the window closes.",
+     "Examples": "To receive a service credit, Customer must submit a claim within 30 days after the end of the month."
+    },
+    {
+     "Title": "Maintain insurance and deliver certificates",
+     "Category": "Insurance",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "Annual",
+     "Description": "Keep required coverage and deliver certificates or endorsements by a date or each year. One item, dated by the certificate.",
+     "Examples": "Maintain general liability insurance and deliver a certificate of insurance by January 15 each year."
+    },
+    {
+     "Title": "Confidentiality",
+     "Category": "Data & confidentiality",
+     "Handling": "Track",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Protect the other side's confidential information during the term and any survival period. Usually Both, Ongoing.",
+     "Examples": "Each party shall hold the other party's confidential information in confidence."
+    },
+    {
+     "Title": "Personal data breach notification",
+     "Category": "Data & confidentiality",
+     "Handling": "Track",
+     "DefaultRisk": "High",
+     "DefaultRecurrence": "None",
+     "Description": "Notify of a personal data or security breach within a set time. Event-driven.",
+     "Examples": "Processor shall notify Controller of any personal data breach within 48 hours after becoming aware of it."
+    },
+    {
+     "Title": "Sub-processor notice and objection window",
+     "Category": "Data & confidentiality",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "The processor's advance notice of new sub-processors, and our window to object.",
+     "Examples": "Controller may object in writing within 15 days after receiving notice of a new sub-processor."
+    },
+    {
+     "Title": "Minimum purchase or volume commitment",
+     "Category": "Purchasing & volume",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "Annual",
+     "Description": "Minimum spend or volume per period; a shortfall triggers a remedy.",
+     "Examples": "Distributor shall purchase products of at least $500,000 in each contract year."
+    },
+    {
+     "Title": "Forecasts and periodic commercial reviews",
+     "Category": "Purchasing & volume",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "Monthly",
+     "Description": "Rolling forecasts and scheduled pricing or business reviews.",
+     "Examples": "By the 5th of each month, provide a rolling six-month forecast."
+    },
+    {
+     "Title": "Product discontinuation and last-time-buy notice",
+     "Category": "Purchasing & volume",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "The supplier's notice before discontinuing a product. Counterparty, Event-driven.",
+     "Examples": "Supplier shall give at least 90 days' notice before discontinuing any product."
+    },
+    {
+     "Title": "Defect, damage or repair notice window",
+     "Category": "Other",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Notice we must give within a set time after delivery or discovery, or rights are lost.",
+     "Examples": "Buyer shall notify Supplier of any defect within 14 days after delivery."
+    },
+    {
+     "Title": "Post-signing deliverable",
+     "Category": "Other",
+     "Handling": "Track",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "A one-time commercial plan or setup task due within a set time after the effective date.",
+     "Examples": "Within 90 days after the effective date, submit an initial marketing plan for approval."
+    },
+    {
+     "Title": "Key personnel continuity",
+     "Category": "Other",
+     "Handling": "Track",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Named key people who may not be replaced without notice or approval.",
+     "Examples": "Supplier shall not replace the named account director without Customer's prior written approval."
+    },
+    {
+     "Title": "Contacts, notice addresses and invoicing logistics",
+     "Category": "Other",
+     "Handling": "Exclude",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Designating contacts, notice addresses, where invoices go, issuing our own routine invoices. Payment amounts and deadlines are tracked separately.",
+     "Examples": "Each party shall designate a point of contact. | Invoices shall be sent to the accounts payable mailbox."
+    },
+    {
+     "Title": "Good-faith cooperation and general conduct",
+     "Category": "Other",
+     "Handling": "Exclude",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "General promises to cooperate or act in good faith, with no action, date or deliverable.",
+     "Examples": "The parties shall cooperate in good faith in the performance of this agreement."
+    },
+    {
+     "Title": "Interpretive and legal boilerplate",
+     "Category": "Other",
+     "Handling": "Exclude",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Headings, counterparts, own costs, governing law, entire agreement, severability, force majeure, survival, waivers, liability caps, termination for cause, remedies.",
+     "Examples": "Headings are for convenience only. | Each party shall bear its own costs."
+    },
+    {
+     "Title": "Routine service delivery and site rules",
+     "Category": "Other",
+     "Handling": "Exclude",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Uniforms, badges, site access, hours, permitted use, signage, service descriptions and general performance standards with no measurable level, trigger, date or deliverable.",
+     "Examples": "Supplier staff shall wear uniforms and identification badges. | Provider will perform the services in a professional manner."
+    },
+    {
+     "Title": "Conditions met at signing",
+     "Category": "Other",
+     "Handling": "Exclude",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Payments, deposits or deliverables completed at or before signing, including conditions to effectiveness of an agreement now in effect.",
+     "Examples": "As a condition to effectiveness, Borrower shall pay the facility fee on the closing date."
+    },
+    {
+     "Title": "Efforts-based or third-party duties",
+     "Category": "Other",
+     "Handling": "Hold for review",
+     "DefaultRisk": "Low",
+     "DefaultRecurrence": "None",
+     "Description": "Reasonable or best efforts duties with no measurable outcome, and duties placed on affiliates, subcontractors or others who did not sign.",
+     "Examples": "Reseller shall use commercially reasonable efforts to promote the products."
+    },
+    {
+     "Title": "Indemnity claim notices and defense procedures",
+     "Category": "Compliance & audit",
+     "Handling": "Hold for review",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Procedural duties after a third-party claim (prompt notice, defense, cooperation); Legal decides case by case.",
+     "Examples": "The indemnified party shall promptly notify the indemnifying party of any claim."
+    },
+    {
+     "Title": "Record retention and end-of-term data return",
+     "Category": "Data & confidentiality",
+     "Handling": "Hold for review",
+     "DefaultRisk": "Medium",
+     "DefaultRecurrence": "None",
+     "Description": "Keep records for a period, or return or delete data at the end of the contract; often defined in another document.",
+     "Examples": "Upon termination, Processor shall return or delete all personal data within 30 days."
+    }
+   ]
+  },
+  "ownerRules": {
+   "list": "owners",
+   "matchOn": "Title",
+   "rows": [
+    {
+     "Title": "Default - all obligations",
+     "Category": "Any",
+     "BusinessUnit": "Any",
+     "Counterparty": "",
+     "Owner": "{{CURRENT_USER}}",
+     "EscalationOwner": "{{CURRENT_USER}}",
+     "Notify": "Both"
+    }
+   ],
+   "sampleRows": [
+    {
+     "Title": "Finance - payments",
+     "Category": "Payment",
+     "BusinessUnit": "Any",
+     "Counterparty": "",
+     "Owner": "{{CURRENT_USER}}",
+     "EscalationOwner": "{{CURRENT_USER}}",
+     "Notify": "Both"
+    },
+    {
+     "Title": "Legal - notices and renewals",
+     "Category": "Notice & renewal",
+     "BusinessUnit": "Any",
+     "Counterparty": "",
+     "Owner": "{{CURRENT_USER}}",
+     "EscalationOwner": "{{CURRENT_USER}}",
+     "Notify": "Both"
+    }
+   ],
+   "note": "Always adds the Any/Any default rule for the installer (unless one exists); the two example rules only with sample data."
+  }
+ },
+ "pages": [
+  {
+   "name": "Home",
+   "title": "Obligations",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/Home.template.html",
+   "target": "SitePages/Home.html",
+   "home": true
+  },
+  {
+   "name": "MyObligations",
+   "title": "My obligations",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/MyObligations.template.html",
+   "target": "SitePages/MyObligations.html",
+   "home": false
+  },
+  {
+   "name": "Contract360",
+   "title": "Contract 360",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/Contract360.template.html",
+   "target": "SitePages/Contract360.html",
+   "home": false
+  },
+  {
+   "name": "ReviewQueue",
+   "title": "Review queue",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/ReviewQueue.template.html",
+   "target": "SitePages/ReviewQueue.html",
+   "home": false
+  },
+  {
+   "name": "Leadership",
+   "title": "Leadership",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/Leadership.template.html",
+   "target": "SitePages/Leadership.html",
+   "home": false
+  },
+  {
+   "name": "Settings",
+   "title": "Settings",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/Settings.template.html",
+   "target": "SitePages/Settings.html",
+   "home": false
+  },
+  {
+   "name": "HowItWorks",
+   "title": "How it works",
+   "template": "solutions/obligation-hub-for-sharepoint/deploy/pages/HowItWorks.template.html",
+   "target": "SitePages/HowItWorks.html",
+   "home": false
+  }
+ ],
+ "pageTokens": [
+  {
+   "token": "{{SITE_URL}}",
+   "value": "siteUrl",
+   "kind": "url"
+  },
+  {
+   "token": "{{SITE_URL_ORIGIN}}",
+   "value": "origin",
+   "kind": "url"
+  },
+  {
+   "token": "{{PAGES_URL}}",
+   "value": "siteUrl + /SitePages",
+   "kind": "url"
+  },
+  {
+   "token": "{{LISTID_OBLIGATIONS}}",
+   "value": "listId:obligations",
+   "kind": "guid"
+  },
+  {
+   "token": "{{LISTID_CONTRACTS}}",
+   "value": "listId:contracts",
+   "kind": "guid"
+  },
+  {
+   "token": "{{LISTID_RUNLOG}}",
+   "value": "listId:runlog",
+   "kind": "guid"
+  },
+  {
+   "token": "{{LISTID_OWNERS}}",
+   "value": "listId:owners",
+   "kind": "guid"
+  },
+  {
+   "token": "{{LISTURL_OBLIGATIONS}}",
+   "value": "listUrl:obligations",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_CONTRACTS}}",
+   "value": "listUrl:contracts",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_RUNLOG}}",
+   "value": "listUrl:runlog",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_OWNERS}}",
+   "value": "listUrl:owners",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_TYPES}}",
+   "value": "listUrl:types",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_EXCLUSIONS}}",
+   "value": "listUrl:exclusions",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_EVIDENCE}}",
+   "value": "listUrl:evidence",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{LISTURL_AGENTASSETS}}",
+   "value": "listUrl:agentassets",
+   "kind": "path",
+   "encoding": "server-relative, each path segment percent-encoded (spaces as %20), no trailing slash"
+  },
+  {
+   "token": "{{WORKFLOW_PROMPT_CAPTURE_NEW}}",
+   "value": "workflowPrompt:CAPTURE_NEW",
+   "kind": "html-text",
+   "encoding": "HTML-escape & < >"
+  },
+  {
+   "token": "{{WORKFLOW_PROMPT_CAPTURE_CHANGED}}",
+   "value": "workflowPrompt:CAPTURE_CHANGED",
+   "kind": "html-text",
+   "encoding": "HTML-escape & < >"
+  },
+  {
+   "token": "{{WORKFLOW_PROMPT_ASSIGN_OWNERS}}",
+   "value": "workflowPrompt:ASSIGN_OWNERS",
+   "kind": "html-text",
+   "encoding": "HTML-escape & < >"
+  },
+  {
+   "token": "{{WORKFLOW_PROMPT_DAILY_SWEEP}}",
+   "value": "workflowPrompt:DAILY_SWEEP",
+   "kind": "html-text",
+   "encoding": "HTML-escape & < >"
+  },
+  {
+   "token": "{{WORKFLOW_PROMPT_OWNER_DIGEST}}",
+   "value": "workflowPrompt:OWNER_DIGEST",
+   "kind": "html-text",
+   "encoding": "HTML-escape & < >"
+  },
+  {
+   "token": "{{WORKFLOW_PROMPT_LEADERSHIP_DIGEST}}",
+   "value": "workflowPrompt:LEADERSHIP_DIGEST",
+   "kind": "html-text",
+   "encoding": "HTML-escape & < >"
+  }
+ ],
+ "site": {
+  "navigation": {
+   "placement": "top",
+   "nodes": [
+    {
+     "title": "Overview",
+     "target": "page:Home"
+    },
+    {
+     "title": "My obligations",
+     "target": "page:MyObligations"
+    },
+    {
+     "title": "Contracts",
+     "target": "list:contracts"
+    },
+    {
+     "title": "Obligations",
+     "target": "list:obligations"
+    },
+    {
+     "title": "Review",
+     "target": "page:ReviewQueue"
+    },
+    {
+     "title": "Leadership",
+     "target": "page:Leadership"
+    },
+    {
+     "title": "How it works",
+     "target": "page:HowItWorks"
+    },
+    {
+     "title": "Settings",
+     "target": "page:Settings"
+    }
+   ],
+   "targets": "page:<Name> = the page in Site Pages; list:<key> = the list or library root (opens its default view)",
+   "collection": "Communication sites: the top navigation (TopNavigationBar). Team sites: the site navigation (QuickLaunch) switched to horizontal.",
+   "replaceable": [
+    {
+     "title": "Documents",
+     "urlPattern": "/Shared(%20| )Documents(/|$)"
+    },
+    {
+     "title": "Pages",
+     "urlPattern": "/SitePages(/Forms/[^/]*)?/?$"
+    },
+    {
+     "title": "Site contents",
+     "urlPattern": "/_layouts/15/viewlsts\\.aspx"
+    }
+   ],
+   "note": "The site navigation is the hub's only navigation; the pages have no in-page nav. Nodes with the same title and address are never added twice; other custom nodes are never removed."
+  },
+  "header": {
+   "layout": "compact",
+   "headerLayout": 2,
+   "emphasis": "none",
+   "headerEmphasis": 0
+  },
+  "theme": {
+   "name": "Obligation Hub",
+   "basedOn": "Atmospheric Precision: graphite #111827 text, ice blue #9AC7F5 and cloud #EAF3FC accents, violet #8B83DB tertiary, white background",
+   "palette": {
+    "themePrimary": "#2F4A6D",
+    "themeLighterAlt": "#F5F9FE",
+    "themeLighter": "#EAF3FC",
+    "themeLight": "#CFE3F9",
+    "themeTertiary": "#9AC7F5",
+    "themeSecondary": "#46648C",
+    "themeDarkAlt": "#2A4262",
+    "themeDark": "#233853",
+    "themeDarker": "#1A293D",
+    "neutralLighterAlt": "#F9FAFB",
+    "neutralLighter": "#F3F4F6",
+    "neutralLight": "#E5E7EB",
+    "neutralQuaternaryAlt": "#DDE1E7",
+    "neutralQuaternary": "#D1D5DB",
+    "neutralTertiaryAlt": "#C4C9D1",
+    "neutralTertiary": "#9CA3AF",
+    "neutralSecondary": "#4B5563",
+    "neutralPrimaryAlt": "#374151",
+    "neutralPrimary": "#111827",
+    "neutralDark": "#0B1220",
+    "black": "#030712",
+    "white": "#FFFFFF"
+   },
+   "accents": {
+    "graphite": "#111827",
+    "ice": "#9AC7F5",
+    "cloud": "#EAF3FC",
+    "violet": "#8B83DB"
+   },
+   "contrast": {
+    "themePrimary on white (links, buttons)": 9.05,
+    "white on themePrimary (button text)": 9.05,
+    "themeDarkAlt on white (hover)": 10.22,
+    "themeSecondary on white": 6.07,
+    "neutralPrimary on white (body text)": 17.74,
+    "neutralSecondary on white (secondary text)": 7.56,
+    "themePrimary on themeLighter (selected nav)": 8.07,
+    "neutralPrimary on neutralLighter (header band)": 16.12
+   },
+   "note": "Applied with the ThemeManager REST API by the deploy script (site owner). There is no SharePoint IQ tool for it; on the Cowork path pick a theme by hand or run the deploy script with pagesOnly: true."
+  },
+  "logo": {
+   "png": "solutions/obligation-hub-for-sharepoint/deploy/assets/obligation-hub-logo.png",
+   "svg": "solutions/obligation-hub-for-sharepoint/deploy/assets/obligation-hub-logo.svg",
+   "target": "SiteAssets/obligation-hub-logo.png"
+  },
+  "manual": [
+   "Navigation: Settings (gear) > Change the look > Navigation: Site navigation visible, horizontal; then Edit on the site navigation and add the links in the order of site.navigation.nodes.",
+   "Header: Settings > Change the look > Header: Layout Compact, Background (emphasis) None.",
+   "Logo: Settings > Change the look > Header > Site logo > Change, and upload deploy/assets/obligation-hub-logo.png.",
+   "Theme: Settings > Change the look > Theme. A custom theme palette can only be applied by script (deploy-obligation-hub.js with pagesOnly: true, or a tenant admin adding it as a company theme); otherwise pick the closest built-in blue theme."
+  ]
+ },
+ "quickSteps": [
+  {
+   "list": "obligations",
+   "title": "Mark fulfilled",
+   "condition": "[$Status] != 'Fulfilled'",
+   "actionType": "AskKnowledgeAgent",
+   "prompt": "Mark this obligation fulfilled using the mark-obligation-fulfilled skill.",
+   "skill": "mark-obligation-fulfilled"
+  },
+  {
+   "list": "obligations",
+   "title": "Remove obligation",
+   "condition": "true",
+   "actionType": "AskKnowledgeAgent",
+   "prompt": "Remove this obligation from tracking using the exclude-obligation skill.",
+   "skill": "exclude-obligation"
+  },
+  {
+   "list": "contracts",
+   "title": "Re-capture obligations",
+   "condition": "true",
+   "actionType": "AskKnowledgeAgent",
+   "prompt": "Re-capture obligations from this contract using the capture-obligations skill. Do a full capture even if the text hasn't changed.",
+   "skill": "capture-obligations"
+  }
+ ],
+ "workflows": [
+  {
+   "key": "CAPTURE_NEW",
+   "name": "Capture new contracts",
+   "trigger": "fileAdded",
+   "triggerText": "When a file is added to the Contracts library",
+   "skill": "capture-obligations",
+   "runAs": "creator",
+   "runLogWorkflow": "Capture",
+   "sends": "Nothing",
+   "prompt": "Create an AI workflow named \"Capture new contracts\" on this site. Trigger it when a file is added to the Contracts library. For each run, load the site skill capture-obligations from AgentAssets/Skills and follow it for the file that triggered the run. Save results without asking for confirmation. Run as me."
+  },
+  {
+   "key": "CAPTURE_CHANGED",
+   "name": "Capture changed contracts",
+   "trigger": "fileChanged",
+   "triggerText": "When a file in the Contracts library is changed",
+   "skill": "capture-obligations",
+   "runAs": "creator",
+   "runLogWorkflow": "Capture",
+   "sends": "Nothing",
+   "prompt": "Create an AI workflow named \"Capture changed contracts\" on this site. Trigger it when a file in the Contracts library is changed. For each run, load the site skill capture-obligations from AgentAssets/Skills and follow it for the file that triggered the run. If the contract text is unchanged since the last capture, log the skip and stop. Save results without asking for confirmation. Run as me."
+  },
+  {
+   "key": "ASSIGN_OWNERS",
+   "name": "Assign owners",
+   "trigger": "schedule",
+   "triggerText": "Every day at 7:00 AM Pacific",
+   "skill": "assign-obligation-owners",
+   "runAs": "creator",
+   "runLogWorkflow": "Assign owners",
+   "sends": "One message to each newly assigned owner",
+   "prompt": "Create an AI workflow named \"Assign owners\" on this site that runs every day at 7:00 AM Pacific time. For each run, load the site skill assign-obligation-owners from AgentAssets/Skills and follow it for the Obligations list. It may send each newly assigned owner one email or Teams message. Run as me.",
+   "schedule": "Daily 07:00 Pacific"
+  },
+  {
+   "key": "DAILY_SWEEP",
+   "name": "Daily sweep",
+   "trigger": "schedule",
+   "triggerText": "Every day at 6:00 AM Pacific",
+   "skill": "sweep-obligations",
+   "runAs": "creator",
+   "runLogWorkflow": "Daily sweep",
+   "sends": "Reminders to owners; escalations to escalation owners",
+   "prompt": "Create an AI workflow named \"Daily sweep\" on this site that runs every day at 6:00 AM Pacific time. For each run, load the site skill sweep-obligations from AgentAssets/Skills and follow it for the Obligations list. It may send reminder and escalation emails or Teams messages. Run as me.",
+   "schedule": "Daily 06:00 Pacific"
+  },
+  {
+   "key": "OWNER_DIGEST",
+   "name": "Owner digest",
+   "trigger": "schedule",
+   "triggerText": "Every Monday at 8:00 AM Pacific",
+   "skill": "obligation-owner-digest",
+   "runAs": "creator",
+   "runLogWorkflow": "Owner digest",
+   "sends": "One digest per owner with items due",
+   "prompt": "Create an AI workflow named \"Owner digest\" on this site that runs every Monday at 8:00 AM Pacific time. For each run, load the site skill obligation-owner-digest from AgentAssets/Skills and follow it for the Obligations list. It may send each owner one email or Teams message. Run as me.",
+   "schedule": "Mondays 08:00 Pacific"
+  },
+  {
+   "key": "LEADERSHIP_DIGEST",
+   "name": "Leadership digest",
+   "trigger": "schedule",
+   "triggerText": "Every Friday at 3:00 PM Pacific",
+   "skill": "obligation-leadership-digest",
+   "runAs": "creator",
+   "runLogWorkflow": "Leadership digest",
+   "sends": "One email to leadershipRecipients (and optional Teams post)",
+   "prompt": "Create an AI workflow named \"Leadership digest\" on this site that runs every Friday at 3:00 PM Pacific time. For each run, load the site skill obligation-leadership-digest from AgentAssets/Skills and follow it. It may send one email to the leadership recipients in AgentAssets/Config/hub-settings.json and post to their Teams channel. Run as me.",
+   "schedule": "Fridays 15:00 Pacific"
+  }
+ ],
+ "autofill": {
+  "list": "contracts",
+  "columns": [
+   "Counterparty",
+   "ContractType",
+   "EffectiveDate",
+   "ExpirationDate",
+   "AutoRenews",
+   "NoticePeriodDays",
+   "GoverningLaw",
+   "ContractValue",
+   "ContractSummary"
+  ],
+  "optional": true,
+  "note": "Autofill may not run on every tenant; capture reads the contract text itself and never depends on it.",
+  "copilotPrompt": "Turn on autofill for the Contracts library on this site. Use these existing columns and extraction prompts, keep values that are already filled in (don't overwrite), and don't create new columns:\n- Counterparty: The legal name of the other party to this contract, i.e. the party that is not {{OUR_COMPANY}}. Use the name exactly as written in the parties block.\n- ContractType: Classify the document from {{OUR_COMPANY}}'s point of view: Customer agreement if {{OUR_COMPANY}} provides goods or services to the other party; Supplier agreement if {{OUR_COMPANY}} buys from them; Partner agreement for distribution, reseller or alliance deals; License, Lease, Financing or Data processing when that is the main subject; Amendment if the document amends an earlier agreement; otherwise Other.\n- EffectiveDate: The effective date of this agreement (or of this amendment). Return only the date.\n- ExpirationDate: The date the current term ends. If the contract states a term length instead of an end date, compute the end date from the effective date. Leave empty if the agreement has no fixed end.\n- AutoRenews: Yes if the term renews automatically unless a party gives notice; No if it simply expires or renews only by mutual agreement; Unclear otherwise.\n- NoticePeriodDays: The number of days of advance written notice required to prevent renewal or to terminate at the end of the term. Convert months to days (1 month = 30 days). Empty if none.\n- GoverningLaw: The governing law jurisdiction, e.g. 'Washington, USA'.\n- ContractValue: The total or annual contract value in US dollars if stated; empty if not stated.\n- ContractSummary: Two plain-language sentences, under 250 characters in total: what the contract is for and the most important dates or commitments."
+ },
+ "sampleData": {
+  "referenceDate": "2026-11-24",
+  "flagColumn": "IsSample",
+  "company": "Northwind Traders, Inc.",
+  "generator": "solutions/obligation-hub-for-sharepoint/sample-data/generator/build.py",
+  "contracts": {
+   "list": "contracts",
+   "manifest": "solutions/obligation-hub-for-sharepoint/sample-data/contracts-manifest.json",
+   "items": [
+    {
+     "fileName": "01-Contoso-MSA.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/01-Contoso-MSA.docx",
+     "fields": {
+      "Title": "Master Services Agreement",
+      "Counterparty": "Contoso Ltd",
+      "ContractType": "Customer agreement",
+      "EffectiveDate": "2024-04-01",
+      "ExpirationDate": "2027-03-31",
+      "AutoRenews": "Yes",
+      "NoticePeriodDays": 90,
+      "GoverningLaw": "Washington, USA",
+      "ContractValue": 540000,
+      "ContractSummary": "Master Services Agreement between Northwind Traders and Contoso Ltd, with Northwind as supplier. Runs to 31 March 2027 and renews automatically unless notice is given 90 days before renewal; governed by the law of Washington, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Sales",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "02-Contoso-MSA-Amendment-1.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/02-Contoso-MSA-Amendment-1.docx",
+     "fields": {
+      "Title": "Amendment No. 1 to Master Services Agreement",
+      "Counterparty": "Contoso Ltd",
+      "ContractType": "Amendment",
+      "EffectiveDate": "2026-09-01",
+      "ExpirationDate": "2027-03-31",
+      "AutoRenews": "Yes",
+      "NoticePeriodDays": 120,
+      "GoverningLaw": "Washington, USA",
+      "ContractSummary": "Amends the Master Services Agreement with Contoso Ltd, effective 1 September 2026. Runs to 31 March 2027 and renews automatically unless notice is given 120 days before renewal; governed by the law of Washington, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Sales",
+      "Amends": "01-Contoso-MSA.docx",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "fields": {
+      "Title": "Cloud Hosting Services Agreement",
+      "Counterparty": "Fabrikam Inc",
+      "ContractType": "Supplier agreement",
+      "EffectiveDate": "2024-04-01",
+      "ExpirationDate": "2027-03-31",
+      "AutoRenews": "No",
+      "GoverningLaw": "New York, USA",
+      "ContractValue": 1386000,
+      "ContractSummary": "Cloud Hosting Services Agreement between Northwind Traders and Fabrikam Inc, with Northwind as customer. Runs to 31 March 2027 and does not renew automatically; governed by the law of New York, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "IT",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "04-Tailspin-Distribution-Agreement.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/04-Tailspin-Distribution-Agreement.docx",
+     "fields": {
+      "Title": "Exclusive Distribution Agreement",
+      "Counterparty": "Tailspin Toys",
+      "ContractType": "Partner agreement",
+      "EffectiveDate": "2026-07-01",
+      "ExpirationDate": "2029-06-30",
+      "AutoRenews": "No",
+      "GoverningLaw": "Delaware, USA",
+      "ContractValue": 750000,
+      "ContractSummary": "Exclusive Distribution Agreement between Northwind Traders and Tailspin Toys, with Northwind as distributor. Runs to 30 June 2029 and does not renew automatically; governed by the law of Delaware, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Sales",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "05-Litware-Software-License-Support.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/05-Litware-Software-License-Support.docx",
+     "fields": {
+      "Title": "Software License and Support Agreement",
+      "Counterparty": "Litware Inc",
+      "ContractType": "License",
+      "EffectiveDate": "2025-11-06",
+      "AutoRenews": "Yes",
+      "NoticePeriodDays": 60,
+      "GoverningLaw": "California, USA",
+      "ContractValue": 504000,
+      "ContractSummary": "Software License and Support Agreement between Northwind Traders and Litware Inc, with Northwind as licensee. Effective 6 November 2025 with no fixed end; renews automatically unless notice is given 60 days before renewal; California law.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "IT",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "06-Proseware-Data-Processing-Agreement.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/06-Proseware-Data-Processing-Agreement.docx",
+     "fields": {
+      "Title": "Data Processing Agreement",
+      "Counterparty": "Proseware Inc",
+      "ContractType": "Data processing",
+      "EffectiveDate": "2026-09-01",
+      "AutoRenews": "No",
+      "GoverningLaw": "Washington, USA",
+      "ContractSummary": "Data Processing Agreement between Northwind Traders and Proseware Inc, with Northwind as controller. Effective from 1 September 2026 with no fixed end date and does not renew automatically; governed by the law of Washington, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Legal",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "07-Alpine-Ski-House-Office-Lease.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/07-Alpine-Ski-House-Office-Lease.docx",
+     "fields": {
+      "Title": "Office Lease",
+      "Counterparty": "Alpine Ski House",
+      "ContractType": "Lease",
+      "EffectiveDate": "2023-10-01",
+      "ExpirationDate": "2027-09-30",
+      "AutoRenews": "No",
+      "GoverningLaw": "Washington, USA",
+      "ContractValue": 513000,
+      "ContractSummary": "Office Lease between Northwind Traders and Alpine Ski House, with Northwind as tenant. Runs to 30 September 2027 and does not renew automatically; governed by the law of Washington, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Facilities",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "08-Wide-World-Importers-Supply-Agreement.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/08-Wide-World-Importers-Supply-Agreement.docx",
+     "fields": {
+      "Title": "Supply Agreement",
+      "Counterparty": "Wide World Importers",
+      "ContractType": "Supplier agreement",
+      "EffectiveDate": "2025-06-01",
+      "ExpirationDate": "2028-05-31",
+      "AutoRenews": "No",
+      "GoverningLaw": "Washington, USA",
+      "ContractValue": 1200000,
+      "ContractSummary": "Supply Agreement between Northwind Traders and Wide World Importers, with Northwind as customer. Runs to 31 May 2028 and does not renew automatically; governed by the law of Washington, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Procurement",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "09-Adventure-Works-Reseller-Agreement.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/09-Adventure-Works-Reseller-Agreement.docx",
+     "fields": {
+      "Title": "Reseller Agreement",
+      "Counterparty": "Adventure Works Cycles",
+      "ContractType": "Customer agreement",
+      "EffectiveDate": "2024-01-01",
+      "ExpirationDate": "2026-12-31",
+      "AutoRenews": "No",
+      "GoverningLaw": "Oregon, USA",
+      "ContractValue": 800000,
+      "ContractSummary": "Reseller Agreement between Northwind Traders and Adventure Works Cycles, with Northwind as reseller. Runs to 31 December 2026 and does not renew automatically; governed by the law of Oregon, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Sales",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "10-Fourth-Coffee-Facilities-Services-Agreement.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/10-Fourth-Coffee-Facilities-Services-Agreement.docx",
+     "fields": {
+      "Title": "Facilities Services Agreement",
+      "Counterparty": "Fourth Coffee",
+      "ContractType": "Supplier agreement",
+      "EffectiveDate": "2025-03-01",
+      "AutoRenews": "No",
+      "NoticePeriodDays": 60,
+      "GoverningLaw": "Washington, USA",
+      "ContractSummary": "Facilities Services Agreement between Northwind Traders and Fourth Coffee, with Northwind as customer. Effective from 1 March 2025 with no fixed end date and does not renew automatically; governed by the law of Washington, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Facilities",
+      "IsSample": true
+     }
+    },
+    {
+     "fileName": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "file": "solutions/obligation-hub-for-sharepoint/sample-data/contracts/11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "fields": {
+      "Title": "Revolving Credit Facility Letter Agreement",
+      "Counterparty": "Woodgrove Bank",
+      "ContractType": "Financing",
+      "EffectiveDate": "2026-09-15",
+      "ExpirationDate": "2029-09-15",
+      "AutoRenews": "No",
+      "GoverningLaw": "New York, USA",
+      "ContractValue": 10000000,
+      "ContractSummary": "Revolving Credit Facility Letter Agreement between Northwind Traders and Woodgrove Bank, with Northwind as borrower. Runs to 15 September 2029 and does not renew automatically; governed by the law of New York, USA.",
+      "ContractOwner": "{{CURRENT_USER}}",
+      "BusinessUnit": "Finance",
+      "IsSample": true
+     }
+    }
+   ]
+  },
+  "obligations": {
+   "list": "obligations",
+   "source": "solutions/obligation-hub-for-sharepoint/sample-data/pre-captured-obligations.json",
+   "matchOn": "CaptureKey",
+   "owner": "Owner and EscalationOwner = the installer when ReviewState is Confirmed and Status is open; held (Needs review) and closed items stay unowned.",
+   "timing": "Timing is recomputed at load time from DueDate, Status and dueSoonDays."
+  },
+  "runLog": {
+   "list": "runlog",
+   "source": "solutions/obligation-hub-for-sharepoint/sample-data/run-log-seed.json",
+   "matchOn": "Title",
+   "label": "Demo seed"
+  },
+  "dateShift": "Optional: shift every sample date by (today - referenceDate). Dates inside the Word files do not move."
+ },
+ "removal": {
+  "lists": [
+   "contracts",
+   "obligations",
+   "owners",
+   "types",
+   "exclusions",
+   "runlog",
+   "evidence"
+  ],
+  "pages": [
+   "SitePages/Home.html",
+   "SitePages/MyObligations.html",
+   "SitePages/Contract360.html",
+   "SitePages/ReviewQueue.html",
+   "SitePages/Leadership.html",
+   "SitePages/Settings.html",
+   "SitePages/HowItWorks.html"
+  ],
+  "skills": [
+   "capture-obligations",
+   "assign-obligation-owners",
+   "sweep-obligations",
+   "obligation-owner-digest",
+   "obligation-leadership-digest",
+   "mark-obligation-fulfilled",
+   "exclude-obligation",
+   "obligation-hub-guide",
+   "clear-obligation-sample-data",
+   "setup-obligation-hub"
+  ],
+  "files": [
+   "Config/hub-settings.json",
+   "SHAREPOINT.md"
+  ],
+  "resetWelcomePageFrom": "SitePages/Home.html",
+  "resetWelcomePageTo": "SitePages/Home.aspx",
+  "navigation": "Only the hub navigation links (same title and address as site.navigation.nodes) are removed.",
+  "notRemoved": [
+   "AI workflows (delete them in the site's AI workflows panel; they fail once the lists are gone)",
+   "The AgentAssets library and its Skills and Config folders",
+   "Other skills and files in AgentAssets",
+   "The site theme, logo and header layout (change them in Settings > Change the look)",
+   "Anything you added or changed by hand outside the hub lists"
+  ]
+ }
+}

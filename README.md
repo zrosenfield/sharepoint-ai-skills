@@ -28,7 +28,8 @@ Do not submit updates for graduated skills here. Open issues and pull requests a
 
 Solutions are complete samples to try on a test site, not production-ready or supported products. Their installable skills remain in `Skills/`; each kit links to those canonical sources.
 
-Start with [Client Hub for SharePoint](./solutions/client-hub-for-sharepoint/): three related lists for clients, projects, and activity, with deployment/removal scripts, formatting, fictional sample data, an optional dashboard, and five Copilot skills. Its [manual setup guide](./solutions/client-hub-for-sharepoint/SETUP.md) is an alternative to running the browser script.
+- [Client Hub for SharePoint](./solutions/client-hub-for-sharepoint/): three related lists for clients, projects, and activity, with deployment/removal scripts, formatting, fictional sample data, an optional dashboard, and five Copilot skills.
+- [Obligation Hub for SharePoint](./solutions/obligation-hub-for-sharepoint/): tracks contract obligations, owners, due dates, evidence, and scheduled digests, with deployment/removal assets, fictional contracts, evals, and ten Copilot skills.
 
 ## Running Demos
 

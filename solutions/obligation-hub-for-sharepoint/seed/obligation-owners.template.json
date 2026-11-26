@@ -1,0 +1,36 @@
+{
+  "_about": "Obligation Owners seed. 'rules' holds one Any/Any default rule: replace {{OWNER_EMAIL}} with the person (or shared mailbox user) who should own anything no more specific rule covers. 'examples' is NOT loaded by the deploy script; it shows how more specific rules look. Add your own in the Obligation Owners list. The most specific matching rule wins: counterparty, then category + business unit, then category, then business unit, then Any/Any.",
+  "rules": [
+    {
+      "Title": "Default - all obligations",
+      "Category": "Any",
+      "BusinessUnit": "Any",
+      "Counterparty": "",
+      "Owner": "{{OWNER_EMAIL}}",
+      "EscalationOwner": "{{OWNER_EMAIL}}",
+      "Notify": "Both"
+    }
+  ],
+  "examples": [
+    {
+      "_comment": "Example: Finance owns every payment obligation, whatever the business unit. Messages by email only.",
+      "Title": "Finance - payments",
+      "Category": "Payment",
+      "BusinessUnit": "Any",
+      "Counterparty": "",
+      "Owner": "finance.owner@example.com",
+      "EscalationOwner": "finance.lead@example.com",
+      "Notify": "Email"
+    },
+    {
+      "_comment": "Example: Legal owns every notice and renewal deadline. Messages by email and Teams.",
+      "Title": "Legal - notices and renewals",
+      "Category": "Notice & renewal",
+      "BusinessUnit": "Any",
+      "Counterparty": "",
+      "Owner": "legal.owner@example.com",
+      "EscalationOwner": "legal.lead@example.com",
+      "Notify": "Both"
+    }
+  ]
+}

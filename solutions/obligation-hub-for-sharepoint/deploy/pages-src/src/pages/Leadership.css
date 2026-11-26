@@ -1,0 +1,55 @@
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); }
+.stat { display: grid; gap: 4px; align-content: start; }
+.stat__label { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); }
+.stat__value { font-family: var(--font-display); font-size: 40px; line-height: 1.1; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.stat__note { font-size: var(--fs-sm); color: var(--ink-3); }
+
+.split { display: block; width: 100%; height: 16px; margin-top: var(--s2); }
+.legend { list-style: none; margin: var(--s2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); font-size: var(--fs-md); color: var(--ink-2); }
+.legend li { display: inline-flex; align-items: center; gap: 8px; }
+.legend svg { width: 12px; height: 12px; flex: none; }
+.legend strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* bar charts rendered as tables: the table is the accessible equivalent, the inline SVG draws the bar */
+.bars { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
+.bars caption { text-align: left; font-size: var(--fs-sm); color: var(--ink-3); padding-bottom: var(--s1); }
+.bars th, .bars td { padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.bars tr:last-child th, .bars tr:last-child td { border-bottom: 0; }
+.bars thead th { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding-top: 0; }
+.bars tbody th { text-align: left; font-weight: 400; color: var(--ink); padding-right: var(--s2); width: 38%; }
+.bars .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; width: 48px; padding-right: 12px; }
+.bars .bar svg { display: block; width: 100%; height: 14px; }
+.bars .sub { display: block; font-size: var(--fs-xs); color: var(--ink-3); font-weight: 400; }
+
+.months { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.months thead { display: table-footer-group; }
+.months caption { text-align: left; font-size: var(--fs-sm); color: var(--ink-3); padding-bottom: var(--s2); }
+.months td { vertical-align: bottom; text-align: center; padding: 0 6px; }
+.months td svg { display: block; width: 100%; max-width: 56px; height: 120px; margin: 0 auto; }
+.months td span { display: block; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 6px; }
+.months th { padding-top: 10px; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); border-top: 1px solid var(--line-2); }
+.months th small { display: block; font-weight: 400; color: var(--ink-3); font-size: var(--fs-xs); }
+
+.owe { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); margin-top: var(--s2); }
+.owe div { padding: var(--s2); border-radius: var(--r-m); background: var(--surface-2); border: 1px solid var(--line); }
+.owe strong { display: block; font-size: 28px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.owe span { font-size: var(--fs-sm); color: var(--ink-2); }
+.nohist { display: flex; gap: 12px; align-items: flex-start; font-size: var(--fs-md); color: var(--ink-2); }
+.nohist svg { width: 20px; height: 20px; flex: none; margin-top: 2px; }
+
+.risk-key h2 { font-size: var(--fs-lg); }
+.risk-key__list { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--s2) var(--s4); margin: var(--s2) 0 0; }
+.risk-key__list > div { min-width: 0; padding-top: 12px; border-top: 1px solid var(--line-2); }
+.risk-key__list dt { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
+.risk-key__list dt svg { width: 12px; height: 12px; flex: none; }
+.risk-key__list dd { margin: 4px 0 0; font-size: var(--fs-md); color: var(--ink-2); }
+.risk-key__note { margin-top: var(--s2); font-size: var(--fs-sm); color: var(--ink-3); }
+
+@media (max-width: 1080px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .risk-key__list { grid-template-columns: minmax(0, 1fr); gap: var(--s1); } }
+@media (max-width: 640px) {
+  .stats { gap: var(--s2); }
+  .stat__value { font-size: 32px; }
+  .bars tbody th { width: 46%; }
+  .owe { grid-template-columns: minmax(0, 1fr); }
+  .owe div { display: flex; align-items: baseline; gap: 12px; }
+}

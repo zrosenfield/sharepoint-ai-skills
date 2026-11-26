@@ -4,6 +4,11 @@ This directory contains walkthrough documentation, sample data, presentation ass
 
 Demo content is intentionally broader than reusable skills. It may include site setup, prompts, narration, screenshots, generated reports, and reset instructions.
 
+## Obligation Hub
+
+- [Recorded overview](./obligation-hub/demo-script.md): About 9:35 with a 7:26 talk track.
+- [Prompt-only run sheet](./obligation-hub/prompt-only.md): Setup and live prompts for the recording.
+
 ## Live-Linked Dashboard Series
 
 See [`live-dashboards/README.md`](./live-dashboards/README.md) for the four relational-data and large-list dashboard scenarios:

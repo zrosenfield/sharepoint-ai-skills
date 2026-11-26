@@ -1,0 +1,46 @@
+{
+ "sample": true,
+ "note": "SAMPLE DATA - fictional companies, people and contracts from the Obligation Hub demo kit, as loaded on the demo site. Dates are relative to 2026-11-24. Shown only when live list data is unavailable.",
+ "headers": [
+  "ID",
+  "Title",
+  "Category",
+  "BusinessUnit",
+  "Counterparty",
+  "Owner",
+  "EscalationOwner",
+  "Notify"
+ ],
+ "rows": [
+  [
+   "1",
+   "Default - all obligations",
+   "Any",
+   "Any",
+   "",
+   "Avery Chen",
+   "Avery Chen",
+   "Both"
+  ],
+  [
+   "2",
+   "Finance - payments",
+   "Payment",
+   "Any",
+   "",
+   "Avery Chen",
+   "Avery Chen",
+   "Both"
+  ],
+  [
+   "3",
+   "Legal - notices and renewals",
+   "Notice & renewal",
+   "Any",
+   "",
+   "Avery Chen",
+   "Avery Chen",
+   "Both"
+  ]
+ ]
+}

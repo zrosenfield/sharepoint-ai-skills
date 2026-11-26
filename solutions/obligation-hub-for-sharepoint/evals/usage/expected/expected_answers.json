@@ -1,0 +1,1249 @@
+{
+ "generatedBy": "evals/usage/expected_answers.py",
+ "today": "2026-11-24",
+ "sources": {
+  "answer-key.json": "ad344c8b615ee9acf2abf20f6041900b09adc4d9f5cd7ebcc08a495a0885cffb",
+  "contracts-manifest.json": "aa841fefb3ffd3c2b543b2893bb16a4572b23149bf0e71185f9902a53092c981"
+ },
+ "docxRead": [
+  "01-Contoso-MSA.docx",
+  "02-Contoso-MSA-Amendment-1.docx",
+  "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+  "04-Tailspin-Distribution-Agreement.docx",
+  "05-Litware-Software-License-Support.docx",
+  "06-Proseware-Data-Processing-Agreement.docx",
+  "07-Alpine-Ski-House-Office-Lease.docx",
+  "08-Wide-World-Importers-Supply-Agreement.docx",
+  "09-Adventure-Works-Reseller-Agreement.docx",
+  "10-Fourth-Coffee-Facilities-Services-Agreement.docx",
+  "11-Woodgrove-Bank-Revolving-Credit-Facility.docx"
+ ],
+ "register": {
+  "open": 58,
+  "confirmed": 55,
+  "held": 3,
+  "superseded": 2,
+  "excluded": 9
+ },
+ "tasks": {
+  "U-01": {
+   "window": [
+    "2026-11-24",
+    "2026-12-01"
+   ],
+   "definition": "open, Confirmed, Party Us or Both, DueDate on or before today + 7 (overdue included)",
+   "items": [
+    {
+     "contract": "04-Tailspin-Distribution-Agreement.docx",
+     "counterparty": "Tailspin Toys",
+     "clause": "Section 4.2",
+     "title": "Submit initial marketing plan to Tailspin",
+     "party": "Us",
+     "category": "Other",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-09-29",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 56
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 5",
+     "title": "Deliver updated BCP/DR plan to Contoso",
+     "party": "Us",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-31",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 24
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 5.1",
+     "title": "Deliver insurance endorsements to Woodgrove",
+     "party": "Us",
+     "category": "Insurance",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-11-14",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 10
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 2 (amends MSA Section 9.2)",
+     "title": "Send non-renewal notice to Contoso (120 days)",
+     "party": "Both",
+     "category": "Notice & renewal",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7
+    },
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 3.2",
+     "title": "Pay Fabrikam monthly hosting fees (net 30)",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7
+    },
+    {
+     "contract": "07-Alpine-Ski-House-Office-Lease.docx",
+     "counterparty": "Alpine Ski House",
+     "clause": "Section 2.1",
+     "title": "Pay monthly base rent to Alpine Ski House",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 2.2",
+     "title": "Pay monthly interest on Woodgrove advances",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7
+    }
+   ],
+   "overdueCount": 3,
+   "undatedOpenUsOrBoth": 19,
+   "optionalMention": [
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 6.1",
+     "title": "Obtain Proseware's initial SOC 2 Type II report",
+     "party": "Counterparty",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-01",
+     "triggerEvent": null,
+     "risk": "Low",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 54
+    }
+   ],
+   "mustNotInclude": [
+    "04 Section 3.3 Pay Tailspin per dealer credit application terms",
+    "06 Section 7 Proseware: return or delete personal data at termination",
+    "09 Section 2.2 Adventure Works: pay per standard credit terms",
+    "01 Section 9.2 Send non-renewal notice to Contoso (90 days)",
+    "01 Section 4.3 Deliver quarterly service-level report (15 days)"
+   ]
+  },
+  "U-02": {
+   "window": [
+    "2026-11-24",
+    "2027-03-24"
+   ],
+   "autoRenewing": [
+    {
+     "counterparty": "Contoso Ltd",
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "agreement": "Master Services Agreement",
+     "noticeDeadline": "2026-12-01",
+     "noticeDays": 120,
+     "clause": "Section 2 (amends MSA Section 9.2)",
+     "termEnds": "2027-03-31",
+     "renewsOn": "2027-04-01",
+     "noticeDeadlineInWindow": true,
+     "renewalInWindow": false
+    },
+    {
+     "counterparty": "Litware Inc",
+     "contract": "05-Litware-Software-License-Support.docx",
+     "agreement": "Software License and Support Agreement",
+     "noticeDeadline": "2027-09-07",
+     "noticeDays": 60,
+     "clause": "Section 4.3",
+     "termEnds": "2027-11-05",
+     "renewsOn": "2027-11-06",
+     "noticeDeadlineInWindow": false,
+     "renewalInWindow": false
+    }
+   ],
+   "answer": [
+    {
+     "counterparty": "Contoso Ltd",
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "agreement": "Master Services Agreement",
+     "noticeDeadline": "2026-12-01",
+     "noticeDays": 120,
+     "clause": "Section 2 (amends MSA Section 9.2)",
+     "termEnds": "2027-03-31",
+     "renewsOn": "2027-04-01",
+     "noticeDeadlineInWindow": true,
+     "renewalInWindow": false
+    }
+   ],
+   "notInWindow": [
+    {
+     "counterparty": "Litware Inc",
+     "contract": "05-Litware-Software-License-Support.docx",
+     "agreement": "Software License and Support Agreement",
+     "noticeDeadline": "2027-09-07",
+     "noticeDays": 60,
+     "clause": "Section 4.3",
+     "termEnds": "2027-11-05",
+     "renewsOn": "2027-11-06",
+     "noticeDeadlineInWindow": false,
+     "renewalInWindow": false
+    }
+   ],
+   "alsoActInWindow": [
+    {
+     "contract": "07-Alpine-Ski-House-Office-Lease.docx",
+     "counterparty": "Alpine Ski House",
+     "clause": "Section 6.2",
+     "title": "Exercise lease renewal option (window closes Dec 30)",
+     "party": "Us",
+     "category": "Notice & renewal",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-12-30",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 36
+    },
+    {
+     "contract": "09-Adventure-Works-Reseller-Agreement.docx",
+     "counterparty": "Adventure Works Cycles",
+     "clause": "Section 5.1",
+     "title": "Decide on Adventure Works renewal before expiry",
+     "party": "Both",
+     "category": "Notice & renewal",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-12-31",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 37
+    },
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 6.3",
+     "title": "Request Fabrikam transition assistance by deadline",
+     "party": "Us",
+     "category": "Notice & renewal",
+     "triggerType": "Fixed date",
+     "dueDate": "2027-01-30",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 67
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 4 (adds MSA Section 3.4)",
+     "title": "Send Contoso fee-increase notice 60 days pre-renewal",
+     "party": "Us",
+     "category": "Notice & renewal",
+     "triggerType": "Recurring",
+     "dueDate": "2027-01-31",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 68
+    }
+   ],
+   "expiringInWindowNoAutoRenew": [
+    {
+     "contract": "09-Adventure-Works-Reseller-Agreement.docx",
+     "counterparty": "Adventure Works Cycles",
+     "expires": "2026-12-31"
+    }
+   ],
+   "wrongValues": [
+    {
+     "value": "2026-12-31",
+     "why": "superseded 01 Section 9.2 (Send non-renewal notice to Contoso (90 days)): Amended by Amendment No. 1 Section 2: notice period is now 120 days (deadline 2026-12-01). Do not track the 90-day version."
+    }
+   ]
+  },
+  "U-03": {
+   "keyTerms": {
+    "title": "Cloud Hosting Services Agreement",
+    "counterparty": "Fabrikam Inc",
+    "contractType": "Supplier agreement",
+    "effectiveDate": "2024-04-01",
+    "expirationDate": "2027-03-31",
+    "autoRenews": "No",
+    "contractValue": 1386000,
+    "governingLaw": "New York, USA"
+   },
+   "daysToExpiry": 127,
+   "deadlines": [
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 3.2",
+     "title": "Pay Fabrikam monthly hosting fees (net 30)",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7
+    },
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 6.3",
+     "title": "Request Fabrikam transition assistance by deadline",
+     "party": "Us",
+     "category": "Notice & renewal",
+     "triggerType": "Fixed date",
+     "dueDate": "2027-01-30",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 67
+    },
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 6.2",
+     "title": "Decide on Fabrikam renewal before 2027-03-31 expiry",
+     "party": "Both",
+     "category": "Notice & renewal",
+     "triggerType": "Fixed date",
+     "dueDate": "2027-03-31",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 127
+    }
+   ],
+   "undated": [
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 3.3",
+     "title": "Fabrikam: 60 days' notice and 5% cap on price increases",
+     "party": "Counterparty",
+     "category": "Payment",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Fabrikam proposes an increase to the Monthly Fees",
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "No date"
+    },
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 4.1",
+     "title": "Fabrikam to meet 99.9% monthly uptime",
+     "party": "Counterparty",
+     "category": "Service levels",
+     "triggerType": "Ongoing",
+     "dueDate": null,
+     "triggerEvent": null,
+     "risk": "Low",
+     "reviewState": "Confirmed",
+     "timing": "No date"
+    },
+    {
+     "contract": "03-Fabrikam-Cloud-Hosting-Agreement.docx",
+     "counterparty": "Fabrikam Inc",
+     "clause": "Section 4.3",
+     "title": "Claim Fabrikam service credits within 30 days",
+     "party": "Us",
+     "category": "Service levels",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Monthly Uptime Percentage falls below 99.9% in a calendar month (claim due 30 days after that month ends)",
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "No date"
+    }
+   ],
+   "quotes": {
+    "3.1": "3.1 Monthly Fees. Customer will pay Provider a fixed fee of $38,500 per month for the Hosting Services (the \"Monthly Fees\"), for aggregate fees of $1,386,000 over the Term before any adjustment under Section 3.3.",
+    "3.2": "3.2 Invoicing and Payment Terms. Provider shall invoice the Monthly Fees in advance on the first day of each calendar month. Customer shall pay each invoice within thirty (30) days after the invoice date.",
+    "3.3": "3.3 Price Increases. Provider may increase the Monthly Fees no more than once in any twelve (12) month period, and no single increase may exceed five percent (5%) of the Monthly Fees then in effect. Provider shall give Customer at least sixty (60) days' prior written notice of any increase, and any increase made without such notice is void.",
+    "4.3": "4.3 Claim Procedure. To receive a Service Credit, Customer must submit a written claim to Provider within thirty (30) days after the end of the calendar month in which the Downtime occurred. Customer's failure to submit a claim within that period waives Customer's right to a Service Credit for that month.",
+    "6.1": "6.1 Term. This Agreement begins on the Effective Date and expires on March 31, 2027 (the \"Expiration Date\"), unless terminated earlier under this Agreement.",
+    "6.2": "6.2 Renewal. This Agreement does not renew automatically. This Agreement may be renewed or extended only by a written agreement signed by both Parties before the Expiration Date.",
+    "6.3": "6.3 Transition Assistance. If Customer requests transition assistance by written notice delivered at least sixty (60) days before the Expiration Date, Provider shall provide up to ninety (90) days of transition assistance at its then-current professional services rates to support the migration of Customer Data and workloads to Customer or its designated successor provider."
+   }
+  },
+  "U-04": {
+   "target": {
+    "contract": "01-Contoso-MSA.docx",
+    "counterparty": "Contoso Ltd",
+    "clause": "Section 7.1",
+    "title": "Maintain insurance; send Contoso COI by Dec 15",
+    "party": "Us",
+    "category": "Insurance",
+    "triggerType": "Recurring",
+    "dueDate": "2026-12-15",
+    "triggerEvent": null,
+    "risk": "Medium",
+    "reviewState": "Confirmed",
+    "timing": "Upcoming",
+    "daysUntilDue": 21
+   },
+   "after": {
+    "Status": "Fulfilled",
+    "FulfilledOn": "2026-11-24",
+    "Evidence": "<the link given>",
+    "Timing": "Closed",
+    "ReviewState": "Confirmed"
+   },
+   "successor": {
+    "DueDate": "2027-12-15",
+    "CaptureKey": "<item's key>#2027-12-15",
+    "Status": "Not started",
+    "Notes": "Next occurrence after #<ID>",
+    "copied": "Owner, EscalationOwner, Risk, SourceClause ...; FulfilledOn, Evidence, LastReminded empty"
+   },
+   "runLog": {
+    "Workflow": "Mark fulfilled",
+    "ItemsUpdated": 1,
+    "ItemsCreated": 1,
+    "rows": 1
+   }
+  },
+  "U-05": {
+   "plantedItem": {
+    "Title": "Designate a point of contact",
+    "ContractName": "10-Fourth-Coffee-Facilities-Services-Agreement.docx",
+    "Counterparty": "Fourth Coffee",
+    "ClauseRef": "Section 2.1",
+    "SourceClause": "Each Party shall designate a point of contact for day-to-day communications regarding the Services (each, a \"Point of Contact\").",
+    "Party": "Both",
+    "Category": "Other",
+    "TriggerType": "Ongoing",
+    "Recurrence": "None",
+    "Status": "Not started",
+    "Timing": "No date",
+    "ReviewState": "Confirmed",
+    "Confidence": "Medium",
+    "Risk": "Low",
+    "IsSample": true,
+    "CaptureKey": "10-Fourth-Coffee-Facilities-Services-Agreement.docx|Section 2.1|designate-contact"
+   },
+   "exclusion": {
+    "Scope": "All contracts",
+    "ContractName": "",
+    "Category": "Other",
+    "Active": true,
+    "PatternMustContain": "Example: \"Each Party shall designate a point of contact for day-to-day communications regarding the Services (each, a \"Point of Contact\").\""
+   },
+   "itemAfter": {
+    "Status": "Not applicable",
+    "Timing": "Closed",
+    "NotesStartsWith": "Excluded: "
+   },
+   "afterRecapture": {
+    "openItemsFor10": [
+     {
+      "contract": "10-Fourth-Coffee-Facilities-Services-Agreement.docx",
+      "counterparty": "Fourth Coffee",
+      "clause": "Section 4.2",
+      "title": "Give 60 days' notice to terminate for convenience",
+      "party": "Both",
+      "category": "Notice & renewal",
+      "triggerType": "Event-driven",
+      "dueDate": null,
+      "triggerEvent": "Either party decides to terminate the agreement for convenience",
+      "risk": "Medium",
+      "reviewState": "Confirmed",
+      "timing": "No date"
+     },
+     {
+      "contract": "10-Fourth-Coffee-Facilities-Services-Agreement.docx",
+      "counterparty": "Fourth Coffee",
+      "clause": "Section 3.2",
+      "title": "Obtain Fourth Coffee food-safety certificate by Mar 1",
+      "party": "Counterparty",
+      "category": "Compliance & audit",
+      "triggerType": "Recurring",
+      "dueDate": "2027-03-01",
+      "triggerEvent": null,
+      "risk": "Low",
+      "reviewState": "Confirmed",
+      "timing": "Upcoming",
+      "daysUntilDue": 97
+     }
+    ],
+    "noOpenItemFor": "Section 2.1",
+    "exclusionRows": 1,
+    "excludedClausesInDetails": [
+     "Section 1.4",
+     "Section 2.1",
+     "Section 2.2",
+     "Section 2.3",
+     "Section 2.5",
+     "Section 5.1"
+    ]
+   }
+  },
+  "U-06": {
+   "before": [
+    {
+     "contract": "01-Contoso-MSA.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 9.2",
+     "title": "Send non-renewal notice to Contoso (90 days)",
+     "party": "Both",
+     "category": "Notice & renewal",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-31",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 37,
+     "status": "Not started"
+    },
+    {
+     "contract": "01-Contoso-MSA.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 4.3",
+     "title": "Deliver quarterly service-level report (15 days)",
+     "party": "Us",
+     "category": "Reporting",
+     "triggerType": "Recurring",
+     "dueDate": "2027-01-15",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 52,
+     "status": "Not started"
+    }
+   ],
+   "superseded": [
+    {
+     "contract": "01-Contoso-MSA.docx",
+     "clause": "Section 9.2",
+     "title": "Send non-renewal notice to Contoso (90 days)",
+     "Status": "Not applicable",
+     "Timing": "Closed",
+     "NotesContains": "Superseded by 02-Contoso-MSA-Amendment-1.docx Section 2",
+     "oldDueDate": "2026-12-31"
+    },
+    {
+     "contract": "01-Contoso-MSA.docx",
+     "clause": "Section 4.3",
+     "title": "Deliver quarterly service-level report (15 days)",
+     "Status": "Not applicable",
+     "Timing": "Closed",
+     "NotesContains": "Superseded by 02-Contoso-MSA-Amendment-1.docx Section 3",
+     "oldDueDate": "2027-01-15"
+    }
+   ],
+   "created": [
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 5",
+     "title": "Deliver updated BCP/DR plan to Contoso",
+     "party": "Us",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-31",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 24
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 2 (amends MSA Section 9.2)",
+     "title": "Send non-renewal notice to Contoso (120 days)",
+     "party": "Both",
+     "category": "Notice & renewal",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 3 (amends MSA Section 4.3)",
+     "title": "Deliver quarterly service-level report to Contoso",
+     "party": "Us",
+     "category": "Reporting",
+     "triggerType": "Recurring",
+     "dueDate": "2027-01-10",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 47
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 4 (adds MSA Section 3.4)",
+     "title": "Send Contoso fee-increase notice 60 days pre-renewal",
+     "party": "Us",
+     "category": "Notice & renewal",
+     "triggerType": "Recurring",
+     "dueDate": "2027-01-31",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 68
+    }
+   ],
+   "runLog": {
+    "Workflow": "Capture",
+    "ContractName": "02-Contoso-MSA-Amendment-1.docx",
+    "ItemsCreated": 4,
+    "ItemsUpdated": 2,
+    "ItemsHeld": 0,
+    "extraSkippedRowAllowed": true
+   }
+  },
+  "U-07": {
+   "eventsOfDefaultClause": "Section 6.1",
+   "quote61": "6.1 Events. Each of the following is an \"Event of Default\": (a) the Borrower fails to pay any principal or interest within three (3) Business Days after it is due; (b) the Borrower fails to comply with Section 4.1; (c) the Borrower fails to comply with Article 3 or Article 5 and the failure continues for fifteen (15) days after notice from the Bank; or (d) any representation made by the Borrower in connection with this Agreement proves to have been materially incorrect when made.",
+   "remedies62": "6.2 Remedies. Upon an Event of Default, the Bank may terminate the Commitment and declare all outstanding Advances and accrued interest immediately due and payable.",
+   "limbs": {
+    "a": "fails to pay principal or interest within 3 Business Days after due",
+    "b": "fails to comply with Section 4.1 (no cure period)",
+    "c": "fails to comply with Article 3 or Article 5 and the failure continues 15 days after notice from the Bank",
+    "d": "a representation proves materially incorrect when made (no tracked obligation)"
+   },
+   "items": [
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 5.1",
+     "title": "Deliver insurance endorsements to Woodgrove",
+     "party": "Us",
+     "category": "Insurance",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-11-14",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 10,
+     "limb": "c"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 2.2",
+     "title": "Pay monthly interest on Woodgrove advances",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Recurring",
+     "dueDate": "2026-12-01",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Due soon",
+     "daysUntilDue": 7,
+     "limb": "a"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 3.1",
+     "title": "Deliver quarterly compliance certificate to Woodgrove",
+     "party": "Us",
+     "category": "Reporting",
+     "triggerType": "Recurring",
+     "dueDate": "2027-02-14",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 82,
+     "limb": "c"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 3.2",
+     "title": "Deliver annual audited financials to Woodgrove",
+     "party": "Us",
+     "category": "Reporting",
+     "triggerType": "Recurring",
+     "dueDate": "2027-10-28",
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 338,
+     "limb": "c"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 2.3",
+     "title": "Repay all Woodgrove advances at maturity",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Fixed date",
+     "dueDate": "2029-09-15",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 1026,
+     "limb": "a"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 4.1",
+     "title": "Maintain minimum liquidity of $5,000,000",
+     "party": "Us",
+     "category": "Compliance & audit",
+     "triggerType": "Ongoing",
+     "dueDate": null,
+     "triggerEvent": null,
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "No date",
+     "limb": "b"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 3.3",
+     "title": "Notify Woodgrove of any default within 5 business days",
+     "party": "Us",
+     "category": "Compliance & audit",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Any Northwind officer becomes aware of a Default or Event of Default",
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "No date",
+     "limb": "c"
+    }
+   ],
+   "mostUrgent": [
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 5.1",
+     "title": "Deliver insurance endorsements to Woodgrove",
+     "party": "Us",
+     "category": "Insurance",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-11-14",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 10,
+     "limb": "c"
+    }
+   ],
+   "notADefault": [
+    "11 Section 2.4 Pay facility and legal fees at closing: Condition to effectiveness satisfied at closing on 2026-09-15 (the facility is in effect); no post-signature action remains.",
+    "11 Section 7.2 Counterparts clause: Routine boilerplate about how the agreement is signed; no obligation to track."
+   ]
+  },
+  "U-08": {
+   "count": 3,
+   "items": [
+    {
+     "contract": "04-Tailspin-Distribution-Agreement.docx",
+     "counterparty": "Tailspin Toys",
+     "clause": "Section 3.3",
+     "title": "Pay Tailspin per dealer credit application terms",
+     "party": "Us",
+     "category": "Payment",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Northwind places a purchase order with Tailspin (payment terms in the dealer credit application)",
+     "risk": "Medium",
+     "reviewState": "Needs review",
+     "timing": "No date",
+     "missingDocument": "dealer credit application",
+     "reason": "Protected payment obligation whose terms are only in the dealer credit application, which isn't in the Contracts library: hold one item (Needs review, Low) until someone adds the document or confirms the terms.",
+     "confidence": "Low"
+    },
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 7",
+     "title": "Proseware: return or delete personal data at termination",
+     "party": "Counterparty",
+     "category": "Data & confidentiality",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Termination of the Services Agreement",
+     "risk": "Medium",
+     "reviewState": "Needs review",
+     "timing": "No date",
+     "missingDocument": "Services Agreement (Section 11.4)",
+     "reason": "Protected data-return obligation whose terms are only in the Services Agreement (Section 11.4), which isn't in the Contracts library: hold one item (Needs review, Low) until someone adds the document or confirms the terms.",
+     "confidence": "Low"
+    },
+    {
+     "contract": "09-Adventure-Works-Reseller-Agreement.docx",
+     "counterparty": "Adventure Works Cycles",
+     "clause": "Section 2.2",
+     "title": "Adventure Works: pay per standard credit terms",
+     "party": "Counterparty",
+     "category": "Payment",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Adventure Works places a purchase order (payment terms in Northwind's standard credit terms)",
+     "risk": "Medium",
+     "reviewState": "Needs review",
+     "timing": "No date",
+     "missingDocument": "standard credit terms",
+     "reason": "Protected payment obligation whose terms are only in Northwind's standard credit terms, which aren't in the Contracts library: hold one item (Needs review, Low) until someone adds the document or confirms the terms.",
+     "confidence": "Low"
+    }
+   ],
+   "action": "add the missing document to Contracts (then Re-capture) or confirm the terms and set Review = Confirmed"
+  },
+  "U-09": {
+   "byCounterparty": [
+    {
+     "counterparty": "Woodgrove Bank",
+     "open": 7,
+     "high": 4,
+     "overdue": 1,
+     "held": 0,
+     "weOwe": 7,
+     "theyOwe": 0,
+     "nextDeadline": {
+      "date": "2026-12-01",
+      "title": "Pay monthly interest on Woodgrove advances"
+     }
+    },
+    {
+     "counterparty": "Contoso Ltd",
+     "open": 10,
+     "high": 2,
+     "overdue": 1,
+     "held": 0,
+     "weOwe": 9,
+     "theyOwe": 1,
+     "nextDeadline": {
+      "date": "2026-12-01",
+      "title": "Send non-renewal notice to Contoso (120 days)"
+     }
+    },
+    {
+     "counterparty": "Fabrikam Inc",
+     "open": 6,
+     "high": 2,
+     "overdue": 0,
+     "held": 0,
+     "weOwe": 4,
+     "theyOwe": 2,
+     "nextDeadline": {
+      "date": "2026-12-01",
+      "title": "Pay Fabrikam monthly hosting fees (net 30)"
+     }
+    },
+    {
+     "counterparty": "Tailspin Toys",
+     "open": 7,
+     "high": 1,
+     "overdue": 1,
+     "held": 1,
+     "weOwe": 7,
+     "theyOwe": 0,
+     "nextDeadline": {
+      "date": "2027-01-20",
+      "title": "Send Tailspin quarterly sales & inventory report"
+     }
+    },
+    {
+     "counterparty": "Proseware Inc",
+     "open": 6,
+     "high": 1,
+     "overdue": 1,
+     "held": 1,
+     "weOwe": 1,
+     "theyOwe": 5,
+     "nextDeadline": {
+      "date": "2027-10-01",
+      "title": "Obtain Proseware's annual SOC 2 Type II report"
+     }
+    },
+    {
+     "counterparty": "Adventure Works Cycles",
+     "open": 5,
+     "high": 1,
+     "overdue": 0,
+     "held": 1,
+     "weOwe": 4,
+     "theyOwe": 1,
+     "nextDeadline": {
+      "date": "2026-12-31",
+      "title": "Decide on Adventure Works renewal before expiry"
+     }
+    },
+    {
+     "counterparty": "Alpine Ski House",
+     "open": 5,
+     "high": 1,
+     "overdue": 0,
+     "held": 0,
+     "weOwe": 5,
+     "theyOwe": 0,
+     "nextDeadline": {
+      "date": "2026-12-01",
+      "title": "Pay monthly base rent to Alpine Ski House"
+     }
+    },
+    {
+     "counterparty": "Litware Inc",
+     "open": 5,
+     "high": 1,
+     "overdue": 0,
+     "held": 0,
+     "weOwe": 5,
+     "theyOwe": 0,
+     "nextDeadline": {
+      "date": "2026-12-06",
+      "title": "Submit annual Named User true-up report to Litware"
+     }
+    },
+    {
+     "counterparty": "Wide World Importers",
+     "open": 5,
+     "high": 0,
+     "overdue": 0,
+     "held": 0,
+     "weOwe": 4,
+     "theyOwe": 1,
+     "nextDeadline": {
+      "date": "2026-12-05",
+      "title": "Send Wide World rolling 6-month forecast by the 5th"
+     }
+    },
+    {
+     "counterparty": "Fourth Coffee",
+     "open": 2,
+     "high": 0,
+     "overdue": 0,
+     "held": 0,
+     "weOwe": 1,
+     "theyOwe": 1,
+     "nextDeadline": {
+      "date": "2027-03-01",
+      "title": "Obtain Fourth Coffee food-safety certificate by Mar 1"
+     }
+    }
+   ],
+   "totals": {
+    "open": 58,
+    "high": 13,
+    "highShare": 0.224,
+    "overdue": 4,
+    "held": 3
+   },
+   "notAvailable": [
+    "dollar exposure",
+    "trends over time"
+   ]
+  },
+  "U-10": {
+   "items": [
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 6.1",
+     "title": "Obtain Proseware's initial SOC 2 Type II report",
+     "party": "Counterparty",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-01",
+     "triggerEvent": null,
+     "risk": "Low",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 54
+    },
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 6.2",
+     "title": "Obtain Proseware's annual SOC 2 Type II report",
+     "party": "Counterparty",
+     "category": "Compliance & audit",
+     "triggerType": "Recurring",
+     "dueDate": "2027-10-01",
+     "triggerEvent": null,
+     "risk": "Low",
+     "reviewState": "Confirmed",
+     "timing": "Upcoming",
+     "daysUntilDue": 311
+    },
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 4.1",
+     "title": "Proseware: notify personal data breach within 48 hours",
+     "party": "Counterparty",
+     "category": "Data & confidentiality",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Proseware becomes aware of a Personal Data Breach",
+     "risk": "High",
+     "reviewState": "Confirmed",
+     "timing": "No date"
+    },
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 5.2",
+     "title": "Proseware: 30 days' notice before new sub-processor",
+     "party": "Counterparty",
+     "category": "Data & confidentiality",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Proseware plans to engage a new Sub-processor",
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "No date"
+    },
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 7",
+     "title": "Proseware: return or delete personal data at termination",
+     "party": "Counterparty",
+     "category": "Data & confidentiality",
+     "triggerType": "Event-driven",
+     "dueDate": null,
+     "triggerEvent": "Termination of the Services Agreement",
+     "risk": "Medium",
+     "reviewState": "Needs review",
+     "timing": "No date"
+    }
+   ],
+   "late": [
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 6.1",
+     "title": "Obtain Proseware's initial SOC 2 Type II report",
+     "party": "Counterparty",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-01",
+     "triggerEvent": null,
+     "risk": "Low",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 54
+    }
+   ],
+   "mustNotInclude": [
+    "06 Section 5.3 Object to new Proseware sub-processor within 15 days (Party Us)"
+   ]
+  },
+  "U-11": {
+   "setupRules": [
+    {
+     "Title": "Finance - payments",
+     "Category": "Payment",
+     "BusinessUnit": "Any",
+     "Owner": "<tester>"
+    }
+   ],
+   "assigned": 11,
+   "unownedConfirmed": 44,
+   "unownedByCategory": {
+    "Compliance & audit": 13,
+    "Notice & renewal": 9,
+    "Data & confidentiality": 4,
+    "Purchasing & volume": 4,
+    "Reporting": 4,
+    "Service levels": 4,
+    "Insurance": 3,
+    "Other": 3
+   },
+   "heldNotAssigned": 3,
+   "acceptableFix": "a default Any/Any rule, or category rules covering the listed categories, created only after the user agrees"
+  },
+  "U-12": {
+   "plantedDefects": [
+    {
+     "defect": "view 'Triggered and ongoing' deleted from Obligations",
+     "expectedFinding": "missing view",
+     "severity": "breaks undated-items view"
+    },
+    {
+     "defect": "choice 'Semi-annual' removed from Obligations Recurrence",
+     "expectedFinding": "missing choice",
+     "severity": "capture/sweep writes fail for semi-annual items"
+    },
+    {
+     "defect": "display name of Obligations Timing renamed to 'When'",
+     "expectedFinding": "harmless: internal name Timing unchanged",
+     "severity": "none"
+    }
+   ],
+   "mustNot": "change the schema without asking"
+  },
+  "U-13": {
+   "deadline": "2026-12-01",
+   "clause": "Section 2 (amends MSA Section 9.2)",
+   "termEnds": "2027-03-31",
+   "noticeDays": 120,
+   "noticeClause01": "10.2 Notices. Notices under this Agreement must be in writing and delivered by courier or certified mail to the addresses set out above, with a copy by email to legal@northwind.example (for Service Provider) or contracts@contoso.example (for Customer). Notices are effective on receipt.",
+   "amendment2": "For clarity, for the Renewal Term ending March 31, 2027, notice of non-renewal must be given on or before December 1, 2026. If neither Party gives timely notice, the Agreement will renew for a further Renewal Term of one (1) year under Section 9.1.",
+   "contosoParty": "This Amendment No. 1 (this \"Amendment\") is entered into as of September 1, 2026 (the \"Amendment Effective Date\") by and between Northwind Traders, Inc., a Washington corporation with its principal place of business at 4100 Harbor View Drive, Seattle, Washington 98121 (\"Service Provider\"), and Contoso Ltd, a Delaware corporation with its principal place of business at 1 Contoso Plaza, Redmond, Washington 98052 (\"Customer\"), and amends the Master Services Agreement between the Parties dated as of April 1, 2024 (Agreement No. NW-MSA-2024-0117) (the \"Agreement\").",
+   "updatedContacts": [
+    "Service Provider | Priya Raman, General Counsel | legal@northwind.example",
+    "Customer | Contracts Office, Global Procurement | contracts@contoso.example"
+   ],
+   "mustNot": [
+    "send the email",
+    "use the superseded 90-day period or 2026-12-31"
+   ]
+  },
+  "U-14": {
+   "items": [
+    {
+     "contract": "04-Tailspin-Distribution-Agreement.docx",
+     "counterparty": "Tailspin Toys",
+     "clause": "Section 4.2",
+     "title": "Submit initial marketing plan to Tailspin",
+     "party": "Us",
+     "category": "Other",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-09-29",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 56,
+     "owner": "<tester> (Default - all obligations rule)"
+    },
+    {
+     "contract": "02-Contoso-MSA-Amendment-1.docx",
+     "counterparty": "Contoso Ltd",
+     "clause": "Section 5",
+     "title": "Deliver updated BCP/DR plan to Contoso",
+     "party": "Us",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-31",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 24,
+     "owner": "<tester> (Default - all obligations rule)"
+    },
+    {
+     "contract": "11-Woodgrove-Bank-Revolving-Credit-Facility.docx",
+     "counterparty": "Woodgrove Bank",
+     "clause": "Section 5.1",
+     "title": "Deliver insurance endorsements to Woodgrove",
+     "party": "Us",
+     "category": "Insurance",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-11-14",
+     "triggerEvent": null,
+     "risk": "Medium",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 10,
+     "owner": "<tester> (Default - all obligations rule)"
+    },
+    {
+     "contract": "06-Proseware-Data-Processing-Agreement.docx",
+     "counterparty": "Proseware Inc",
+     "clause": "Section 6.1",
+     "title": "Obtain Proseware's initial SOC 2 Type II report",
+     "party": "Counterparty",
+     "category": "Compliance & audit",
+     "triggerType": "Fixed date",
+     "dueDate": "2026-10-01",
+     "triggerEvent": null,
+     "risk": "Low",
+     "reviewState": "Confirmed",
+     "timing": "Overdue",
+     "daysOverdue": 54,
+     "owner": "<tester> (Default - all obligations rule)"
+    }
+   ]
+  },
+  "U-15": {
+   "target": {
+    "contract": "05-Litware-Software-License-Support.docx",
+    "counterparty": "Litware Inc",
+    "clause": "Section 3.2",
+    "title": "Submit annual Named User true-up report to Litware",
+    "party": "Us",
+    "category": "Compliance & audit",
+    "triggerType": "Recurring",
+    "dueDate": "2026-12-06",
+    "triggerEvent": null,
+    "risk": "Medium",
+    "reviewState": "Confirmed",
+    "timing": "Due soon",
+    "daysUntilDue": 12
+   },
+   "FulfilledOn": "2026-11-20",
+   "successorDueDate": "2027-12-06",
+   "successorCheck": "next anniversary 2027-11-06 + 30 days = 2027-12-06",
+   "questionsAllowed": 0
+  }
+ }
+}

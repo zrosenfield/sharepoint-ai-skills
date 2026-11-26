@@ -1,0 +1,34 @@
+.filters { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--s2) var(--s3); padding: var(--s2) var(--s3); }
+.person { min-width: 260px; }
+.person .control { min-width: 260px; }
+.filters__hint { margin-top: var(--s1); font-size: var(--fs-sm); }
+.group { margin-top: var(--s5); }
+.group:first-child { margin-top: 0; }
+.group__head { display: flex; align-items: center; gap: 12px; margin-bottom: var(--s2); }
+.group__head h2 { font-size: var(--fs-lg); }
+.group__count { font-size: var(--fs-md); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.group__rule { flex: 1; height: 1px; background: var(--line); }
+.ob-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); list-style: none; margin: 0; padding: 0; }
+.ob { display: grid; gap: 12px; align-content: start; height: 100%; transition: box-shadow .45s var(--ease-spring), transform .45s var(--ease-spring); }
+.ob:hover { box-shadow: var(--shadow-2); }
+.ob__top { display: flex; justify-content: space-between; gap: var(--s2); align-items: flex-start; }
+.ob__title { font-size: var(--fs-base); font-weight: 600; line-height: 1.45; }
+.ob__who { display: block; font-size: var(--fs-sm); color: var(--ink-3); margin-top: 2px; }
+.ob__facts { display: grid; grid-template-columns: repeat(3, minmax(0, auto)); justify-content: start; gap: 4px var(--s3); margin: 0; }
+.ob__facts div { min-width: 0; }
+.ob__facts dt { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.ob__facts dd { margin: 0; font-size: var(--fs-md); color: var(--ink); }
+.ob__text { font-size: var(--fs-md); color: var(--ink-2); }
+.ob__actions { display: flex; flex-wrap: wrap; gap: var(--s1); padding-top: 12px; border-top: 1px solid var(--line); margin-top: auto; }
+.closed-note { margin-top: var(--s4); font-size: var(--fs-md); color: var(--ink-3); }
+@media (max-width: 1080px) { .ob-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .filters { padding: var(--s2); }
+  .seg { width: 100%; }
+  .seg__opt { flex: 1 0 auto; justify-content: center; gap: 6px; padding: 0 8px; font-size: var(--fs-sm); }
+  .person, .person .control { min-width: 0; width: 100%; }
+  .ob__facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ob__actions .btn { flex: 1 1 auto; }
+  .hint__text { left: 0; transform: translate(0, 4px); }
+  .hint:hover .hint__text, .hint:focus-within .hint__text { transform: translate(0, 0); }
+}

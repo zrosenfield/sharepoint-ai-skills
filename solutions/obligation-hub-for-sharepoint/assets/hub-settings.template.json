@@ -1,0 +1,29 @@
+{
+  "_about": "Obligation Hub settings. Replace the {{TOKENS}}, then upload as AgentAssets/Config/hub-settings.json. Every hub skill reads this file first. Keys starting with _ are ignored.",
+  "_tokens": {
+    "{{OUR_COMPANY}}": "Legal name of the company that owns this hub, exactly as it appears in contracts (decides Party = Us).",
+    "{{SITE_URL}}": "Absolute site URL without a trailing slash, e.g. https://<tenant>.sharepoint.com/sites/<site>.",
+    "{{LEADERSHIP_EMAILS}}": "One or more email addresses. Replace the whole token string with quoted, comma-separated addresses: \"a@example.com\", \"b@example.com\". Use an empty list [] to send no leadership digest."
+  },
+  "_keys": {
+    "timeZone": "Windows time zone name used for 'today' and in the workflow schedules, e.g. Pacific Standard Time, GMT Standard Time.",
+    "dueSoonDays": "Days ahead that count as Due soon.",
+    "escalateAfterDaysOverdue": "Days overdue before an item is escalated to its escalation owner (0 = the day after the due date).",
+    "reminderCooldownDays": "Minimum days between overdue reminders for one item (at least 1).",
+    "leadershipTeamsChannel": "Optional Teams team and channel names for the leadership digest; leave both empty for email only.",
+    "notifyDefault": "Email, Teams or Both: the channel for people no routing rule names.",
+    "captureHoldBelowConfidence": "High, Medium or Low: captured items below this confidence go to Needs review.",
+    "maxDigestItems": "Most items listed in one owner digest."
+  },
+  "ourCompany": "{{OUR_COMPANY}}",
+  "siteUrl": "{{SITE_URL}}",
+  "timeZone": "Pacific Standard Time",
+  "dueSoonDays": 14,
+  "escalateAfterDaysOverdue": 0,
+  "reminderCooldownDays": 3,
+  "leadershipRecipients": ["{{LEADERSHIP_EMAILS}}"],
+  "leadershipTeamsChannel": { "team": "", "channel": "" },
+  "notifyDefault": "Both",
+  "captureHoldBelowConfidence": "Medium",
+  "maxDigestItems": 25
+}

@@ -1,0 +1,857 @@
+{
+ "version": "1.0.0",
+ "about": "Obligation Hub schema used by check_schema.py. Generated from the live-tested lists.json (reference build 2026-11-24) plus Evidence.IsSample from schema v1.0.0. Internal names are the contract.",
+ "lists": [
+  {
+   "title": "Contracts",
+   "template": "DocumentLibrary",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Contract title",
+     "type": "Text"
+    },
+    {
+     "internalName": "Counterparty",
+     "displayName": "Counterparty",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContractType",
+     "displayName": "Contract type",
+     "type": "Choice",
+     "choices": [
+      "Customer agreement",
+      "Supplier agreement",
+      "Partner agreement",
+      "License",
+      "Lease",
+      "Financing",
+      "Data processing",
+      "Amendment",
+      "Other"
+     ]
+    },
+    {
+     "internalName": "EffectiveDate",
+     "displayName": "Effective date",
+     "type": "DateTime",
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "ExpirationDate",
+     "displayName": "Expiration date",
+     "type": "DateTime",
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "AutoRenews",
+     "displayName": "Auto-renews",
+     "type": "Choice",
+     "choices": [
+      "Yes",
+      "No",
+      "Unclear"
+     ]
+    },
+    {
+     "internalName": "NoticePeriodDays",
+     "displayName": "Notice period (days)",
+     "type": "Number"
+    },
+    {
+     "internalName": "GoverningLaw",
+     "displayName": "Governing law",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContractValue",
+     "displayName": "Contract value",
+     "type": "Currency"
+    },
+    {
+     "internalName": "ContractSummary",
+     "displayName": "Summary",
+     "type": "Note"
+    },
+    {
+     "internalName": "ContractOwner",
+     "displayName": "Contract owner",
+     "type": "User"
+    },
+    {
+     "internalName": "BusinessUnit",
+     "displayName": "Business unit",
+     "type": "Choice",
+     "choices": [
+      "Sales",
+      "Procurement",
+      "Finance",
+      "Legal",
+      "IT",
+      "Facilities",
+      "Operations"
+     ]
+    },
+    {
+     "internalName": "Amends",
+     "displayName": "Amends",
+     "type": "Text"
+    },
+    {
+     "internalName": "IsSample",
+     "displayName": "Sample data",
+     "type": "Boolean",
+     "default": "0"
+    }
+   ],
+   "views": [
+    {
+     "title": "All contracts",
+     "default": true,
+     "fields": [
+      "DocIcon",
+      "LinkFilename",
+      "Counterparty",
+      "ContractType",
+      "EffectiveDate",
+      "ExpirationDate",
+      "AutoRenews",
+      "NoticePeriodDays",
+      "ContractOwner",
+      "BusinessUnit"
+     ],
+     "query": "<OrderBy><FieldRef Name='Counterparty'/></OrderBy>"
+    },
+    {
+     "title": "Expiring in 180 days",
+     "default": false,
+     "fields": [
+      "DocIcon",
+      "LinkFilename",
+      "Counterparty",
+      "ExpirationDate",
+      "AutoRenews",
+      "NoticePeriodDays",
+      "ContractOwner"
+     ],
+     "query": "<Where><And><IsNotNull><FieldRef Name='ExpirationDate'/></IsNotNull><Leq><FieldRef Name='ExpirationDate'/><Value Type='DateTime'><Today OffsetDays='180'/></Value></Leq></And></Where><OrderBy><FieldRef Name='ExpirationDate'/></OrderBy>"
+    }
+   ]
+  },
+  {
+   "title": "Obligations",
+   "template": "GenericList",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Obligation",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContractName",
+     "displayName": "Contract",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContractLink",
+     "displayName": "Contract link",
+     "type": "URL",
+     "format": "Hyperlink"
+    },
+    {
+     "internalName": "Counterparty",
+     "displayName": "Counterparty",
+     "type": "Text"
+    },
+    {
+     "internalName": "ObligationText",
+     "displayName": "What must happen",
+     "type": "Note"
+    },
+    {
+     "internalName": "ClauseRef",
+     "displayName": "Clause",
+     "type": "Text"
+    },
+    {
+     "internalName": "SourceClause",
+     "displayName": "Source clause",
+     "type": "Note"
+    },
+    {
+     "internalName": "Party",
+     "displayName": "Who owes it",
+     "type": "Choice",
+     "choices": [
+      "Us",
+      "Counterparty",
+      "Both"
+     ],
+     "default": "Us"
+    },
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ]
+    },
+    {
+     "internalName": "TriggerType",
+     "displayName": "Trigger",
+     "type": "Choice",
+     "choices": [
+      "Fixed date",
+      "Recurring",
+      "Event-driven",
+      "Ongoing"
+     ]
+    },
+    {
+     "internalName": "Recurrence",
+     "displayName": "Recurrence",
+     "type": "Choice",
+     "choices": [
+      "None",
+      "Weekly",
+      "Monthly",
+      "Quarterly",
+      "Semi-annual",
+      "Annual"
+     ],
+     "default": "None"
+    },
+    {
+     "internalName": "DueDate",
+     "displayName": "Due date",
+     "type": "DateTime",
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "TriggerEvent",
+     "displayName": "Trigger event",
+     "type": "Text"
+    },
+    {
+     "internalName": "Owner",
+     "displayName": "Owner",
+     "type": "User"
+    },
+    {
+     "internalName": "EscalationOwner",
+     "displayName": "Escalation owner",
+     "type": "User"
+    },
+    {
+     "internalName": "BusinessUnit",
+     "displayName": "Business unit",
+     "type": "Choice",
+     "choices": [
+      "Sales",
+      "Procurement",
+      "Finance",
+      "Legal",
+      "IT",
+      "Facilities",
+      "Operations"
+     ]
+    },
+    {
+     "internalName": "Status",
+     "displayName": "Status",
+     "type": "Choice",
+     "choices": [
+      "Not started",
+      "In progress",
+      "Fulfilled",
+      "Waived",
+      "Not applicable"
+     ],
+     "default": "Not started"
+    },
+    {
+     "internalName": "Timing",
+     "displayName": "Timing",
+     "type": "Choice",
+     "choices": [
+      "Overdue",
+      "Due soon",
+      "Upcoming",
+      "No date",
+      "Closed"
+     ]
+    },
+    {
+     "internalName": "ReviewState",
+     "displayName": "Review",
+     "type": "Choice",
+     "choices": [
+      "Confirmed",
+      "Needs review"
+     ],
+     "default": "Needs review"
+    },
+    {
+     "internalName": "Confidence",
+     "displayName": "Confidence",
+     "type": "Choice",
+     "choices": [
+      "High",
+      "Medium",
+      "Low"
+     ]
+    },
+    {
+     "internalName": "Risk",
+     "displayName": "Risk",
+     "type": "Choice",
+     "choices": [
+      "High",
+      "Medium",
+      "Low"
+     ],
+     "default": "Medium"
+    },
+    {
+     "internalName": "FulfilledOn",
+     "displayName": "Fulfilled on",
+     "type": "DateTime",
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "Evidence",
+     "displayName": "Evidence",
+     "type": "URL",
+     "format": "Hyperlink"
+    },
+    {
+     "internalName": "LastReminded",
+     "displayName": "Last reminded",
+     "type": "DateTime",
+     "format": "DateOnly"
+    },
+    {
+     "internalName": "CaptureKey",
+     "displayName": "Capture key",
+     "type": "Text"
+    },
+    {
+     "internalName": "Notes",
+     "displayName": "Notes",
+     "type": "Note"
+    },
+    {
+     "internalName": "IsSample",
+     "displayName": "Sample data",
+     "type": "Boolean",
+     "default": "0"
+    }
+   ],
+   "views": [
+    {
+     "title": "Open by due date",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "DueDate",
+      "Timing",
+      "Status",
+      "Owner",
+      "Party",
+      "Risk",
+      "ReviewState"
+     ],
+     "query": "<Where><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Fulfilled</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Waived</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Not applicable</Value></Neq><IsNotNull><FieldRef Name='DueDate'/></IsNotNull></And></And></And></Where><OrderBy><FieldRef Name='DueDate' Ascending='TRUE'/></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "title": "Triggered and ongoing",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "TriggerType",
+      "TriggerEvent",
+      "Owner",
+      "Party",
+      "Risk",
+      "ReviewState"
+     ],
+     "query": "<Where><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Fulfilled</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Waived</Value></Neq><And><Neq><FieldRef Name='Status'/><Value Type='Choice'>Not applicable</Value></Neq><IsNull><FieldRef Name='DueDate'/></IsNull></And></And></And></Where><OrderBy><FieldRef Name='Counterparty'/></OrderBy>",
+     "rowLimit": 100
+    },
+    {
+     "title": "My obligations",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "DueDate",
+      "Timing",
+      "Status",
+      "Risk"
+     ],
+     "query": "<Where><Eq><FieldRef Name='Owner'/><Value Type='User'><UserID/></Value></Eq></Where><OrderBy><FieldRef Name='DueDate' Ascending='TRUE'/></OrderBy>"
+    },
+    {
+     "title": "Needs owner",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "BusinessUnit",
+      "DueDate",
+      "Risk"
+     ],
+     "query": "<Where><IsNull><FieldRef Name='Owner'/></IsNull></Where><OrderBy><FieldRef Name='DueDate'/></OrderBy>"
+    },
+    {
+     "title": "Needs review",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "ClauseRef",
+      "Category",
+      "Confidence",
+      "DueDate",
+      "Notes"
+     ],
+     "query": "<Where><Eq><FieldRef Name='ReviewState'/><Value Type='Choice'>Needs review</Value></Eq></Where>"
+    },
+    {
+     "title": "By contract",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Category",
+      "Party",
+      "DueDate",
+      "Recurrence",
+      "Status",
+      "Owner"
+     ],
+     "query": "<GroupBy Collapse='FALSE'><FieldRef Name='ContractName'/></GroupBy><OrderBy><FieldRef Name='DueDate'/></OrderBy>"
+    },
+    {
+     "title": "Calendar",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "DueDate",
+      "Counterparty",
+      "Status"
+     ],
+     "viewType2": "MODERNCALENDAR"
+    },
+    {
+     "title": "All obligations",
+     "default": false,
+     "fields": [
+      "LinkTitle",
+      "Counterparty",
+      "Category",
+      "DueDate",
+      "Timing",
+      "Status",
+      "Owner",
+      "Party",
+      "Risk",
+      "ReviewState",
+      "ContractName",
+      "ClauseRef",
+      "TriggerType",
+      "Recurrence",
+      "TriggerEvent",
+      "EscalationOwner",
+      "BusinessUnit",
+      "Confidence",
+      "FulfilledOn",
+      "Evidence"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Obligation Owners",
+   "template": "GenericList",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Rule",
+     "type": "Text"
+    },
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Any",
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ],
+     "default": "Any"
+    },
+    {
+     "internalName": "BusinessUnit",
+     "displayName": "Business unit",
+     "type": "Choice",
+     "choices": [
+      "Any",
+      "Sales",
+      "Procurement",
+      "Finance",
+      "Legal",
+      "IT",
+      "Facilities",
+      "Operations"
+     ],
+     "default": "Any"
+    },
+    {
+     "internalName": "Counterparty",
+     "displayName": "Counterparty (optional)",
+     "type": "Text"
+    },
+    {
+     "internalName": "Owner",
+     "displayName": "Owner",
+     "type": "User"
+    },
+    {
+     "internalName": "EscalationOwner",
+     "displayName": "Escalation owner",
+     "type": "User"
+    },
+    {
+     "internalName": "Notify",
+     "displayName": "Notify by",
+     "type": "Choice",
+     "choices": [
+      "Email",
+      "Teams",
+      "Both"
+     ],
+     "default": "Both"
+    }
+   ],
+   "views": [
+    {
+     "title": "All rules",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Category",
+      "BusinessUnit",
+      "Counterparty",
+      "Owner",
+      "EscalationOwner",
+      "Notify"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Obligation Types",
+   "template": "GenericList",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Obligation type",
+     "type": "Text"
+    },
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ]
+    },
+    {
+     "internalName": "Handling",
+     "displayName": "Handling",
+     "type": "Choice",
+     "choices": [
+      "Track",
+      "Exclude",
+      "Hold for review"
+     ],
+     "default": "Track"
+    },
+    {
+     "internalName": "DefaultRisk",
+     "displayName": "Default risk",
+     "type": "Choice",
+     "choices": [
+      "High",
+      "Medium",
+      "Low"
+     ],
+     "default": "Medium"
+    },
+    {
+     "internalName": "DefaultRecurrence",
+     "displayName": "Default recurrence",
+     "type": "Choice",
+     "choices": [
+      "None",
+      "Weekly",
+      "Monthly",
+      "Quarterly",
+      "Semi-annual",
+      "Annual"
+     ],
+     "default": "None"
+    },
+    {
+     "internalName": "Description",
+     "displayName": "Description",
+     "type": "Note"
+    },
+    {
+     "internalName": "Examples",
+     "displayName": "Example wording",
+     "type": "Note"
+    }
+   ],
+   "views": [
+    {
+     "title": "All types",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Category",
+      "Handling",
+      "DefaultRisk",
+      "DefaultRecurrence",
+      "Description"
+     ],
+     "query": "<OrderBy><FieldRef Name='Category'/></OrderBy>"
+    }
+   ]
+  },
+  {
+   "title": "Exclusions",
+   "template": "GenericList",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Exclusion",
+     "type": "Text"
+    },
+    {
+     "internalName": "Pattern",
+     "displayName": "Clause or pattern",
+     "type": "Note"
+    },
+    {
+     "internalName": "Reason",
+     "displayName": "Reason",
+     "type": "Note"
+    },
+    {
+     "internalName": "Scope",
+     "displayName": "Scope",
+     "type": "Choice",
+     "choices": [
+      "All contracts",
+      "This contract"
+     ],
+     "default": "This contract"
+    },
+    {
+     "internalName": "ContractName",
+     "displayName": "Contract",
+     "type": "Text"
+    },
+    {
+     "internalName": "Category",
+     "displayName": "Category",
+     "type": "Choice",
+     "choices": [
+      "Payment",
+      "Reporting",
+      "Notice & renewal",
+      "Compliance & audit",
+      "Service levels",
+      "Insurance",
+      "Data & confidentiality",
+      "Purchasing & volume",
+      "Other"
+     ]
+    },
+    {
+     "internalName": "Active",
+     "displayName": "Active",
+     "type": "Boolean",
+     "default": "1"
+    }
+   ],
+   "views": [
+    {
+     "title": "All exclusions",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Scope",
+      "ContractName",
+      "Category",
+      "Reason",
+      "Active"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Run Log",
+   "template": "GenericList",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Run",
+     "type": "Text"
+    },
+    {
+     "internalName": "Workflow",
+     "displayName": "Workflow",
+     "type": "Choice",
+     "choices": [
+      "Capture",
+      "Assign owners",
+      "Daily sweep",
+      "Owner digest",
+      "Leadership digest",
+      "Mark fulfilled",
+      "Exclude",
+      "Setup"
+     ]
+    },
+    {
+     "internalName": "Outcome",
+     "displayName": "Outcome",
+     "type": "Choice",
+     "choices": [
+      "Succeeded",
+      "Partial",
+      "Failed",
+      "Skipped"
+     ]
+    },
+    {
+     "internalName": "ContractName",
+     "displayName": "Contract",
+     "type": "Text"
+    },
+    {
+     "internalName": "ContractVersion",
+     "displayName": "Contract version",
+     "type": "Text"
+    },
+    {
+     "internalName": "ItemsCreated",
+     "displayName": "Created",
+     "type": "Number"
+    },
+    {
+     "internalName": "ItemsUpdated",
+     "displayName": "Updated",
+     "type": "Number"
+    },
+    {
+     "internalName": "ItemsHeld",
+     "displayName": "Held for review",
+     "type": "Number"
+    },
+    {
+     "internalName": "Details",
+     "displayName": "Details",
+     "type": "Note"
+    },
+    {
+     "internalName": "RunAt",
+     "displayName": "Run at",
+     "type": "DateTime",
+     "format": "DateTime"
+    }
+   ],
+   "views": [
+    {
+     "title": "Recent runs",
+     "default": true,
+     "fields": [
+      "LinkTitle",
+      "Workflow",
+      "Outcome",
+      "ContractName",
+      "ItemsCreated",
+      "ItemsUpdated",
+      "ItemsHeld",
+      "RunAt"
+     ],
+     "query": "<OrderBy><FieldRef Name='Created' Ascending='FALSE'/></OrderBy>"
+    }
+   ]
+  },
+  {
+   "title": "Evidence",
+   "template": "DocumentLibrary",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Evidence title",
+     "type": "Text"
+    },
+    {
+     "internalName": "IsSample",
+     "displayName": "Sample data",
+     "type": "Boolean",
+     "default": "0"
+    }
+   ],
+   "views": []
+  },
+  {
+   "title": "AgentAssets",
+   "template": "DocumentLibrary",
+   "fields": [
+    {
+     "internalName": "Title",
+     "displayName": "Asset title",
+     "type": "Text"
+    }
+   ],
+   "views": []
+  }
+ ]
+}

@@ -1,0 +1,134 @@
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        @@HUB_MARK@@
+        <span class="eyebrow">How it works</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1>Every promise in a signed contract, kept on time</h1>
+      <p class="lede">Obligation Hub reads your signed contracts, turns each duty into a tracked item with an owner and a date, and makes sure someone hears about it before it&rsquo;s due. <span id="site-stat"></span></p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section grid-2 what" aria-labelledby="what-title">
+      <div class="what__text">
+        <h2 id="what-title">What is an obligation?</h2>
+        <p>A duty that starts <strong>after</strong> a contract is signed: <strong>who</strong> owes <strong>what</strong>, <strong>by when</strong>, and <strong>what triggers it</strong>. Some fall on a date, some repeat, some wait for an event &mdash; and some run for as long as the contract does.</p>
+        <p>Governing law, headings, definitions and other boilerplate aren&rsquo;t obligations, so they aren&rsquo;t tracked. A right the other side has (an audit, say) can still create a duty for us &mdash; to cooperate &mdash; and that is tracked.</p>
+      </div>
+      <figure class="card anatomy" aria-labelledby="anat-cap">
+        <figcaption id="anat-cap"><span class="pill pill--quiet">Example</span> One clause, four answers</figcaption>
+        <p class="anatomy__title">Send non-renewal notice to Contoso</p>
+        <dl class="anatomy__grid">
+          <div><dt>Who owes it</dt><dd>Us (either party may give notice)</dd></div>
+          <div><dt>What must happen</dt><dd>Written notice that we won&rsquo;t renew</dd></div>
+          <div><dt>By when</dt><dd>120 days before the term ends on 31 March</dd></div>
+          <div><dt>Triggered by</dt><dd>The automatic renewal date &mdash; a fixed annual cycle</dd></div>
+        </dl>
+        <p class="anatomy__foot">Miss it and the contract renews for another year. That&rsquo;s the kind of date the hub exists to catch.</p>
+      </figure>
+    </section>
+
+    <section class="section card loop" aria-labelledby="loop-title">
+      <div class="section-head"><div><h2 id="loop-title">The loop</h2><p>Four steps, mostly automatic. People step in where judgement matters.</p></div></div>
+      <svg class="loop__svg loop__svg--wide" viewBox="0 0 1120 240" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="loop-lane" x1="0" x2="1"><stop offset="0" stop-color="#9AC7F5" stop-opacity=".7"/><stop offset="1" stop-color="#8B83DB" stop-opacity=".55"/></linearGradient>
+          <radialGradient id="loop-glow" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EAF3FC"/></radialGradient>
+          <marker id="loop-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#374151" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        </defs>
+        <path d="M140 104H980" stroke="url(#loop-lane)" stroke-width="6" stroke-linecap="round"/>
+        <g fill="#8B83DB"><circle cx="280" cy="104" r="4"/><circle cx="560" cy="104" r="4"/><circle cx="840" cy="104" r="4"/></g>
+        <path d="M980 150C980 206 140 206 140 152" fill="none" stroke="#6B7A90" stroke-width="1.5" stroke-dasharray="4 6" marker-end="url(#loop-arrow)"/>
+        <g font-family="Segoe UI Variable Text, Segoe UI, system-ui, -apple-system, Helvetica Neue, Arial, sans-serif">
+          <g><text x="140" y="24" text-anchor="middle" font-size="15" font-weight="600" fill="#111827">Add contract</text><text x="140" y="44" text-anchor="middle" font-size="13" fill="#374151">You drop in a signed file</text>
+            <circle cx="140" cy="104" r="40" fill="url(#loop-glow)" stroke="#D3DDE9"/><circle cx="140" cy="104" r="28" fill="#111827"/><text x="140" y="111" text-anchor="middle" font-size="20" font-weight="600" fill="#FFFFFF">1</text></g><g><text x="420" y="24" text-anchor="middle" font-size="15" font-weight="600" fill="#111827">Captured &amp; classified</text><text x="420" y="44" text-anchor="middle" font-size="13" fill="#374151">Capture new &amp; changed contracts</text>
+            <circle cx="420" cy="104" r="40" fill="url(#loop-glow)" stroke="#D3DDE9"/><circle cx="420" cy="104" r="28" fill="#111827"/><text x="420" y="111" text-anchor="middle" font-size="20" font-weight="600" fill="#FFFFFF">2</text></g><g><text x="700" y="24" text-anchor="middle" font-size="15" font-weight="600" fill="#111827">Assigned &amp; tracked</text><text x="700" y="44" text-anchor="middle" font-size="13" fill="#374151">Assign owners</text>
+            <circle cx="700" cy="104" r="40" fill="url(#loop-glow)" stroke="#D3DDE9"/><circle cx="700" cy="104" r="28" fill="#111827"/><text x="700" y="111" text-anchor="middle" font-size="20" font-weight="600" fill="#FFFFFF">3</text></g><g><text x="980" y="24" text-anchor="middle" font-size="15" font-weight="600" fill="#111827">Reminded, escalated, evidenced</text><text x="980" y="44" text-anchor="middle" font-size="13" fill="#374151">Daily sweep &amp; digests</text>
+            <circle cx="980" cy="104" r="40" fill="url(#loop-glow)" stroke="#D3DDE9"/><circle cx="980" cy="104" r="28" fill="#111827"/><text x="980" y="111" text-anchor="middle" font-size="20" font-weight="600" fill="#FFFFFF">4</text></g>
+          <text x="560" y="230" text-anchor="middle" font-size="13" fill="#374151">An amendment or a new contract starts the loop again</text>
+        </g>
+      </svg>
+      <ol class="steps">
+        <li><span class="steps__n" aria-hidden="true">1</span><div><h3>Add a contract</h3><p>Upload the signed file to the Contracts library. Key terms &mdash; counterparty, dates, auto-renewal, notice period, value &mdash; fill in on their own.</p></div></li>
+        <li><span class="steps__n" aria-hidden="true">2</span><div><h3>Captured and classified</h3><p>Two capture workflows run the same skill &mdash; <em>Capture new contracts</em> when a file is added, <em>Capture changed contracts</em> when one changes. They find each duty, record the clause it came from and classify it. Anything uncertain is held for review.</p></div></li>
+        <li><span class="steps__n" aria-hidden="true">3</span><div><h3>Assigned and tracked</h3><p><em>Assign owners</em> gives each obligation an owner and an escalation owner from the routing rules. Timing is tracked from its due date or trigger.</p></div></li>
+        <li><span class="steps__n" aria-hidden="true">4</span><div><h3>Reminded, escalated, evidenced</h3><p>The <em>Daily sweep</em> reminds owners as dates approach and escalates anything overdue. Owners mark items fulfilled and keep the proof in Evidence.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="section" aria-labelledby="roles-title">
+      <div class="section-head"><div><h2 id="roles-title">Who does what</h2></div></div>
+      <div class="grid-3 roles">
+        <article class="card role"><span class="role__icon"><svg aria-hidden="true"><use href="#i-tick"></use></svg></span><h3>Obligation owner</h3>
+          <ul><li>Does the work before the due date</li><li>Marks the item fulfilled and attaches evidence</li><li>Starts from <a href="{{PAGES_URL}}/MyObligations.html" target="_top" data-page="MyObligations.html">My obligations</a></li></ul></article>
+        <article class="card role"><span class="role__icon"><svg aria-hidden="true"><use href="#i-doc"></use></svg></span><h3>Contract manager</h3>
+          <ul><li>Adds contracts and amendments</li><li>Clears the <a href="{{PAGES_URL}}/ReviewQueue.html" target="_top" data-page="ReviewQueue.html">Review queue</a></li><li>Keeps routing rules, types and exclusions current in <a href="{{PAGES_URL}}/Settings.html" target="_top" data-page="Settings.html">Settings</a></li></ul></article>
+        <article class="card role"><span class="role__icon"><svg aria-hidden="true"><use href="#i-people"></use></svg></span><h3>Leader</h3>
+          <ul><li>Reads the Friday leadership digest</li><li>Makes the renewal and exit calls in time</li><li>Resolves escalations; sees exposure on <a href="{{PAGES_URL}}/Leadership.html" target="_top" data-page="Leadership.html">Leadership</a></li></ul></article>
+      </div>
+    </section>
+
+    <section class="section card card--flush" aria-labelledby="msg-title">
+      <div class="card__head pad"><div><h2 id="msg-title">What you&rsquo;ll receive</h2><p>By email, Teams or both &mdash; whichever the routing rule&rsquo;s <strong>Notify by</strong> says.</p></div></div>
+      <div class="table-wrap">
+        <table class="table table--stack">
+          <caption class="sr-only">Messages the workflows send</caption>
+          <thead><tr><th scope="col">Message</th><th scope="col">When</th><th scope="col">Who gets it</th><th scope="col">Sent by workflow</th></tr></thead>
+          <tbody>
+            <tr><td class="cell-lead"><span class="cell-title">Reminder</span><span class="cell-sub">What&rsquo;s due, the clause and a link to the item</span></td><td data-label="When">As an item comes due &mdash; within 14 days of its date</td><td data-label="Who gets it">The owner</td><td data-label="Workflow">Daily sweep</td></tr>
+            <tr><td class="cell-lead"><span class="cell-title">Escalation</span><span class="cell-sub">An item has passed its due date and is still open</span></td><td data-label="When">When an item becomes overdue</td><td data-label="Who gets it">The escalation owner</td><td data-label="Workflow">Daily sweep</td></tr>
+            <tr><td class="cell-lead"><span class="cell-title">Owner digest</span><span class="cell-sub">Your open obligations for the weeks ahead</span></td><td data-label="When">Mondays, 8:00 AM</td><td data-label="Who gets it">Every owner with open items</td><td data-label="Workflow">Owner digest</td></tr>
+            <tr><td class="cell-lead"><span class="cell-title">Leadership digest</span><span class="cell-sub">Overdue and high-risk items, notice windows, what changed</span></td><td data-label="When">Fridays, 3:00 PM</td><td data-label="Who gets it">The leaders the workflow is set up to notify</td><td data-label="Workflow">Leadership digest</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section card gaps" id="gaps" aria-labelledby="gaps-title">
+      <div class="gaps__head">
+        <h2 id="gaps-title">What this sample doesn&rsquo;t do yet</h2>
+        <p>Known gaps in this sample as it stands today. Plan around them.</p>
+      </div>
+      <ul class="gaps__list">
+        <li><strong>Events aren&rsquo;t detected.</strong> In the sample, 28 of the 58 open obligations (48%) are triggered by an event or ongoing, so they have no date. Nothing notices the event itself &mdash; a change of control, a breach, a termination &mdash; a person has to.</li>
+        <li><strong>No proof standard.</strong> Mark fulfilled doesn&rsquo;t require evidence and nobody signs off a fulfilment. The Run Log is an ordinary list people can edit, not an audit trail.</li>
+        <li><strong>Capture is tested on clean samples only.</strong> Accuracy was measured on the 11 synthetic Word contracts the skill was tuned on (55 of 55 obligations found). Scans, exhibits, statements of work and documents a contract refers to but that aren&rsquo;t in the library are untested.</li>
+        <li><strong>Deadlines, not performance.</strong> It tracks when things are due. It doesn&rsquo;t check payments against accounts payable, measure service levels, or connect to e-signature, contract-management or ERP systems.</li>
+        <li><strong>Leadership is a snapshot.</strong> The Leadership page shows today only: no trends over time and no dollar exposure.</li>
+        <li><strong>My obligations can&rsquo;t tell who you are.</strong> The page opens the first owner, or the name in its link (<code>#owner=</code>). The <em>My obligations</em> view in the Obligations list does filter to you.</li>
+        <li><strong>Workflows are still in preview.</strong> SharePoint AI workflows aren&rsquo;t generally available yet, messages come from whoever set them up, and runs can fail. Check the Run Log after each run.</li>
+        <li><strong>No per-contract permissions.</strong> Everyone with access to the site sees every contract and every obligation.</li>
+        <li><strong>Large lists get slow.</strong> Pages load whole lists. Above about 5,000 obligations, index Status, DueDate and Owner, and expect slower pages.</li>
+        <li><strong>Key terms and amendments need a person.</strong> Key-term autofill may not run, so fill the columns in by hand if they stay empty. An amendment doesn&rsquo;t rewrite the original contract&rsquo;s summary; Contract 360 notes the amendment under it instead.</li>
+      </ul>
+      <p class="gaps__foot">These are the roadmap, not hidden limits.</p>
+    </section>
+
+    <section class="section faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">Questions</h2>
+      <div class="faq__list">
+        <details class="card faq__item"><summary><h3>Why was this item held for review?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <p>Capture holds an item when it isn&rsquo;t confident: it can&rsquo;t tell who owes the duty, the clause reads more like a right than a duty, it had to calculate a date the clause doesn&rsquo;t state, or the obligation type is set to <em>Hold for review</em> in Obligation Types. The reason is in the item&rsquo;s <strong>Notes</strong>. Accept, edit or exclude it on the <a href="{{PAGES_URL}}/ReviewQueue.html" target="_top" data-page="ReviewQueue.html">Review</a> page. Held items aren&rsquo;t assigned or reminded until someone confirms them.</p></details>
+        <details class="card faq__item"><summary><h3>What do High, Medium and Low risk mean?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <dl class="risk-defs" id="risk-defs">
+            <div><dt>High</dt><dd>Missing it automatically loses a right or money or starts a legal clock (notice, renewal and option deadlines we must act on; change-of-control and breach notices; financing covenants, compliance certificates and default notices).</dd></div>
+            <div><dt>Medium</dt><dd>Other dated or money obligations (payments, reports, certificates, audits).</dd></div>
+            <div><dt>Low</dt><dd>Ongoing conduct, and counterparty duties we only monitor.</dd></div>
+          </dl>
+          <p>High-risk items are counted on their own on the <a href="{{PAGES_URL}}/Leadership.html" target="_top" data-page="Leadership.html">Leadership</a> page and in the Friday digest. If an item&rsquo;s risk doesn&rsquo;t fit, change it in the Obligations list.</p></details>
+        <details class="card faq__item"><summary><h3>How do I remove an obligation?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <p>Select it in the Obligations list and use the <strong>Remove obligation</strong> quick step. It takes the item out of tracking and records the clause in Exclusions, so the next capture doesn&rsquo;t add it back. Deleting the item instead doesn&rsquo;t stop capture from finding the clause again. If it&rsquo;s simply done, use the <strong>Mark fulfilled</strong> quick step instead &mdash; that keeps the record.</p></details>
+        <details class="card faq__item"><summary><h3>What if a contract is amended?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <p>Upload the amendment to Contracts and set <strong>Amends</strong> to the original contract&rsquo;s file name. Adding it starts <em>Capture new contracts</em>, which reads the two together: changed terms update the existing obligations (a 90-day notice period that becomes 120 days, for example) and replaced clauses are treated as superseded rather than tracked twice. If you edit or replace a contract file instead, <em>Capture changed contracts</em> updates its obligations. To run capture again without changing anything, select the contract in Contracts and use the <strong>Re-capture obligations</strong> quick step. <a href="{{PAGES_URL}}/Contract360.html" target="_top" data-page="Contract360.html">Contract 360</a> shows the contract and its amendments in one place.</p></details>
+        <details class="card faq__item"><summary><h3>Who sends the reminders?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <p>The person who set up the workflows. AI workflows run as the account that created them, so reminders, escalations and digests come from that account&rsquo;s mailbox and Teams. We recommend setting them up with a shared obligations account &mdash; for example <em>obligations@</em> your domain &mdash; so messages don&rsquo;t stop when one person changes role or leaves.</p></details>
+        <details class="card faq__item"><summary><h3>How is Timing worked out?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <p>These pages work it out in your browser from today&rsquo;s date: <em>Closed</em> if the status is Fulfilled, Waived or Not applicable; <em>No date</em> if there&rsquo;s no due date; <em>Overdue</em> if the due date has passed; <em>Due soon</em> within 14 days; otherwise <em>Upcoming</em>. The list&rsquo;s own Timing column is refreshed by the daily sweep, so it can be up to a day behind.</p></details>
+        <details class="card faq__item"><summary><h3>Why does a page say &ldquo;Sample snapshot&rdquo;?</h3><svg aria-hidden="true"><use href="#i-chev"></use></svg></summary>
+          <p>Each page carries a small set of fictional sample data so it never appears empty. When the site provides live list data, the badge changes to <em>Live</em> and the sample is no longer shown &mdash; even if a list is empty.</p></details>
+      </div>
+    </section>
+  </div>
+</main>

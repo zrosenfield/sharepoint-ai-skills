@@ -9,14 +9,18 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | Skill | Purpose |
 |---|---|
 | [`authoring-sharepoint-markdown`](./authoring-sharepoint-markdown/) | Produces SharePoint-compatible Markdown |
+| [`assign-obligation-owners`](./assign-obligation-owners/) | Assigns missing primary and escalation owners to confirmed open obligations |
 | [`autoresearch`](./autoresearch/) | Performs iterative multi-step research |
 | [`brainstorming-design-docs`](./brainstorming-design-docs/) | Turns ideas into structured design documents |
+| [`capture-obligations`](./capture-obligations/) | Captures contract obligations and source clauses into the Obligations list |
 | [`client-briefing`](./client-briefing/) | Briefs users on a Client Hub client's projects, activity, and follow-ups |
+| [`clear-obligation-sample-data`](./clear-obligation-sample-data/) | Removes fictional Obligation Hub sample data after confirmation |
 | [`copy-editing`](./copy-editing/) | Runs a structured copy-editing workflow |
 | [`crm-change-request`](./crm-change-request/) | Plans and confirms changes to the experimental Client Hub |
 | [`decision-log`](./decision-log/) | Extracts structured decision records |
 | [`deck-assembly`](./deck-assembly/) | Assembles presentations from existing slide content |
 | [`design-direction`](./design-direction/) | Produces distinctive, professionally justified visual direction |
+| [`exclude-obligation`](./exclude-obligation/) | Excludes a clause or pattern from future Obligation Hub capture |
 | [`executive-summary`](./executive-summary/) | Produces concise leadership summaries |
 | [`faq-building`](./faq-building/) | Builds structured FAQ content |
 | [`find-expert`](./find-expert/) | Matches knowledge gaps to subject-matter experts |
@@ -30,19 +34,27 @@ Each installable skill is stored directly at `Skills/<skill-name>/SKILL.md`, fol
 | [`list-formatting`](./list-formatting/) | Creates SharePoint list-formatting JSON |
 | [`log-client-activity`](./log-client-activity/) | Previews and records Client Hub activity after confirmation |
 | [`log-knowledge-gap`](./log-knowledge-gap/) | Records unanswered questions and routes them |
+| [`mark-obligation-fulfilled`](./mark-obligation-fulfilled/) | Records fulfillment, evidence, and recurring next occurrences |
 | [`meeting-notes`](./meeting-notes/) | Converts transcripts into meeting notes |
+| [`obligation-hub-guide`](./obligation-hub-guide/) | Answers questions about the Obligation Hub with clause citations and links |
+| [`obligation-leadership-digest`](./obligation-leadership-digest/) | Sends a weekly leadership summary of register exposure |
+| [`obligation-owner-digest`](./obligation-owner-digest/) | Sends obligation owners their overdue and upcoming work |
 | [`project-brief`](./project-brief/) | Develops decision-ready project briefs |
 | [`quarterly-expense-report`](./quarterly-expense-report/) | Creates quarterly expense reports |
 | [`ralph-loop`](./ralph-loop/) | Applies an iterative self-evaluation loop |
 | [`scrollytelling-story`](./scrollytelling-story/) | Creates interactive scrolling explainers with a continuous D3 graphic and user-defined story lengths |
 | [`setup-client-hub`](./setup-client-hub/) | Builds the experimental Client Hub lists, columns, and views |
+| [`setup-obligation-hub`](./setup-obligation-hub/) | Builds the Obligation Hub lists, columns, views, and related configuration |
 | [`site-analyzer`](./site-analyzer/) | Analyzes SharePoint project sites |
 | [`style-guidelines`](./style-guidelines/) | Provides a brand-style skill template |
+| [`sweep-obligations`](./sweep-obligations/) | Runs daily timing, reminder, and escalation maintenance |
 | [`uppababy-brand-review`](./uppababy-brand-review/) | Experimental brand-compliance demo |
 | [`weekly-client-review`](./weekly-client-review/) | Reviews Client Hub portfolio health and upcoming work |
 | [`youtube-description`](./youtube-description/) | Generates descriptions from video transcripts |
 
 The five Client Hub skills use the list design in [Client Hub for SharePoint](../solutions/client-hub-for-sharepoint/). Install `setup-client-hub` to try building the lists with Copilot, or set up the lists using the kit before using the four day-to-day skills.
+
+The ten Obligation Hub skills use the contract and obligation lists in [Obligation Hub for SharePoint](../solutions/obligation-hub-for-sharepoint/). Install `setup-obligation-hub` to build the hub, then add the capture, routing, fulfillment, reporting, maintenance, and exception skills needed for the scenario.
 
 ## Graduated to PnP
 

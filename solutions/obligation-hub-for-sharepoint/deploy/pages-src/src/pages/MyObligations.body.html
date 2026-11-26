@@ -1,0 +1,30 @@
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        @@HUB_MARK@@
+        <span class="eyebrow">My obligations</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1 id="page-title">Your open obligations</h1>
+      <p class="lede" id="page-sub">Everything you own, grouped by when it&rsquo;s due. Open an item to update it, mark it fulfilled or attach proof.</p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section" aria-labelledby="filters-title">
+      <h2 class="sr-only" id="filters-title">Choose whose obligations to show</h2>
+      <div class="filters card">
+        <div class="seg" id="seg" role="group" aria-label="Whose obligations"><span class="seg__opt" aria-hidden="true"><span class="skel" style="width:220px"></span></span></div>
+        <div class="field person" id="person-field">
+          <label for="person">Showing obligations for</label>
+          <select class="control" id="person" data-focus="person" disabled><option>Loading&hellip;</option></select>
+        </div>
+      </div>
+      <p class="filters__hint muted" id="person-hint">This page can&rsquo;t see who is signed in, so choose your name once &mdash; the choice is kept in the page address, so you can bookmark it.</p>
+    </section>
+
+    <div class="section" id="groups" aria-live="polite" aria-busy="true">
+      <div class="card"><span class="skel skel--w40"></span><span class="skel"></span><span class="skel skel--w80"></span></div>
+    </div>
+  </div>
+</main>

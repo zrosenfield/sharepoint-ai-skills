@@ -1,0 +1,37 @@
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        @@HUB_MARK@@
+        <span class="eyebrow">Contract 360</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1 id="page-title">Contracts</h1>
+      <p class="lede" id="page-sub">Key terms, notice dates, every obligation and the capture history for one contract.</p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section picker card" aria-labelledby="picker-title">
+      <h2 class="sr-only" id="picker-title">Choose a contract</h2>
+      <div class="field picker__search">
+        <label for="c-search">Find a contract</label>
+        <div class="search">
+          <svg aria-hidden="true"><use href="#i-search"></use></svg>
+          <input class="control" type="search" id="c-search" placeholder="Counterparty, title or file name" autocomplete="off" aria-describedby="c-search-count" data-focus="c-search">
+        </div>
+      </div>
+      <div class="field picker__select">
+        <label for="c-select">Contract</label>
+        <select class="control" id="c-select" data-focus="c-select" disabled><option>Loading&hellip;</option></select>
+      </div>
+      <p class="picker__count muted" id="c-search-count" aria-live="polite"></p>
+    </section>
+
+    <div class="section" id="c360" aria-busy="true">
+      <div class="grid-2">
+        <div class="card"><span class="skel skel--title"></span><span class="skel"></span><span class="skel skel--w80"></span><span class="skel skel--w60"></span></div>
+        <div class="card"><span class="skel skel--block"></span></div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,335 @@
+[
+  {
+    "Title": "Payments we owe",
+    "Category": "Payment",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Fees, rent, interest, support fees, repayments or milestone payments we must pay, with amount and due date or schedule. Merge late charges into the same item.",
+    "Examples": "Licensee shall pay the annual fee on or before the first day of each contract year. | Borrower shall repay all advances on the maturity date."
+  },
+  {
+    "Title": "Payments owed to us",
+    "Category": "Payment",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "The counterparty's payment terms on our invoices. Party Counterparty, so receivables can be chased.",
+    "Examples": "Customer shall pay each undisputed invoice within thirty (30) days after receipt."
+  },
+  {
+    "Title": "Rebates, fund contributions, true-ups and deposit top-ups",
+    "Category": "Payment",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "Quarterly",
+    "Description": "Calculated payments tied to a period or event: volume rebates, marketing fund contributions, true-up invoices, restoring a security deposit.",
+    "Examples": "Within 45 days after each quarter, pay the rebate earned for that quarter with a calculation statement."
+  },
+  {
+    "Title": "Supplier price-increase limits and notice",
+    "Category": "Payment",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "The other side may raise what we pay only within a cap and after notice. Counterparty, Event-driven.",
+    "Examples": "Provider may increase fees once per year by up to 5% on 60 days' prior written notice."
+  },
+  {
+    "Title": "Periodic operational report",
+    "Category": "Reporting",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "Quarterly",
+    "Description": "Recurring service-level, sales, inventory or usage reports due after each period.",
+    "Examples": "Within 20 days after each calendar quarter, deliver a report of net sales and inventory on hand."
+  },
+  {
+    "Title": "Financial statements and compliance certificates",
+    "Category": "Reporting",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "Quarterly",
+    "Description": "Lender or investor reporting: periodic financial statements and officer-signed compliance certificates.",
+    "Examples": "Within 45 days after each fiscal quarter, deliver a compliance certificate signed by the CFO."
+  },
+  {
+    "Title": "Non-renewal notice before automatic renewal",
+    "Category": "Notice & renewal",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "Annual",
+    "Description": "Last day to stop an auto-renewing contract or service. Due date = term end minus the notice period.",
+    "Examples": "Either party may give notice of non-renewal at least 90 days before the end of the then-current term."
+  },
+  {
+    "Title": "Renewal, extension or transition option window",
+    "Category": "Notice & renewal",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "None",
+    "Description": "A right that lapses unless exercised by a deadline or inside a window (renewal or extension option, transition assistance request). Due date = last day; note when the window opens.",
+    "Examples": "Tenant may exercise the option by notice no earlier than 12 and no later than 9 months before expiration."
+  },
+  {
+    "Title": "Renewal decision before fixed expiry",
+    "Category": "Notice & renewal",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "None",
+    "Description": "A contract that ends on a date without automatic renewal: decide and sign any renewal before expiry. Created when expiry is within 12 months.",
+    "Examples": "This agreement expires on its stated date and may be renewed only by a written agreement signed before then."
+  },
+  {
+    "Title": "Termination for convenience notice",
+    "Category": "Notice & renewal",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Notice either party must give to end the contract without cause. Event-driven.",
+    "Examples": "Either party may terminate this agreement for convenience on 60 days' prior written notice."
+  },
+  {
+    "Title": "Fee-increase notice we must give",
+    "Category": "Notice & renewal",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "Annual",
+    "Description": "Our price increase at renewal is valid only if notice is given by a deadline.",
+    "Examples": "Supplier may increase fees for a renewal term by giving notice at least 60 days before that term starts."
+  },
+  {
+    "Title": "Change-of-control or assignment notice",
+    "Category": "Notice & renewal",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "None",
+    "Description": "Notice due after a change of control, merger or assignment. Event-driven.",
+    "Examples": "Distributor shall notify Supplier in writing within 30 days after any change of control."
+  },
+  {
+    "Title": "Audit cooperation",
+    "Category": "Compliance & audit",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "The other side's audit right creates our duty to cooperate after their notice. Our own discretionary audit rights are not tracked.",
+    "Examples": "On 30 days' notice, Customer may audit Supplier's records once per year; Supplier shall cooperate."
+  },
+  {
+    "Title": "License usage certification or true-up",
+    "Category": "Compliance & audit",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "Annual",
+    "Description": "Periodic certification of users, seats or volumes, and payment for any excess.",
+    "Examples": "Within 30 days after each anniversary, certify the peak number of named users."
+  },
+  {
+    "Title": "Compliance deliverables: certificates, attestations and plans",
+    "Category": "Compliance & audit",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Reports, certificates or plans due on a date or each year: SOC reports, inspection or permit certificates, continuity or security plans. The other side's delivery is Counterparty.",
+    "Examples": "Processor shall deliver an updated SOC 2 Type II report by October 1 each year. | Within 60 days, deliver an updated disaster recovery plan."
+  },
+  {
+    "Title": "Restrictive covenants and pricing commitments",
+    "Category": "Compliance & audit",
+    "Handling": "Track",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Standing restrictions to monitor: exclusivity, non-compete, license-use limits, most-favoured pricing and the duty to extend better pricing.",
+    "Examples": "Licensee shall not permit any affiliate or third party to use the software."
+  },
+  {
+    "Title": "Financial covenants and default notices",
+    "Category": "Compliance & audit",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "None",
+    "Description": "Minimum liquidity or ratio covenants, and notifying a lender or counterparty of a default within a set time.",
+    "Examples": "Borrower shall notify the bank within five business days after becoming aware of any default."
+  },
+  {
+    "Title": "Service-level commitment",
+    "Category": "Service levels",
+    "Handling": "Track",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Measurable service levels (availability %, response or resolution times), ours or the other side's. Ongoing.",
+    "Examples": "Provider shall maintain monthly availability of at least 99.9%."
+  },
+  {
+    "Title": "Service credits: issue or claim within the window",
+    "Category": "Service levels",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Credits we must issue after a miss, or credits we must claim before the window closes.",
+    "Examples": "To receive a service credit, Customer must submit a claim within 30 days after the end of the month."
+  },
+  {
+    "Title": "Maintain insurance and deliver certificates",
+    "Category": "Insurance",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "Annual",
+    "Description": "Keep required coverage and deliver certificates or endorsements by a date or each year. One item, dated by the certificate.",
+    "Examples": "Maintain general liability insurance and deliver a certificate of insurance by January 15 each year."
+  },
+  {
+    "Title": "Confidentiality",
+    "Category": "Data & confidentiality",
+    "Handling": "Track",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Protect the other side's confidential information during the term and any survival period. Usually Both, Ongoing.",
+    "Examples": "Each party shall hold the other party's confidential information in confidence."
+  },
+  {
+    "Title": "Personal data breach notification",
+    "Category": "Data & confidentiality",
+    "Handling": "Track",
+    "DefaultRisk": "High",
+    "DefaultRecurrence": "None",
+    "Description": "Notify of a personal data or security breach within a set time. Event-driven.",
+    "Examples": "Processor shall notify Controller of any personal data breach within 48 hours after becoming aware of it."
+  },
+  {
+    "Title": "Sub-processor notice and objection window",
+    "Category": "Data & confidentiality",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "The processor's advance notice of new sub-processors, and our window to object.",
+    "Examples": "Controller may object in writing within 15 days after receiving notice of a new sub-processor."
+  },
+  {
+    "Title": "Minimum purchase or volume commitment",
+    "Category": "Purchasing & volume",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "Annual",
+    "Description": "Minimum spend or volume per period; a shortfall triggers a remedy.",
+    "Examples": "Distributor shall purchase products of at least $500,000 in each contract year."
+  },
+  {
+    "Title": "Forecasts and periodic commercial reviews",
+    "Category": "Purchasing & volume",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "Monthly",
+    "Description": "Rolling forecasts and scheduled pricing or business reviews.",
+    "Examples": "By the 5th of each month, provide a rolling six-month forecast."
+  },
+  {
+    "Title": "Product discontinuation and last-time-buy notice",
+    "Category": "Purchasing & volume",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "The supplier's notice before discontinuing a product. Counterparty, Event-driven.",
+    "Examples": "Supplier shall give at least 90 days' notice before discontinuing any product."
+  },
+  {
+    "Title": "Defect, damage or repair notice window",
+    "Category": "Other",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Notice we must give within a set time after delivery or discovery, or rights are lost.",
+    "Examples": "Buyer shall notify Supplier of any defect within 14 days after delivery."
+  },
+  {
+    "Title": "Post-signing deliverable",
+    "Category": "Other",
+    "Handling": "Track",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "A one-time commercial plan or setup task due within a set time after the effective date.",
+    "Examples": "Within 90 days after the effective date, submit an initial marketing plan for approval."
+  },
+  {
+    "Title": "Key personnel continuity",
+    "Category": "Other",
+    "Handling": "Track",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Named key people who may not be replaced without notice or approval.",
+    "Examples": "Supplier shall not replace the named account director without Customer's prior written approval."
+  },
+  {
+    "Title": "Contacts, notice addresses and invoicing logistics",
+    "Category": "Other",
+    "Handling": "Exclude",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Designating contacts, notice addresses, where invoices go, issuing our own routine invoices. Payment amounts and deadlines are tracked separately.",
+    "Examples": "Each party shall designate a point of contact. | Invoices shall be sent to the accounts payable mailbox."
+  },
+  {
+    "Title": "Good-faith cooperation and general conduct",
+    "Category": "Other",
+    "Handling": "Exclude",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "General promises to cooperate or act in good faith, with no action, date or deliverable.",
+    "Examples": "The parties shall cooperate in good faith in the performance of this agreement."
+  },
+  {
+    "Title": "Interpretive and legal boilerplate",
+    "Category": "Other",
+    "Handling": "Exclude",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Headings, counterparts, own costs, governing law, entire agreement, severability, force majeure, survival, waivers, liability caps, termination for cause, remedies.",
+    "Examples": "Headings are for convenience only. | Each party shall bear its own costs."
+  },
+  {
+    "Title": "Routine service delivery and site rules",
+    "Category": "Other",
+    "Handling": "Exclude",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Uniforms, badges, site access, hours, permitted use, signage, service descriptions and general performance standards with no measurable level, trigger, date or deliverable.",
+    "Examples": "Supplier staff shall wear uniforms and identification badges. | Provider will perform the services in a professional manner."
+  },
+  {
+    "Title": "Conditions met at signing",
+    "Category": "Other",
+    "Handling": "Exclude",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Payments, deposits or deliverables completed at or before signing, including conditions to effectiveness of an agreement now in effect.",
+    "Examples": "As a condition to effectiveness, Borrower shall pay the facility fee on the closing date."
+  },
+  {
+    "Title": "Efforts-based or third-party duties",
+    "Category": "Other",
+    "Handling": "Hold for review",
+    "DefaultRisk": "Low",
+    "DefaultRecurrence": "None",
+    "Description": "Reasonable or best efforts duties with no measurable outcome, and duties placed on affiliates, subcontractors or others who did not sign.",
+    "Examples": "Reseller shall use commercially reasonable efforts to promote the products."
+  },
+  {
+    "Title": "Indemnity claim notices and defense procedures",
+    "Category": "Compliance & audit",
+    "Handling": "Hold for review",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Procedural duties after a third-party claim (prompt notice, defense, cooperation); Legal decides case by case.",
+    "Examples": "The indemnified party shall promptly notify the indemnifying party of any claim."
+  },
+  {
+    "Title": "Record retention and end-of-term data return",
+    "Category": "Data & confidentiality",
+    "Handling": "Hold for review",
+    "DefaultRisk": "Medium",
+    "DefaultRecurrence": "None",
+    "Description": "Keep records for a period, or return or delete data at the end of the contract; often defined in another document.",
+    "Examples": "Upon termination, Processor shall return or delete all personal data within 30 days."
+  }
+]

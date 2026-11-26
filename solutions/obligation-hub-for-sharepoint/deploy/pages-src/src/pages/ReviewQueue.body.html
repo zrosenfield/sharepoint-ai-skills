@@ -1,0 +1,33 @@
+<main id="main">
+  <div class="wrap">
+    <header class="page-head reveal">
+      <div class="meta-row">
+        @@HUB_MARK@@
+        <span class="eyebrow">Review</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1 id="page-title">Review queue</h1>
+      <p class="lede" id="page-sub">Capture holds anything it isn&rsquo;t sure about. Check the clause, then accept, edit or exclude each item.</p>
+      <div class="data-note" id="data-note" hidden></div>
+    </header>
+
+    <section class="section how card card--tint" aria-labelledby="how-title">
+      <h2 class="sr-only" id="how-title">What the three actions do</h2>
+      <dl class="how__grid">
+        <div><dt><svg aria-hidden="true"><use href="#i-tick"></use></svg>Accept</dt><dd>Opens the item to edit. Set <strong>Review</strong> to <em>Confirmed</em> and save &mdash; it then gets an owner and reminders like any other obligation.</dd></div>
+        <div><dt><svg aria-hidden="true"><use href="#i-edit"></use></svg>Edit</dt><dd>Fix the party, date, category or wording first, then set <strong>Review</strong> to <em>Confirmed</em>.</dd></div>
+        <div><dt><svg aria-hidden="true"><use href="#i-block"></use></svg>Exclude</dt><dd>Opens the item in the list. Select it and use the <strong>Remove obligation</strong> quick step: it takes the obligation out of tracking and adds the clause to Exclusions so capture won&rsquo;t add it back.</dd></div>
+      </dl>
+    </section>
+
+    <section class="section" aria-labelledby="queue-title">
+      <div class="section-head">
+        <h2 id="queue-title">Waiting for review</h2>
+        <div class="seg" id="seg" role="group" aria-label="Filter by confidence"></div>
+      </div>
+      <div id="queue" aria-busy="true">
+        <div class="card"><span class="skel skel--w40"></span><span class="skel"></span><span class="skel skel--w80"></span></div>
+      </div>
+    </section>
+  </div>
+</main>

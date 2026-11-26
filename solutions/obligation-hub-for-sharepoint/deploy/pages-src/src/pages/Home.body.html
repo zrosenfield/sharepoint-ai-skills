@@ -1,0 +1,117 @@
+<main id="main">
+  <div class="wrap">
+    <section class="hero reveal" aria-labelledby="hero-title">
+      <div class="meta-row hero__meta">
+        @@HUB_MARK@@
+        <span class="eyebrow" id="today-label">Today</span>
+        <span class="badge badge--loading" id="data-badge"><span class="badge__dot" aria-hidden="true"></span><span>Loading data&hellip;</span></span>
+      </div>
+      <h1 class="hero__title" id="hero-title"><span class="skel skel--title" aria-hidden="true"></span><span class="sr-only">Loading obligations</span></h1>
+      <p class="lede hero__sub" id="hero-sub"><span class="skel skel--w60" aria-hidden="true"></span></p>
+      <div class="data-note" id="data-note" hidden></div>
+    </section>
+
+    <section class="section" aria-labelledby="kpi-title">
+      <h2 class="sr-only" id="kpi-title">At a glance</h2>
+      <div class="kpis" id="kpis">
+        <div class="card kpi"><span class="skel skel--w40"></span><span class="skel skel--title"></span></div>
+        <div class="card kpi"><span class="skel skel--w40"></span><span class="skel skel--title"></span></div>
+        <div class="card kpi"><span class="skel skel--w40"></span><span class="skel skel--title"></span></div>
+        <div class="card kpi"><span class="skel skel--w40"></span><span class="skel skel--title"></span></div>
+      </div>
+    </section>
+
+    <section class="section card card--flush tl reveal" style="--d:2" aria-labelledby="tl-title">
+      <div class="tl__head">
+        <div>
+          <h2 id="tl-title">Notice windows</h2>
+          <p id="tl-sub">Notice deadlines, renewal decisions and contract expiries over the next 180 days.</p>
+        </div>
+        <ul class="tl-legend" aria-label="Legend">
+          <li><svg class="tl-legend__mark" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 12.5 7 7 12.5 1.5 7z" fill="#8B83DB" stroke="#111827" stroke-width="1.4"/></svg>Notice or renewal deadline</li>
+          <li><svg class="tl-legend__mark" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="#FFFFFF" stroke="#111827" stroke-width="2"/><circle cx="7" cy="7" r="1.6" fill="#111827"/></svg>Contract expires</li>
+          <li id="legend-derived" hidden><svg class="tl-legend__mark" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 12.5 7 7 12.5 1.5 7z" fill="#FFFFFF" stroke="#3F3891" stroke-width="1.4" stroke-dasharray="2 1.6"/></svg>From key terms, not yet captured</li>
+          <li id="legend-past" hidden><svg class="tl-legend__mark" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5 12.5 7 7 12.5 1.5 7z" fill="#C25A7C" stroke="#8A1C3F" stroke-width="1.4"/></svg>Deadline passed, still open</li>
+          <li><svg class="tl-legend__mark tl-legend__mark--wide" viewBox="0 0 22 14" aria-hidden="true"><rect x="1" y="3" width="20" height="8" rx="4" fill="#C9DFF7"/></svg>Next 14 days</li>
+        </ul>
+      </div>
+      <div class="tl__canvas" id="tl-canvas" tabindex="0" role="region" aria-label="Notice windows timeline. Scrolls sideways on small screens; the same dates are listed below."><div class="tl__loading"><span class="skel skel--block"></span></div></div>
+      <div class="tl__list">
+        <p class="tl__hint">Swipe the timeline sideways to see all 180 days &mdash; or use the list below.</p>
+        <h3 class="tl__list-title" id="tl-list-title">In date order</h3>
+        <ol class="tl-list" id="tl-list" aria-labelledby="tl-list-title"></ol>
+        <p class="tl__foot" id="tl-foot"></p>
+      </div>
+    </section>
+
+    <div class="section grid-main">
+      <section class="card card--flush reveal" style="--d:3" aria-labelledby="due-title">
+        <div class="card__head pad">
+          <div>
+            <h2 id="due-title">Due next</h2>
+            <p>The next ten open obligations by due date. Your own items are on <a href="{{PAGES_URL}}/MyObligations.html" target="_top" data-page="MyObligations.html">My obligations</a>.</p>
+          </div>
+          <a class="link-arrow" id="due-all" href="{{SITE_URL_ORIGIN}}{{LISTURL_OBLIGATIONS}}/AllItems.aspx" target="_top">All open obligations<svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        </div>
+        <div class="table-wrap" id="due-table"><div class="pad"><span class="skel"></span><span class="skel skel--w80"></span><span class="skel skel--w60"></span></div></div>
+      </section>
+
+      <aside class="side" aria-label="Contracts, workflows and setup">
+        <section class="card card--tint add reveal" style="--d:3" aria-labelledby="add-title">
+          <svg class="add__art" viewBox="0 0 120 88" aria-hidden="true" focusable="false">
+            <defs><linearGradient id="add-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9AC7F5" stop-opacity=".55"/><stop offset="1" stop-color="#8B83DB" stop-opacity=".35"/></linearGradient></defs>
+            <ellipse cx="62" cy="80" rx="44" ry="5" fill="#111827" opacity=".06"/>
+            <rect x="30" y="10" width="52" height="66" rx="8" fill="#FFFFFF" stroke="#D3DDE9"/>
+            <rect x="40" y="4" width="52" height="66" rx="8" fill="url(#add-g)"/>
+            <rect x="40" y="4" width="52" height="66" rx="8" fill="none" stroke="#FFFFFF" stroke-opacity=".8"/>
+            <path d="M50 22h30M50 31h24M50 40h28" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="88" cy="62" r="13" fill="#111827"/>
+            <path d="M88 56.5v11M82.5 62h11" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h2 id="add-title">Add a contract</h2>
+          <p class="add__text">Drop a signed contract into the Contracts library &mdash; key terms fill in and obligations are captured automatically.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="{{SITE_URL_ORIGIN}}{{LISTURL_CONTRACTS}}/Forms/AllItems.aspx" target="_top"><svg aria-hidden="true"><use href="#i-upload"></use></svg>Open Contracts library</a>
+          </div>
+          <p class="add__fine">Anything the capture isn&rsquo;t sure about waits in <a href="{{PAGES_URL}}/ReviewQueue.html" target="_top" data-page="ReviewQueue.html">Review</a>.</p>
+        </section>
+
+        <section class="card reveal" style="--d:4" id="health-card" aria-labelledby="health-title">
+          <div class="card__head">
+            <div>
+              <h2 id="health-title">Workflow health</h2>
+              <p>Last run of each AI workflow, from the Run Log.</p>
+            </div>
+          </div>
+          <div id="health"><span class="skel"></span><span class="skel skel--w80"></span><span class="skel skel--w60"></span></div>
+          <div class="card__foot"><a class="link-arrow" href="{{SITE_URL_ORIGIN}}{{LISTURL_RUNLOG}}/AllItems.aspx" target="_top">Open Run Log<svg aria-hidden="true"><use href="#i-arrow"></use></svg></a></div>
+        </section>
+
+        <section class="card reveal" style="--d:5" id="setup-card" aria-labelledby="setup-title" hidden>
+          <div class="card__head">
+            <div>
+              <h2 id="setup-title">Get set up</h2>
+              <p id="setup-sub">A few steps before obligations flow in on their own.</p>
+            </div>
+          </div>
+          <ol class="checklist" id="setup"></ol>
+        </section>
+      </aside>
+    </div>
+
+    <section class="section ask reveal" style="--d:5" aria-labelledby="ask-title">
+      <div class="ask__intro">
+        <svg class="ask__icon" aria-hidden="true"><use href="#i-spark"></use></svg>
+        <div>
+          <h2 id="ask-title">Ask Copilot</h2>
+          <p>Open Copilot on this site and paste a question. Select one to copy it.</p>
+        </div>
+      </div>
+      <div class="ask__chips">
+        <button type="button" class="chip" data-copy="Which contracts auto-renew in the next 120 days?"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__text">Which contracts auto-renew in the next 120 days?</span><span class="chip__state" data-idle="Copy">Copy</span></button>
+        <button type="button" class="chip" data-copy="What do we owe Contoso this quarter?"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__text">What do we owe Contoso this quarter?</span><span class="chip__state" data-idle="Copy">Copy</span></button>
+        <button type="button" class="chip" data-copy="Which obligations have no owner?"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span class="chip__text">Which obligations have no owner?</span><span class="chip__state" data-idle="Copy">Copy</span></button>
+      </div>
+    </section>
+  </div>
+</main>
