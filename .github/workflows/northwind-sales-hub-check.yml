@@ -1,0 +1,24 @@
+name: northwind-sales-hub-check
+on:
+  push:
+    paths: ["solutions/sales-enablement-hub/**", ".github/workflows/northwind-sales-hub-check.yml"]
+  pull_request:
+    paths: ["solutions/sales-enablement-hub/**", ".github/workflows/northwind-sales-hub-check.yml"]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solutions/sales-enablement-hub
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Lint package
+        run: python deploy/tools/check_package.py
+      - name: Pages are in sync with the page builder
+        run: |
+          cd tools/page-builder && python build_pages.py && python build_deckview.py && cd ../..
+          python deploy/tools/make_view_formatter.py site/views/decks-start-here.html "Start here" > /tmp/f.txt
+          cmp /tmp/f.txt site/views/decks-start-here.formatter.txt
+          git diff --exit-code -- site/pages site/views

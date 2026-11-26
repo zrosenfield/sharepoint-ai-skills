@@ -1,0 +1,7 @@
+{
+ "{{SiteUrl}}": "https://contoso.sharepoint.com/sites/saleshub",
+ "{{SiteTitle}}": "Contoso Sales Hub",
+ "{{ApproverEmail}}": "content-approvers@contoso.com",
+ "{{ApproverName}}": "Content approvers",
+ "{{OwnerEmail}}": "owner@contoso.com"
+}

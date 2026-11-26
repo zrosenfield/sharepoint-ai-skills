@@ -1,0 +1,419 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/tile-formatting.schema.json",
+  "height": 420,
+  "width": 340,
+  "hideSelection": false,
+  "fillHorizontally": true,
+  "formatter": {
+    "elmType": "div",
+    "style": {
+      "display": "flex",
+      "flex-direction": "column",
+      "width": "100%",
+      "height": "100%",
+      "box-sizing": "border-box",
+      "padding": "10px"
+    },
+    "children": [
+      {
+        "elmType": "div",
+        "style": {
+          "display": "flex",
+          "flex-direction": "column",
+          "height": "100%",
+          "box-sizing": "border-box",
+          "border-radius": "14px",
+          "border": "1px solid #EDEBE9",
+          "background-color": "#FFFFFF",
+          "overflow": "hidden",
+          "box-shadow": "0 8px 24px rgba(17,24,39,0.08)"
+        },
+        "children": [
+          {
+            "elmType": "div",
+            "style": {
+              "height": "170px",
+              "width": "100%",
+              "background-color": "#4C4A48",
+              "overflow": "hidden",
+              "flex-shrink": "0",
+              "cursor": "pointer",
+              "color": "#ffffff"
+            },
+            "customRowAction": {
+              "action": "previewFileAction"
+            },
+            "children": [
+              {
+                "elmType": "filepreview",
+                "attributes": {
+                  "src": "@thumbnail.medium"
+                },
+                "style": {
+                  "width": "100%",
+                  "height": "170px"
+                }
+              }
+            ]
+          },
+          {
+            "elmType": "div",
+            "style": {
+              "display": "flex",
+              "flex-direction": "column",
+              "flex-grow": "1",
+              "padding": "16px 18px 16px 18px",
+              "box-sizing": "border-box"
+            },
+            "children": [
+              {
+                "elmType": "div",
+                "style": {
+                  "display": "flex",
+                  "align-items": "center",
+                  "justify-content": "space-between",
+                  "margin-bottom": "6px"
+                },
+                "children": [
+                  {
+                    "elmType": "span",
+                    "txtContent": "=if([$TemplateKind]=='','Template',[$TemplateKind.displayValue])",
+                    "style": {
+                      "font-size": "18px",
+                      "font-weight": "600",
+                      "color": "#4C4A48",
+                      "white-space": "nowrap",
+                      "overflow": "hidden",
+                      "text-overflow": "ellipsis",
+                      "max-width": "210px"
+                    }
+                  },
+                  {
+                    "elmType": "span",
+                    "txtContent": "=if([$SlideCount]=='','',toString([$SlideCount]) + ' slides')",
+                    "style": {
+                      "padding": "3px 10px",
+                      "border-radius": "999px",
+                      "background-color": "#4C4A48",
+                      "color": "#FFFFFF",
+                      "font-size": "12px",
+                      "font-weight": "600",
+                      "white-space": "nowrap"
+                    }
+                  }
+                ]
+              },
+              {
+                "elmType": "div",
+                "style": {
+                  "display": "flex",
+                  "flex-wrap": "wrap",
+                  "margin-bottom": "6px",
+                  "height": "26px",
+                  "overflow": "hidden"
+                },
+                "children": [
+                  {
+                    "elmType": "span",
+                    "txtContent": "=if(length([$Audience])==0,'All audiences','For ' + join([$Audience], ', '))",
+                    "style": {
+                      "display": "inline-block",
+                      "padding": "3px 10px",
+                      "border-radius": "999px",
+                      "background-color": "#EFF6FC",
+                      "color": "#ffffff",
+                      "font-size": "12px",
+                      "font-weight": "600",
+                      "white-space": "nowrap",
+                      "overflow": "hidden",
+                      "text-overflow": "ellipsis",
+                      "max-width": "290px"
+                    }
+                  }
+                ]
+              },
+              {
+                "elmType": "div",
+                "txtContent": "[$BestFor]",
+                "style": {
+                  "font-size": "13px",
+                  "line-height": "19px",
+                  "color": "#605E5C",
+                  "height": "57px",
+                  "overflow": "hidden",
+                  "display": "-webkit-box",
+                  "-webkit-line-clamp": "3",
+                  "-webkit-box-orient": "vertical"
+                }
+              },
+              {
+                "elmType": "div",
+                "style": {
+                  "display": "flex",
+                  "align-items": "center",
+                  "margin-top": "auto",
+                  "padding-top": "12px"
+                },
+                "children": [
+                  {
+                    "elmType": "button",
+                    "txtContent": "✨ Build with this template",
+                    "customRowAction": {
+                      "action": "executeQuickStep",
+                      "actionInput": {
+                        "ruleTemplateId": "{{QuickStepId:Deck Templates/Build with this template}}"
+                      }
+                    },
+                    "style": {
+                      "flex-grow": "1",
+                      "height": "38px",
+                      "border": "none",
+                      "border-radius": "999px",
+                      "background-color": "#8764B8",
+                      "color": "#FFFFFF",
+                      "font-size": "14px",
+                      "font-weight": "600",
+                      "cursor": "pointer",
+                      "padding": "0 14px",
+                      "margin-right": "8px"
+                    }
+                  },
+                  {
+                    "elmType": "button",
+                    "txtContent": "Preview",
+                    "customRowAction": {
+                      "action": "previewFileAction"
+                    },
+                    "style": {
+                      "height": "38px",
+                      "border": "1px solid #EDEBE9",
+                      "border-radius": "999px",
+                      "background-color": "#FFFFFF",
+                      "color": "#4C4A48",
+                      "font-size": "14px",
+                      "font-weight": "600",
+                      "cursor": "pointer",
+                      "padding": "0 16px"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "attributes": {
+      "class": "sp-row-card-alignNormal"
+    }
+  },
+  "tileProps": {
+    "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/tile-formatting.schema.json",
+    "height": 420,
+    "width": 340,
+    "hideSelection": false,
+    "fillHorizontally": true,
+    "formatter": {
+      "elmType": "div",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "width": "100%",
+        "height": "100%",
+        "box-sizing": "border-box",
+        "padding": "10px"
+      },
+      "children": [
+        {
+          "elmType": "div",
+          "style": {
+            "display": "flex",
+            "flex-direction": "column",
+            "height": "100%",
+            "box-sizing": "border-box",
+            "border-radius": "14px",
+            "border": "1px solid #EDEBE9",
+            "background-color": "#FFFFFF",
+            "overflow": "hidden",
+            "box-shadow": "0 8px 24px rgba(17,24,39,0.08)"
+          },
+          "children": [
+            {
+              "elmType": "div",
+              "style": {
+                "height": "170px",
+                "width": "100%",
+                "background-color": "#4C4A48",
+                "overflow": "hidden",
+                "flex-shrink": "0",
+                "cursor": "pointer"
+              },
+              "customRowAction": {
+                "action": "previewFileAction"
+              },
+              "children": [
+                {
+                  "elmType": "filepreview",
+                  "attributes": {
+                    "src": "@thumbnail.medium"
+                  },
+                  "style": {
+                    "width": "100%",
+                    "height": "170px"
+                  }
+                }
+              ]
+            },
+            {
+              "elmType": "div",
+              "style": {
+                "display": "flex",
+                "flex-direction": "column",
+                "flex-grow": "1",
+                "padding": "16px 18px 16px 18px",
+                "box-sizing": "border-box"
+              },
+              "children": [
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "align-items": "center",
+                    "justify-content": "space-between",
+                    "margin-bottom": "6px"
+                  },
+                  "children": [
+                    {
+                      "elmType": "span",
+                      "txtContent": "=if([$TemplateKind]=='','Template',[$TemplateKind.displayValue])",
+                      "style": {
+                        "font-size": "18px",
+                        "font-weight": "600",
+                        "color": "#4C4A48",
+                        "white-space": "nowrap",
+                        "overflow": "hidden",
+                        "text-overflow": "ellipsis",
+                        "max-width": "210px"
+                      }
+                    },
+                    {
+                      "elmType": "span",
+                      "txtContent": "=if([$SlideCount]=='','',toString([$SlideCount]) + ' slides')",
+                      "style": {
+                        "padding": "3px 10px",
+                        "border-radius": "999px",
+                        "background-color": "#4C4A48",
+                        "color": "#FFFFFF",
+                        "font-size": "12px",
+                        "font-weight": "600",
+                        "white-space": "nowrap"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "flex-wrap": "wrap",
+                    "margin-bottom": "6px",
+                    "height": "26px",
+                    "overflow": "hidden"
+                  },
+                  "children": [
+                    {
+                      "elmType": "span",
+                      "txtContent": "=if(length([$Audience])==0,'All audiences','For ' + join([$Audience], ', '))",
+                      "style": {
+                        "display": "inline-block",
+                        "padding": "3px 10px",
+                        "border-radius": "999px",
+                        "background-color": "#EFF6FC",
+                        "color": "#00188F",
+                        "font-size": "12px",
+                        "font-weight": "600",
+                        "white-space": "nowrap",
+                        "overflow": "hidden",
+                        "text-overflow": "ellipsis",
+                        "max-width": "290px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "txtContent": "[$BestFor]",
+                  "style": {
+                    "font-size": "13px",
+                    "line-height": "19px",
+                    "color": "#605E5C",
+                    "height": "57px",
+                    "overflow": "hidden",
+                    "display": "-webkit-box",
+                    "-webkit-line-clamp": "3",
+                    "-webkit-box-orient": "vertical"
+                  }
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "align-items": "center",
+                    "margin-top": "auto",
+                    "padding-top": "12px"
+                  },
+                  "children": [
+                    {
+                      "elmType": "button",
+                      "txtContent": "✨ Build with this template",
+                      "customRowAction": {
+                        "action": "executeQuickStep",
+                        "actionInput": {
+                          "ruleTemplateId": "{{QuickStepId:Deck Templates/Build with this template}}"
+                        }
+                      },
+                      "style": {
+                        "flex-grow": "1",
+                        "height": "38px",
+                        "border": "none",
+                        "border-radius": "999px",
+                        "background-color": "#8764B8",
+                        "color": "#FFFFFF",
+                        "font-size": "14px",
+                        "font-weight": "600",
+                        "cursor": "pointer",
+                        "padding": "0 14px",
+                        "margin-right": "8px"
+                      }
+                    },
+                    {
+                      "elmType": "button",
+                      "txtContent": "Preview",
+                      "customRowAction": {
+                        "action": "previewFileAction"
+                      },
+                      "style": {
+                        "height": "38px",
+                        "border": "1px solid #EDEBE9",
+                        "border-radius": "999px",
+                        "background-color": "#FFFFFF",
+                        "color": "#4C4A48",
+                        "font-size": "14px",
+                        "font-weight": "600",
+                        "cursor": "pointer",
+                        "padding": "0 16px"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "attributes": {
+        "class": "sp-row-card-alignNormal"
+      }
+    }
+  }
+}

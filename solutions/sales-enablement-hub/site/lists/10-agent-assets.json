@@ -1,0 +1,58 @@
+{
+  "order": 10,
+  "title": "Agent Assets",
+  "url": "AgentAssets",
+  "template": "DocumentLibrary",
+  "description": "Site skills and standards the hub's agents follow.",
+  "purpose": "Copilot in SharePoint loads site skills from here (Skills/<name>/SKILL.md). Content team can read; only owners edit.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Title",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Asset title\" />"
+    }
+  ],
+  "folders": [
+    {
+      "path": "Skills",
+      "color": "DARK_TEAL"
+    },
+    {
+      "path": "Standards",
+      "color": "DARK_BLUE"
+    },
+    {
+      "path": "Skills/review-submission",
+      "color": "DARK_TEAL"
+    },
+    {
+      "path": "Skills/publish-approved",
+      "color": "DARK_TEAL"
+    },
+    {
+      "path": "Skills/build-customer-deck",
+      "color": "DARK_TEAL"
+    },
+    {
+      "path": "Skills/prepare-customer-sharing",
+      "color": "DARK_TEAL"
+    },
+    {
+      "path": "Skills/freshness-check",
+      "color": "DARK_TEAL"
+    }
+  ],
+  "files": "site/agent-assets",
+  "createAs": "AgentAssets",
+  "renameTo": "Agent Assets",
+  "permissions": {
+    "breakInheritance": true,
+    "remove": [
+      "Content Team:Edit"
+    ],
+    "grant": [
+      "Content Team:Read"
+    ]
+  }
+}

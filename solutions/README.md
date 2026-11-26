@@ -6,6 +6,9 @@ Complete, reusable sample kits for trying SharePoint scenarios on a test site. "
 |---|---|---|
 | [Client Hub for SharePoint](./client-hub-for-sharepoint/) | A lightweight client tracker built from related lists, formatting, and optional Copilot skills and a dashboard | Experimental; tenant validation required |
 | [Obligation Hub for SharePoint](./obligation-hub-for-sharepoint/) | Turns signed contracts into a tracked register of obligations, owners, due dates, evidence, digests, and recurring work | Experimental; tenant validation required |
+| [Sales Enablement Hub](./sales-enablement-hub/) | A SharePoint-only sales content, solution plays, publishing and deck-building sample | Experimental; tenant validation required |
+
+The Sales Enablement [live demo](https://microsoft.sharepoint-df.com/sites/zavasaleshub/SitePages/Home.html) is available to internal testers.
 
 ## Where things belong
 

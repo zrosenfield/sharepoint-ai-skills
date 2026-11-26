@@ -1,0 +1,120 @@
+{
+  "order": 3,
+  "title": "Slide Library",
+  "url": "Slide Library",
+  "template": "DocumentLibrary",
+  "description": "Approved single slides: the building blocks for Slide Builder and Deck Studio.",
+  "purpose": "One approved slide per file, tagged by role, industry and product. The deck builder only picks from here.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Slide title",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Slide title\" />"
+    },
+    {
+      "internalName": "SlideRole",
+      "displayName": "Slide role",
+      "type": "Choice",
+      "choices": [
+        "Title",
+        "Agenda",
+        "Problem",
+        "Solution",
+        "Proof",
+        "Customer story",
+        "Pricing",
+        "Next steps",
+        "Close"
+      ],
+      "metadataExtractionPrompt": "What job does this slide do in a sales deck?"
+    },
+    {
+      "internalName": "Products",
+      "displayName": "Products",
+      "type": "MultiChoice",
+      "choices": [
+        "Northwind Data Platform",
+        "Northwind Secure Access",
+        "Northwind AI Studio",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "metadataExtractionPrompt": "Which Northwind Cloud products does this slide cover?"
+    },
+    {
+      "internalName": "Industry",
+      "displayName": "Industry",
+      "type": "MultiChoice",
+      "choices": [
+        "Healthcare",
+        "Financial services",
+        "Retail",
+        "Manufacturing",
+        "Public sector",
+        "Cross-industry"
+      ],
+      "metadataExtractionPrompt": "Which industries is this slide for? Use Cross-industry if it is not industry-specific."
+    },
+    {
+      "internalName": "SlideSummary",
+      "displayName": "Slide summary",
+      "type": "Note",
+      "metadataExtractionPrompt": "Describe in one sentence what this slide says."
+    },
+    {
+      "internalName": "Shareability",
+      "displayName": "Shareability",
+      "type": "Choice",
+      "choices": [
+        "Internal only",
+        "Customer-shareable (NDA)",
+        "Public"
+      ],
+      "defaultValueFields": {
+        "defaultValue": "Customer-shareable (NDA)"
+      }
+    },
+    {
+      "internalName": "SourceDeck",
+      "displayName": "Source deck",
+      "type": "Text"
+    },
+    {
+      "internalName": "UseVerbatim",
+      "displayName": "Use verbatim",
+      "type": "Boolean",
+      "defaultValueFields": {
+        "defaultValue": "0"
+      }
+    },
+    {
+      "internalName": "SlideOrder",
+      "displayName": "Default order",
+      "type": "Number",
+      "min": 0
+    }
+  ],
+  "unlimitedLength": [
+    "SlideSummary"
+  ],
+  "views": [
+    {
+      "name": "All Documents",
+      "isDefaultView": true,
+      "viewFields": [
+        "DocIcon",
+        "LinkFilename",
+        "Title",
+        "SlideRole",
+        "Products",
+        "Industry",
+        "Shareability",
+        "SlideSummary",
+        "UseVerbatim",
+        "SlideOrder"
+      ]
+    }
+  ],
+  "seed": "Slide Library"
+}

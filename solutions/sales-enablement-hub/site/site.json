@@ -1,0 +1,202 @@
+{
+  "title": "Northwind Sales Hub",
+  "description": "Find, build and share approved Northwind Cloud sales content.",
+  "siteTemplate": "Communication site (SITEPAGEPUBLISHING#0), English (1033)",
+  "homePage": "SitePages/Home.html",
+  "header": {
+    "HeaderLayout": 2,
+    "HeaderEmphasis": 3,
+    "logo": "HubAssets/nw-mark.png",
+    "thumbnail": "HubAssets/nw-mark.png",
+    "headerImage": "HubAssets/nw-header.png"
+  },
+  "theme": {
+    "name": "Dark Teal",
+    "how": "Out-of-the-box theme. Settings > Change the look > Theme > Dark Teal (manual; no tenant theme is required)."
+  },
+  "navigation": {
+    "HorizontalQuickLaunch": true,
+    "MegaMenuEnabled": true,
+    "quickLaunch": [
+      {
+        "title": "Home",
+        "url": "{{SitePath}}/SitePages/Home.html"
+      },
+      {
+        "title": "Find",
+        "url": "{{SitePath}}/SitePages/Find.html"
+      },
+      {
+        "title": "Plays",
+        "url": "{{SitePath}}/SitePages/Plays.html"
+      },
+      {
+        "title": "Build a deck",
+        "url": "{{SitePath}}/Deck Templates"
+      },
+      {
+        "title": "Content team",
+        "url": "{{SitePath}}/SitePages/PublishingDesk.html",
+        "children": [
+          {
+            "title": "Publishing Desk",
+            "url": "{{SitePath}}/SitePages/PublishingDesk.html"
+          },
+          {
+            "title": "Content Intake",
+            "url": "{{SitePath}}/Content Intake/Forms/AllItems.aspx"
+          },
+          {
+            "title": "Content Library",
+            "url": "{{SitePath}}/Content Library/Forms/AllItems.aspx"
+          }
+        ]
+      }
+    ]
+  },
+  "groups": [
+    {
+      "key": "Owners",
+      "associated": "Owner",
+      "title": "{{SiteTitle}} Owners",
+      "role": "Full Control",
+      "description": "Hub admins: full control, own the site skills, settings and navigation."
+    },
+    {
+      "key": "Content Team",
+      "associated": "Member",
+      "title": "{{SiteTitle}} Content Team",
+      "role": "Edit",
+      "description": "Content team: publishes, reviews and approves content. Edit on the hub; sees Publishing Desk, Content Intake and Archive. Add people or a security group here.",
+      "renameFrom": "{{SiteTitle}} Members"
+    },
+    {
+      "key": "Sellers",
+      "associated": "Visitor",
+      "title": "{{SiteTitle}} Sellers",
+      "role": "Read",
+      "description": "Sellers: browse content, build decks, request content and share with customers. Read on the hub, Contribute where they create. Add people or a security group here.",
+      "renameFrom": "{{SiteTitle}} Visitors"
+    }
+  ],
+  "pages": [
+    {
+      "file": "Home.html",
+      "title": "Home",
+      "audience": "Everyone"
+    },
+    {
+      "file": "Find.html",
+      "title": "Find content",
+      "audience": "Everyone"
+    },
+    {
+      "file": "Plays.html",
+      "title": "Plays",
+      "audience": "Everyone"
+    },
+    {
+      "file": "SlideBuilder.html",
+      "title": "Slide gallery",
+      "audience": "Everyone"
+    },
+    {
+      "file": "PublishingDesk.html",
+      "title": "Publishing Desk",
+      "audience": "Owners + Content Team",
+      "permissions": {
+        "breakInheritance": true,
+        "remove": [
+          "Sellers"
+        ]
+      }
+    }
+  ],
+  "lists": [
+    {
+      "order": 1,
+      "title": "Content Intake",
+      "url": "Content Intake",
+      "definition": "site/lists/01-content-intake.json"
+    },
+    {
+      "order": 2,
+      "title": "Content Library",
+      "url": "Content Library",
+      "definition": "site/lists/02-content-library.json"
+    },
+    {
+      "order": 3,
+      "title": "Slide Library",
+      "url": "Slide Library",
+      "definition": "site/lists/03-slide-library.json"
+    },
+    {
+      "order": 4,
+      "title": "Deck Templates",
+      "url": "Deck Templates",
+      "definition": "site/lists/04-deck-templates.json"
+    },
+    {
+      "order": 5,
+      "title": "Decks",
+      "url": "Generated Content",
+      "definition": "site/lists/05-decks.json"
+    },
+    {
+      "order": 6,
+      "title": "Solution Plays",
+      "url": "Lists/Solution Plays",
+      "definition": "site/lists/06-solution-plays.json"
+    },
+    {
+      "order": 7,
+      "title": "Content Requests",
+      "url": "Lists/Content Requests",
+      "definition": "site/lists/07-content-requests.json"
+    },
+    {
+      "order": 8,
+      "title": "Customer Shares",
+      "url": "Lists/Customer Shares",
+      "definition": "site/lists/08-customer-shares.json"
+    },
+    {
+      "order": 9,
+      "title": "Archive",
+      "url": "Archive",
+      "definition": "site/lists/09-archive.json"
+    },
+    {
+      "order": 10,
+      "title": "Agent Assets",
+      "url": "AgentAssets",
+      "definition": "site/lists/10-agent-assets.json"
+    },
+    {
+      "order": 11,
+      "title": "HubAssets",
+      "url": "HubAssets",
+      "definition": "site/lists/11-hubassets.json"
+    }
+  ],
+  "tokens": {
+    "{{SiteUrl}}": "Absolute URL of the target site, no trailing slash (https://contoso.sharepoint.com/sites/saleshub)",
+    "{{SitePath}}": "Server-relative path of the site (/sites/saleshub)",
+    "{{TenantUrl}}": "https://contoso.sharepoint.com",
+    "{{TenantHost}}": "contoso.sharepoint.com",
+    "{{SiteTitle}}": "Site title, used in group names",
+    "{{SiteKey}}": "SharePoint IQ site key (IQ route only: get_site_key)",
+    "{{ListId:<List title>}}": "GUID of a list after it is created",
+    "{{ListIdB64:<List title>}}": "base64 of that GUID (form links)",
+    "{{ViewId:<List>/<View>}}": "GUID of a view",
+    "{{ViewIdB64:<List>/<View>}}": "base64 of that GUID (form links)",
+    "{{FieldId:<List>/<Field>}}": "GUID of a column (form step)",
+    "{{QuickStepId:<List>/<Quick step title>}}": "Id (RuleTemplateId) of a quick step after it is created",
+    "{{GroupId:<Owners|Content Team|Sellers>}}": "Principal id of the site group",
+    "{{ItemId:<Library>/<file name>}}": "List item id of an uploaded file",
+    "{{ApproverEmail}} / {{ApproverName}}": "Content approver (person or mail-enabled group)",
+    "{{OwnerEmail}}": "Default Content owner for the sample content (usually the deployer)",
+    "{{Today}}, {{Today+N}}, {{Today-N}}": "Date relative to deploy day, written as yyyy-MM-ddT12:00:00Z, so the sample never goes stale"
+  }
+}

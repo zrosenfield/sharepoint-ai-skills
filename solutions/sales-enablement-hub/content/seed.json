@@ -1,0 +1,1489 @@
+{
+  "Content Library": [
+    {
+      "Title": "Battlecard: Data Platform vs legacy warehouses",
+      "AssetType": "Battlecard",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform"
+      ],
+      "Audience": [
+        "Technical practitioner",
+        "IT decision maker"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "How to win against an incumbent on-premises warehouse: landmines, objections and proof. Internal only.",
+      "Shareability": "Internal only",
+      "PublishedOn": "{{Today-44}}",
+      "ExpiresOn": "{{Today+138}}",
+      "Featured": true,
+      "Popularity": 356,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Battlecard - Data Platform vs Legacy Warehouses.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Battlecard: Secure Access vs legacy VPN",
+      "AssetType": "Battlecard",
+      "Solution": "Security",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Audience": [
+        "IT decision maker"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Cross-industry",
+        "Financial services"
+      ],
+      "AISummary": "Talk track and objection handling for replacing a legacy VPN with zero-trust access. Internal only.",
+      "Shareability": "Internal only",
+      "PublishedOn": "{{Today-84}}",
+      "ExpiresOn": "{{Today+97}}",
+      "Featured": false,
+      "Popularity": 241,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Battlecard - Secure Access vs VPN.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Customer story: Contoso Health",
+      "AssetType": "Customer story",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Healthcare"
+      ],
+      "AISummary": "How Contoso Health got results with Northwind AI Studio: 2 hrs saved per clinician each week. Reference approved.",
+      "Shareability": "Public",
+      "PublishedOn": "{{Today-147}}",
+      "ExpiresOn": "{{Today+279}}",
+      "Featured": true,
+      "Popularity": 265,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Customer Story - Contoso Health.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Customer story: Tailspin Manufacturing",
+      "AssetType": "Customer story",
+      "Solution": "Business Applications",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Manufacturing"
+      ],
+      "AISummary": "How Tailspin Manufacturing got results with Northwind Field Service: 89% first-time fix rate. Reference approved.",
+      "Shareability": "Public",
+      "PublishedOn": "{{Today-147}}",
+      "ExpiresOn": "{{Today+217}}",
+      "Featured": false,
+      "Popularity": 134,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Customer Story - Tailspin Manufacturing.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Customer story: Woodgrove Financial",
+      "AssetType": "Customer story",
+      "Solution": "Security",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Financial services"
+      ],
+      "AISummary": "How Woodgrove Financial got results with Northwind Secure Access: 100% apps behind zero trust. Reference approved.",
+      "Shareability": "Public",
+      "PublishedOn": "{{Today-147}}",
+      "ExpiresOn": "{{Today+15}}",
+      "Featured": false,
+      "Popularity": 159,
+      "Views": 2,
+      "Viewers": 1,
+      "Views7": 2,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Customer Story - Woodgrove Financial.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Data Platform Technical Deep Dive",
+      "AssetType": "Pitch deck",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind Analytics",
+        "Northwind AI Studio"
+      ],
+      "Audience": [
+        "Technical practitioner",
+        "IT decision maker"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "Walks architects through connect, govern and serve, then proposes a design workshop. Use after the first meeting lands.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-138}}",
+      "ExpiresOn": "{{Today+156}}",
+      "Featured": false,
+      "Popularity": 121,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Data Platform Technical Deep Dive.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Demo script: clinical summary agent",
+      "AssetType": "Demo script",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Audience": [
+        "Technical practitioner"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Healthcare"
+      ],
+      "AISummary": "Seven-minute click path for the AI Studio clinical summary demo, with a backup plan.",
+      "Shareability": "Internal only",
+      "PublishedOn": "{{Today-51}}",
+      "ExpiresOn": "{{Today+131}}",
+      "Featured": false,
+      "Popularity": 88,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Demo Script - AI Studio Clinical Summary Agent.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Demo script: ask your data",
+      "AssetType": "Demo script",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Analytics"
+      ],
+      "Audience": [
+        "Technical practitioner",
+        "Line of business"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Retail",
+        "Cross-industry"
+      ],
+      "AISummary": "Five-minute natural-language analytics demo for retail and general audiences.",
+      "Shareability": "Internal only",
+      "PublishedOn": "{{Today-68}}",
+      "ExpiresOn": "{{Today-5}}",
+      "Featured": false,
+      "Popularity": 64,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Demo Script - Analytics Ask Your Data.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Field Service Executive Briefing",
+      "AssetType": "Pitch deck",
+      "Solution": "Business Applications",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Manufacturing"
+      ],
+      "AISummary": "A short executive story on predictive field service and first-time fix, with Tailspin as proof. Use with service and operations leaders.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-97}}",
+      "ExpiresOn": "{{Today+187}}",
+      "Featured": false,
+      "Popularity": 143,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Field Service Executive Briefing.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Financial Services Zero Trust Pitch",
+      "AssetType": "Pitch deck",
+      "Solution": "Security",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Audience": [
+        "IT decision maker",
+        "Executive"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Financial services"
+      ],
+      "AISummary": "Makes the case for retiring VPNs in regulated banks, with Woodgrove Financial as proof. Use with CISOs and IT leaders.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-177}}",
+      "ExpiresOn": "{{Today+20}}",
+      "Featured": false,
+      "Popularity": 198,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Financial Services Zero Trust Pitch.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Healthcare AI Pitch: Clinician Time Back",
+      "AssetType": "Pitch deck",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio",
+        "Northwind Data Platform"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Healthcare"
+      ],
+      "AISummary": "Shows hospital leaders how AI agents cut documentation time, with Contoso Health as proof. Use for CMIO and CNO conversations.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-71}}",
+      "ExpiresOn": "{{Today+126}}",
+      "Featured": true,
+      "Popularity": 287,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Healthcare AI Pitch - Clinician Time Back.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Northwind Corporate Pitch FY27",
+      "AssetType": "Pitch deck",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Analytics"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "The flagship first-meeting story: why data decisions stall and how Northwind fixes it. Use it to open any new account.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-55}}",
+      "ExpiresOn": "{{Today+217}}",
+      "VersionNotes": "FY27 refresh with new proof points.",
+      "Featured": true,
+      "Popularity": 412,
+      "Views": 14,
+      "Viewers": 1,
+      "Views7": 14,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Northwind Corporate Pitch FY27.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "One-pager: Northwind AI Studio",
+      "AssetType": "One-pager",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "A one-page overview of Northwind AI Studio: what it does, why customers choose it and the next step. Safe to leave behind.",
+      "Shareability": "Public",
+      "PublishedOn": "{{Today-85}}",
+      "ExpiresOn": "{{Today+187}}",
+      "Featured": false,
+      "Popularity": 310,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "One-pager - Northwind AI Studio.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "One-pager: Northwind Analytics for Retail",
+      "AssetType": "One-pager",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Analytics"
+      ],
+      "Audience": [
+        "Line of business",
+        "Executive"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Retail"
+      ],
+      "AISummary": "Retail leave-behind on self-service analytics for store managers, with Wingtip Retail results.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-36}}",
+      "ExpiresOn": "{{Today+146}}",
+      "Featured": false,
+      "Popularity": 76,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "One-pager - Northwind Analytics for Retail.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "One-pager: Northwind Field Service",
+      "AssetType": "One-pager",
+      "Solution": "Business Applications",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Manufacturing"
+      ],
+      "AISummary": "A one-page overview of Northwind Field Service: what it does, why customers choose it and the next step. Safe to leave behind.",
+      "Shareability": "Public",
+      "PublishedOn": "{{Today-85}}",
+      "ExpiresOn": "{{Today+95}}",
+      "Featured": false,
+      "Popularity": 98,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "One-pager - Northwind Field Service.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Playbook: land with Data Platform, expand with AI",
+      "AssetType": "Playbook",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio"
+      ],
+      "Audience": [
+        "Executive",
+        "IT decision maker"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "The land-and-expand motion: who to target, which asset to use at each stage, and how to expand into AI.",
+      "Shareability": "Internal only",
+      "PublishedOn": "{{Today-116}}",
+      "ExpiresOn": "{{Today+68}}",
+      "Featured": false,
+      "Popularity": 201,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Playbook - Land with Data Platform.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Pricing and packaging guide FY27",
+      "AssetType": "Pricing guide",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Audience": [
+        "Executive"
+      ],
+      "SalesStage": "Negotiate",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "FY27 packages and discount approval levels. Internal only; quote through the deal desk.",
+      "Shareability": "Internal only",
+      "PublishedOn": "{{Today-147}}",
+      "ExpiresOn": "{{Today+217}}",
+      "Featured": true,
+      "Popularity": 377,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Pricing and Packaging Guide FY27.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Proposal template: 90-day pilot SOW",
+      "AssetType": "Proposal template",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Analytics"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Cross-industry"
+      ],
+      "AISummary": "A fill-in statement of work for a 90-day pilot. Fill the bracketed fields before sending.",
+      "Shareability": "Customer-shareable (NDA)",
+      "PublishedOn": "{{Today-76}}",
+      "ExpiresOn": "{{Today+21}}",
+      "Featured": false,
+      "Popularity": 115,
+      "Views": 0,
+      "Viewers": 0,
+      "Views7": 0,
+      "ViewsAsOf": "{{Today}}",
+      "file": "Proposal Template - Northwind Pilot SOW.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    }
+  ],
+  "Content Intake": [
+    {
+      "Title": "AI Studio for Retail pitch v3",
+      "AssetType": "Pitch deck",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio",
+        "Northwind Analytics"
+      ],
+      "Audience": [
+        "Executive",
+        "IT decision maker",
+        "Line of business",
+        "Technical practitioner"
+      ],
+      "SalesStage": "Discover",
+      "Industry": [
+        "Retail"
+      ],
+      "AISummary": "A retail briefing pitch deck that frames data silos, trust, and slow analytics as customer challenges, then positions Northwind AI Studio and Northwind Analytics with a 90-day path to value. Use it during discovery to identify the customer’s primary pain,",
+      "Shareability": "Customer-shareable (NDA)",
+      "ProposedExpiry": "{{Today+217}}",
+      "SubmissionNotes": "New retail pitch for the holiday push. Please publish by Dec 5.",
+      "file": "AI Studio for Retail - pitch v3.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Battlecard: Field Service vs spreadsheets",
+      "AssetType": "Battlecard",
+      "Solution": "Business Applications",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Audience": [
+        "IT decision maker",
+        "Line of business",
+        "Technical practitioner"
+      ],
+      "SalesStage": "Qualify",
+      "Industry": [
+        "Manufacturing"
+      ],
+      "AISummary": "This internal battlecard positions Northwind Field Service against spreadsheet- and whiteboard-based scheduling, highlighting AI scheduling, guided mobile repair, and regional first-time-fix visibility. Use it during qualification when dispatchers or mana",
+      "Shareability": "Internal only",
+      "ProposedExpiry": "{{Today+187}}",
+      "SubmissionNotes": "Internal battlecard for dispatch-heavy accounts.",
+      "file": "Battlecard - Field Service vs Spreadsheets.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Fabrikam Bank win story",
+      "AssetType": "Customer story",
+      "Solution": "Security",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Audience": [
+        "Executive",
+        "IT decision maker",
+        "Technical practitioner"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Financial services"
+      ],
+      "AISummary": "This customer story describes how Fabrikam Bank selected Northwind Secure Access over two competitors and achieved VPN retirement in five months with fewer help-desk tickets. Use it during the proposal stage to support a security solution discussion, subj",
+      "Shareability": "Public",
+      "ProposedExpiry": "{{Today+217}}",
+      "SubmissionNotes": "Great win, let's make it a public story!",
+      "file": "Fabrikam Bank win story.docx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Field Service ROI one-pager",
+      "AssetType": "One-pager",
+      "Solution": "Business Applications",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Audience": [
+        "Executive",
+        "IT decision maker",
+        "Line of business"
+      ],
+      "SalesStage": "Propose",
+      "Industry": [
+        "Manufacturing"
+      ],
+      "AISummary": "This one-pager presents the ROI of improving first-time fix rates, highlighting a reported 22% reduction in truck rolls at Tailspin Manufacturing. Use it to support an ROI discussion and direct the customer to the ROI calculator with the account team.",
+      "Shareability": "Customer-shareable (NDA)",
+      "ProposedExpiry": "{{Today+217}}",
+      "SubmissionNotes": "Leave-behind for manufacturing execs.",
+      "file": "Field Service ROI one-pager.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    }
+  ],
+  "Archive": [
+    {
+      "Title": "Northwind DataHub overview 2025",
+      "AssetType": "Pitch deck",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform"
+      ],
+      "AISummary": "Retired overview that uses the old DataHub product name.",
+      "Shareability": "Customer-shareable (NDA)",
+      "ArchivedOn": "{{Today-55}}",
+      "ArchiveReason": "Replaced",
+      "ReplacedBy": {
+        "Url": "{{SiteUrl}}/Content%20Library/Northwind%20Corporate%20Pitch%20FY27.pptx",
+        "Description": "Northwind Corporate Pitch FY27.pptx"
+      },
+      "file": "Northwind DataHub Overview 2025.pptx",
+      "ContentOwner": "{{OwnerEmail}}"
+    },
+    {
+      "Title": "Pricing guide FY26",
+      "AssetType": "Pricing guide",
+      "Solution": "Data & AI",
+      "AISummary": "Last year's pricing guide. Expired.",
+      "Shareability": "Internal only",
+      "ArchivedOn": "{{Today-147}}",
+      "ArchiveReason": "Expired",
+      "ReplacedBy": {
+        "Url": "{{SiteUrl}}/Content%20Library/Pricing%20and%20Packaging%20Guide%20FY27.pdf",
+        "Description": "Pricing and Packaging Guide FY27.pdf"
+      },
+      "file": "Pricing Guide FY26.pdf",
+      "ContentOwner": "{{OwnerEmail}}"
+    }
+  ],
+  "Slide Library": [
+    {
+      "Title": "What we'll cover in 30 minutes",
+      "SlideRole": "Agenda",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Agenda: Your 2027 goals; Three moves that matter; Proof; A 90-day plan.",
+      "Shareability": "Public",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 2,
+      "file": "NW-Agenda-Executive.pptx"
+    },
+    {
+      "Title": "Today's agenda",
+      "SlideRole": "Agenda",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Agenda: Your priorities; What we're seeing in the market; How Northwind helps; Proof from customers like you; Next steps.",
+      "Shareability": "Public",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 2,
+      "file": "NW-Agenda-Standard.pptx"
+    },
+    {
+      "Title": "Thank you",
+      "SlideRole": "Close",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Closing slide with account team contact.",
+      "Shareability": "Public",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 9,
+      "file": "NW-Close-ThankYou.pptx"
+    },
+    {
+      "Title": "A 90-day path to value",
+      "SlideRole": "Next steps",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Weeks 1-2: Discovery workshop; Weeks 3-8: Pilot; Weeks 9-12: Scale plan.",
+      "Shareability": "Public",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 8,
+      "file": "NW-NextSteps-90Day.pptx"
+    },
+    {
+      "Title": "Let's run a design workshop",
+      "SlideRole": "Next steps",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Day 1: Envision; Day 2: Design; Day 3: Plan.",
+      "Shareability": "Public",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 8,
+      "file": "NW-NextSteps-Workshop.pptx"
+    },
+    {
+      "Title": "INTERNAL ONLY: discount guidance FY27",
+      "SlideRole": "Pricing",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Internal discount approval levels. Never show to customers.",
+      "Shareability": "Internal only",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 7,
+      "file": "NW-Pricing-InternalDiscounts.pptx"
+    },
+    {
+      "Title": "Simple packages that grow with you",
+      "SlideRole": "Pricing",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Starter, Business and Enterprise packages, no prices.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 7,
+      "file": "NW-Pricing-Packages.pptx"
+    },
+    {
+      "Title": "Decisions are waiting on data",
+      "SlideRole": "Problem",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Most teams still stitch reports by hand. Pains: Silos, Trust, Speed.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 3,
+      "file": "NW-Problem-DataSilos.pptx"
+    },
+    {
+      "Title": "Every repeat visit costs margin and loyalty",
+      "SlideRole": "Problem",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Industry": [
+        "Manufacturing"
+      ],
+      "SlideSummary": "Unplanned downtime is the most expensive hour in manufacturing. Pains: Reactive, Mismatch, Knowledge.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 3,
+      "file": "NW-Problem-FieldService.pptx"
+    },
+    {
+      "Title": "Every app is now a front door for attackers",
+      "SlideRole": "Problem",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Industry": [
+        "Financial services"
+      ],
+      "SlideSummary": "Flat VPN access turns one stolen password into a breach. Pains: Credentials, Sprawl, Regulation.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 3,
+      "file": "NW-Problem-FinServ.pptx"
+    },
+    {
+      "Title": "Clinicians spend their evenings on paperwork",
+      "SlideRole": "Problem",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Industry": [
+        "Healthcare"
+      ],
+      "SlideSummary": "Documentation burden is the top driver of burnout. Pains: Admin load, Fragmented records, Staffing.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 3,
+      "file": "NW-Problem-Healthcare.pptx"
+    },
+    {
+      "Title": "AI that pays for itself",
+      "SlideRole": "Proof",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "6 mo median payback; 71% of agent answers used without edits; 0 ungoverned data sources. Source: Northwind AI Studio early adopter study, Sept 2026, n=18.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 5,
+      "file": "NW-Proof-AI.pptx"
+    },
+    {
+      "Title": "Results customers report in year one",
+      "SlideRole": "Proof",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "38% faster month-end close; 4.2x more questions answered; -35% data engineering backlog. Source: Northwind customer benchmark 2026, n=42 customers, median values.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 5,
+      "file": "NW-Proof-Platform.pptx"
+    },
+    {
+      "Title": "Zero trust, measured",
+      "SlideRole": "Proof",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Industry": [
+        "Cross-industry",
+        "Financial services"
+      ],
+      "SlideSummary": "-64% risky sign-ins; 12 min median containment; 98% phishing-resistant sign-ins. Source: Northwind Secure Access telemetry, Q3 2026, opted-in tenants.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 5,
+      "file": "NW-Proof-Security.pptx"
+    },
+    {
+      "Title": "Northwind AI Studio: build and run ai agents on your own data",
+      "SlideRole": "Solution",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Northwind AI Studio: Build and run AI agents on your own data. Ground, Orchestrate, Evaluate.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 4,
+      "file": "NW-Solution-AIStudio.pptx"
+    },
+    {
+      "Title": "Northwind Analytics: answers for every team, without a ticket",
+      "SlideRole": "Solution",
+      "Products": [
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Northwind Analytics: Answers for every team, without a ticket. Ask, Forecast, Share.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 4,
+      "file": "NW-Solution-Analytics.pptx"
+    },
+    {
+      "Title": "Northwind Data Platform: one governed home for all your data",
+      "SlideRole": "Solution",
+      "Products": [
+        "Northwind Data Platform"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Northwind Data Platform: One governed home for all your data. Connect, Govern, Serve.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 4,
+      "file": "NW-Solution-DataPlatform.pptx"
+    },
+    {
+      "Title": "Northwind Field Service: the right technician, first time, every time",
+      "SlideRole": "Solution",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Northwind Field Service: The right technician, first time, every time. Predict, Schedule, Resolve.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 4,
+      "file": "NW-Solution-FieldService.pptx"
+    },
+    {
+      "Title": "Northwind Secure Access: zero-trust access for every app and device",
+      "SlideRole": "Solution",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Northwind Secure Access: Zero-trust access for every app and device. Verify, Segment, Detect.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 4,
+      "file": "NW-Solution-SecureAccess.pptx"
+    },
+    {
+      "Title": "Contoso Health: 2 hrs saved per clinician each week",
+      "SlideRole": "Customer story",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Industry": [
+        "Healthcare"
+      ],
+      "SlideSummary": "Contoso Health (Healthcare): 2 hrs saved per clinician each week; 31% faster discharge summaries; 4.7/5 clinician satisfaction. Reference approved.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 6,
+      "file": "NW-Story-Contoso.pptx"
+    },
+    {
+      "Title": "Tailspin Manufacturing: 89% first-time fix rate",
+      "SlideRole": "Customer story",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Industry": [
+        "Manufacturing"
+      ],
+      "SlideSummary": "Tailspin Manufacturing (Manufacturing): 89% first-time fix rate; -22% truck rolls; 6 wks to go live. Reference approved.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 6,
+      "file": "NW-Story-Tailspin.pptx"
+    },
+    {
+      "Title": "Wingtip Retail: 1,200 store managers on self-service",
+      "SlideRole": "Customer story",
+      "Products": [
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Retail"
+      ],
+      "SlideSummary": "Wingtip Retail (Retail): 1,200 store managers on self-service; -40% report requests; +3.1% basket size in pilot. Reference approved.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 6,
+      "file": "NW-Story-Wingtip.pptx"
+    },
+    {
+      "Title": "Woodgrove Financial: 100% apps behind zero trust",
+      "SlideRole": "Customer story",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Industry": [
+        "Financial services"
+      ],
+      "SlideSummary": "Woodgrove Financial (Financial services): 100% apps behind zero trust; -64% risky sign-ins; 1 qtr VPN retired. Reference approved.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": true,
+      "SlideOrder": 6,
+      "file": "NW-Story-Woodgrove.pptx"
+    },
+    {
+      "Title": "Northwind Cloud: from data to decisions",
+      "SlideRole": "Title",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio",
+        "Northwind Secure Access",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "SlideSummary": "Title slide: Northwind Cloud: from data to decisions.",
+      "Shareability": "Public",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 1,
+      "file": "NW-Title-Corporate.pptx"
+    },
+    {
+      "Title": "Secure, compliant growth: Northwind for Financial Services",
+      "SlideRole": "Title",
+      "Products": [
+        "Northwind Secure Access",
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Financial services"
+      ],
+      "SlideSummary": "Title slide: Secure, compliant growth: Northwind for Financial Services.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 1,
+      "file": "NW-Title-FinServ.pptx"
+    },
+    {
+      "Title": "Better care, less admin: Northwind for Healthcare",
+      "SlideRole": "Title",
+      "Products": [
+        "Northwind AI Studio",
+        "Northwind Data Platform"
+      ],
+      "Industry": [
+        "Healthcare"
+      ],
+      "SlideSummary": "Title slide: Better care, less admin: Northwind for Healthcare.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 1,
+      "file": "NW-Title-Healthcare.pptx"
+    },
+    {
+      "Title": "Less downtime, more first-time fixes: Northwind for Manufacturing",
+      "SlideRole": "Title",
+      "Products": [
+        "Northwind Field Service",
+        "Northwind Data Platform"
+      ],
+      "Industry": [
+        "Manufacturing"
+      ],
+      "SlideSummary": "Title slide: Less downtime, more first-time fixes: Northwind for Manufacturing.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 1,
+      "file": "NW-Title-Manufacturing.pptx"
+    },
+    {
+      "Title": "Better stores, faster answers: Northwind for Retail",
+      "SlideRole": "Title",
+      "Products": [
+        "Northwind Analytics",
+        "Northwind Data Platform"
+      ],
+      "Industry": [
+        "Retail"
+      ],
+      "SlideSummary": "Title slide: Better stores, faster answers: Northwind for Retail.",
+      "Shareability": "Customer-shareable (NDA)",
+      "SourceDeck": "Northwind master deck FY27",
+      "UseVerbatim": false,
+      "SlideOrder": 1,
+      "file": "NW-Title-Retail.pptx"
+    }
+  ],
+  "Deck Templates": [
+    {
+      "Title": "Executive briefing",
+      "TemplateKind": "Executive briefing",
+      "OutputFormat": "PowerPoint",
+      "Recipe": "Title, Agenda, Problem, Solution, Proof, Customer story, Pricing, Next steps, Close",
+      "Audience": [
+        "Executive"
+      ],
+      "SlideCount": 9,
+      "BestFor": "30 minutes with a C-level sponsor. Outcome-led, few words per slide, detail in the notes.",
+      "file": "Template-ExecutiveBriefing.pptx"
+    },
+    {
+      "Title": "First meeting pitch",
+      "TemplateKind": "First meeting pitch",
+      "OutputFormat": "PowerPoint",
+      "Recipe": "Title, Agenda, Problem, Solution, Proof, Customer story, Next steps, Close",
+      "Audience": [
+        "Line of business",
+        "IT decision maker"
+      ],
+      "SlideCount": 8,
+      "BestFor": "A first conversation with a new account: their problem, our answer, proof, and a clear next step.",
+      "file": "Template-FirstMeetingPitch.pptx"
+    },
+    {
+      "Title": "Industry one-pager",
+      "TemplateKind": "Industry one-pager",
+      "OutputFormat": "Word",
+      "Recipe": "Headline, Challenge, Solution, Proof, Customer story, Next step",
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SlideCount": 1,
+      "BestFor": "A one-page leave-behind tailored to one industry.",
+      "file": "Template-IndustryOnePager.docx"
+    },
+    {
+      "Title": "Quarterly business review",
+      "TemplateKind": "Quarterly business review",
+      "OutputFormat": "PowerPoint",
+      "Recipe": "Title, Agenda, Proof, Customer story, Solution, Next steps, Close",
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "SlideCount": 7,
+      "BestFor": "Existing customers: results so far, what's next, and expansion.",
+      "file": "Template-QBR.pptx"
+    },
+    {
+      "Title": "Technical deep dive",
+      "TemplateKind": "Technical deep dive",
+      "OutputFormat": "PowerPoint",
+      "Recipe": "Title, Agenda, Problem, Solution, Solution, Solution, Proof, Next steps, Close",
+      "Audience": [
+        "Technical practitioner",
+        "IT decision maker"
+      ],
+      "SlideCount": 9,
+      "BestFor": "Architects and engineers: capabilities product by product, then a pilot plan.",
+      "file": "Template-TechnicalDeepDive.pptx"
+    }
+  ],
+  "Decks": [
+    {
+      "Title": "Contoso Health: giving clinicians time back",
+      "Customer": "Contoso Health",
+      "Template": "Executive briefing",
+      "DraftStatus": "Reviewed",
+      "SourceSlides": "NW-Title-Healthcare, NW-Agenda-Executive, NW-Problem-Healthcare, NW-Solution-AIStudio, NW-Proof-AI, NW-Story-Contoso, NW-Pricing-Packages, NW-NextSteps-Workshop, NW-Close-ThankYou",
+      "Industry": "Healthcare",
+      "MeetingGoal": "Agree to a three-day design workshop that scopes an AI pilot for clinical documentation.",
+      "TalkingPoints": "Opening: Contoso Health, you've already given clinicians two hours a week back; today is about where to take that next.\nNew title: Contoso Health: the next step in giving clinicians time back\n1. Better care, less admin: Open with their goal, not our logo.\n2. What we'll cover in 30 minutes: Confirm the agenda and ask what they would add.\n3. Clinicians spend their evenings on paperwork: Ask which of the three pains is still the biggest.\n4. Northwind AI Studio: Tie each capability to the pain they named.\n5. AI that pays for itself: Quote the numbers and the source line as written.\n6. Contoso Health: 2 hrs saved per clinician each week: These are your results so far.\n7. Simple packages that grow with you: Show packages, not prices.\n8. Let's run a design workshop: Agree the three days, an owner and a start date.\n9. Thank you: Recap the one next step and who owns it.",
+      "file": "Contoso Health - Executive briefing - 2026-12-03.pptx"
+    }
+  ],
+  "Solution Plays": [
+    {
+      "Title": "Land with data, expand with AI",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Data Platform",
+        "Northwind AI Studio"
+      ],
+      "Industry": [
+        "Cross-industry"
+      ],
+      "Audience": [
+        "Executive",
+        "IT decision maker"
+      ],
+      "Pitch": "One governed home for your data today, AI agents on top of it tomorrow.",
+      "WhyNow": "Warehouse renewals and AI pilots are colliding in 2027 budgets.",
+      "DiscoveryQuestions": "How many copies of your customer table exist?\nHow long does a new data source take to onboard?\nWhich AI pilot is blocked on data access",
+      "Objections": "Migration is risky -> run side by side, one domain at a time.\nWe already paid for licenses -> keep them for the long tail.",
+      "KeyAssets": "12,16,1,6",
+      "Featured": true,
+      "PlayOrder": 1
+    },
+    {
+      "Title": "Give clinicians time back",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio"
+      ],
+      "Industry": [
+        "Healthcare"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "Pitch": "AI agents that draft documentation from the chart, with citations, so clinicians finish on time.",
+      "WhyNow": "Burnout and staffing shortages top every hospital board agenda.",
+      "DiscoveryQuestions": "How many hours a week do clinicians spend on notes after hours?\nWhich document takes longest today?\nWho owns clinical AI governance",
+      "Objections": "Accuracy -> every line cites its source in the chart.\nPrivacy -> runs on your governed data, in your tenant.",
+      "KeyAssets": "11,3,7",
+      "Featured": true,
+      "PlayOrder": 2
+    },
+    {
+      "Title": "Retire the VPN",
+      "Solution": "Security",
+      "Products": [
+        "Northwind Secure Access"
+      ],
+      "Industry": [
+        "Financial services",
+        "Cross-industry"
+      ],
+      "Audience": [
+        "IT decision maker",
+        "Executive"
+      ],
+      "Pitch": "Per-app zero-trust access that's safer for the bank and easier for users.",
+      "WhyNow": "Regulators now expect zero-trust evidence; VPN renewals are due.",
+      "DiscoveryQuestions": "How many apps sit behind your VPN?\nWhat did your last phishing test show?\nWhat do auditors ask you to prove",
+      "Objections": "Users will hate it -> fewer prompts, not more.\nWe just renewed -> start with contractors and high-risk apps.",
+      "KeyAssets": "10,2,5",
+      "Featured": true,
+      "PlayOrder": 3
+    },
+    {
+      "Title": "First-time fix, every time",
+      "Solution": "Business Applications",
+      "Products": [
+        "Northwind Field Service"
+      ],
+      "Industry": [
+        "Manufacturing"
+      ],
+      "Audience": [
+        "Executive",
+        "Line of business"
+      ],
+      "Pitch": "Predict failures, send the right technician with the right part, fix it on the first visit.",
+      "WhyNow": "Service margins are under pressure and senior technicians are retiring.",
+      "DiscoveryQuestions": "What is your first-time fix rate today?\nHow are work orders scheduled?\nWhat does a repeat visit cost",
+      "Objections": "Our techs won't use an app -> guided repair saves them time on site.",
+      "KeyAssets": "9,4,15",
+      "Featured": false,
+      "PlayOrder": 4
+    },
+    {
+      "Title": "Answers for every store",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind Analytics"
+      ],
+      "Industry": [
+        "Retail"
+      ],
+      "Audience": [
+        "Line of business",
+        "Executive"
+      ],
+      "Pitch": "Store managers ask questions in plain language and act the same day.",
+      "WhyNow": "Holiday season planning exposes slow, ticket-based reporting.",
+      "DiscoveryQuestions": "How long does a store manager wait for a report?\nHow many report requests does BI get each week",
+      "Objections": "Data quality -> answers come only from certified data.",
+      "KeyAssets": "14,8",
+      "Featured": false,
+      "PlayOrder": 5
+    },
+    {
+      "Title": "Agents your auditors will love",
+      "Solution": "Data & AI",
+      "Products": [
+        "Northwind AI Studio",
+        "Northwind Data Platform"
+      ],
+      "Industry": [
+        "Financial services",
+        "Public sector"
+      ],
+      "Audience": [
+        "IT decision maker",
+        "Executive"
+      ],
+      "Pitch": "Build AI agents with lineage, evaluation and approvals built in.",
+      "WhyNow": "AI regulations require explainability and human oversight in 2027.",
+      "DiscoveryQuestions": "Which AI use cases are stuck in risk review?\nHow do you evaluate an agent before it goes live",
+      "Objections": "We'll build it ourselves -> evaluation and governance are the hard 80%.",
+      "KeyAssets": "13,12",
+      "Featured": false,
+      "PlayOrder": 6
+    }
+  ],
+  "Content Requests": [
+    {
+      "Title": "Public sector AI governance one-pager",
+      "Need": "Litware is asking how we handle AI oversight for government. Need a one-pager on AI Studio governance for public sector.",
+      "Solution": "Data & AI",
+      "Industry": "Public sector",
+      "Priority": "High",
+      "RequestStatus": "In progress",
+      "NeededBy": "{{Today+17}}"
+    },
+    {
+      "Title": "Retail customer story",
+      "Need": "Wingtip results are great; can we turn them into a public customer story",
+      "Solution": "Data & AI",
+      "Industry": "Retail",
+      "Priority": "Medium",
+      "RequestStatus": "Planned",
+      "NeededBy": "{{Today+51}}"
+    },
+    {
+      "Title": "Renewed Woodgrove story",
+      "Need": "The Woodgrove story expires Dec 10. Two open deals use it.",
+      "Solution": "Security",
+      "Industry": "Financial services",
+      "Priority": "High",
+      "RequestStatus": "New",
+      "NeededBy": "{{Today+10}}"
+    },
+    {
+      "Title": "Field Service ROI calculator",
+      "Need": "Manufacturing execs want to plug in their own numbers.",
+      "Solution": "Business Applications",
+      "Industry": "Manufacturing",
+      "Priority": "Medium",
+      "RequestStatus": "Delivered",
+      "NeededBy": "{{Today-10}}",
+      "DeliveredAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/One-pager%20-%20Northwind%20Field%20Service.pdf",
+        "Description": "Field Service one-pager"
+      }
+    },
+    {
+      "Title": "Spanish version of corporate pitch",
+      "Need": "LATAM team needs the corporate pitch in Spanish.",
+      "Solution": "Data & AI",
+      "Industry": "Cross-industry",
+      "Priority": "Low",
+      "RequestStatus": "Declined",
+      "NeededBy": "{{Today+36}}"
+    }
+  ],
+  "Customer Shares": [
+    {
+      "Title": "Contoso Health story to CMIO",
+      "Customer": "Contoso Health",
+      "Recipient": "maya.patel@contosohealth.example",
+      "SharedAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Customer%20Story%20-%20Contoso%20Health.pdf",
+        "Description": "Shared copy"
+      },
+      "SourceAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Customer%20Story%20-%20Contoso%20Health.pdf",
+        "Description": "Source"
+      },
+      "Shareability": "Public",
+      "SharedOn": "{{Today-13}}",
+      "ShareStatus": "Active",
+      "Opportunity": "Contoso Health clinical AI"
+    },
+    {
+      "Title": "FS zero trust pitch to Woodgrove CISO",
+      "Customer": "Woodgrove Financial",
+      "Recipient": "priya.nair@woodgrove.example",
+      "SharedAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Financial%20Services%20Zero%20Trust%20Pitch.pptx",
+        "Description": "Shared copy"
+      },
+      "SourceAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Financial%20Services%20Zero%20Trust%20Pitch.pptx",
+        "Description": "Source"
+      },
+      "Shareability": "Customer-shareable (NDA)",
+      "SharedOn": "{{Today-28}}",
+      "ShareStatus": "Active",
+      "Opportunity": "Woodgrove contractor access"
+    },
+    {
+      "Title": "Woodgrove story to procurement",
+      "Customer": "Woodgrove Financial",
+      "Recipient": "procurement@woodgrove.example",
+      "SharedAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Customer%20Story%20-%20Woodgrove%20Financial.pdf",
+        "Description": "Shared copy"
+      },
+      "SourceAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Customer%20Story%20-%20Woodgrove%20Financial.pdf",
+        "Description": "Source"
+      },
+      "Shareability": "Public",
+      "SharedOn": "{{Today-56}}",
+      "ShareStatus": "Source expired",
+      "Opportunity": "Woodgrove contractor access"
+    },
+    {
+      "Title": "Retail one-pager to Wingtip",
+      "Customer": "Wingtip Retail",
+      "Recipient": "hannah.kim@wingtip.example",
+      "SharedAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/One-pager%20-%20Northwind%20Analytics%20for%20Retail.pdf",
+        "Description": "Shared copy"
+      },
+      "SourceAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/One-pager%20-%20Northwind%20Analytics%20for%20Retail.pdf",
+        "Description": "Source"
+      },
+      "Shareability": "Customer-shareable (NDA)",
+      "SharedOn": "{{Today-7}}",
+      "ShareStatus": "Active",
+      "Opportunity": "Wingtip holiday analytics"
+    },
+    {
+      "Title": "Corporate pitch to Litware",
+      "Customer": "Litware Public Services",
+      "Recipient": "cio@litware.example",
+      "SharedAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Northwind%20Corporate%20Pitch%20FY27.pptx",
+        "Description": "Shared copy"
+      },
+      "SourceAsset": {
+        "Url": "{{SiteUrl}}/Content%20Library/Northwind%20Corporate%20Pitch%20FY27.pptx",
+        "Description": "Source"
+      },
+      "Shareability": "Customer-shareable (NDA)",
+      "SharedOn": "{{Today-20}}",
+      "ShareStatus": "Source updated",
+      "Opportunity": "Litware data platform"
+    }
+  ]
+}

@@ -30,6 +30,7 @@ Solutions are complete samples to try on a test site, not production-ready or su
 
 - [Client Hub for SharePoint](./solutions/client-hub-for-sharepoint/): three related lists for clients, projects, and activity, with deployment/removal scripts, formatting, fictional sample data, an optional dashboard, and five Copilot skills.
 - [Obligation Hub for SharePoint](./solutions/obligation-hub-for-sharepoint/): tracks contract obligations, owners, due dates, evidence, and scheduled digests, with deployment/removal assets, fictional contracts, evals, and ten Copilot skills.
+- [Sales Enablement Hub](./solutions/sales-enablement-hub/): a SharePoint-only sales enablement sample for governed content, solution plays, customer sharing, and Copilot-built decks.
 
 ## Running Demos
 

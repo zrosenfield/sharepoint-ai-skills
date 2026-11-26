@@ -1,0 +1,130 @@
+{
+  "order": 6,
+  "title": "Solution Plays",
+  "url": "Lists/Solution Plays",
+  "template": "GenericList",
+  "description": "Guided selling plays: who to target, what to say, which assets to use.",
+  "purpose": "The plays behind the Plays page: pitch, why now, discovery questions, objections and key assets.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Play",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Play\" />"
+    },
+    {
+      "internalName": "Solution",
+      "displayName": "Solution area",
+      "type": "Choice",
+      "choices": [
+        "Data & AI",
+        "Security",
+        "Business Applications",
+        "Modern Work"
+      ]
+    },
+    {
+      "internalName": "Products",
+      "displayName": "Products",
+      "type": "MultiChoice",
+      "choices": [
+        "Northwind Data Platform",
+        "Northwind Secure Access",
+        "Northwind AI Studio",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ]
+    },
+    {
+      "internalName": "Industry",
+      "displayName": "Industry",
+      "type": "MultiChoice",
+      "choices": [
+        "Healthcare",
+        "Financial services",
+        "Retail",
+        "Manufacturing",
+        "Public sector",
+        "Cross-industry"
+      ]
+    },
+    {
+      "internalName": "Audience",
+      "displayName": "Audience",
+      "type": "MultiChoice",
+      "choices": [
+        "Executive",
+        "IT decision maker",
+        "Line of business",
+        "Technical practitioner",
+        "Partner"
+      ]
+    },
+    {
+      "internalName": "Pitch",
+      "displayName": "Pitch in one line",
+      "type": "Note"
+    },
+    {
+      "internalName": "WhyNow",
+      "displayName": "Why now",
+      "type": "Note"
+    },
+    {
+      "internalName": "DiscoveryQuestions",
+      "displayName": "Discovery questions",
+      "type": "Note"
+    },
+    {
+      "internalName": "Objections",
+      "displayName": "Objections and answers",
+      "type": "Note"
+    },
+    {
+      "internalName": "KeyAssets",
+      "displayName": "Key assets (Content Library IDs)",
+      "type": "Text"
+    },
+    {
+      "internalName": "HeroImage",
+      "displayName": "Hero image",
+      "type": "URL",
+      "format": "Image"
+    },
+    {
+      "internalName": "Featured",
+      "displayName": "Featured",
+      "type": "Boolean",
+      "defaultValueFields": {
+        "defaultValue": "0"
+      }
+    },
+    {
+      "internalName": "PlayOrder",
+      "displayName": "Order",
+      "type": "Number",
+      "min": 0
+    }
+  ],
+  "views": [
+    {
+      "name": "All Items",
+      "isDefaultView": true,
+      "viewFields": [
+        "LinkTitle",
+        "Solution",
+        "Products",
+        "Industry",
+        "Audience",
+        "Pitch",
+        "WhyNow",
+        "DiscoveryQuestions",
+        "Objections",
+        "KeyAssets",
+        "Featured",
+        "PlayOrder"
+      ]
+    }
+  ],
+  "seed": "Solution Plays"
+}

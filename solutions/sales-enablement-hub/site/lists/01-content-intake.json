@@ -1,0 +1,295 @@
+{
+ "order": 1,
+ "title": "Content Intake",
+ "url": "Content Intake",
+ "template": "DocumentLibrary",
+ "description": "Submit new sales content here. An agent reviews and fixes it, then one approver signs off before it is published.",
+ "purpose": "Where new content lands. Autofill tags it, the agent review validates and fixes it, one human approves it, then it moves to the Content Library.",
+ "columns": [
+  {
+   "internalName": "Title",
+   "displayName": "Asset title",
+   "type": "Text",
+   "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Asset title\" />"
+  },
+  {
+   "internalName": "AssetType",
+   "displayName": "Asset type",
+   "type": "Choice",
+   "choices": [
+    "Pitch deck",
+    "Battlecard",
+    "One-pager",
+    "Customer story",
+    "Demo script",
+    "Pricing guide",
+    "Proposal template",
+    "Video",
+    "Playbook"
+   ],
+   "metadataExtractionPrompt": "Classify what kind of sales asset this document is."
+  },
+  {
+   "internalName": "Solution",
+   "displayName": "Solution area",
+   "type": "Choice",
+   "choices": [
+    "Data & AI",
+    "Security",
+    "Business Applications",
+    "Modern Work"
+   ],
+   "metadataExtractionPrompt": "Which Northwind Cloud solution area is this content mainly about?"
+  },
+  {
+   "internalName": "Products",
+   "displayName": "Products",
+   "type": "MultiChoice",
+   "choices": [
+    "Northwind Data Platform",
+    "Northwind Secure Access",
+    "Northwind AI Studio",
+    "Northwind Field Service",
+    "Northwind Analytics"
+   ],
+   "metadataExtractionPrompt": "List every Northwind Cloud product this document covers."
+  },
+  {
+   "internalName": "Audience",
+   "displayName": "Audience",
+   "type": "MultiChoice",
+   "choices": [
+    "Executive",
+    "IT decision maker",
+    "Line of business",
+    "Technical practitioner",
+    "Partner"
+   ],
+   "metadataExtractionPrompt": "Who is this content written for? Pick every audience that fits."
+  },
+  {
+   "internalName": "SalesStage",
+   "displayName": "Sales stage",
+   "type": "Choice",
+   "choices": [
+    "Prospect",
+    "Discover",
+    "Qualify",
+    "Propose",
+    "Negotiate",
+    "Expand"
+   ],
+   "metadataExtractionPrompt": "At which sales stage would a seller use this content?"
+  },
+  {
+   "internalName": "Industry",
+   "displayName": "Industry",
+   "type": "MultiChoice",
+   "choices": [
+    "Healthcare",
+    "Financial services",
+    "Retail",
+    "Manufacturing",
+    "Public sector",
+    "Cross-industry"
+   ],
+   "metadataExtractionPrompt": "Which industries does this content target? Use Cross-industry if it is not industry-specific."
+  },
+  {
+   "internalName": "AISummary",
+   "displayName": "Summary",
+   "type": "Note",
+   "metadataExtractionPrompt": "Summarize this asset for a seller in two sentences: what it is and when to use it."
+  },
+  {
+   "internalName": "Shareability",
+   "displayName": "Requested shareability",
+   "type": "Choice",
+   "choices": [
+    "Internal only",
+    "Customer-shareable (NDA)",
+    "Public"
+   ],
+   "required": false,
+   "defaultValueFields": {
+    "defaultValue": "Internal only"
+   }
+  },
+  {
+   "internalName": "SuggestedShareability",
+   "displayName": "Suggested shareability",
+   "type": "Choice",
+   "choices": [
+    "Internal only",
+    "Customer-shareable (NDA)",
+    "Public"
+   ],
+   "metadataExtractionPrompt": "Based on the content, how widely could this be shared? Internal only if it has internal pricing, roadmap or confidential markings; Public if it is marketing material; otherwise Customer-shareable (NDA)."
+  },
+  {
+   "internalName": "ValidationResult",
+   "displayName": "Validation result",
+   "type": "Choice",
+   "choices": [
+    "Pass",
+    "Fixable",
+    "Blocked"
+   ],
+   "metadataExtractionPrompt": "Review this document against these rules. Northwind Cloud publishing standards: (1) current product names only: Northwind Data Platform, Northwind Secure Access, Northwind AI Studio, Northwind Field Service, Northwind Analytics; the retired names Northwind DataHub, SecureGate and Northwind Insights must be replaced. (2) every statistic, percentage or ROI claim needs a source on the same slide or page. (3) internal pricing, discount levels, roadmap dates or text marked Internal only or Confidential must never appear in customer-facing content. (4) a named customer needs the note 'Reference approved'. (5) competitor mentions must be factual and never disparaging. (6) customer-facing decks and documents must include the line 'Northwind Cloud confidential. Subject to change.' (7) no personal data such as personal phone numbers or personal email addresses. (8) every slide or section has a title. Return Blocked if internal-only content appears in customer-facing material, a named customer lacks 'Reference approved', or personal data is present. Return Fixable if there are only other issues. Return Pass if there are no issues."
+  },
+  {
+   "internalName": "ValidationFindings",
+   "displayName": "Validation findings",
+   "type": "Note",
+   "metadataExtractionPrompt": "Review this document against these rules. Northwind Cloud publishing standards: (1) current product names only: Northwind Data Platform, Northwind Secure Access, Northwind AI Studio, Northwind Field Service, Northwind Analytics; the retired names Northwind DataHub, SecureGate and Northwind Insights must be replaced. (2) every statistic, percentage or ROI claim needs a source on the same slide or page. (3) internal pricing, discount levels, roadmap dates or text marked Internal only or Confidential must never appear in customer-facing content. (4) a named customer needs the note 'Reference approved'. (5) competitor mentions must be factual and never disparaging. (6) customer-facing decks and documents must include the line 'Northwind Cloud confidential. Subject to change.' (7) no personal data such as personal phone numbers or personal email addresses. (8) every slide or section has a title. List each issue on its own line starting with [Fixable] or [Blocker], naming the slide or section. If there are no issues, write 'No issues found.'"
+  },
+  {
+   "internalName": "ReviewStatus",
+   "displayName": "Review status",
+   "type": "Choice",
+   "choices": [
+    "Submitted",
+    "Agent review",
+    "Needs fixes",
+    "Awaiting approval",
+    "Approved",
+    "Rejected",
+    "Published"
+   ],
+   "defaultValueFields": {
+    "defaultValue": "Submitted"
+   }
+  },
+  {
+   "internalName": "AgentFixes",
+   "displayName": "Agent fixes",
+   "type": "Note"
+  },
+  {
+   "internalName": "ContentOwner",
+   "displayName": "Content owner",
+   "type": "User"
+  },
+  {
+   "internalName": "ProposedExpiry",
+   "displayName": "Proposed expiry",
+   "type": "DateTime",
+   "format": "DateOnly"
+  },
+  {
+   "internalName": "SubmissionNotes",
+   "displayName": "Submission notes",
+   "type": "Note"
+  },
+  {
+   "internalName": "Actions",
+   "displayName": "Actions",
+   "type": "QuickSteps"
+  }
+ ],
+ "unlimitedLength": [
+  "AISummary",
+  "ValidationFindings",
+  "AgentFixes",
+  "SubmissionNotes"
+ ],
+ "views": [
+  {
+   "name": "All Documents",
+   "isDefaultView": true,
+   "viewFields": [
+    "DocIcon",
+    "LinkFilename",
+    "Title",
+    "ReviewStatus",
+    "ValidationResult",
+    "_ApprovalStatus",
+    "_ApprovalAssignedTo",
+    "AssetType",
+    "Products",
+    "Shareability",
+    "SuggestedShareability",
+    "ContentOwner",
+    "ValidationFindings",
+    "AgentFixes",
+    "SubmissionNotes",
+    "AISummary",
+    "Modified",
+    "Actions"
+   ]
+  }
+ ],
+ "approvals": {
+  "enabled": true,
+  "addFieldsToDefaultView": true,
+  "enableDefaultApprovers": true,
+  "defaultApprovers": [
+   [
+    "{{ApproverEmail}}"
+   ]
+  ],
+  "requireAll": false,
+  "canOverwrite": true
+ },
+ "quickSteps": [
+  {
+   "title": "Run agent review",
+   "condition": "[$_ApprovalStatus] != 3",
+   "action": {
+    "actionType": "AskKnowledgeAgent",
+    "customPrompt": "Load the review-submission site skill and follow it for this file: check it against the Northwind publishing standards, fix what is safe as a new version, record Validation result, Validation findings, Agent fixes and Review status, and submit it for approval only if it passes."
+   },
+   "button": true,
+   "buttonColor": {
+    "BackgroundColor": "sp-css-backgroundColor-BgTeal",
+    "FontColor": "sp-css-color-WhiteFont"
+   }
+  },
+  {
+   "title": "Submit for approval",
+   "condition": "[$ValidationResult] == 'Pass' && [$_ApprovalStatus] != 1 && [$_ApprovalStatus] != 3",
+   "action": {
+    "actionType": "CreateApprovalRequest",
+    "recipients": {
+     "recipientNames": [
+      "{{ApproverName}}"
+     ],
+     "recipientEmails": [
+      "{{ApproverEmail}}"
+     ]
+    },
+    "approvalShowDialog": true,
+    "approvalRequireAllResponses": false
+   },
+   "button": true,
+   "buttonColor": {
+    "BackgroundColor": "sp-css-backgroundColor-BgDarkBlue",
+    "FontColor": "sp-css-color-WhiteFont"
+   }
+  },
+  {
+   "title": "Publish to library",
+   "condition": "[$_ApprovalStatus] == 3",
+   "action": {
+    "actionType": "MoveFileOrFolder",
+    "targetFolderUrl": "{{SiteUrl}}/Content Library",
+    "targetLibraryUrl": "{{SiteUrl}}/Content Library",
+    "targetLibraryTitle": "Content Library"
+   },
+   "button": true,
+   "buttonColor": {
+    "BackgroundColor": "sp-css-backgroundColor-BgDarkGreen",
+    "FontColor": "sp-css-color-WhiteFont"
+   }
+  }
+ ],
+ "permissions": {
+  "breakInheritance": true,
+  "remove": [
+   "Sellers"
+  ],
+  "grant": []
+ },
+ "seed": "Content Intake",
+ "notes": "The default view must include _ApprovalStatus and _ApprovalAssignedTo: the quick step button conditions read [$_ApprovalStatus]."
+}

@@ -1,0 +1,143 @@
+{
+  "order": 5,
+  "title": "Decks",
+  "url": "Generated Content",
+  "template": "DocumentLibrary",
+  "description": "Customer decks built with Copilot from approved slides. Press Build a deck to make one.",
+  "purpose": "Output of the deck builder. Default view 'Start here' is a custom HTML view (the deck studio). Note: the URL stays 'Generated Content' because pages and the skill link to it.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Deck title",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Deck title\" />"
+    },
+    {
+      "internalName": "Customer",
+      "displayName": "Customer",
+      "type": "Text"
+    },
+    {
+      "internalName": "Template",
+      "displayName": "Template",
+      "type": "Choice",
+      "choices": [
+        "First meeting pitch",
+        "Executive briefing",
+        "Technical deep dive",
+        "Quarterly business review",
+        "Industry one-pager"
+      ]
+    },
+    {
+      "internalName": "DraftStatus",
+      "displayName": "Status",
+      "type": "Choice",
+      "choices": [
+        "Draft",
+        "Reviewed",
+        "Shared"
+      ],
+      "defaultValueFields": {
+        "defaultValue": "Draft"
+      }
+    },
+    {
+      "internalName": "SourceSlides",
+      "displayName": "Source slides",
+      "type": "Note"
+    },
+    {
+      "internalName": "Industry",
+      "displayName": "Industry",
+      "type": "Choice",
+      "choices": [
+        "Healthcare",
+        "Financial services",
+        "Retail",
+        "Manufacturing",
+        "Public sector",
+        "Cross-industry"
+      ]
+    },
+    {
+      "internalName": "MeetingGoal",
+      "displayName": "Meeting goal",
+      "type": "Note"
+    },
+    {
+      "internalName": "TalkingPoints",
+      "displayName": "Talking points",
+      "type": "Note"
+    }
+  ],
+  "unlimitedLength": [
+    "SourceSlides",
+    "MeetingGoal",
+    "TalkingPoints"
+  ],
+  "views": [
+    {
+      "name": "Start here",
+      "isDefaultView": true,
+      "viewType2": "CUSTOMHTML",
+      "viewFields": [
+        "DocIcon",
+        "LinkFilename",
+        "Title",
+        "Customer",
+        "Template",
+        "Industry",
+        "MeetingGoal",
+        "TalkingPoints",
+        "DraftStatus",
+        "SourceSlides",
+        "Modified",
+        "Editor",
+        "Author"
+      ]
+    },
+    {
+      "name": "All Documents",
+      "isDefaultView": false,
+      "viewFields": [
+        "DocIcon",
+        "LinkFilename",
+        "Customer",
+        "Template",
+        "DraftStatus",
+        "Modified",
+        "Editor"
+      ]
+    }
+  ],
+  "viewFormatting": [
+    {
+      "view": "Start here",
+      "viewType": "CUSTOMHTML",
+      "htmlSource": "site/views/decks-start-here.html",
+      "formatterFile": "site/views/decks-start-here.formatter.txt"
+    }
+  ],
+  "quickSteps": [
+    {
+      "title": "Build a deck",
+      "condition": "true",
+      "action": {
+        "actionType": "AskKnowledgeAgentForList",
+        "customPrompt": "Load the build-customer-deck site skill and follow it: show me its interactive cards, then build my deck from approved slides and save it to this library with my talking points."
+      },
+      "button": false
+    }
+  ],
+  "permissions": {
+    "breakInheritance": true,
+    "remove": [
+      "Sellers:Read"
+    ],
+    "grant": [
+      "Sellers:Contribute"
+    ]
+  },
+  "seed": "Decks"
+}

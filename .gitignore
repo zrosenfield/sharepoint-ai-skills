@@ -48,3 +48,8 @@ tools/scripts/local/
 
 # Playwright MCP — ephemeral session logs and snapshots
 .playwright-mcp/
+
+# Sales Enablement Hub package
+solutions/sales-enablement-hub/deploy/tokens.local.json
+solutions/sales-enablement-hub/deploy/out/
+solutions/sales-enablement-hub/tools/content-generators/content/

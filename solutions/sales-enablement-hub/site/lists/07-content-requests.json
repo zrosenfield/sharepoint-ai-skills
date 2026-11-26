@@ -1,0 +1,123 @@
+{
+  "order": 7,
+  "title": "Content Requests",
+  "url": "Lists/Content Requests",
+  "template": "GenericList",
+  "description": "Sellers ask for content that does not exist yet; marketing triages it.",
+  "purpose": "Sellers ask the content team for missing content through the 'Request content' form.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Request",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Request\" />"
+    },
+    {
+      "internalName": "Need",
+      "displayName": "What do you need, and for which deal?",
+      "type": "Note",
+      "required": true
+    },
+    {
+      "internalName": "Solution",
+      "displayName": "Solution area",
+      "type": "Choice",
+      "choices": [
+        "Data & AI",
+        "Security",
+        "Business Applications",
+        "Modern Work"
+      ]
+    },
+    {
+      "internalName": "Industry",
+      "displayName": "Industry",
+      "type": "Choice",
+      "choices": [
+        "Healthcare",
+        "Financial services",
+        "Retail",
+        "Manufacturing",
+        "Public sector",
+        "Cross-industry"
+      ]
+    },
+    {
+      "internalName": "Priority",
+      "displayName": "Priority",
+      "type": "Choice",
+      "choices": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "defaultValueFields": {
+        "defaultValue": "Medium"
+      }
+    },
+    {
+      "internalName": "RequestStatus",
+      "displayName": "Status",
+      "type": "Choice",
+      "choices": [
+        "New",
+        "Planned",
+        "In progress",
+        "Delivered",
+        "Declined"
+      ],
+      "defaultValueFields": {
+        "defaultValue": "New"
+      }
+    },
+    {
+      "internalName": "NeededBy",
+      "displayName": "Needed by",
+      "type": "DateTime",
+      "format": "DateOnly"
+    },
+    {
+      "internalName": "DeliveredAsset",
+      "displayName": "Delivered asset",
+      "type": "URL",
+      "format": "Hyperlink"
+    }
+  ],
+  "views": [
+    {
+      "name": "All Items",
+      "isDefaultView": true,
+      "viewFields": [
+        "LinkTitle",
+        "Need",
+        "Solution",
+        "Industry",
+        "Priority",
+        "RequestStatus",
+        "NeededBy",
+        "DeliveredAsset",
+        "Author"
+      ]
+    }
+  ],
+  "forms": [
+    {
+      "name": "Request content",
+      "source": "calls_gov:Request content form"
+    }
+  ],
+  "permissions": {
+    "breakInheritance": true,
+    "remove": [
+      "Sellers:Read"
+    ],
+    "grant": [
+      "Sellers:Contribute"
+    ],
+    "itemLevel": {
+      "ReadSecurity": 2,
+      "WriteSecurity": 2
+    }
+  },
+  "seed": "Content Requests"
+}

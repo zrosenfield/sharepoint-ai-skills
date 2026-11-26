@@ -1,0 +1,118 @@
+{
+  "listUrl": "{{SitePath}}/Lists/Content Requests",
+  "listId": "{{ListId:Content Requests}}",
+  "header": {
+    "title": "Request content",
+    "description": "Can't find what you need? Tell the content team and track it here."
+  },
+  "theme": {
+    "background": {
+      "backgroundColor": "radial-gradient(circle at 12% 15%, rgba(0,163,161,0.30) 0%, transparent 45%), radial-gradient(circle at 90% 85%, rgba(255,107,74,0.14) 0%, transparent 42%), linear-gradient(140deg, #0B1F3A 0%, #12325C 60%, #0B1F3A 100%)"
+    },
+    "primaryColor": "#00A3A1"
+  },
+  "newElements": [
+    {
+      "displayName": "What do you need?",
+      "internalName": "Title",
+      "fieldType": 0,
+      "required": false,
+      "description": "A short name, e.g. 'Retail customer story'."
+    },
+    {
+      "displayName": "Tell us more, and which deal it's for",
+      "internalName": "Need",
+      "fieldType": 1,
+      "required": true,
+      "description": ""
+    },
+    {
+      "displayName": "Solution area",
+      "internalName": "Solution",
+      "fieldType": 4,
+      "required": false,
+      "description": "",
+      "choices": [
+        "Data & AI",
+        "Security",
+        "Business Applications",
+        "Modern Work"
+      ]
+    },
+    {
+      "displayName": "Industry",
+      "internalName": "Industry",
+      "fieldType": 4,
+      "required": false,
+      "description": "",
+      "choices": [
+        "Healthcare",
+        "Financial services",
+        "Retail",
+        "Manufacturing",
+        "Public sector",
+        "Cross-industry"
+      ]
+    },
+    {
+      "displayName": "Priority",
+      "internalName": "Priority",
+      "fieldType": 4,
+      "required": true,
+      "description": "High means a deal is waiting on it.",
+      "choices": [
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
+    {
+      "displayName": "Needed by",
+      "internalName": "NeededBy",
+      "fieldType": 6,
+      "required": false,
+      "description": "",
+      "timeFormat": "DateOnly"
+    }
+  ],
+  "selectedFields": [
+    "Title",
+    "Need",
+    "Solution",
+    "Industry",
+    "Priority",
+    "NeededBy"
+  ],
+  "selectedFieldsDescriptions": [
+    "A short name, e.g. 'Retail customer story'.",
+    "",
+    "",
+    "",
+    "High means a deal is waiting on it.",
+    ""
+  ],
+  "existingListFields": [
+    "Title",
+    "Need",
+    "Solution",
+    "Industry",
+    "Priority",
+    "NeededBy"
+  ],
+  "existingListFieldIds": [
+    "{{FieldId:Content Requests/Title}}",
+    "{{FieldId:Content Requests/Need}}",
+    "{{FieldId:Content Requests/Solution}}",
+    "{{FieldId:Content Requests/Industry}}",
+    "{{FieldId:Content Requests/Priority}}",
+    "{{FieldId:Content Requests/NeededBy}}"
+  ],
+  "existingListFieldDisplayNames": [
+    "What do you need?",
+    "Tell us more, and which deal it's for",
+    "Solution area",
+    "Industry",
+    "Priority",
+    "Needed by"
+  ]
+}

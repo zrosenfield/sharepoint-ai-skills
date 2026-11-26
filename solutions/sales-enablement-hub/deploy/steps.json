@@ -1,0 +1,3817 @@
+{
+ "about": "Ordered deploy steps for Northwind Sales Hub. via=iq: a SharePoint IQ tool call; via=rest: SharePoint REST against {{SiteUrl}} (Accept/Content-Type application/json;odata=nometadata); via=manual: a person does it. Resolve every double-brace token before a call (see site/site.json 'tokens'). Steps are idempotent-safe to re-run except uploads with overwrite=false. Tested end to end on a fresh dogfood communication site on 2026-11-25 (see docs/setup-walkthrough.md).",
+ "phases": {
+  "1": "Site",
+  "2": "Lists and libraries",
+  "3": "Column settings",
+  "4": "Agent skills and hub assets",
+  "5": "Approvals and quick steps",
+  "6": "Views",
+  "7": "Forms and deck studio",
+  "8": "Sample content",
+  "9": "Pages and home",
+  "10": "Permissions",
+  "11": "Navigation and branding",
+  "12": "Verify"
+ },
+ "steps": [
+  {
+   "id": "01.01",
+   "phase": 1,
+   "title": "Create a communication site (any URL) and make the deployer an owner",
+   "via": "manual",
+   "notes": "Any route works: SharePoint start page, admin center, New-PnPSite, or SharePoint IQ create_site (get_site_key on the tenant root, then create_site with sitecreationprecheckOnly=true to check the address, then the real call with siteType CommunicationSite and a sensitivity label). The new site's default home page is blank; step 09.11 replaces it. Tested 2026-11-25: IQ create_site made a new communication site in about 30 seconds."
+  },
+  {
+   "id": "01.02",
+   "phase": 1,
+   "title": "Resolve the site tokens",
+   "via": "iq",
+   "tool": "get_site_key",
+   "arguments": {
+    "siteUrl": "{{SiteUrl}}"
+   },
+   "produces": [
+    "{{SiteKey}}"
+   ]
+  },
+  {
+   "id": "02.01",
+   "phase": 2,
+   "title": "Create Content Intake",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Intake",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Submit new sales content here. An agent reviews and fixes it, then one approver signs off before it is published.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Asset title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Asset title\\\" />\"}",
+     "{\"internalName\": \"AssetType\", \"displayName\": \"Asset type\", \"type\": \"Choice\", \"choices\": [\"Pitch deck\", \"Battlecard\", \"One-pager\", \"Customer story\", \"Demo script\", \"Pricing guide\", \"Proposal template\", \"Video\", \"Playbook\"], \"metadataExtractionPrompt\": \"Classify what kind of sales asset this document is.\"}",
+     "{\"internalName\": \"Solution\", \"displayName\": \"Solution area\", \"type\": \"Choice\", \"choices\": [\"Data & AI\", \"Security\", \"Business Applications\", \"Modern Work\"], \"metadataExtractionPrompt\": \"Which Northwind Cloud solution area is this content mainly about?\"}",
+     "{\"internalName\": \"Products\", \"displayName\": \"Products\", \"type\": \"MultiChoice\", \"choices\": [\"Northwind Data Platform\", \"Northwind Secure Access\", \"Northwind AI Studio\", \"Northwind Field Service\", \"Northwind Analytics\"], \"metadataExtractionPrompt\": \"List every Northwind Cloud product this document covers.\"}",
+     "{\"internalName\": \"Audience\", \"displayName\": \"Audience\", \"type\": \"MultiChoice\", \"choices\": [\"Executive\", \"IT decision maker\", \"Line of business\", \"Technical practitioner\", \"Partner\"], \"metadataExtractionPrompt\": \"Who is this content written for? Pick every audience that fits.\"}",
+     "{\"internalName\": \"SalesStage\", \"displayName\": \"Sales stage\", \"type\": \"Choice\", \"choices\": [\"Prospect\", \"Discover\", \"Qualify\", \"Propose\", \"Negotiate\", \"Expand\"], \"metadataExtractionPrompt\": \"At which sales stage would a seller use this content?\"}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"MultiChoice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"], \"metadataExtractionPrompt\": \"Which industries does this content target? Use Cross-industry if it is not industry-specific.\"}",
+     "{\"internalName\": \"AISummary\", \"displayName\": \"Summary\", \"type\": \"Note\", \"metadataExtractionPrompt\": \"Summarize this asset for a seller in two sentences: what it is and when to use it.\"}",
+     "{\"internalName\": \"Shareability\", \"displayName\": \"Requested shareability\", \"type\": \"Choice\", \"choices\": [\"Internal only\", \"Customer-shareable (NDA)\", \"Public\"], \"required\": false, \"defaultValueFields\": {\"defaultValue\": \"Internal only\"}}",
+     "{\"internalName\": \"SuggestedShareability\", \"displayName\": \"Suggested shareability\", \"type\": \"Choice\", \"choices\": [\"Internal only\", \"Customer-shareable (NDA)\", \"Public\"], \"metadataExtractionPrompt\": \"Based on the content, how widely could this be shared? Internal only if it has internal pricing, roadmap or confidential markings; Public if it is marketing material; otherwise Customer-shareable (NDA).\"}",
+     "{\"internalName\": \"ValidationResult\", \"displayName\": \"Validation result\", \"type\": \"Choice\", \"choices\": [\"Pass\", \"Fixable\", \"Blocked\"], \"metadataExtractionPrompt\": \"Review this document against these rules. Northwind Cloud publishing standards: (1) current product names only: Northwind Data Platform, Northwind Secure Access, Northwind AI Studio, Northwind Field Service, Northwind Analytics; the retired names Northwind DataHub, SecureGate and Northwind Insights must be replaced. (2) every statistic, percentage or ROI claim needs a source on the same slide or page. (3) internal pricing, discount levels, roadmap dates or text marked Internal only or Confidential must never appear in customer-facing content. (4) a named customer needs the note 'Reference approved'. (5) competitor mentions must be factual and never disparaging. (6) customer-facing decks and documents must include the line 'Northwind Cloud confidential. Subject to change.' (7) no personal data such as personal phone numbers or personal email addresses. (8) every slide or section has a title. Return Blocked if internal-only content appears in customer-facing material, a named customer lacks 'Reference approved', or personal data is present. Return Fixable if there are only other issues. Return Pass if there are no issues.\"}",
+     "{\"internalName\": \"ValidationFindings\", \"displayName\": \"Validation findings\", \"type\": \"Note\", \"metadataExtractionPrompt\": \"Review this document against these rules. Northwind Cloud publishing standards: (1) current product names only: Northwind Data Platform, Northwind Secure Access, Northwind AI Studio, Northwind Field Service, Northwind Analytics; the retired names Northwind DataHub, SecureGate and Northwind Insights must be replaced. (2) every statistic, percentage or ROI claim needs a source on the same slide or page. (3) internal pricing, discount levels, roadmap dates or text marked Internal only or Confidential must never appear in customer-facing content. (4) a named customer needs the note 'Reference approved'. (5) competitor mentions must be factual and never disparaging. (6) customer-facing decks and documents must include the line 'Northwind Cloud confidential. Subject to change.' (7) no personal data such as personal phone numbers or personal email addresses. (8) every slide or section has a title. List each issue on its own line starting with [Fixable] or [Blocker], naming the slide or section. If there are no issues, write 'No issues found.'\"}",
+     "{\"internalName\": \"ReviewStatus\", \"displayName\": \"Review status\", \"type\": \"Choice\", \"choices\": [\"Submitted\", \"Agent review\", \"Needs fixes\", \"Awaiting approval\", \"Approved\", \"Rejected\", \"Published\"], \"defaultValueFields\": {\"defaultValue\": \"Submitted\"}}",
+     "{\"internalName\": \"AgentFixes\", \"displayName\": \"Agent fixes\", \"type\": \"Note\"}",
+     "{\"internalName\": \"ContentOwner\", \"displayName\": \"Content owner\", \"type\": \"User\"}",
+     "{\"internalName\": \"ProposedExpiry\", \"displayName\": \"Proposed expiry\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}",
+     "{\"internalName\": \"SubmissionNotes\", \"displayName\": \"Submission notes\", \"type\": \"Note\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Content Intake}}"
+   ],
+   "notes": "Autofill prompts ride on metadataExtractionPrompt; they need SharePoint autofill (Copilot/Syntex) in the tenant."
+  },
+  {
+   "id": "02.02",
+   "phase": 2,
+   "title": "Create Content Library",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Library",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Approved, published Northwind Cloud sales content. Read-only for sellers.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Asset title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Asset title\\\" />\"}",
+     "{\"internalName\": \"AssetType\", \"displayName\": \"Asset type\", \"type\": \"Choice\", \"choices\": [\"Pitch deck\", \"Battlecard\", \"One-pager\", \"Customer story\", \"Demo script\", \"Pricing guide\", \"Proposal template\", \"Video\", \"Playbook\"]}",
+     "{\"internalName\": \"Solution\", \"displayName\": \"Solution area\", \"type\": \"Choice\", \"choices\": [\"Data & AI\", \"Security\", \"Business Applications\", \"Modern Work\"]}",
+     "{\"internalName\": \"Products\", \"displayName\": \"Products\", \"type\": \"MultiChoice\", \"choices\": [\"Northwind Data Platform\", \"Northwind Secure Access\", \"Northwind AI Studio\", \"Northwind Field Service\", \"Northwind Analytics\"]}",
+     "{\"internalName\": \"Audience\", \"displayName\": \"Audience\", \"type\": \"MultiChoice\", \"choices\": [\"Executive\", \"IT decision maker\", \"Line of business\", \"Technical practitioner\", \"Partner\"]}",
+     "{\"internalName\": \"SalesStage\", \"displayName\": \"Sales stage\", \"type\": \"Choice\", \"choices\": [\"Prospect\", \"Discover\", \"Qualify\", \"Propose\", \"Negotiate\", \"Expand\"]}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"MultiChoice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"]}",
+     "{\"internalName\": \"AISummary\", \"displayName\": \"Summary\", \"type\": \"Note\"}",
+     "{\"internalName\": \"Shareability\", \"displayName\": \"Shareability\", \"type\": \"Choice\", \"choices\": [\"Internal only\", \"Customer-shareable (NDA)\", \"Public\"], \"defaultValueFields\": {\"defaultValue\": \"Internal only\"}}",
+     "{\"internalName\": \"ContentOwner\", \"displayName\": \"Content owner\", \"type\": \"User\"}",
+     "{\"internalName\": \"PublishedOn\", \"displayName\": \"Published on\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}",
+     "{\"internalName\": \"ExpiresOn\", \"displayName\": \"Expires on\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}",
+     "{\"internalName\": \"VersionNotes\", \"displayName\": \"Version notes\", \"type\": \"Note\"}",
+     "{\"internalName\": \"Featured\", \"displayName\": \"Featured\", \"type\": \"Boolean\", \"defaultValueFields\": {\"defaultValue\": \"0\"}}",
+     "{\"internalName\": \"Popularity\", \"displayName\": \"Popularity\", \"type\": \"Number\", \"min\": 0}",
+     "{\"internalName\": \"ReplacedBy\", \"displayName\": \"Replaced by\", \"type\": \"URL\", \"format\": \"Hyperlink\"}",
+     "{\"internalName\": \"Views\", \"displayName\": \"Views\", \"type\": \"Number\", \"min\": 0}",
+     "{\"internalName\": \"Viewers\", \"displayName\": \"Viewers\", \"type\": \"Number\", \"min\": 0}",
+     "{\"internalName\": \"Views7\", \"displayName\": \"Views (7 days)\", \"type\": \"Number\", \"min\": 0}",
+     "{\"internalName\": \"ViewsAsOf\", \"displayName\": \"Views as of\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Content Library}}"
+   ]
+  },
+  {
+   "id": "02.03",
+   "phase": 2,
+   "title": "Create Slide Library",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Slide Library",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Approved single slides: the building blocks for Slide Builder and Deck Studio.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Slide title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Slide title\\\" />\"}",
+     "{\"internalName\": \"SlideRole\", \"displayName\": \"Slide role\", \"type\": \"Choice\", \"choices\": [\"Title\", \"Agenda\", \"Problem\", \"Solution\", \"Proof\", \"Customer story\", \"Pricing\", \"Next steps\", \"Close\"], \"metadataExtractionPrompt\": \"What job does this slide do in a sales deck?\"}",
+     "{\"internalName\": \"Products\", \"displayName\": \"Products\", \"type\": \"MultiChoice\", \"choices\": [\"Northwind Data Platform\", \"Northwind Secure Access\", \"Northwind AI Studio\", \"Northwind Field Service\", \"Northwind Analytics\"], \"metadataExtractionPrompt\": \"Which Northwind Cloud products does this slide cover?\"}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"MultiChoice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"], \"metadataExtractionPrompt\": \"Which industries is this slide for? Use Cross-industry if it is not industry-specific.\"}",
+     "{\"internalName\": \"SlideSummary\", \"displayName\": \"Slide summary\", \"type\": \"Note\", \"metadataExtractionPrompt\": \"Describe in one sentence what this slide says.\"}",
+     "{\"internalName\": \"Shareability\", \"displayName\": \"Shareability\", \"type\": \"Choice\", \"choices\": [\"Internal only\", \"Customer-shareable (NDA)\", \"Public\"], \"defaultValueFields\": {\"defaultValue\": \"Customer-shareable (NDA)\"}}",
+     "{\"internalName\": \"SourceDeck\", \"displayName\": \"Source deck\", \"type\": \"Text\"}",
+     "{\"internalName\": \"UseVerbatim\", \"displayName\": \"Use verbatim\", \"type\": \"Boolean\", \"defaultValueFields\": {\"defaultValue\": \"0\"}}",
+     "{\"internalName\": \"SlideOrder\", \"displayName\": \"Default order\", \"type\": \"Number\", \"min\": 0}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Slide Library}}"
+   ],
+   "notes": "Autofill prompts ride on metadataExtractionPrompt; they need SharePoint autofill (Copilot/Syntex) in the tenant."
+  },
+  {
+   "id": "02.04",
+   "phase": 2,
+   "title": "Create Deck Templates",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Deck Templates",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Branded deck and document templates, each with a recipe of slide roles.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Template name\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Template name\\\" />\"}",
+     "{\"internalName\": \"TemplateKind\", \"displayName\": \"Template\", \"type\": \"Choice\", \"choices\": [\"First meeting pitch\", \"Executive briefing\", \"Technical deep dive\", \"Quarterly business review\", \"Industry one-pager\"]}",
+     "{\"internalName\": \"OutputFormat\", \"displayName\": \"Output format\", \"type\": \"Choice\", \"choices\": [\"PowerPoint\", \"Word\"]}",
+     "{\"internalName\": \"Recipe\", \"displayName\": \"Recipe (slide roles in order)\", \"type\": \"Note\"}",
+     "{\"internalName\": \"Audience\", \"displayName\": \"Audience\", \"type\": \"MultiChoice\", \"choices\": [\"Executive\", \"IT decision maker\", \"Line of business\", \"Technical practitioner\", \"Partner\"]}",
+     "{\"internalName\": \"SlideCount\", \"displayName\": \"Slides\", \"type\": \"Number\", \"min\": 0}",
+     "{\"internalName\": \"BestFor\", \"displayName\": \"Best for\", \"type\": \"Note\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Deck Templates}}"
+   ]
+  },
+  {
+   "id": "02.05",
+   "phase": 2,
+   "title": "Create Decks",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Generated Content",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Customer decks built with Copilot from approved slides. Press Build a deck to make one.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Deck title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Deck title\\\" />\"}",
+     "{\"internalName\": \"Customer\", \"displayName\": \"Customer\", \"type\": \"Text\"}",
+     "{\"internalName\": \"Template\", \"displayName\": \"Template\", \"type\": \"Choice\", \"choices\": [\"First meeting pitch\", \"Executive briefing\", \"Technical deep dive\", \"Quarterly business review\", \"Industry one-pager\"]}",
+     "{\"internalName\": \"DraftStatus\", \"displayName\": \"Status\", \"type\": \"Choice\", \"choices\": [\"Draft\", \"Reviewed\", \"Shared\"], \"defaultValueFields\": {\"defaultValue\": \"Draft\"}}",
+     "{\"internalName\": \"SourceSlides\", \"displayName\": \"Source slides\", \"type\": \"Note\"}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"Choice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"]}",
+     "{\"internalName\": \"MeetingGoal\", \"displayName\": \"Meeting goal\", \"type\": \"Note\"}",
+     "{\"internalName\": \"TalkingPoints\", \"displayName\": \"Talking points\", \"type\": \"Note\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Decks}}"
+   ]
+  },
+  {
+   "id": "02.06",
+   "phase": 2,
+   "title": "Rename Generated Content to Decks",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Generated Content",
+    "newListName": "Decks",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "notes": "Keeps the URL (Generated Content) and changes only the title."
+  },
+  {
+   "id": "02.07",
+   "phase": 2,
+   "title": "Create Solution Plays",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Solution Plays",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "GenericList",
+    "listDescription": "Guided selling plays: who to target, what to say, which assets to use.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Play\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Play\\\" />\"}",
+     "{\"internalName\": \"Solution\", \"displayName\": \"Solution area\", \"type\": \"Choice\", \"choices\": [\"Data & AI\", \"Security\", \"Business Applications\", \"Modern Work\"]}",
+     "{\"internalName\": \"Products\", \"displayName\": \"Products\", \"type\": \"MultiChoice\", \"choices\": [\"Northwind Data Platform\", \"Northwind Secure Access\", \"Northwind AI Studio\", \"Northwind Field Service\", \"Northwind Analytics\"]}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"MultiChoice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"]}",
+     "{\"internalName\": \"Audience\", \"displayName\": \"Audience\", \"type\": \"MultiChoice\", \"choices\": [\"Executive\", \"IT decision maker\", \"Line of business\", \"Technical practitioner\", \"Partner\"]}",
+     "{\"internalName\": \"Pitch\", \"displayName\": \"Pitch in one line\", \"type\": \"Note\"}",
+     "{\"internalName\": \"WhyNow\", \"displayName\": \"Why now\", \"type\": \"Note\"}",
+     "{\"internalName\": \"DiscoveryQuestions\", \"displayName\": \"Discovery questions\", \"type\": \"Note\"}",
+     "{\"internalName\": \"Objections\", \"displayName\": \"Objections and answers\", \"type\": \"Note\"}",
+     "{\"internalName\": \"KeyAssets\", \"displayName\": \"Key assets (Content Library IDs)\", \"type\": \"Text\"}",
+     "{\"internalName\": \"HeroImage\", \"displayName\": \"Hero image\", \"type\": \"URL\", \"format\": \"Image\"}",
+     "{\"internalName\": \"Featured\", \"displayName\": \"Featured\", \"type\": \"Boolean\", \"defaultValueFields\": {\"defaultValue\": \"0\"}}",
+     "{\"internalName\": \"PlayOrder\", \"displayName\": \"Order\", \"type\": \"Number\", \"min\": 0}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Solution Plays}}"
+   ]
+  },
+  {
+   "id": "02.08",
+   "phase": 2,
+   "title": "Create Content Requests",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Requests",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "GenericList",
+    "listDescription": "Sellers ask for content that does not exist yet; marketing triages it.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Request\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Request\\\" />\"}",
+     "{\"internalName\": \"Need\", \"displayName\": \"What do you need, and for which deal?\", \"type\": \"Note\", \"required\": true}",
+     "{\"internalName\": \"Solution\", \"displayName\": \"Solution area\", \"type\": \"Choice\", \"choices\": [\"Data & AI\", \"Security\", \"Business Applications\", \"Modern Work\"]}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"Choice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"]}",
+     "{\"internalName\": \"Priority\", \"displayName\": \"Priority\", \"type\": \"Choice\", \"choices\": [\"High\", \"Medium\", \"Low\"], \"defaultValueFields\": {\"defaultValue\": \"Medium\"}}",
+     "{\"internalName\": \"RequestStatus\", \"displayName\": \"Status\", \"type\": \"Choice\", \"choices\": [\"New\", \"Planned\", \"In progress\", \"Delivered\", \"Declined\"], \"defaultValueFields\": {\"defaultValue\": \"New\"}}",
+     "{\"internalName\": \"NeededBy\", \"displayName\": \"Needed by\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}",
+     "{\"internalName\": \"DeliveredAsset\", \"displayName\": \"Delivered asset\", \"type\": \"URL\", \"format\": \"Hyperlink\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Content Requests}}"
+   ]
+  },
+  {
+   "id": "02.09",
+   "phase": 2,
+   "title": "Create Customer Shares",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Customer Shares",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "GenericList",
+    "listDescription": "Every piece of content shared with a customer: who, what, when, and whether the source is still current.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Share\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Share\\\" />\"}",
+     "{\"internalName\": \"Customer\", \"displayName\": \"Customer\", \"type\": \"Text\", \"required\": true}",
+     "{\"internalName\": \"Recipient\", \"displayName\": \"Recipient email\", \"type\": \"Text\"}",
+     "{\"internalName\": \"SharedAsset\", \"displayName\": \"Shared copy\", \"type\": \"URL\", \"format\": \"Hyperlink\"}",
+     "{\"internalName\": \"SourceAsset\", \"displayName\": \"Source asset\", \"type\": \"URL\", \"format\": \"Hyperlink\"}",
+     "{\"internalName\": \"Shareability\", \"displayName\": \"Shareability\", \"type\": \"Choice\", \"choices\": [\"Internal only\", \"Customer-shareable (NDA)\", \"Public\"]}",
+     "{\"internalName\": \"SharedOn\", \"displayName\": \"Shared on\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}",
+     "{\"internalName\": \"ShareStatus\", \"displayName\": \"Status\", \"type\": \"Choice\", \"choices\": [\"Active\", \"Source updated\", \"Source expired\", \"Revoked\"], \"defaultValueFields\": {\"defaultValue\": \"Active\"}}",
+     "{\"internalName\": \"Opportunity\", \"displayName\": \"Opportunity\", \"type\": \"Text\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Customer Shares}}"
+   ]
+  },
+  {
+   "id": "02.10",
+   "phase": 2,
+   "title": "Create Archive",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Archive",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Expired, replaced or withdrawn content. Kept for reference; not for customer use.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Asset title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Asset title\\\" />\"}",
+     "{\"internalName\": \"AssetType\", \"displayName\": \"Asset type\", \"type\": \"Choice\", \"choices\": [\"Pitch deck\", \"Battlecard\", \"One-pager\", \"Customer story\", \"Demo script\", \"Pricing guide\", \"Proposal template\", \"Video\", \"Playbook\"]}",
+     "{\"internalName\": \"Solution\", \"displayName\": \"Solution area\", \"type\": \"Choice\", \"choices\": [\"Data & AI\", \"Security\", \"Business Applications\", \"Modern Work\"]}",
+     "{\"internalName\": \"Products\", \"displayName\": \"Products\", \"type\": \"MultiChoice\", \"choices\": [\"Northwind Data Platform\", \"Northwind Secure Access\", \"Northwind AI Studio\", \"Northwind Field Service\", \"Northwind Analytics\"]}",
+     "{\"internalName\": \"Audience\", \"displayName\": \"Audience\", \"type\": \"MultiChoice\", \"choices\": [\"Executive\", \"IT decision maker\", \"Line of business\", \"Technical practitioner\", \"Partner\"]}",
+     "{\"internalName\": \"SalesStage\", \"displayName\": \"Sales stage\", \"type\": \"Choice\", \"choices\": [\"Prospect\", \"Discover\", \"Qualify\", \"Propose\", \"Negotiate\", \"Expand\"]}",
+     "{\"internalName\": \"Industry\", \"displayName\": \"Industry\", \"type\": \"MultiChoice\", \"choices\": [\"Healthcare\", \"Financial services\", \"Retail\", \"Manufacturing\", \"Public sector\", \"Cross-industry\"]}",
+     "{\"internalName\": \"AISummary\", \"displayName\": \"Summary\", \"type\": \"Note\"}",
+     "{\"internalName\": \"Shareability\", \"displayName\": \"Shareability\", \"type\": \"Choice\", \"choices\": [\"Internal only\", \"Customer-shareable (NDA)\", \"Public\"]}",
+     "{\"internalName\": \"ContentOwner\", \"displayName\": \"Content owner\", \"type\": \"User\"}",
+     "{\"internalName\": \"ArchivedOn\", \"displayName\": \"Archived on\", \"type\": \"DateTime\", \"format\": \"DateOnly\"}",
+     "{\"internalName\": \"ArchiveReason\", \"displayName\": \"Reason\", \"type\": \"Choice\", \"choices\": [\"Expired\", \"Replaced\", \"Withdrawn\"]}",
+     "{\"internalName\": \"ReplacedBy\", \"displayName\": \"Replaced by\", \"type\": \"URL\", \"format\": \"Hyperlink\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Archive}}"
+   ]
+  },
+  {
+   "id": "02.11",
+   "phase": 2,
+   "title": "Create Agent Assets",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "AgentAssets",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Site skills and standards the hub's agents follow.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Asset title\\\" />\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:Agent Assets}}"
+   ]
+  },
+  {
+   "id": "02.12",
+   "phase": 2,
+   "title": "Rename AgentAssets to Agent Assets",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "AgentAssets",
+    "newListName": "Agent Assets",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "notes": "Keeps the URL (AgentAssets) and changes only the title."
+  },
+  {
+   "id": "02.13",
+   "phase": 2,
+   "title": "Create HubAssets",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "HubAssets",
+    "isNewList": true,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "listDescription": "Images used by the hub's pages: slide thumbnails and artwork.",
+    "columns": [
+     "{\"internalName\": \"Title\", \"displayName\": \"Title\", \"type\": \"Text\", \"editSchemaXml\": \"<Field InternalName=\\\"Title\\\" Type=\\\"Text\\\" DisplayName=\\\"Asset title\\\" />\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ListId:HubAssets}}"
+   ]
+  },
+  {
+   "id": "02.14",
+   "phase": 2,
+   "title": "Read every list id into {{ListId:*}}",
+   "via": "rest",
+   "rest": {
+    "method": "GET",
+    "uri": "_api/web/lists?$filter=Hidden eq false&$select=Id,Title"
+   },
+   "produces": [
+    "{{ListId:*}}"
+   ]
+  },
+  {
+   "id": "03.01",
+   "phase": 3,
+   "title": "Content Intake: allow unlimited length on AISummary",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Intake}}')/fields/getbyinternalnameortitle('AISummary')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.02",
+   "phase": 3,
+   "title": "Content Intake: allow unlimited length on ValidationFindings",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Intake}}')/fields/getbyinternalnameortitle('ValidationFindings')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.03",
+   "phase": 3,
+   "title": "Content Intake: allow unlimited length on AgentFixes",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Intake}}')/fields/getbyinternalnameortitle('AgentFixes')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.04",
+   "phase": 3,
+   "title": "Content Intake: allow unlimited length on SubmissionNotes",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Intake}}')/fields/getbyinternalnameortitle('SubmissionNotes')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.05",
+   "phase": 3,
+   "title": "Content Library: allow unlimited length on AISummary",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Library}}')/fields/getbyinternalnameortitle('AISummary')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.06",
+   "phase": 3,
+   "title": "Content Library: allow unlimited length on VersionNotes",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Library}}')/fields/getbyinternalnameortitle('VersionNotes')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.07",
+   "phase": 3,
+   "title": "Slide Library: allow unlimited length on SlideSummary",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Slide Library}}')/fields/getbyinternalnameortitle('SlideSummary')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.08",
+   "phase": 3,
+   "title": "Deck Templates: allow unlimited length on Recipe",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Deck Templates}}')/fields/getbyinternalnameortitle('Recipe')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.09",
+   "phase": 3,
+   "title": "Deck Templates: allow unlimited length on BestFor",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Deck Templates}}')/fields/getbyinternalnameortitle('BestFor')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.10",
+   "phase": 3,
+   "title": "Decks: allow unlimited length on SourceSlides",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/fields/getbyinternalnameortitle('SourceSlides')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.11",
+   "phase": 3,
+   "title": "Decks: allow unlimited length on MeetingGoal",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/fields/getbyinternalnameortitle('MeetingGoal')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.12",
+   "phase": 3,
+   "title": "Decks: allow unlimited length on TalkingPoints",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/fields/getbyinternalnameortitle('TalkingPoints')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "03.13",
+   "phase": 3,
+   "title": "Archive: allow unlimited length on AISummary",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Archive}}')/fields/getbyinternalnameortitle('AISummary')",
+    "body": {
+     "UnlimitedLengthInDocumentLibrary": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Without this, Copilot's writes over 255 characters fail ('This field can have no more than 255 characters')."
+  },
+  {
+   "id": "04.01",
+   "phase": 4,
+   "title": "Agent Assets folders",
+   "via": "iq",
+   "tool": "create_folder",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Agent Assets}}",
+    "listFullUrl": "{{SiteUrl}}/AgentAssets",
+    "folders": [
+     {
+      "name": "Skills",
+      "folderColor": "DARK_TEAL"
+     },
+     {
+      "name": "Standards",
+      "folderColor": "DARK_BLUE"
+     },
+     {
+      "name": "review-submission",
+      "relativeFolderPath": "Skills",
+      "folderColor": "DARK_TEAL"
+     },
+     {
+      "name": "publish-approved",
+      "relativeFolderPath": "Skills",
+      "folderColor": "DARK_TEAL"
+     },
+     {
+      "name": "build-customer-deck",
+      "relativeFolderPath": "Skills",
+      "folderColor": "DARK_TEAL"
+     },
+     {
+      "name": "prepare-customer-sharing",
+      "relativeFolderPath": "Skills",
+      "folderColor": "DARK_TEAL"
+     },
+     {
+      "name": "freshness-check",
+      "relativeFolderPath": "Skills",
+      "folderColor": "DARK_TEAL"
+     }
+    ]
+   }
+  },
+  {
+   "id": "04.02",
+   "phase": 4,
+   "title": "Upload Skills/build-customer-deck/SKILL.md",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/AgentAssets/Skills/build-customer-deck",
+    "fileName": "SKILL.md",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/agent-assets/Skills/build-customer-deck/SKILL.md"
+  },
+  {
+   "id": "04.03",
+   "phase": 4,
+   "title": "Upload Skills/freshness-check/SKILL.md",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/AgentAssets/Skills/freshness-check",
+    "fileName": "SKILL.md",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/agent-assets/Skills/freshness-check/SKILL.md"
+  },
+  {
+   "id": "04.04",
+   "phase": 4,
+   "title": "Upload Skills/prepare-customer-sharing/SKILL.md",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/AgentAssets/Skills/prepare-customer-sharing",
+    "fileName": "SKILL.md",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/agent-assets/Skills/prepare-customer-sharing/SKILL.md"
+  },
+  {
+   "id": "04.05",
+   "phase": 4,
+   "title": "Upload Skills/publish-approved/SKILL.md",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/AgentAssets/Skills/publish-approved",
+    "fileName": "SKILL.md",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/agent-assets/Skills/publish-approved/SKILL.md"
+  },
+  {
+   "id": "04.06",
+   "phase": 4,
+   "title": "Upload Skills/review-submission/SKILL.md",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/AgentAssets/Skills/review-submission",
+    "fileName": "SKILL.md",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/agent-assets/Skills/review-submission/SKILL.md"
+  },
+  {
+   "id": "04.07",
+   "phase": 4,
+   "title": "Upload Standards/publishing-standards.md",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/AgentAssets/Standards",
+    "fileName": "publishing-standards.md",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/agent-assets/Standards/publishing-standards.md"
+  },
+  {
+   "id": "04.08",
+   "phase": 4,
+   "title": "Upload hub asset NW-Agenda-Executive.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Agenda-Executive.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Agenda-Executive.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.09",
+   "phase": 4,
+   "title": "Upload hub asset NW-Agenda-Standard.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Agenda-Standard.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Agenda-Standard.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.10",
+   "phase": 4,
+   "title": "Upload hub asset NW-Close-ThankYou.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Close-ThankYou.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Close-ThankYou.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.11",
+   "phase": 4,
+   "title": "Upload hub asset NW-NextSteps-90Day.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-NextSteps-90Day.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-NextSteps-90Day.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.12",
+   "phase": 4,
+   "title": "Upload hub asset NW-NextSteps-Workshop.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-NextSteps-Workshop.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-NextSteps-Workshop.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.13",
+   "phase": 4,
+   "title": "Upload hub asset NW-Pricing-InternalDiscounts.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Pricing-InternalDiscounts.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Pricing-InternalDiscounts.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.14",
+   "phase": 4,
+   "title": "Upload hub asset NW-Pricing-Packages.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Pricing-Packages.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Pricing-Packages.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.15",
+   "phase": 4,
+   "title": "Upload hub asset NW-Problem-DataSilos.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Problem-DataSilos.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Problem-DataSilos.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.16",
+   "phase": 4,
+   "title": "Upload hub asset NW-Problem-FieldService.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Problem-FieldService.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Problem-FieldService.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.17",
+   "phase": 4,
+   "title": "Upload hub asset NW-Problem-FinServ.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Problem-FinServ.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Problem-FinServ.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.18",
+   "phase": 4,
+   "title": "Upload hub asset NW-Problem-Healthcare.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Problem-Healthcare.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Problem-Healthcare.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.19",
+   "phase": 4,
+   "title": "Upload hub asset NW-Proof-AI.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Proof-AI.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Proof-AI.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.20",
+   "phase": 4,
+   "title": "Upload hub asset NW-Proof-Platform.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Proof-Platform.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Proof-Platform.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.21",
+   "phase": 4,
+   "title": "Upload hub asset NW-Proof-Security.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Proof-Security.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Proof-Security.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.22",
+   "phase": 4,
+   "title": "Upload hub asset NW-Solution-AIStudio.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Solution-AIStudio.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Solution-AIStudio.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.23",
+   "phase": 4,
+   "title": "Upload hub asset NW-Solution-Analytics.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Solution-Analytics.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Solution-Analytics.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.24",
+   "phase": 4,
+   "title": "Upload hub asset NW-Solution-DataPlatform.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Solution-DataPlatform.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Solution-DataPlatform.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.25",
+   "phase": 4,
+   "title": "Upload hub asset NW-Solution-FieldService.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Solution-FieldService.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Solution-FieldService.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.26",
+   "phase": 4,
+   "title": "Upload hub asset NW-Solution-SecureAccess.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Solution-SecureAccess.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Solution-SecureAccess.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.27",
+   "phase": 4,
+   "title": "Upload hub asset NW-Story-Contoso.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Story-Contoso.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Story-Contoso.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.28",
+   "phase": 4,
+   "title": "Upload hub asset NW-Story-Tailspin.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Story-Tailspin.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Story-Tailspin.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.29",
+   "phase": 4,
+   "title": "Upload hub asset NW-Story-Wingtip.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Story-Wingtip.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Story-Wingtip.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.30",
+   "phase": 4,
+   "title": "Upload hub asset NW-Story-Woodgrove.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Story-Woodgrove.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Story-Woodgrove.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.31",
+   "phase": 4,
+   "title": "Upload hub asset NW-Title-Corporate.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Title-Corporate.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Title-Corporate.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.32",
+   "phase": 4,
+   "title": "Upload hub asset NW-Title-FinServ.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Title-FinServ.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Title-FinServ.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.33",
+   "phase": 4,
+   "title": "Upload hub asset NW-Title-Healthcare.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Title-Healthcare.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Title-Healthcare.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.34",
+   "phase": 4,
+   "title": "Upload hub asset NW-Title-Manufacturing.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Title-Manufacturing.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Title-Manufacturing.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.35",
+   "phase": 4,
+   "title": "Upload hub asset NW-Title-Retail.jpg",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "NW-Title-Retail.jpg",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/hub-assets/NW-Title-Retail.jpg",
+   "encode": "base64"
+  },
+  {
+   "id": "04.36",
+   "phase": 4,
+   "title": "Upload hub asset nw-header.png",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "nw-header.png",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/branding/nw-header.png",
+   "encode": "base64"
+  },
+  {
+   "id": "04.37",
+   "phase": 4,
+   "title": "Upload hub asset nw-mark.png",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/HubAssets",
+    "fileName": "nw-mark.png",
+    "contentType": "base64",
+    "overwrite": true
+   },
+   "contentFrom": "site/branding/nw-mark.png",
+   "encode": "base64"
+  },
+  {
+   "id": "05.01",
+   "phase": 5,
+   "title": "Turn on approvals for Content Intake",
+   "via": "iq",
+   "tool": "configure_approvals_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Content Intake}}",
+    "enabled": true,
+    "addFieldsToDefaultView": true,
+    "enableDefaultApprovers": true,
+    "defaultApprovers": [
+     [
+      "{{ApproverEmail}}"
+     ]
+    ],
+    "requireAll": false,
+    "canOverwrite": true
+   }
+  },
+  {
+   "id": "05.02",
+   "phase": 5,
+   "title": "Quick step 'Run agent review' on Content Intake",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Content Intake}}",
+    "listUrl": "{{SitePath}}/Content Intake",
+    "title": "Run agent review",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "[$_ApprovalStatus] != 3",
+    "action": {
+     "actionType": "AskKnowledgeAgent",
+     "customPrompt": "Load the review-submission site skill and follow it for this file: check it against the Northwind publishing standards, fix what is safe as a new version, record Validation result, Validation findings, Agent fixes and Review status, and submit it for approval only if it passes."
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Content Intake/Run agent review}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.03",
+   "phase": 5,
+   "title": "Quick step 'Submit for approval' on Content Intake",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Content Intake}}",
+    "listUrl": "{{SitePath}}/Content Intake",
+    "title": "Submit for approval",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "[$ValidationResult] == 'Pass' && [$_ApprovalStatus] != 1 && [$_ApprovalStatus] != 3",
+    "action": {
+     "actionType": "CreateApprovalRequest",
+     "recipients": {
+      "recipientNames": [
+       "{{ApproverName}}"
+      ],
+      "recipientEmails": [
+       "{{ApproverEmail}}"
+      ]
+     },
+     "approvalShowDialog": true,
+     "approvalRequireAllResponses": false
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Content Intake/Submit for approval}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.04",
+   "phase": 5,
+   "title": "Quick step 'Publish to library' on Content Intake",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Content Intake}}",
+    "listUrl": "{{SitePath}}/Content Intake",
+    "title": "Publish to library",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "[$_ApprovalStatus] == 3",
+    "action": {
+     "actionType": "MoveFileOrFolder",
+     "targetFolderUrl": "{{SiteUrl}}/Content Library",
+     "targetLibraryUrl": "{{SiteUrl}}/Content Library",
+     "targetLibraryTitle": "Content Library"
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Content Intake/Publish to library}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.05",
+   "phase": 5,
+   "title": "Quick step 'Share with a customer' on Content Library",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Content Library}}",
+    "listUrl": "{{SitePath}}/Content Library",
+    "title": "Share with a customer",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "[$Shareability] != 'Internal only'",
+    "action": {
+     "actionType": "AskKnowledgeAgent",
+     "customPrompt": "Load the prepare-customer-sharing site skill and follow it for this file. Ask me for the customer name and recipient email first, check shareability, share a view-only specific-people link, and log the share in Customer Shares."
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Content Library/Share with a customer}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.06",
+   "phase": 5,
+   "title": "Quick step 'Check freshness' on Content Library",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Content Library}}",
+    "listUrl": "{{SitePath}}/Content Library",
+    "title": "Check freshness",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "true",
+    "action": {
+     "actionType": "AskKnowledgeAgentForList",
+     "customPrompt": "Load the freshness-check site skill and follow it for this library: list expired and expiring assets, the customer shares and decks that depend on them, and propose archive moves."
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Content Library/Check freshness}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.07",
+   "phase": 5,
+   "title": "Quick step 'Build with this template' on Deck Templates",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Deck Templates}}",
+    "listUrl": "{{SitePath}}/Deck Templates",
+    "title": "Build with this template",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "true",
+    "action": {
+     "actionType": "AskKnowledgeAgent",
+     "customPrompt": "Load the build-customer-deck site skill and follow it with this template as my meeting type: show me its interactive cards, then build my deck from approved slides and save it to the Decks library with my talking points."
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Deck Templates/Build with this template}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.08",
+   "phase": 5,
+   "title": "Quick step 'Build a deck' on Decks",
+   "via": "iq",
+   "tool": "create_or_update_quick_step",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listId": "{{ListId:Decks}}",
+    "listUrl": "{{SitePath}}/Generated Content",
+    "title": "Build a deck",
+    "isActive": true,
+    "isDocLib": true,
+    "condition": "true",
+    "action": {
+     "actionType": "AskKnowledgeAgentForList",
+     "customPrompt": "Load the build-customer-deck site skill and follow it: show me its interactive cards, then build my deck from approved slides and save it to this library with my talking points."
+    }
+   },
+   "produces": [
+    "{{QuickStepId:Decks/Build a deck}}"
+   ],
+   "notes": "The create result returns quickStepId; use it for the token. get_quicksteps (match Title) also works."
+  },
+  {
+   "id": "05.09",
+   "phase": 5,
+   "title": "Content Intake: Actions button column",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Intake",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [
+     "{\"internalName\": \"Actions\", \"displayName\": \"Actions\", \"type\": \"QuickSteps\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "05.10",
+   "phase": 5,
+   "title": "Content Intake: buttons in the Actions column",
+   "via": "iq",
+   "tool": "configure_quick_step_columns",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Content Intake",
+    "quickStepsColumns": "{\"Actions\": [{\"RuleTemplateId\": \"{{QuickStepId:Content Intake/Run agent review}}\", \"BackgroundColor\": \"sp-css-backgroundColor-BgTeal\", \"FontColor\": \"sp-css-color-WhiteFont\"}, {\"RuleTemplateId\": \"{{QuickStepId:Content Intake/Submit for approval}}\", \"BackgroundColor\": \"sp-css-backgroundColor-BgDarkBlue\", \"FontColor\": \"sp-css-color-WhiteFont\"}, {\"RuleTemplateId\": \"{{QuickStepId:Content Intake/Publish to library}}\", \"BackgroundColor\": \"sp-css-backgroundColor-BgDarkGreen\", \"FontColor\": \"sp-css-color-WhiteFont\"}]}"
+   }
+  },
+  {
+   "id": "05.11",
+   "phase": 5,
+   "title": "Content Library: Actions button column",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Library",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [
+     "{\"internalName\": \"Actions\", \"displayName\": \"Actions\", \"type\": \"QuickSteps\"}"
+    ],
+    "views": [],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "05.12",
+   "phase": 5,
+   "title": "Content Library: buttons in the Actions column",
+   "via": "iq",
+   "tool": "configure_quick_step_columns",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Content Library",
+    "quickStepsColumns": "{\"Actions\": [{\"RuleTemplateId\": \"{{QuickStepId:Content Library/Share with a customer}}\", \"BackgroundColor\": \"sp-css-backgroundColor-BgTeal\", \"FontColor\": \"sp-css-color-WhiteFont\"}]}"
+   }
+  },
+  {
+   "id": "06.01",
+   "phase": 6,
+   "title": "Content Intake: view 'All Documents'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Intake",
+    "serverRelativeListUrl": "{{SitePath}}/Content Intake",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Documents\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"ReviewStatus\", \"ValidationResult\", \"_ApprovalStatus\", \"_ApprovalAssignedTo\", \"AssetType\", \"Products\", \"Shareability\", \"SuggestedShareability\", \"ContentOwner\", \"ValidationFindings\", \"AgentFixes\", \"SubmissionNotes\", \"AISummary\", \"Modified\", \"Actions\"], \"viewId\": \"{{ViewId:Content Intake/All Documents}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "notes": "Keep _ApprovalStatus and _ApprovalAssignedTo in this view. This step replaces the view's columns after approvals (05.01) added them, and the Actions buttons' conditions read [$_ApprovalStatus]: without it in the view, Submit for approval and Publish to library never appear."
+  },
+  {
+   "id": "06.02",
+   "phase": 6,
+   "title": "Content Library: view 'All Documents'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Library",
+    "serverRelativeListUrl": "{{SitePath}}/Content Library",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Documents\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"AssetType\", \"Solution\", \"Products\", \"Audience\", \"SalesStage\", \"Industry\", \"Shareability\", \"AISummary\", \"PublishedOn\", \"ExpiresOn\", \"Views\", \"Viewers\", \"Views7\", \"ViewsAsOf\", \"Featured\", \"ContentOwner\", \"Actions\"], \"viewId\": \"{{ViewId:Content Library/All Documents}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.03",
+   "phase": 6,
+   "title": "Slide Library: view 'All Documents'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Slide Library",
+    "serverRelativeListUrl": "{{SitePath}}/Slide Library",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Documents\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"SlideRole\", \"Products\", \"Industry\", \"Shareability\", \"SlideSummary\", \"UseVerbatim\", \"SlideOrder\"], \"viewId\": \"{{ViewId:Slide Library/All Documents}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.04",
+   "phase": 6,
+   "title": "Deck Templates: view 'All Documents'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Deck Templates",
+    "serverRelativeListUrl": "{{SitePath}}/Deck Templates",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Documents\", \"isNewView\": false, \"isDefaultView\": false, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"TemplateKind\", \"OutputFormat\", \"Recipe\", \"SlideCount\", \"BestFor\", \"Audience\"], \"viewId\": \"{{ViewId:Deck Templates/All Documents}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.05",
+   "phase": 6,
+   "title": "Deck Templates: view 'Pick a template'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Deck Templates",
+    "serverRelativeListUrl": "{{SitePath}}/Deck Templates",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"Pick a template\", \"isNewView\": true, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"TemplateKind\", \"BestFor\", \"SlideCount\", \"Recipe\", \"Audience\"], \"viewType2\": \"TILES\", \"query\": \"<Where><Eq><FieldRef Name='OutputFormat'/><Value Type='Choice'>PowerPoint</Value></Eq></Where><OrderBy><FieldRef Name='SlideCount' Ascending='TRUE'/></OrderBy>\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ViewId:Deck Templates/Pick a template}}"
+   ]
+  },
+  {
+   "id": "06.06",
+   "phase": 6,
+   "title": "Decks: view 'Start here'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Decks",
+    "serverRelativeListUrl": "{{SitePath}}/Generated Content",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"Start here\", \"isNewView\": true, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"Customer\", \"Template\", \"Industry\", \"MeetingGoal\", \"TalkingPoints\", \"DraftStatus\", \"SourceSlides\", \"Modified\", \"Editor\", \"Author\"], \"viewType2\": \"CUSTOMHTML\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   },
+   "produces": [
+    "{{ViewId:Decks/Start here}}"
+   ]
+  },
+  {
+   "id": "06.07",
+   "phase": 6,
+   "title": "Decks: view 'All Documents'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Decks",
+    "serverRelativeListUrl": "{{SitePath}}/Generated Content",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Documents\", \"isNewView\": false, \"isDefaultView\": false, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Customer\", \"Template\", \"DraftStatus\", \"Modified\", \"Editor\"], \"viewId\": \"{{ViewId:Decks/All Documents}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.08",
+   "phase": 6,
+   "title": "Solution Plays: view 'All Items'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Solution Plays",
+    "serverRelativeListUrl": "{{SitePath}}/Lists/Solution Plays",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "GenericList",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Items\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"LinkTitle\", \"Solution\", \"Products\", \"Industry\", \"Audience\", \"Pitch\", \"WhyNow\", \"DiscoveryQuestions\", \"Objections\", \"KeyAssets\", \"Featured\", \"PlayOrder\"], \"viewId\": \"{{ViewId:Solution Plays/All Items}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.09",
+   "phase": 6,
+   "title": "Content Requests: view 'All Items'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Content Requests",
+    "serverRelativeListUrl": "{{SitePath}}/Lists/Content Requests",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "GenericList",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Items\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"LinkTitle\", \"Need\", \"Solution\", \"Industry\", \"Priority\", \"RequestStatus\", \"NeededBy\", \"DeliveredAsset\", \"Author\"], \"viewId\": \"{{ViewId:Content Requests/All Items}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.10",
+   "phase": 6,
+   "title": "Customer Shares: view 'All Items'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Customer Shares",
+    "serverRelativeListUrl": "{{SitePath}}/Lists/Customer Shares",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "GenericList",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Items\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"LinkTitle\", \"Customer\", \"Recipient\", \"SharedAsset\", \"SourceAsset\", \"Shareability\", \"SharedOn\", \"ShareStatus\", \"Opportunity\", \"Author\"], \"viewId\": \"{{ViewId:Customer Shares/All Items}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.11",
+   "phase": 6,
+   "title": "Archive: view 'All Documents'",
+   "via": "iq",
+   "tool": "create_or_update_list",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listName": "Archive",
+    "serverRelativeListUrl": "{{SitePath}}/Archive",
+    "isNewList": false,
+    "addNavLink": false,
+    "templateType": "DocumentLibrary",
+    "columns": [],
+    "views": [
+     "{\"name\": \"All Documents\", \"isNewView\": false, \"isDefaultView\": true, \"replaceViewFields\": true, \"viewFields\": [\"DocIcon\", \"LinkFilename\", \"Title\", \"AssetType\", \"ArchiveReason\", \"ArchivedOn\", \"ReplacedBy\"], \"viewId\": \"{{ViewId:Archive/All Documents}}\"}"
+    ],
+    "enableApprovals": false,
+    "restriction_to_author": false,
+    "isManualColumnCreation": true
+   }
+  },
+  {
+   "id": "06.12",
+   "phase": 6,
+   "title": "Deck Templates: tile cards with the Build with this template button",
+   "via": "iq",
+   "tool": "apply_view_formatting_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "viewId": "{{ViewId:Deck Templates/Pick a template}}",
+    "viewType": "TILES",
+    "listName": "Deck Templates",
+    "isRevertOperation": false
+   },
+   "argFiles": {
+    "customFormatterJson": "site/views/deck-templates-pick-a-template.tiles.json"
+   },
+   "notes": "Render tokens first: the button runs {{QuickStepId:Deck Templates/Build with this template}}."
+  },
+  {
+   "id": "07.01",
+   "phase": 7,
+   "title": "Content Requests: 'Request content' form",
+   "via": "iq",
+   "tool": "create_form",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "fromFile": "site/forms/content-requests.request-content.json"
+   },
+   "needs": [
+    "{{FieldId:Content Requests/*}} via get_list_schema"
+   ],
+   "produces": [
+    "{{ViewId:Content Requests/Request content}}"
+   ],
+   "notes": "Arguments = the rendered JSON in deploy/out/forms/content-requests.request-content.json plus siteKey. The form is stored as a hidden FORMS view that get_views_of_list does NOT return: take the view id from the result's formEditUrl (formId=<GUID>) or formShareUrl (nav=<base64 GUID>). That id is {{ViewId:Content Requests/Request content}}; its base64 form feeds the Ask for content links on every page and in the Start here view."
+  },
+  {
+   "id": "07.03",
+   "phase": 7,
+   "title": "Decks: install the 'Start here' deck studio (custom HTML view)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/views(guid'{{ViewId:Decks/Start here}}')",
+    "body": {
+     "CustomFormatter": "<![CDATA[{{file:site/views/decks-start-here.formatter.txt}}]]>"
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   },
+   "notes": "Runs after 07.01 because the page links to the Request content form ({{ViewIdB64:Content Requests/Request content}}). Render tokens first (deploy/tools/render.py), then send the formatter text wrapped in CDATA. Moved here from 06.13 after the 2026-11-25 test deploy failed on the unresolved form id."
+  },
+  {
+   "id": "07.02",
+   "phase": 7,
+   "title": "Optional: 'Industry one-pager' Word document form on Template-IndustryOnePager.docx (folder 'Generated one-pagers')",
+   "via": "iq",
+   "tool": "create_document_form",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "fileWebUrl": "{{SiteUrl}}/Deck Templates/Template-IndustryOnePager.docx",
+    "formName": "Industry one-pager",
+    "folderServerRelativeUrl": "{{SitePath}}/Deck Templates",
+    "shouldCreateNewFolder": true,
+    "folderName": "Generated one-pagers",
+    "documentType": "Word"
+   },
+   "optional": true,
+   "runAfter": "08 (needs the template file)"
+  },
+  {
+   "id": "08.01",
+   "phase": 8,
+   "title": "Upload Content Intake/AI Studio for Retail - pitch v3.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Intake",
+    "fileName": "AI Studio for Retail - pitch v3.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Intake/AI Studio for Retail - pitch v3.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Intake/AI Studio for Retail - pitch v3.pptx}}"
+   ]
+  },
+  {
+   "id": "08.02",
+   "phase": 8,
+   "title": "Upload Content Intake/Battlecard - Field Service vs Spreadsheets.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Intake",
+    "fileName": "Battlecard - Field Service vs Spreadsheets.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Intake/Battlecard - Field Service vs Spreadsheets.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Intake/Battlecard - Field Service vs Spreadsheets.docx}}"
+   ]
+  },
+  {
+   "id": "08.03",
+   "phase": 8,
+   "title": "Upload Content Intake/Fabrikam Bank win story.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Intake",
+    "fileName": "Fabrikam Bank win story.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Intake/Fabrikam Bank win story.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Intake/Fabrikam Bank win story.docx}}"
+   ]
+  },
+  {
+   "id": "08.04",
+   "phase": 8,
+   "title": "Upload Content Intake/Field Service ROI one-pager.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Intake",
+    "fileName": "Field Service ROI one-pager.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Intake/Field Service ROI one-pager.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Intake/Field Service ROI one-pager.pdf}}"
+   ]
+  },
+  {
+   "id": "08.05",
+   "phase": 8,
+   "title": "Content Intake: metadata for every file (from content/seed.json)",
+   "via": "iq",
+   "tool": "update_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Content Intake",
+    "items": "{{seed:Content Intake}}"
+   },
+   "notes": "Build items from content/seed.json['Content Intake']: itemId = {{ItemId:Content Intake/<file>}}; values per docs/value-formats in PLAYBOOK.md. Upload first, then write metadata: re-uploading a file wipes its columns."
+  },
+  {
+   "id": "08.06",
+   "phase": 8,
+   "title": "Upload Content Library/Battlecard - Data Platform vs Legacy Warehouses.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Battlecard - Data Platform vs Legacy Warehouses.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Battlecard - Data Platform vs Legacy Warehouses.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Battlecard - Data Platform vs Legacy Warehouses.docx}}"
+   ]
+  },
+  {
+   "id": "08.07",
+   "phase": 8,
+   "title": "Upload Content Library/Battlecard - Secure Access vs VPN.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Battlecard - Secure Access vs VPN.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Battlecard - Secure Access vs VPN.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Battlecard - Secure Access vs VPN.docx}}"
+   ]
+  },
+  {
+   "id": "08.08",
+   "phase": 8,
+   "title": "Upload Content Library/Customer Story - Contoso Health.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Customer Story - Contoso Health.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Customer Story - Contoso Health.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Customer Story - Contoso Health.pdf}}"
+   ]
+  },
+  {
+   "id": "08.09",
+   "phase": 8,
+   "title": "Upload Content Library/Customer Story - Tailspin Manufacturing.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Customer Story - Tailspin Manufacturing.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Customer Story - Tailspin Manufacturing.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Customer Story - Tailspin Manufacturing.pdf}}"
+   ]
+  },
+  {
+   "id": "08.10",
+   "phase": 8,
+   "title": "Upload Content Library/Customer Story - Woodgrove Financial.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Customer Story - Woodgrove Financial.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Customer Story - Woodgrove Financial.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Customer Story - Woodgrove Financial.pdf}}"
+   ]
+  },
+  {
+   "id": "08.11",
+   "phase": 8,
+   "title": "Upload Content Library/Data Platform Technical Deep Dive.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Data Platform Technical Deep Dive.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Data Platform Technical Deep Dive.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Data Platform Technical Deep Dive.pptx}}"
+   ]
+  },
+  {
+   "id": "08.12",
+   "phase": 8,
+   "title": "Upload Content Library/Demo Script - AI Studio Clinical Summary Agent.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Demo Script - AI Studio Clinical Summary Agent.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Demo Script - AI Studio Clinical Summary Agent.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Demo Script - AI Studio Clinical Summary Agent.docx}}"
+   ]
+  },
+  {
+   "id": "08.13",
+   "phase": 8,
+   "title": "Upload Content Library/Demo Script - Analytics Ask Your Data.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Demo Script - Analytics Ask Your Data.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Demo Script - Analytics Ask Your Data.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Demo Script - Analytics Ask Your Data.docx}}"
+   ]
+  },
+  {
+   "id": "08.14",
+   "phase": 8,
+   "title": "Upload Content Library/Field Service Executive Briefing.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Field Service Executive Briefing.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Field Service Executive Briefing.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Field Service Executive Briefing.pptx}}"
+   ]
+  },
+  {
+   "id": "08.15",
+   "phase": 8,
+   "title": "Upload Content Library/Financial Services Zero Trust Pitch.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Financial Services Zero Trust Pitch.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Financial Services Zero Trust Pitch.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Financial Services Zero Trust Pitch.pptx}}"
+   ]
+  },
+  {
+   "id": "08.16",
+   "phase": 8,
+   "title": "Upload Content Library/Healthcare AI Pitch - Clinician Time Back.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Healthcare AI Pitch - Clinician Time Back.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Healthcare AI Pitch - Clinician Time Back.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Healthcare AI Pitch - Clinician Time Back.pptx}}"
+   ]
+  },
+  {
+   "id": "08.17",
+   "phase": 8,
+   "title": "Upload Content Library/Northwind Corporate Pitch FY27.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Northwind Corporate Pitch FY27.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Northwind Corporate Pitch FY27.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Northwind Corporate Pitch FY27.pptx}}"
+   ]
+  },
+  {
+   "id": "08.18",
+   "phase": 8,
+   "title": "Upload Content Library/One-pager - Northwind AI Studio.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "One-pager - Northwind AI Studio.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/One-pager - Northwind AI Studio.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/One-pager - Northwind AI Studio.pdf}}"
+   ]
+  },
+  {
+   "id": "08.19",
+   "phase": 8,
+   "title": "Upload Content Library/One-pager - Northwind Analytics for Retail.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "One-pager - Northwind Analytics for Retail.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/One-pager - Northwind Analytics for Retail.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/One-pager - Northwind Analytics for Retail.pdf}}"
+   ]
+  },
+  {
+   "id": "08.20",
+   "phase": 8,
+   "title": "Upload Content Library/One-pager - Northwind Field Service.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "One-pager - Northwind Field Service.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/One-pager - Northwind Field Service.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/One-pager - Northwind Field Service.pdf}}"
+   ]
+  },
+  {
+   "id": "08.21",
+   "phase": 8,
+   "title": "Upload Content Library/Playbook - Land with Data Platform.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Playbook - Land with Data Platform.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Playbook - Land with Data Platform.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Playbook - Land with Data Platform.docx}}"
+   ]
+  },
+  {
+   "id": "08.22",
+   "phase": 8,
+   "title": "Upload Content Library/Pricing and Packaging Guide FY27.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Pricing and Packaging Guide FY27.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Pricing and Packaging Guide FY27.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Pricing and Packaging Guide FY27.pdf}}"
+   ]
+  },
+  {
+   "id": "08.23",
+   "phase": 8,
+   "title": "Upload Content Library/Proposal Template - Northwind Pilot SOW.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Content Library",
+    "fileName": "Proposal Template - Northwind Pilot SOW.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Content Library/Proposal Template - Northwind Pilot SOW.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Content Library/Proposal Template - Northwind Pilot SOW.docx}}"
+   ]
+  },
+  {
+   "id": "08.24",
+   "phase": 8,
+   "title": "Content Library: metadata for every file (from content/seed.json)",
+   "via": "iq",
+   "tool": "update_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Content Library",
+    "items": "{{seed:Content Library}}"
+   },
+   "notes": "Build items from content/seed.json['Content Library']: itemId = {{ItemId:Content Library/<file>}}; values per docs/value-formats in PLAYBOOK.md. Upload first, then write metadata: re-uploading a file wipes its columns."
+  },
+  {
+   "id": "08.25",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Agenda-Executive.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Agenda-Executive.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Agenda-Executive.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Agenda-Executive.pptx}}"
+   ]
+  },
+  {
+   "id": "08.26",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Agenda-Standard.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Agenda-Standard.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Agenda-Standard.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Agenda-Standard.pptx}}"
+   ]
+  },
+  {
+   "id": "08.27",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Close-ThankYou.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Close-ThankYou.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Close-ThankYou.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Close-ThankYou.pptx}}"
+   ]
+  },
+  {
+   "id": "08.28",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-NextSteps-90Day.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-NextSteps-90Day.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-NextSteps-90Day.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-NextSteps-90Day.pptx}}"
+   ]
+  },
+  {
+   "id": "08.29",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-NextSteps-Workshop.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-NextSteps-Workshop.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-NextSteps-Workshop.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-NextSteps-Workshop.pptx}}"
+   ]
+  },
+  {
+   "id": "08.30",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Pricing-InternalDiscounts.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Pricing-InternalDiscounts.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Pricing-InternalDiscounts.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Pricing-InternalDiscounts.pptx}}"
+   ]
+  },
+  {
+   "id": "08.31",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Pricing-Packages.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Pricing-Packages.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Pricing-Packages.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Pricing-Packages.pptx}}"
+   ]
+  },
+  {
+   "id": "08.32",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Problem-DataSilos.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Problem-DataSilos.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Problem-DataSilos.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Problem-DataSilos.pptx}}"
+   ]
+  },
+  {
+   "id": "08.33",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Problem-FieldService.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Problem-FieldService.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Problem-FieldService.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Problem-FieldService.pptx}}"
+   ]
+  },
+  {
+   "id": "08.34",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Problem-FinServ.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Problem-FinServ.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Problem-FinServ.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Problem-FinServ.pptx}}"
+   ]
+  },
+  {
+   "id": "08.35",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Problem-Healthcare.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Problem-Healthcare.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Problem-Healthcare.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Problem-Healthcare.pptx}}"
+   ]
+  },
+  {
+   "id": "08.36",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Proof-AI.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Proof-AI.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Proof-AI.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Proof-AI.pptx}}"
+   ]
+  },
+  {
+   "id": "08.37",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Proof-Platform.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Proof-Platform.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Proof-Platform.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Proof-Platform.pptx}}"
+   ]
+  },
+  {
+   "id": "08.38",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Proof-Security.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Proof-Security.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Proof-Security.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Proof-Security.pptx}}"
+   ]
+  },
+  {
+   "id": "08.39",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Solution-AIStudio.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Solution-AIStudio.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Solution-AIStudio.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Solution-AIStudio.pptx}}"
+   ]
+  },
+  {
+   "id": "08.40",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Solution-Analytics.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Solution-Analytics.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Solution-Analytics.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Solution-Analytics.pptx}}"
+   ]
+  },
+  {
+   "id": "08.41",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Solution-DataPlatform.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Solution-DataPlatform.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Solution-DataPlatform.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Solution-DataPlatform.pptx}}"
+   ]
+  },
+  {
+   "id": "08.42",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Solution-FieldService.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Solution-FieldService.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Solution-FieldService.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Solution-FieldService.pptx}}"
+   ]
+  },
+  {
+   "id": "08.43",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Solution-SecureAccess.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Solution-SecureAccess.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Solution-SecureAccess.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Solution-SecureAccess.pptx}}"
+   ]
+  },
+  {
+   "id": "08.44",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Story-Contoso.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Story-Contoso.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Story-Contoso.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Story-Contoso.pptx}}"
+   ]
+  },
+  {
+   "id": "08.45",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Story-Tailspin.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Story-Tailspin.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Story-Tailspin.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Story-Tailspin.pptx}}"
+   ]
+  },
+  {
+   "id": "08.46",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Story-Wingtip.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Story-Wingtip.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Story-Wingtip.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Story-Wingtip.pptx}}"
+   ]
+  },
+  {
+   "id": "08.47",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Story-Woodgrove.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Story-Woodgrove.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Story-Woodgrove.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Story-Woodgrove.pptx}}"
+   ]
+  },
+  {
+   "id": "08.48",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Title-Corporate.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Title-Corporate.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Title-Corporate.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Title-Corporate.pptx}}"
+   ]
+  },
+  {
+   "id": "08.49",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Title-FinServ.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Title-FinServ.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Title-FinServ.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Title-FinServ.pptx}}"
+   ]
+  },
+  {
+   "id": "08.50",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Title-Healthcare.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Title-Healthcare.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Title-Healthcare.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Title-Healthcare.pptx}}"
+   ]
+  },
+  {
+   "id": "08.51",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Title-Manufacturing.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Title-Manufacturing.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Title-Manufacturing.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Title-Manufacturing.pptx}}"
+   ]
+  },
+  {
+   "id": "08.52",
+   "phase": 8,
+   "title": "Upload Slide Library/NW-Title-Retail.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Slide Library",
+    "fileName": "NW-Title-Retail.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Slide Library/NW-Title-Retail.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Slide Library/NW-Title-Retail.pptx}}"
+   ]
+  },
+  {
+   "id": "08.53",
+   "phase": 8,
+   "title": "Slide Library: metadata for every file (from content/seed.json)",
+   "via": "iq",
+   "tool": "update_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Slide Library",
+    "items": "{{seed:Slide Library}}"
+   },
+   "notes": "Build items from content/seed.json['Slide Library']: itemId = {{ItemId:Slide Library/<file>}}; values per docs/value-formats in PLAYBOOK.md. Upload first, then write metadata: re-uploading a file wipes its columns."
+  },
+  {
+   "id": "08.54",
+   "phase": 8,
+   "title": "Upload Deck Templates/Template-ExecutiveBriefing.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Deck Templates",
+    "fileName": "Template-ExecutiveBriefing.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Deck Templates/Template-ExecutiveBriefing.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Deck Templates/Template-ExecutiveBriefing.pptx}}"
+   ]
+  },
+  {
+   "id": "08.55",
+   "phase": 8,
+   "title": "Upload Deck Templates/Template-FirstMeetingPitch.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Deck Templates",
+    "fileName": "Template-FirstMeetingPitch.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Deck Templates/Template-FirstMeetingPitch.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Deck Templates/Template-FirstMeetingPitch.pptx}}"
+   ]
+  },
+  {
+   "id": "08.56",
+   "phase": 8,
+   "title": "Upload Deck Templates/Template-IndustryOnePager.docx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Deck Templates",
+    "fileName": "Template-IndustryOnePager.docx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Deck Templates/Template-IndustryOnePager.docx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Deck Templates/Template-IndustryOnePager.docx}}"
+   ]
+  },
+  {
+   "id": "08.57",
+   "phase": 8,
+   "title": "Upload Deck Templates/Template-QBR.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Deck Templates",
+    "fileName": "Template-QBR.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Deck Templates/Template-QBR.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Deck Templates/Template-QBR.pptx}}"
+   ]
+  },
+  {
+   "id": "08.58",
+   "phase": 8,
+   "title": "Upload Deck Templates/Template-TechnicalDeepDive.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Deck Templates",
+    "fileName": "Template-TechnicalDeepDive.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Deck Templates/Template-TechnicalDeepDive.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Deck Templates/Template-TechnicalDeepDive.pptx}}"
+   ]
+  },
+  {
+   "id": "08.59",
+   "phase": 8,
+   "title": "Deck Templates: metadata for every file (from content/seed.json)",
+   "via": "iq",
+   "tool": "update_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Deck Templates",
+    "items": "{{seed:Deck Templates}}"
+   },
+   "notes": "Build items from content/seed.json['Deck Templates']: itemId = {{ItemId:Deck Templates/<file>}}; values per docs/value-formats in PLAYBOOK.md. Upload first, then write metadata: re-uploading a file wipes its columns."
+  },
+  {
+   "id": "08.60",
+   "phase": 8,
+   "title": "Upload Decks/Contoso Health - Executive briefing - 2026-12-03.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Generated Content",
+    "fileName": "Contoso Health - Executive briefing - 2026-12-03.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Decks/Contoso Health - Executive briefing - 2026-12-03.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Decks/Contoso Health - Executive briefing - 2026-12-03.pptx}}"
+   ]
+  },
+  {
+   "id": "08.61",
+   "phase": 8,
+   "title": "Decks: metadata for every file (from content/seed.json)",
+   "via": "iq",
+   "tool": "update_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Generated Content",
+    "items": "{{seed:Decks}}"
+   },
+   "notes": "Build items from content/seed.json['Decks']: itemId = {{ItemId:Decks/<file>}}; values per docs/value-formats in PLAYBOOK.md. Upload first, then write metadata: re-uploading a file wipes its columns."
+  },
+  {
+   "id": "08.62",
+   "phase": 8,
+   "title": "Solution Plays: sample rows (from content/seed.json)",
+   "via": "iq",
+   "tool": "create_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Lists/Solution Plays",
+    "items": "{{seed:Solution Plays}}"
+   }
+  },
+  {
+   "id": "08.63",
+   "phase": 8,
+   "title": "Content Requests: sample rows (from content/seed.json)",
+   "via": "iq",
+   "tool": "create_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Lists/Content Requests",
+    "items": "{{seed:Content Requests}}"
+   }
+  },
+  {
+   "id": "08.64",
+   "phase": 8,
+   "title": "Customer Shares: sample rows (from content/seed.json)",
+   "via": "iq",
+   "tool": "create_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Lists/Customer Shares",
+    "items": "{{seed:Customer Shares}}"
+   }
+  },
+  {
+   "id": "08.65",
+   "phase": 8,
+   "title": "Upload Archive/Northwind DataHub Overview 2025.pptx",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Archive",
+    "fileName": "Northwind DataHub Overview 2025.pptx",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Archive/Northwind DataHub Overview 2025.pptx",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Archive/Northwind DataHub Overview 2025.pptx}}"
+   ]
+  },
+  {
+   "id": "08.66",
+   "phase": 8,
+   "title": "Upload Archive/Pricing Guide FY26.pdf",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/Archive",
+    "fileName": "Pricing Guide FY26.pdf",
+    "contentType": "base64",
+    "overwrite": false
+   },
+   "contentFrom": "content/Archive/Pricing Guide FY26.pdf",
+   "encode": "base64",
+   "produces": [
+    "{{ItemId:Archive/Pricing Guide FY26.pdf}}"
+   ]
+  },
+  {
+   "id": "08.67",
+   "phase": 8,
+   "title": "Archive: metadata for every file (from content/seed.json)",
+   "via": "iq",
+   "tool": "update_list_items_v2",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "listUrl": "{{SitePath}}/Archive",
+    "items": "{{seed:Archive}}"
+   },
+   "notes": "Build items from content/seed.json['Archive']: itemId = {{ItemId:Archive/<file>}}; values per docs/value-formats in PLAYBOOK.md. Upload first, then write metadata: re-uploading a file wipes its columns."
+  },
+  {
+   "id": "09.01",
+   "phase": 9,
+   "title": "Upload page Home.html",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/SitePages",
+    "fileName": "Home.html",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/pages/Home.html",
+   "render": true,
+   "encodingNote": "Save as UTF-8 with BOM, or '·' renders as 'Â·'."
+  },
+  {
+   "id": "09.02",
+   "phase": 9,
+   "title": "Upload page Find.html",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/SitePages",
+    "fileName": "Find.html",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/pages/Find.html",
+   "render": true,
+   "encodingNote": "Save as UTF-8 with BOM, or '·' renders as 'Â·'."
+  },
+  {
+   "id": "09.03",
+   "phase": 9,
+   "title": "Upload page Plays.html",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/SitePages",
+    "fileName": "Plays.html",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/pages/Plays.html",
+   "render": true,
+   "encodingNote": "Save as UTF-8 with BOM, or '·' renders as 'Â·'."
+  },
+  {
+   "id": "09.04",
+   "phase": 9,
+   "title": "Upload page SlideBuilder.html",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/SitePages",
+    "fileName": "SlideBuilder.html",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/pages/SlideBuilder.html",
+   "render": true,
+   "encodingNote": "Save as UTF-8 with BOM, or '·' renders as 'Â·'."
+  },
+  {
+   "id": "09.05",
+   "phase": 9,
+   "title": "Upload page PublishingDesk.html",
+   "via": "iq",
+   "tool": "upload_file",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "folderServerRelativeUrl": "{{SitePath}}/SitePages",
+    "fileName": "PublishingDesk.html",
+    "contentType": "text",
+    "overwrite": true
+   },
+   "contentFrom": "site/pages/PublishingDesk.html",
+   "render": true,
+   "encodingNote": "Save as UTF-8 with BOM, or '·' renders as 'Â·'."
+  },
+  {
+   "id": "09.06",
+   "phase": 9,
+   "title": "Publish Home.html",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/Home.html')/Publish(comment='Deployed')"
+   },
+   "notes": "If REST publish is not accepted, open the page and press 'Publish changes'. Uploaded HTML pages start as drafts."
+  },
+  {
+   "id": "09.07",
+   "phase": 9,
+   "title": "Publish Find.html",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/Find.html')/Publish(comment='Deployed')"
+   },
+   "notes": "If REST publish is not accepted, open the page and press 'Publish changes'. Uploaded HTML pages start as drafts."
+  },
+  {
+   "id": "09.08",
+   "phase": 9,
+   "title": "Publish Plays.html",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/Plays.html')/Publish(comment='Deployed')"
+   },
+   "notes": "If REST publish is not accepted, open the page and press 'Publish changes'. Uploaded HTML pages start as drafts."
+  },
+  {
+   "id": "09.09",
+   "phase": 9,
+   "title": "Publish SlideBuilder.html",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/SlideBuilder.html')/Publish(comment='Deployed')"
+   },
+   "notes": "If REST publish is not accepted, open the page and press 'Publish changes'. Uploaded HTML pages start as drafts."
+  },
+  {
+   "id": "09.10",
+   "phase": 9,
+   "title": "Publish PublishingDesk.html",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/PublishingDesk.html')/Publish(comment='Deployed')"
+   },
+   "notes": "If REST publish is not accepted, open the page and press 'Publish changes'. Uploaded HTML pages start as drafts."
+  },
+  {
+   "id": "09.11",
+   "phase": 9,
+   "title": "Make Home.html the home page",
+   "via": "iq",
+   "tool": "set_site_homepage",
+   "arguments": {
+    "siteKey": "{{SiteKey}}",
+    "pageUrl": "{{SitePath}}/SitePages/Home.html"
+   }
+  },
+  {
+   "id": "10.01",
+   "phase": 10,
+   "title": "Read group ids into {{GroupId:*}}",
+   "via": "rest",
+   "rest": {
+    "method": "GET",
+    "uri": "_api/web?$select=AssociatedOwnerGroup/Id,AssociatedMemberGroup/Id,AssociatedVisitorGroup/Id&$expand=AssociatedOwnerGroup,AssociatedMemberGroup,AssociatedVisitorGroup"
+   },
+   "produces": [
+    "{{GroupId:Owners}} = AssociatedOwnerGroup",
+    "{{GroupId:Content Team}} = AssociatedMemberGroup",
+    "{{GroupId:Sellers}} = AssociatedVisitorGroup"
+   ]
+  },
+  {
+   "id": "10.02",
+   "phase": 10,
+   "title": "Group Owners: describe",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/sitegroups/getbyid({{GroupId:Owners}})",
+    "body": {
+     "Description": "Hub admins: full control, own the site skills, settings and navigation."
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "10.03",
+   "phase": 10,
+   "title": "Group Content Team: rename and describe",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/sitegroups/getbyid({{GroupId:Content Team}})",
+    "body": {
+     "Description": "Content team: publishes, reviews and approves content. Edit on the hub; sees Publishing Desk, Content Intake and Archive. Add people or a security group here.",
+     "Title": "{{SiteTitle}} Content Team"
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "10.04",
+   "phase": 10,
+   "title": "Group Sellers: rename and describe",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/sitegroups/getbyid({{GroupId:Sellers}})",
+    "body": {
+     "Description": "Sellers: browse content, build decks, request content and share with customers. Read on the hub, Contribute where they create. Add people or a security group here.",
+     "Title": "{{SiteTitle}} Sellers"
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "10.05",
+   "phase": 10,
+   "title": "Break inheritance: Content Intake",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Intake}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.06",
+   "phase": 10,
+   "title": "Content Intake: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Intake}}')/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.07",
+   "phase": 10,
+   "title": "Break inheritance: Content Library",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Library}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.08",
+   "phase": 10,
+   "title": "Content Library: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Library}}')/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.09",
+   "phase": 10,
+   "title": "Content Library: grant Sellers Contribute",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Library}}')/roleassignments/addroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741827)"
+   }
+  },
+  {
+   "id": "10.10",
+   "phase": 10,
+   "title": "Break inheritance: Decks",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.11",
+   "phase": 10,
+   "title": "Decks: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.12",
+   "phase": 10,
+   "title": "Decks: grant Sellers Contribute",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Decks}}')/roleassignments/addroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741827)"
+   }
+  },
+  {
+   "id": "10.13",
+   "phase": 10,
+   "title": "Break inheritance: Content Requests",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Requests}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.14",
+   "phase": 10,
+   "title": "Content Requests: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Requests}}')/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.15",
+   "phase": 10,
+   "title": "Content Requests: grant Sellers Contribute",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Requests}}')/roleassignments/addroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741827)"
+   }
+  },
+  {
+   "id": "10.16",
+   "phase": 10,
+   "title": "Content Requests: people see and edit only their own items",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Content Requests}}')",
+    "body": {
+     "ReadSecurity": 2,
+     "WriteSecurity": 2
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "10.17",
+   "phase": 10,
+   "title": "Break inheritance: Customer Shares",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Customer Shares}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.18",
+   "phase": 10,
+   "title": "Customer Shares: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Customer Shares}}')/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.19",
+   "phase": 10,
+   "title": "Customer Shares: grant Sellers Contribute",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Customer Shares}}')/roleassignments/addroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741827)"
+   }
+  },
+  {
+   "id": "10.20",
+   "phase": 10,
+   "title": "Customer Shares: people see and edit only their own items",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Customer Shares}}')",
+    "body": {
+     "ReadSecurity": 2,
+     "WriteSecurity": 2
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "10.21",
+   "phase": 10,
+   "title": "Break inheritance: Archive",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Archive}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.22",
+   "phase": 10,
+   "title": "Archive: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Archive}}')/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.23",
+   "phase": 10,
+   "title": "Break inheritance: Agent Assets",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Agent Assets}}')/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.24",
+   "phase": 10,
+   "title": "Agent Assets: remove Content Team (Edit)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Agent Assets}}')/roleassignments/removeroleassignment(principalid={{GroupId:Content Team}},roledefid=1073741830)"
+   }
+  },
+  {
+   "id": "10.25",
+   "phase": 10,
+   "title": "Agent Assets: grant Content Team Read",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/lists(guid'{{ListId:Agent Assets}}')/roleassignments/addroleassignment(principalid={{GroupId:Content Team}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "10.26",
+   "phase": 10,
+   "title": "Break inheritance: PublishingDesk.html",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/PublishingDesk.html')/ListItemAllFields/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)"
+   }
+  },
+  {
+   "id": "10.27",
+   "phase": 10,
+   "title": "PublishingDesk.html: remove Sellers (Read)",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/GetFileByServerRelativePath(decodedurl='{{SitePath}}/SitePages/PublishingDesk.html')/ListItemAllFields/roleassignments/removeroleassignment(principalid={{GroupId:Sellers}},roledefid=1073741826)"
+   }
+  },
+  {
+   "id": "11.01",
+   "phase": 11,
+   "title": "Navigation: top menu with mega menu",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web",
+    "body": {
+     "HorizontalQuickLaunch": true,
+     "MegaMenuEnabled": true,
+     "QuickLaunchEnabled": true
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "11.02",
+   "phase": 11,
+   "title": "Navigation: remove the default links",
+   "via": "rest",
+   "rest": {
+    "method": "GET",
+    "uri": "_api/web/navigation/QuickLaunch?$select=Id,Title"
+   },
+   "notes": "Delete each returned node: POST _api/web/navigation/GetNodeById(<Id>) with X-HTTP-Method: DELETE."
+  },
+  {
+   "id": "11.03",
+   "phase": 11,
+   "title": "Navigation: add 'Home'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/QuickLaunch",
+    "body": {
+     "Title": "Home",
+     "Url": "{{SitePath}}/SitePages/Home.html",
+     "IsExternal": true
+    }
+   }
+  },
+  {
+   "id": "11.04",
+   "phase": 11,
+   "title": "Navigation: add 'Find'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/QuickLaunch",
+    "body": {
+     "Title": "Find",
+     "Url": "{{SitePath}}/SitePages/Find.html",
+     "IsExternal": true
+    }
+   }
+  },
+  {
+   "id": "11.05",
+   "phase": 11,
+   "title": "Navigation: add 'Plays'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/QuickLaunch",
+    "body": {
+     "Title": "Plays",
+     "Url": "{{SitePath}}/SitePages/Plays.html",
+     "IsExternal": true
+    }
+   }
+  },
+  {
+   "id": "11.06",
+   "phase": 11,
+   "title": "Navigation: add 'Build a deck'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/QuickLaunch",
+    "body": {
+     "Title": "Build a deck",
+     "Url": "{{SitePath}}/Deck Templates",
+     "IsExternal": true
+    }
+   }
+  },
+  {
+   "id": "11.07",
+   "phase": 11,
+   "title": "Navigation: add 'Content team'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/QuickLaunch",
+    "body": {
+     "Title": "Content team",
+     "Url": "{{SitePath}}/SitePages/PublishingDesk.html",
+     "IsExternal": true
+    }
+   },
+   "produces": [
+    "{{NavId:Content team}}"
+   ]
+  },
+  {
+   "id": "11.08",
+   "phase": 11,
+   "title": "Navigation: add 'Publishing Desk' under 'Content team'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/GetNodeById({{NavId:Content team}})/Children",
+    "body": {
+     "Title": "Publishing Desk",
+     "Url": "{{SitePath}}/SitePages/PublishingDesk.html",
+     "IsExternal": true
+    }
+   }
+  },
+  {
+   "id": "11.09",
+   "phase": 11,
+   "title": "Navigation: add 'Content Intake' under 'Content team'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/GetNodeById({{NavId:Content team}})/Children",
+    "body": {
+     "Title": "Content Intake",
+     "Url": "{{SitePath}}/Content Intake/Forms/AllItems.aspx",
+     "IsExternal": false
+    }
+   }
+  },
+  {
+   "id": "11.10",
+   "phase": 11,
+   "title": "Navigation: add 'Content Library' under 'Content team'",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web/navigation/GetNodeById({{NavId:Content team}})/Children",
+    "body": {
+     "Title": "Content Library",
+     "Url": "{{SitePath}}/Content Library/Forms/AllItems.aspx",
+     "IsExternal": false
+    }
+   }
+  },
+  {
+   "id": "11.11",
+   "phase": 11,
+   "title": "Branding: site logo",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/siteiconmanager/setsitelogo",
+    "body": {
+     "relativeLogoUrl": "{{SitePath}}/HubAssets/nw-mark.png",
+     "type": 0,
+     "aspect": 1
+    }
+   }
+  },
+  {
+   "id": "11.12",
+   "phase": 11,
+   "title": "Branding: site thumbnail",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/siteiconmanager/setsitelogo",
+    "body": {
+     "relativeLogoUrl": "{{SitePath}}/HubAssets/nw-mark.png",
+     "type": 1,
+     "aspect": 1
+    }
+   },
+   "optional": true,
+   "notes": "Optional. On the 2026-11-25 test deploy this returned HTTP 502 BadGateway (site logo, header image and the rest succeeded). Skip it or set the thumbnail in Settings > Change the look > Header."
+  },
+  {
+   "id": "11.13",
+   "phase": 11,
+   "title": "Branding: header background image",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/siteiconmanager/setsitelogo",
+    "body": {
+     "relativeLogoUrl": "{{SitePath}}/HubAssets/nw-header.png",
+     "type": 2,
+     "aspect": 0
+    }
+   }
+  },
+  {
+   "id": "11.14",
+   "phase": 11,
+   "title": "Branding: compact header, strong emphasis",
+   "via": "rest",
+   "rest": {
+    "method": "POST",
+    "uri": "_api/web",
+    "body": {
+     "HeaderLayout": 2,
+     "HeaderEmphasis": 3
+    },
+    "headers": {
+     "X-HTTP-Method": "MERGE",
+     "IF-MATCH": "*"
+    }
+   }
+  },
+  {
+   "id": "11.15",
+   "phase": 11,
+   "title": "Theme: on the home page, Settings > Change the look > Theme > Dark teal",
+   "via": "manual",
+   "notes": "Settings (gear) > Change the look > Theme > Dark teal > Save. Only on a modern page (the home page), not on _layouts pages. See docs/setup-walkthrough.md."
+  },
+  {
+   "id": "12.01",
+   "phase": 12,
+   "title": "Walk the checklist in docs/deploy-checklist.md, then build one deck end to end (Build a deck > a template > Build with this template)",
+   "via": "manual",
+   "notes": "Tested 2026-11-25: Build with this template on Quarterly business review loaded the build-customer-deck site skill, asked 3 card questions and saved the deck to Decks."
+  }
+ ]
+}

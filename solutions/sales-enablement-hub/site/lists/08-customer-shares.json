@@ -1,0 +1,106 @@
+{
+  "order": 8,
+  "title": "Customer Shares",
+  "url": "Lists/Customer Shares",
+  "template": "GenericList",
+  "description": "Every piece of content shared with a customer: who, what, when, and whether the source is still current.",
+  "purpose": "Audit log of every external share made through the Share with a customer quick step.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Share",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Share\" />"
+    },
+    {
+      "internalName": "Customer",
+      "displayName": "Customer",
+      "type": "Text",
+      "required": true
+    },
+    {
+      "internalName": "Recipient",
+      "displayName": "Recipient email",
+      "type": "Text"
+    },
+    {
+      "internalName": "SharedAsset",
+      "displayName": "Shared copy",
+      "type": "URL",
+      "format": "Hyperlink"
+    },
+    {
+      "internalName": "SourceAsset",
+      "displayName": "Source asset",
+      "type": "URL",
+      "format": "Hyperlink"
+    },
+    {
+      "internalName": "Shareability",
+      "displayName": "Shareability",
+      "type": "Choice",
+      "choices": [
+        "Internal only",
+        "Customer-shareable (NDA)",
+        "Public"
+      ]
+    },
+    {
+      "internalName": "SharedOn",
+      "displayName": "Shared on",
+      "type": "DateTime",
+      "format": "DateOnly"
+    },
+    {
+      "internalName": "ShareStatus",
+      "displayName": "Status",
+      "type": "Choice",
+      "choices": [
+        "Active",
+        "Source updated",
+        "Source expired",
+        "Revoked"
+      ],
+      "defaultValueFields": {
+        "defaultValue": "Active"
+      }
+    },
+    {
+      "internalName": "Opportunity",
+      "displayName": "Opportunity",
+      "type": "Text"
+    }
+  ],
+  "views": [
+    {
+      "name": "All Items",
+      "isDefaultView": true,
+      "viewFields": [
+        "LinkTitle",
+        "Customer",
+        "Recipient",
+        "SharedAsset",
+        "SourceAsset",
+        "Shareability",
+        "SharedOn",
+        "ShareStatus",
+        "Opportunity",
+        "Author"
+      ]
+    }
+  ],
+  "permissions": {
+    "breakInheritance": true,
+    "remove": [
+      "Sellers:Read"
+    ],
+    "grant": [
+      "Sellers:Contribute"
+    ],
+    "itemLevel": {
+      "ReadSecurity": 2,
+      "WriteSecurity": 2
+    }
+  },
+  "seed": "Customer Shares"
+}

@@ -1,0 +1,131 @@
+{
+  "order": 4,
+  "title": "Deck Templates",
+  "url": "Deck Templates",
+  "template": "DocumentLibrary",
+  "description": "Branded deck and document templates, each with a recipe of slide roles.",
+  "purpose": "The template gallery. Each template is a real example deck plus a recipe of slide roles. 'Pick a template' is a tiles view with a Build with this template button.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Template name",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Template name\" />"
+    },
+    {
+      "internalName": "TemplateKind",
+      "displayName": "Template",
+      "type": "Choice",
+      "choices": [
+        "First meeting pitch",
+        "Executive briefing",
+        "Technical deep dive",
+        "Quarterly business review",
+        "Industry one-pager"
+      ]
+    },
+    {
+      "internalName": "OutputFormat",
+      "displayName": "Output format",
+      "type": "Choice",
+      "choices": [
+        "PowerPoint",
+        "Word"
+      ]
+    },
+    {
+      "internalName": "Recipe",
+      "displayName": "Recipe (slide roles in order)",
+      "type": "Note"
+    },
+    {
+      "internalName": "Audience",
+      "displayName": "Audience",
+      "type": "MultiChoice",
+      "choices": [
+        "Executive",
+        "IT decision maker",
+        "Line of business",
+        "Technical practitioner",
+        "Partner"
+      ]
+    },
+    {
+      "internalName": "SlideCount",
+      "displayName": "Slides",
+      "type": "Number",
+      "min": 0
+    },
+    {
+      "internalName": "BestFor",
+      "displayName": "Best for",
+      "type": "Note"
+    }
+  ],
+  "unlimitedLength": [
+    "Recipe",
+    "BestFor"
+  ],
+  "views": [
+    {
+      "name": "All Documents",
+      "isDefaultView": false,
+      "viewFields": [
+        "DocIcon",
+        "LinkFilename",
+        "Title",
+        "TemplateKind",
+        "OutputFormat",
+        "Recipe",
+        "SlideCount",
+        "BestFor",
+        "Audience"
+      ]
+    },
+    {
+      "name": "Pick a template",
+      "isDefaultView": true,
+      "viewFields": [
+        "DocIcon",
+        "LinkFilename",
+        "Title",
+        "TemplateKind",
+        "BestFor",
+        "SlideCount",
+        "Recipe",
+        "Audience"
+      ],
+      "viewType2": "TILES",
+      "query": "<Where><Eq><FieldRef Name=\"OutputFormat\" /><Value Type=\"Choice\">PowerPoint</Value></Eq></Where><OrderBy><FieldRef Name=\"SlideCount\" Ascending=\"TRUE\" /></OrderBy>"
+    }
+  ],
+  "viewFormatting": [
+    {
+      "view": "Pick a template",
+      "viewType": "TILES",
+      "file": "site/views/deck-templates-pick-a-template.tiles.json",
+      "after": "quickSteps"
+    }
+  ],
+  "quickSteps": [
+    {
+      "title": "Build with this template",
+      "condition": "true",
+      "action": {
+        "actionType": "AskKnowledgeAgent",
+        "customPrompt": "Load the build-customer-deck site skill and follow it with this template as my meeting type: show me its interactive cards, then build my deck from approved slides and save it to the Decks library with my talking points."
+      },
+      "button": false
+    }
+  ],
+  "documentForms": [
+    {
+      "optional": true,
+      "formName": "Industry one-pager",
+      "templateFile": "Template-IndustryOnePager.docx",
+      "folderName": "Generated one-pagers",
+      "documentType": "Word"
+    }
+  ],
+  "seed": "Deck Templates"
+}

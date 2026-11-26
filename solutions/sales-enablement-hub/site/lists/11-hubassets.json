@@ -1,0 +1,17 @@
+{
+  "order": 11,
+  "title": "HubAssets",
+  "url": "HubAssets",
+  "template": "DocumentLibrary",
+  "description": "Images used by the hub's pages: slide thumbnails and artwork.",
+  "purpose": "Header image, site logo and slide thumbnails.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Title",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Asset title\" />"
+    }
+  ],
+  "files": "site/hub-assets + site/branding/nw-header.png + site/branding/nw-mark.png"
+}

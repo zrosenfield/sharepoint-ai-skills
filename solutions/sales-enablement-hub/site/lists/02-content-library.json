@@ -1,0 +1,248 @@
+{
+  "order": 2,
+  "title": "Content Library",
+  "url": "Content Library",
+  "template": "DocumentLibrary",
+  "description": "Approved, published Northwind Cloud sales content. Read-only for sellers.",
+  "purpose": "Approved, published content. Read-only for sellers except Contribute so the share quick step can log activity.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Asset title",
+      "type": "Text",
+      "editSchemaXml": "<Field InternalName=\"Title\" Type=\"Text\" DisplayName=\"Asset title\" />"
+    },
+    {
+      "internalName": "AssetType",
+      "displayName": "Asset type",
+      "type": "Choice",
+      "choices": [
+        "Pitch deck",
+        "Battlecard",
+        "One-pager",
+        "Customer story",
+        "Demo script",
+        "Pricing guide",
+        "Proposal template",
+        "Video",
+        "Playbook"
+      ]
+    },
+    {
+      "internalName": "Solution",
+      "displayName": "Solution area",
+      "type": "Choice",
+      "choices": [
+        "Data & AI",
+        "Security",
+        "Business Applications",
+        "Modern Work"
+      ]
+    },
+    {
+      "internalName": "Products",
+      "displayName": "Products",
+      "type": "MultiChoice",
+      "choices": [
+        "Northwind Data Platform",
+        "Northwind Secure Access",
+        "Northwind AI Studio",
+        "Northwind Field Service",
+        "Northwind Analytics"
+      ]
+    },
+    {
+      "internalName": "Audience",
+      "displayName": "Audience",
+      "type": "MultiChoice",
+      "choices": [
+        "Executive",
+        "IT decision maker",
+        "Line of business",
+        "Technical practitioner",
+        "Partner"
+      ]
+    },
+    {
+      "internalName": "SalesStage",
+      "displayName": "Sales stage",
+      "type": "Choice",
+      "choices": [
+        "Prospect",
+        "Discover",
+        "Qualify",
+        "Propose",
+        "Negotiate",
+        "Expand"
+      ]
+    },
+    {
+      "internalName": "Industry",
+      "displayName": "Industry",
+      "type": "MultiChoice",
+      "choices": [
+        "Healthcare",
+        "Financial services",
+        "Retail",
+        "Manufacturing",
+        "Public sector",
+        "Cross-industry"
+      ]
+    },
+    {
+      "internalName": "AISummary",
+      "displayName": "Summary",
+      "type": "Note"
+    },
+    {
+      "internalName": "Shareability",
+      "displayName": "Shareability",
+      "type": "Choice",
+      "choices": [
+        "Internal only",
+        "Customer-shareable (NDA)",
+        "Public"
+      ],
+      "defaultValueFields": {
+        "defaultValue": "Internal only"
+      }
+    },
+    {
+      "internalName": "ContentOwner",
+      "displayName": "Content owner",
+      "type": "User"
+    },
+    {
+      "internalName": "PublishedOn",
+      "displayName": "Published on",
+      "type": "DateTime",
+      "format": "DateOnly"
+    },
+    {
+      "internalName": "ExpiresOn",
+      "displayName": "Expires on",
+      "type": "DateTime",
+      "format": "DateOnly"
+    },
+    {
+      "internalName": "VersionNotes",
+      "displayName": "Version notes",
+      "type": "Note"
+    },
+    {
+      "internalName": "Featured",
+      "displayName": "Featured",
+      "type": "Boolean",
+      "defaultValueFields": {
+        "defaultValue": "0"
+      }
+    },
+    {
+      "internalName": "Popularity",
+      "displayName": "Popularity",
+      "type": "Number",
+      "min": 0
+    },
+    {
+      "internalName": "ReplacedBy",
+      "displayName": "Replaced by",
+      "type": "URL",
+      "format": "Hyperlink"
+    },
+    {
+      "internalName": "Views",
+      "displayName": "Views",
+      "type": "Number",
+      "min": 0
+    },
+    {
+      "internalName": "Viewers",
+      "displayName": "Viewers",
+      "type": "Number",
+      "min": 0
+    },
+    {
+      "internalName": "Views7",
+      "displayName": "Views (7 days)",
+      "type": "Number",
+      "min": 0
+    },
+    {
+      "internalName": "ViewsAsOf",
+      "displayName": "Views as of",
+      "type": "DateTime",
+      "format": "DateOnly"
+    },
+    {
+      "internalName": "Actions",
+      "displayName": "Actions",
+      "type": "QuickSteps"
+    }
+  ],
+  "unlimitedLength": [
+    "AISummary",
+    "VersionNotes"
+  ],
+  "views": [
+    {
+      "name": "All Documents",
+      "isDefaultView": true,
+      "viewFields": [
+        "DocIcon",
+        "LinkFilename",
+        "Title",
+        "AssetType",
+        "Solution",
+        "Products",
+        "Audience",
+        "SalesStage",
+        "Industry",
+        "Shareability",
+        "AISummary",
+        "PublishedOn",
+        "ExpiresOn",
+        "Views",
+        "Viewers",
+        "Views7",
+        "ViewsAsOf",
+        "Featured",
+        "ContentOwner",
+        "Actions"
+      ]
+    }
+  ],
+  "quickSteps": [
+    {
+      "title": "Share with a customer",
+      "condition": "[$Shareability] != 'Internal only'",
+      "action": {
+        "actionType": "AskKnowledgeAgent",
+        "customPrompt": "Load the prepare-customer-sharing site skill and follow it for this file. Ask me for the customer name and recipient email first, check shareability, share a view-only specific-people link, and log the share in Customer Shares."
+      },
+      "button": true,
+      "buttonColor": {
+        "BackgroundColor": "sp-css-backgroundColor-BgTeal",
+        "FontColor": "sp-css-color-WhiteFont"
+      }
+    },
+    {
+      "title": "Check freshness",
+      "condition": "true",
+      "action": {
+        "actionType": "AskKnowledgeAgentForList",
+        "customPrompt": "Load the freshness-check site skill and follow it for this library: list expired and expiring assets, the customer shares and decks that depend on them, and propose archive moves."
+      },
+      "button": false
+    }
+  ],
+  "permissions": {
+    "breakInheritance": true,
+    "remove": [
+      "Sellers:Read"
+    ],
+    "grant": [
+      "Sellers:Contribute"
+    ]
+  },
+  "seed": "Content Library"
+}
